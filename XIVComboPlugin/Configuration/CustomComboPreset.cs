@@ -4,7 +4,7 @@ namespace XIVComboExpandedPlugin
 {
     public enum CustomComboPreset
     {
-        // Last enum used: 59
+        // Last enum used: 62
         // ====================================================================================
         #region DRAGOON
 
@@ -89,6 +89,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Seigan to Third Eye", "Replace Seigan with Third Eye when not procced", SAM.JobID, SAM.Seigan)]
         SamuraiThirdEyeFeature = 51,
+
+        [CustomComboInfo("Tsubame-gaeshi to Iaijutsu", "Replace Tsubame-gaeshi with Iaijutsu when Sen is empty", SAM.JobID, SAM.TsubameGaeshi)]
+        SamuraiTsubameGaeshiIaijutsuFeature = 60,
+
+        [CustomComboInfo("Tsubame-gaeshi to Shoha", "Replace Tsubame-gaeshi with Shoha when meditation is 3", SAM.JobID, SAM.TsubameGaeshi)]
+        SamuraiTsubameGaeshiShohaFeature = 61,
 
         #endregion
         // ====================================================================================

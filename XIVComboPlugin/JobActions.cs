@@ -463,7 +463,10 @@ namespace XIVComboExpandedPlugin
             Fuga = 7483,
             Oka = 7485,
             Seigan = 7501,
-            ThirdEye = 7498;
+            ThirdEye = 7498,
+            Iaijutsu = 7867,
+            TsubameGaeshi = 16483,
+            Shoha = 16487;
 
         public static class Buffs
         {
@@ -481,7 +484,9 @@ namespace XIVComboExpandedPlugin
                 Mangetsu = 35,
                 Kasha = 40,
                 Oka = 45,
-                Yukikaze = 50;
+                Yukikaze = 50,
+                TsubameGaeshi = 76,
+                Shoha = 80;
         }
     }
 

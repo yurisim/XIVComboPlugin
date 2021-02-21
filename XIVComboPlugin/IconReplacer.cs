@@ -445,6 +445,32 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
+            // Turn Tsubame-gaeshi into Shoha when meditation is 3
+            // Thanks to grammernatzi
+            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiShohaFeature))
+            {
+                if (actionID == SAM.TsubameGaeshi)
+                {
+                    var gauge = GetJobGauge<SAMGauge>();
+                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                        return SAM.Shoha;
+                }
+            }
+
+            // Turn Tsubame-gaeshi into Iaijutsu when Sen is empty
+            // Requested by Sable
+            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature))
+            {
+                if (actionID == SAM.TsubameGaeshi)
+                {
+                    var gauge = GetJobGauge<SAMGauge>();
+                    if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
+                        return GetIconHook.Original(self, SAM.TsubameGaeshi);
+                    else
+                        return GetIconHook.Original(self, SAM.Iaijutsu);
+                }
+            }
+
             #endregion
             // ====================================================================================
             #region NINJA
