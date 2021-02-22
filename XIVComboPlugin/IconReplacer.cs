@@ -465,9 +465,18 @@ namespace XIVComboExpandedPlugin
                 {
                     var gauge = GetJobGauge<SAMGauge>();
                     if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
-                        return GetIconHook.Original(self, SAM.TsubameGaeshi);
+                    {
+                        var kaeshi = GetIconHook.Original(self, SAM.TsubameGaeshi);
+                        // "The Balance" approved
+                        // if (kaeshi == SAM.KaeshiHiganbana)
+                        //     return SAM.TsubameGaeshi;
+                        // else
+                        return kaeshi;
+                    }
                     else
+                    {
                         return GetIconHook.Original(self, SAM.Iaijutsu);
+                    }
                 }
             }
 

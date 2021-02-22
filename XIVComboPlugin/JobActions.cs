@@ -466,6 +466,7 @@ namespace XIVComboExpandedPlugin
             ThirdEye = 7498,
             Iaijutsu = 7867,
             TsubameGaeshi = 16483,
+            KaeshiHiganbana = 16484,
             Shoha = 16487;
 
         public static class Buffs
