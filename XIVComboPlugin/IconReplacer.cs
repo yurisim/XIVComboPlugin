@@ -22,7 +22,7 @@ namespace XIVComboExpandedPlugin
         private readonly Hook<IsIconReplaceableDelegate> IsIconReplaceableHook;
         private readonly Hook<GetIconDelegate> GetIconHook;
 
-        private readonly HashSet<uint> CustomIds = new HashSet<uint>();
+        private readonly HashSet<uint> CustomIds = new();
 
         public IconReplacer(ClientState clientState, SigScanner scanner, XIVComboExpandedConfiguration configuration)
         {
@@ -96,7 +96,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == DRG.Jump)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(DRG.Buffs.DiveReady))
                         return DRG.MirageDive;
                     if (level >= DRG.Levels.HighJump)
@@ -148,7 +147,6 @@ namespace XIVComboExpandedPlugin
                         if (lastMove == DRG.Disembowel && level >= DRG.Levels.ChaosThrust)
                             return DRG.ChaosThrust;
                     }
-                    UpdateBuffAddress();
                     if (HasBuff(DRG.Buffs.SharperFangAndClaw) && level >= DRG.Levels.FangAndClaw)
                         return DRG.FangAndClaw;
                     if (HasBuff(DRG.Buffs.EnhancedWheelingThrust) && level >= DRG.Levels.WheelingThrust)
@@ -172,7 +170,6 @@ namespace XIVComboExpandedPlugin
                         if (lastMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
                             return DRG.FullThrust;
                     }
-                    UpdateBuffAddress();
                     if (HasBuff(DRG.Buffs.SharperFangAndClaw) && level >= DRG.Levels.FangAndClaw)
                         return DRG.FangAndClaw;
                     if (HasBuff(DRG.Buffs.EnhancedWheelingThrust) && level >= DRG.Levels.WheelingThrust)
@@ -265,7 +262,6 @@ namespace XIVComboExpandedPlugin
 
                     if (Configuration.IsEnabled(CustomComboPreset.PaladinAtonementFeature))
                     {
-                        UpdateBuffAddress();
                         if (HasBuff(PLD.Buffs.SwordOath))
                             return PLD.Atonement;
                     }
@@ -355,7 +351,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == SAM.Yukikaze)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Yukikaze;
                     if (comboTime > 0)
@@ -370,7 +365,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == SAM.Gekko)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Gekko;
                     if (comboTime > 0)
@@ -388,9 +382,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.SamuraiKashaCombo))
             {
                 if (actionID == SAM.Kasha)
-                {
-                    UpdateBuffAddress();
-                    if (HasBuff(SAM.Buffs.MeikyoShisui))
+                {                    if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Kasha;
                     if (comboTime > 0)
                     {
@@ -408,7 +400,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == SAM.Mangetsu)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Mangetsu;
                     if (comboTime > 0)
@@ -423,7 +414,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == SAM.Oka)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Oka;
                     if (comboTime > 0)
@@ -438,7 +428,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == SAM.Seigan)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(SAM.Buffs.EyesOpen))
                         return SAM.Seigan;
                     return SAM.ThirdEye;
@@ -533,7 +522,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == NIN.DreamWithinADream)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(NIN.Buffs.AssassinateReady))
                         return NIN.Assassinate;
                     return NIN.DreamWithinADream;
@@ -568,9 +556,7 @@ namespace XIVComboExpandedPlugin
                     if (Configuration.IsEnabled(CustomComboPreset.GunbreakerGnashingFangCont))
                     {
                         if (level >= GNB.Levels.Continuation)
-                        {
-                            UpdateBuffAddress();
-                            if (HasBuff(GNB.Buffs.ReadyToRip))
+                        {                            if (HasBuff(GNB.Buffs.ReadyToRip))
                                 return GNB.JugularRip;
                             if (HasBuff(GNB.Buffs.ReadyToTear))
                                 return GNB.AbdomenTear;
@@ -579,15 +565,12 @@ namespace XIVComboExpandedPlugin
                         }
                     }
                     var ammoComboState = GetJobGauge<GNBGauge>().AmmoComboStepNumber;
-                    switch (ammoComboState)
+                    return ammoComboState switch
                     {
-                        case 1:
-                            return GNB.SavageClaw;
-                        case 2:
-                            return GNB.WickedTalon;
-                        default:
-                            return GNB.GnashingFang;
-                    }
+                        1 => GNB.SavageClaw,
+                        2 => GNB.WickedTalon,
+                        _ => GNB.GnashingFang,
+                    };
                 }
             }
 
@@ -740,29 +723,18 @@ namespace XIVComboExpandedPlugin
                 if (actionID == AST.Play)
                 {
                     var gauge = GetJobGauge<ASTGauge>();
-                    switch (gauge.DrawnCard())
+                    return gauge.DrawnCard() switch
                     {
-                        case CardType.BALANCE:
-                            return AST.Balance;
-                        case CardType.BOLE:
-                            return AST.Bole;
-                        case CardType.ARROW:
-                            return AST.Arrow;
-                        case CardType.SPEAR:
-                            return AST.Spear;
-                        case CardType.EWER:
-                            return AST.Ewer;
-                        case CardType.SPIRE:
-                            return AST.Spire;
-                        /*
-                        case CardType.LORD:
-                            return AST.LordOfCrowns;
-                        case CardType.LADY:
-                            return AST.LadyOfCrowns;
-                        */
-                        default:
-                            return AST.Draw;
-                    }
+                        CardType.BALANCE => AST.Balance,
+                        CardType.BOLE => AST.Bole,
+                        CardType.ARROW => AST.Arrow,
+                        CardType.SPEAR => AST.Spear,
+                        CardType.EWER => AST.Ewer,
+                        CardType.SPIRE => AST.Spire,
+                        // CardType.LORD => AST.LordOfCrowns,
+                        // CardType.LADY => AST.LadyOfCrowns,
+                        _ => AST.Draw,
+                    };
                 }
             }
 
@@ -809,7 +781,6 @@ namespace XIVComboExpandedPlugin
                     if (gauge.TimerRemaining > 0)
                         if (gauge.IsPhoenixReady())
                         {
-                            UpdateBuffAddress();
                             if (HasBuff(SMN.Buffs.HellishConduit))
                                 return SMN.BrandOfPurgatory;
                             return SMN.FountainOfFire;
@@ -880,7 +851,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == DNC.FanDance1)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(DNC.Buffs.FlourishingFanDance))
                         return DNC.FanDance3;
                     return DNC.FanDance1;
@@ -889,7 +859,6 @@ namespace XIVComboExpandedPlugin
                 // Fan Dance 2 changes into Fan Dance 3 while flourishing.
                 if (actionID == DNC.FanDance2)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(DNC.Buffs.FlourishingFanDance))
                         return DNC.FanDance3;
                     return DNC.FanDance2;
@@ -901,7 +870,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == DNC.StandardStep)
                 {
-                    UpdateBuffAddress();
                     var gauge = GetJobGauge<DNCGauge>();
                     if (gauge.IsDancing() && HasBuff(DNC.Buffs.StandardStep))
                         if (gauge.NumCompleteSteps < 2)
@@ -910,9 +878,7 @@ namespace XIVComboExpandedPlugin
                             return DNC.StandardFinish2;
                 }
                 if (actionID == DNC.TechnicalStep)
-                {
-                    UpdateBuffAddress();
-                    var gauge = GetJobGauge<DNCGauge>();
+                {                    var gauge = GetJobGauge<DNCGauge>();
                     if (gauge.IsDancing() && HasBuff(DNC.Buffs.TechnicalStep))
                         if (gauge.NumCompleteSteps < 4)
                             return gauge.NextStep();
@@ -925,9 +891,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerFlourishFeature))
             {
                 if (actionID == DNC.Flourish)
-                {
-                    UpdateBuffAddress();
-                    if (HasBuff(DNC.Buffs.FlourishingFountain))
+                {                    if (HasBuff(DNC.Buffs.FlourishingFountain))
                         return DNC.Fountainfall;
                     if (HasBuff(DNC.Buffs.FlourishingCascade))
                         return DNC.ReverseCascade;
@@ -943,9 +907,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerSingleTargetMultibutton))
             {
                 if (actionID == DNC.Cascade)
-                {
-                    UpdateBuffAddress();
-                    // From Fountain
+                {                    // From Fountain
                     if (HasBuff(DNC.Buffs.FlourishingFountain))
                         return DNC.Fountainfall;
                     // From Cascade
@@ -962,9 +924,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerAoeMultibutton))
             {
                 if (actionID == DNC.Windmill)
-                {
-                    UpdateBuffAddress();
-                    // From Bladeshower
+                {                    // From Bladeshower
                     if (HasBuff(DNC.Buffs.FlourishingShower))
                         return DNC.Bloodshower;
                     // From Windmill
@@ -1008,7 +968,7 @@ namespace XIVComboExpandedPlugin
             #region BARD
 
             // Replace Wanderer's Minuet with PP when in WM.
-            if (Configuration.IsEnabled(CustomComboPreset.BardWandererPPFeature))
+            if (Configuration.IsEnabled(CustomComboPreset.BardWanderersPitchPerfectFeature))
             {
                 if (actionID == BRD.WanderersMinuet)
                 {
@@ -1023,7 +983,6 @@ namespace XIVComboExpandedPlugin
             {
                 if (actionID == BRD.HeavyShot || actionID == BRD.BurstShot)
                 {
-                    UpdateBuffAddress();
                     if (HasBuff(BRD.Buffs.StraightShotReady))
                     {
                         if (level >= BRD.Levels.RefulgentArrow)
@@ -1037,6 +996,44 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
+            if (Configuration.IsEnabled(CustomComboPreset.BardIronJawsFeature))
+            {
+                if (actionID == BRD.IronJaws)
+                {
+                    if (level < BRD.Levels.IronJaws)
+                    {
+                        var venomous = FindTargetBuff(BRD.Debuffs.VenomousBite);
+                        var windbite = FindTargetBuff(BRD.Debuffs.Windbite);
+                        if (venomous.HasValue && windbite.HasValue)
+                        {
+                            if (venomous?.Duration < windbite?.Duration)
+                                return BRD.VenomousBite;
+                            return BRD.Windbite;
+                        }
+                        else if (windbite.HasValue || level < BRD.Levels.Windbite)
+                            return BRD.VenomousBite;
+                        return BRD.Windbite;
+                    }
+                    if (level < BRD.Levels.BiteUpgrade)
+                    {
+                        var venomous = TargetHasBuff(BRD.Debuffs.VenomousBite);
+                        var windbite = TargetHasBuff(BRD.Debuffs.Windbite);
+                        if (venomous && windbite)
+                            return BRD.IronJaws;
+                        if (windbite)
+                            return BRD.VenomousBite;
+                        return BRD.Windbite;
+                    }
+                    var caustic = TargetHasBuff(BRD.Debuffs.CausticBite);
+                    var stormbite = TargetHasBuff(BRD.Debuffs.Stormbite);
+                    if (caustic && stormbite)
+                        return BRD.IronJaws;
+                    if (stormbite)
+                        return BRD.CausticBite;
+                    return BRD.Stormbite;
+                }
+            }
+
             #endregion
             // ====================================================================================
             #region MONK
@@ -1044,9 +1041,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.MnkAoECombo))
             {
                 if (actionID == MNK.Rockbreaker)
-                {
-                    UpdateBuffAddress();
-                    if (HasBuff(MNK.Buffs.PerfectBalance) || HasBuff(MNK.Buffs.FormlessFist))
+                {                    if (HasBuff(MNK.Buffs.PerfectBalance) || HasBuff(MNK.Buffs.FormlessFist))
                         return MNK.Rockbreaker;
                     if (HasBuff(MNK.Buffs.OpoOpoForm))
                         return MNK.ArmOfTheDestroyer;
@@ -1065,9 +1060,7 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.RedMageAoECombo))
             {
                 if (actionID == RDM.Veraero2)
-                {
-                    UpdateBuffAddress();
-                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
+                {                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
                     {
                         if (level >= RDM.Levels.Impact)
                             return RDM.Impact;
@@ -1077,9 +1070,7 @@ namespace XIVComboExpandedPlugin
                 }
 
                 if (actionID == RDM.Verthunder2)
-                {
-                    UpdateBuffAddress();
-                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
+                {                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
                     {
                         if (level >= RDM.Levels.Impact)
                             return RDM.Impact;
@@ -1119,9 +1110,7 @@ namespace XIVComboExpandedPlugin
                 if (actionID == RDM.Verstone)
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
-                        return RDM.Scorch;
-                    UpdateBuffAddress();
-                    if (HasBuff(RDM.Buffs.VerstoneReady))
+                        return RDM.Scorch;                    if (HasBuff(RDM.Buffs.VerstoneReady))
                         return RDM.Verstone;
                     if (level >= RDM.Levels.Jolt2)
                         return RDM.Jolt2;
@@ -1130,9 +1119,7 @@ namespace XIVComboExpandedPlugin
                 if (actionID == RDM.Verfire)
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
-                        return RDM.Scorch;
-                    UpdateBuffAddress();
-                    if (HasBuff(RDM.Buffs.VerfireReady))
+                        return RDM.Scorch;                    if (HasBuff(RDM.Buffs.VerfireReady))
                         return RDM.Verfire;
                     if (level >= RDM.Levels.Jolt2)
                         return RDM.Jolt2;
@@ -1148,6 +1135,30 @@ namespace XIVComboExpandedPlugin
 
         #region BuffArray
 
+        private bool HasBuff(short effectId) => FindBuff(effectId) != null;
+
+        private bool TargetHasBuff(short effectId) => FindTargetBuff(effectId) != null;
+
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId) => FindBuff(effectId, ClientState.LocalPlayer, null);
+
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindTargetBuff(short effectId) => FindBuff(effectId, ClientState.Targets.CurrentTarget, ClientState.LocalPlayer?.ActorId);
+
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId, Dalamud.Game.ClientState.Actors.Types.Actor actor, int? ownerId)
+        {
+            if (actor == null)
+                return null;
+
+            foreach (var status in actor.StatusEffects)
+            {
+                if (status.EffectId == effectId)
+                    if (!ownerId.HasValue || status.OwnerId == ownerId)
+                        return status;
+            }
+
+            return null;
+        }
+
+        /*
         private IntPtr ActiveBuffArray = IntPtr.Zero;
         private unsafe delegate int* GetBuffArray(long* address);
 
@@ -1182,6 +1193,7 @@ namespace XIVComboExpandedPlugin
             var callback = Marshal.GetDelegateForFunctionPointer<GetBuffArray>(step3);
             return (IntPtr)callback((long*)num) + 8;
         }
+        */
 
         #endregion
     }

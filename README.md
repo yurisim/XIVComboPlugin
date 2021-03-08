@@ -82,6 +82,7 @@ New additions from the original plugin are noted with a 🟢 icon.
 | WHM | Rapture into Misery | Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used |
 | BRD | Wanderer's into Pitch Perfect | Replaces Wanderer's Minuet with Pitch Perfect while in WM |
 | BRD | Heavy Shot into Straight Shot | Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced |
+| BRD | 🟢Iron Jaws Feature | Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available. |
 | MNK | Monk AoE Combo | Replaces Rockbreaker with the AoE combo chain, or Rockbreaker when Perfect Balance is active |
 | RDM | Red Mage AoE Combo | Replaces Veraero/thunder 2 with Impact when Dualcast or Swiftcast are active |
 | RDM | Redoublement combo | Replaces Redoublement with its combo chain, following enchantment rules |

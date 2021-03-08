@@ -4,7 +4,7 @@ namespace XIVComboExpandedPlugin
 {
     public enum CustomComboPreset
     {
-        // Last enum used: 62
+        // Last enum used: 63
         // ====================================================================================
         #region DRAGOON
 
@@ -225,10 +225,13 @@ namespace XIVComboExpandedPlugin
         #region BARD
 
         [CustomComboInfo("Wanderer's into Pitch Perfect", "Replaces Wanderer's Minuet with Pitch Perfect while in WM", BRD.JobID, BRD.WanderersMinuet)]
-        BardWandererPPFeature = 41,
+        BardWanderersPitchPerfectFeature = 41,
 
         [CustomComboInfo("Heavy Shot into Straight Shot", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced", BRD.JobID, BRD.HeavyShot, BRD.BurstShot)]
         BardStraightShotUpgradeFeature = 42,
+
+        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.", BRD.JobID, BRD.IronJaws)]
+        BardIronJawsFeature = 63,
 
         #endregion
         // ====================================================================================

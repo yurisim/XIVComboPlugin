@@ -19,6 +19,11 @@ namespace XIVComboExpandedPlugin
             // public const short placeholder = 0;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             // public const byte placeholder = 0;
@@ -44,6 +49,11 @@ namespace XIVComboExpandedPlugin
                 LeyLines = 737;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -59,12 +69,17 @@ namespace XIVComboExpandedPlugin
         public const byte JobID = 23;
 
         public const uint
-            WanderersMinuet = 3559,
-            PitchPerfect = 7404,
             HeavyShot = 97,
-            BurstShot = 16495,
             StraightShot = 98,
-            RefulgentArrow = 7409;
+            VenomousBite = 100,
+            Windbite = 113,
+            WanderersMinuet = 3559,
+            IronJaws = 3560,
+            PitchPerfect = 7404,
+            CausticBite = 7406,
+            Stormbite = 7407,
+            RefulgentArrow = 7409,
+            BurstShot = 16495;
 
         public static class Buffs
         {
@@ -72,9 +87,21 @@ namespace XIVComboExpandedPlugin
                 StraightShotReady = 122;
         }
 
+        public static class Debuffs
+        {
+            public const short
+                VenomousBite = 124,
+                Windbite = 129,
+                CausticBite = 1200,
+                Stormbite = 1201;
+        }
+
         public static class Levels
         {
             public const byte
+                Windbite = 30,
+                IronJaws = 56,
+                BiteUpgrade = 64,
                 RefulgentArrow = 70,
                 BurstShot = 76;
         }
@@ -90,6 +117,10 @@ namespace XIVComboExpandedPlugin
         {
             public const short
                 Swiftcast = 167;
+        }
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
         }
 
         public static class Levels
@@ -145,6 +176,11 @@ namespace XIVComboExpandedPlugin
                 FlourishingFanDance = 1820;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -184,6 +220,11 @@ namespace XIVComboExpandedPlugin
                 RaidenThrustReady = 1863;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -218,6 +259,10 @@ namespace XIVComboExpandedPlugin
         {
             public const short
                 Delirium = 1972;
+        }
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
         }
 
         public static class Levels
@@ -259,6 +304,11 @@ namespace XIVComboExpandedPlugin
                 ReadyToGouge = 1844;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -291,6 +341,11 @@ namespace XIVComboExpandedPlugin
             public const short
                 Requiescat = 1368,
                 SwordOath = 1902;
+        }
+
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
         }
 
         public static class Levels
@@ -331,6 +386,11 @@ namespace XIVComboExpandedPlugin
             // public const short placeholder = 0;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -366,6 +426,11 @@ namespace XIVComboExpandedPlugin
                 FormlessFist = 2513;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -392,6 +457,11 @@ namespace XIVComboExpandedPlugin
         {
             public const short
                 AssassinateReady = 1955;
+        }
+
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
         }
 
         public static class Levels
@@ -437,6 +507,11 @@ namespace XIVComboExpandedPlugin
                 Dualcast = 1249;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -476,6 +551,11 @@ namespace XIVComboExpandedPlugin
                 EyesOpen = 1252;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -502,6 +582,11 @@ namespace XIVComboExpandedPlugin
             Aetherflow = 166;
 
         public static class Buffs
+        {
+            // public const short placeholder = 0;
+        }
+
+        public static class Debuffs
         {
             // public const short placeholder = 0;
         }
@@ -539,6 +624,11 @@ namespace XIVComboExpandedPlugin
                 HellishConduit = 1867;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -565,6 +655,11 @@ namespace XIVComboExpandedPlugin
             // public const short placeholder = 0;
         }
 
+        public static class Debuffs
+        {
+            // public const short placeholder = 0;
+        }
+
         public static class Levels
         {
             public const byte
@@ -585,6 +680,11 @@ namespace XIVComboExpandedPlugin
             AfflatusMisery = 16535;
 
         public static class Buffs
+        {
+            // public const short placeholder = 0;
+        }
+
+        public static class Debuffs
         {
             // public const short placeholder = 0;
         }
