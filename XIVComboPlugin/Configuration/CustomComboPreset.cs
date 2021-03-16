@@ -4,7 +4,7 @@ namespace XIVComboExpandedPlugin
 {
     public enum CustomComboPreset
     {
-        // Last enum used: 63
+        // Last enum used: 65
         // ====================================================================================
         #region DRAGOON
 
@@ -95,6 +95,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Tsubame-gaeshi to Shoha", "Replace Tsubame-gaeshi with Shoha when meditation is 3", SAM.JobID, SAM.TsubameGaeshi)]
         SamuraiTsubameGaeshiShohaFeature = 61,
+
+        [CustomComboInfo("Iaijutsu to Tsubame-gaeshi", "Replace Iaijutsu with Tsubame-gaeshi when Sen is not empty\n(Use either the Tsubame-gaeshi version or this)", SAM.JobID, SAM.Iaijutsu)]
+        SamuraiIaijutsuTsubameGaeshiFeature = 64,
+
+        [CustomComboInfo("Iaijutsu to Shoha", "Replace Iaijutsu with Shoha when meditation is 3\n(Use either the Tsubame-gaeshi version or this)", SAM.JobID, SAM.Iaijutsu)]
+        SamuraiIaijutsuShohaFeature = 65,
 
         #endregion
         // ====================================================================================

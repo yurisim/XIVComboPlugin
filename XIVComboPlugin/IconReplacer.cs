@@ -382,7 +382,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.SamuraiKashaCombo))
             {
                 if (actionID == SAM.Kasha)
-                {                    if (HasBuff(SAM.Buffs.MeikyoShisui))
+                {
+                    if (HasBuff(SAM.Buffs.MeikyoShisui))
                         return SAM.Kasha;
                     if (comboTime > 0)
                     {
@@ -434,38 +435,27 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
-            // Turn Tsubame-gaeshi into Shoha when meditation is 3
-            // Thanks to grammernatzi
-            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiShohaFeature))
+            // Turn Tsubame-gaeshi into Shoha when meditation is 3, by grammernatzi
+            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiShohaFeature) && actionID == SAM.TsubameGaeshi ||
+                Configuration.IsEnabled(CustomComboPreset.SamuraiIaijutsuShohaFeature) && actionID == SAM.Iaijutsu)
             {
-                if (actionID == SAM.TsubameGaeshi)
-                {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
-                        return SAM.Shoha;
-                }
+                var gauge = GetJobGauge<SAMGauge>();
+                if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                    return SAM.Shoha;
             }
 
-            // Turn Tsubame-gaeshi into Iaijutsu when Sen is empty
-            // Requested by Sable
-            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature))
+            // Turn Tsubame-gaeshi into Iaijutsu when Sen is empty, requested by Sable
+            if (Configuration.IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature) && actionID == SAM.TsubameGaeshi ||
+                Configuration.IsEnabled(CustomComboPreset.SamuraiIaijutsuTsubameGaeshiFeature) && actionID == SAM.Iaijutsu)
             {
-                if (actionID == SAM.TsubameGaeshi)
+                var gauge = GetJobGauge<SAMGauge>();
+                if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
                 {
-                    var gauge = GetJobGauge<SAMGauge>();
-                    if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
-                    {
-                        var kaeshi = GetIconHook.Original(self, SAM.TsubameGaeshi);
-                        // "The Balance" approved
-                        // if (kaeshi == SAM.KaeshiHiganbana)
-                        //     return SAM.TsubameGaeshi;
-                        // else
-                        return kaeshi;
-                    }
-                    else
-                    {
-                        return GetIconHook.Original(self, SAM.Iaijutsu);
-                    }
+                    return GetIconHook.Original(self, SAM.TsubameGaeshi);
+                }
+                else
+                {
+                    return GetIconHook.Original(self, SAM.Iaijutsu);
                 }
             }
 
@@ -556,7 +546,8 @@ namespace XIVComboExpandedPlugin
                     if (Configuration.IsEnabled(CustomComboPreset.GunbreakerGnashingFangCont))
                     {
                         if (level >= GNB.Levels.Continuation)
-                        {                            if (HasBuff(GNB.Buffs.ReadyToRip))
+                        {
+                            if (HasBuff(GNB.Buffs.ReadyToRip))
                                 return GNB.JugularRip;
                             if (HasBuff(GNB.Buffs.ReadyToTear))
                                 return GNB.AbdomenTear;
@@ -878,7 +869,8 @@ namespace XIVComboExpandedPlugin
                             return DNC.StandardFinish2;
                 }
                 if (actionID == DNC.TechnicalStep)
-                {                    var gauge = GetJobGauge<DNCGauge>();
+                {
+                    var gauge = GetJobGauge<DNCGauge>();
                     if (gauge.IsDancing() && HasBuff(DNC.Buffs.TechnicalStep))
                         if (gauge.NumCompleteSteps < 4)
                             return gauge.NextStep();
@@ -891,7 +883,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerFlourishFeature))
             {
                 if (actionID == DNC.Flourish)
-                {                    if (HasBuff(DNC.Buffs.FlourishingFountain))
+                {
+                    if (HasBuff(DNC.Buffs.FlourishingFountain))
                         return DNC.Fountainfall;
                     if (HasBuff(DNC.Buffs.FlourishingCascade))
                         return DNC.ReverseCascade;
@@ -907,7 +900,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerSingleTargetMultibutton))
             {
                 if (actionID == DNC.Cascade)
-                {                    // From Fountain
+                {
+                    // From Fountain
                     if (HasBuff(DNC.Buffs.FlourishingFountain))
                         return DNC.Fountainfall;
                     // From Cascade
@@ -924,7 +918,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.DancerAoeMultibutton))
             {
                 if (actionID == DNC.Windmill)
-                {                    // From Bladeshower
+                {
+                    // From Bladeshower
                     if (HasBuff(DNC.Buffs.FlourishingShower))
                         return DNC.Bloodshower;
                     // From Windmill
@@ -1041,7 +1036,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.MnkAoECombo))
             {
                 if (actionID == MNK.Rockbreaker)
-                {                    if (HasBuff(MNK.Buffs.PerfectBalance) || HasBuff(MNK.Buffs.FormlessFist))
+                {
+                    if (HasBuff(MNK.Buffs.PerfectBalance) || HasBuff(MNK.Buffs.FormlessFist))
                         return MNK.Rockbreaker;
                     if (HasBuff(MNK.Buffs.OpoOpoForm))
                         return MNK.ArmOfTheDestroyer;
@@ -1060,7 +1056,8 @@ namespace XIVComboExpandedPlugin
             if (Configuration.IsEnabled(CustomComboPreset.RedMageAoECombo))
             {
                 if (actionID == RDM.Veraero2)
-                {                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
+                {
+                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
                     {
                         if (level >= RDM.Levels.Impact)
                             return RDM.Impact;
@@ -1070,7 +1067,8 @@ namespace XIVComboExpandedPlugin
                 }
 
                 if (actionID == RDM.Verthunder2)
-                {                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
+                {
+                    if (HasBuff(DoM.Buffs.Swiftcast) || HasBuff(RDM.Buffs.Dualcast))
                     {
                         if (level >= RDM.Levels.Impact)
                             return RDM.Impact;
@@ -1110,7 +1108,8 @@ namespace XIVComboExpandedPlugin
                 if (actionID == RDM.Verstone)
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
-                        return RDM.Scorch;                    if (HasBuff(RDM.Buffs.VerstoneReady))
+                        return RDM.Scorch;
+                    if (HasBuff(RDM.Buffs.VerstoneReady))
                         return RDM.Verstone;
                     if (level >= RDM.Levels.Jolt2)
                         return RDM.Jolt2;
@@ -1119,7 +1118,8 @@ namespace XIVComboExpandedPlugin
                 if (actionID == RDM.Verfire)
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
-                        return RDM.Scorch;                    if (HasBuff(RDM.Buffs.VerfireReady))
+                        return RDM.Scorch;
+                    if (HasBuff(RDM.Buffs.VerfireReady))
                         return RDM.Verfire;
                     if (level >= RDM.Levels.Jolt2)
                         return RDM.Jolt2;
