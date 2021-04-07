@@ -12,7 +12,7 @@ namespace XIVComboExpandedPlugin
         public int Version { get; set; } = 4;
 
         [JsonProperty("EnabledActionsV4")]
-        public HashSet<CustomComboPreset> EnabledActions = new HashSet<CustomComboPreset>();
+        public HashSet<CustomComboPreset> EnabledActions = new();
 
         public bool IsEnabled(CustomComboPreset preset) => EnabledActions.Contains(preset);
 
@@ -93,7 +93,7 @@ namespace XIVComboExpandedPlugin
 
         [JsonIgnore]
         [Obsolete("This was added to prevent serialization of another obsolete property")]
-        private List<bool> _HiddenActionsBacker = new List<bool>();
+        private List<bool> _HiddenActionsBacker = new();
 
 #pragma warning restore IDE1006 // Naming Styles
         #endregion

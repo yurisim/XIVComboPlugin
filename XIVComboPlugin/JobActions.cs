@@ -648,12 +648,14 @@ namespace XIVComboExpandedPlugin
         public const byte JobID = 21;
 
         public const uint
-            StormsPath = 42,
             HeavySwing = 31,
             Maim = 37,
+            Overpower = 41,
+            StormsPath = 42,
             StormsEye = 45,
+            RawIntuition = 3551,
             MythrilTempest = 16462,
-            Overpower = 41;
+            NascentFlash = 16464;
 
         public static class Buffs
         {
@@ -671,7 +673,8 @@ namespace XIVComboExpandedPlugin
                 Maim = 4,
                 StormsPath = 26,
                 MythrilTempest = 40,
-                StormsEye = 50;
+                StormsEye = 50,
+                NascentFlash = 76;
         }
     }
 

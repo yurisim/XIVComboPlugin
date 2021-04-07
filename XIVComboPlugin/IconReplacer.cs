@@ -23,7 +23,7 @@ namespace XIVComboExpandedPlugin
         private readonly Hook<IsIconReplaceableDelegate> IsIconReplaceableHook;
         private readonly Hook<GetIconDelegate> GetIconHook;
 
-        private GetActionCooldownSlotDelegate GetActionCooldownSlot;
+        private readonly GetActionCooldownSlotDelegate GetActionCooldownSlot;
         private IntPtr ActionManager = IntPtr.Zero;
 
         private readonly HashSet<uint> CustomIds = new();
@@ -347,6 +347,17 @@ namespace XIVComboExpandedPlugin
                         if (lastMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
                             return WAR.MythrilTempest;
                     return WAR.Overpower;
+                }
+            }
+
+            // Replace Nascent Flash with Raw Intuition if below level 76
+            if (Configuration.IsEnabled(CustomComboPreset.WarriorNascentFlashFeature))
+            {
+                if (actionID == WAR.NascentFlash)
+                {
+                    if (level >= WAR.Levels.NascentFlash)
+                        return WAR.NascentFlash;
+                    return WAR.RawIntuition;
                 }
             }
 
