@@ -2,37 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Dalamud.Game;
 using Dalamud.Game.Chat;
-using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.ClientState.Structs.JobGauge;
 using Dalamud.Hooking;
+using Dalamud.Plugin;
 
 namespace XIVComboExpandedPlugin
 {
     internal class IconReplacer
     {
-        private readonly ClientState ClientState;
+        private readonly DalamudPluginInterface Interface;
         private readonly PluginAddressResolver Address;
         private readonly XIVComboExpandedConfiguration Configuration;
 
         private delegate ulong IsIconReplaceableDelegate(uint actionID);
-        private delegate ulong GetIconDelegate(byte param1, uint param2);
+        private delegate ulong GetIconDelegate(IntPtr actionManager, uint actionID);
+        private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
 
         private readonly Hook<IsIconReplaceableDelegate> IsIconReplaceableHook;
         private readonly Hook<GetIconDelegate> GetIconHook;
 
+        private GetActionCooldownSlotDelegate GetActionCooldownSlot;
+        private IntPtr ActionManager = IntPtr.Zero;
+
         private readonly HashSet<uint> CustomIds = new();
 
-        public IconReplacer(ClientState clientState, SigScanner scanner, XIVComboExpandedConfiguration configuration)
+        public IconReplacer(DalamudPluginInterface pluginInterface, XIVComboExpandedConfiguration configuration)
         {
-            ClientState = clientState;
+            Interface = pluginInterface;
             Configuration = configuration;
 
             Address = new PluginAddressResolver();
-            Address.Setup(scanner);
+            Address.Setup(pluginInterface.TargetModuleScanner);
 
             UpdateEnabledActionIDs();
+
+            GetActionCooldownSlot = Marshal.GetDelegateForFunctionPointer<GetActionCooldownSlotDelegate>(Address.GetActionCooldown);
 
             GetIconHook = new Hook<GetIconDelegate>(Address.GetIcon, new GetIconDelegate(GetIconDetour), this);
             IsIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(Address.IsIconReplaceable, new IsIconReplaceableDelegate(IsIconReplaceableDetour), this);
@@ -63,7 +69,7 @@ namespace XIVComboExpandedPlugin
             CustomIds.UnionWith(actionIDs);
         }
 
-        private T GetJobGauge<T>() => ClientState.JobGauges.Get<T>();
+        private T GetJobGauge<T>() => Interface.ClientState.JobGauges.Get<T>();
 
         private ulong IsIconReplaceableDetour(uint actionID) => 1;
 
@@ -76,17 +82,19 @@ namespace XIVComboExpandedPlugin
         ///     For example, Souleater combo on DRK happens by dragging Souleater
         ///     onto your bar and mashing it.
         /// </summary>
-        private ulong GetIconDetour(byte self, uint actionID)
+        private ulong GetIconDetour(IntPtr actionManager, uint actionID)
         {
-            if (ClientState.LocalPlayer == null)
-                return GetIconHook.Original(self, actionID);
+            ActionManager = actionManager;
+
+            if (Interface.ClientState.LocalPlayer == null)
+                return GetIconHook.Original(actionManager, actionID);
 
             if (!CustomIds.Contains(actionID))
-                return GetIconHook.Original(self, actionID);
+                return GetIconHook.Original(actionManager, actionID);
 
             var lastMove = Marshal.ReadInt32(Address.LastComboMove);
             var comboTime = Marshal.PtrToStructure<float>(Address.ComboTimer);
-            var level = ClientState.LocalPlayer.Level;
+            var level = Interface.ClientState.LocalPlayer.Level;
 
             // ====================================================================================
             #region DRAGOON
@@ -451,11 +459,11 @@ namespace XIVComboExpandedPlugin
                 var gauge = GetJobGauge<SAMGauge>();
                 if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
                 {
-                    return GetIconHook.Original(self, SAM.TsubameGaeshi);
+                    return GetIconHook.Original(actionManager, SAM.TsubameGaeshi);
                 }
                 else
                 {
-                    return GetIconHook.Original(self, SAM.Iaijutsu);
+                    return GetIconHook.Original(actionManager, SAM.Iaijutsu);
                 }
             }
 
@@ -621,6 +629,23 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
+            if (Configuration.IsEnabled(CustomComboPreset.MachinistGaussRoundRicochetFeature))
+            {
+                if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
+                {
+                    var gaussCd = GetCooldown(MCH.GaussRound);
+                    var ricochetCd = GetCooldown(MCH.Ricochet);
+
+                    if (!gaussCd.IsCooldown && !ricochetCd.IsCooldown)
+                        return actionID;
+
+                    if (gaussCd.CooldownRemaining < ricochetCd.CooldownRemaining)
+                        return MCH.GaussRound;
+                    else
+                        return MCH.Ricochet;
+                }
+            }
+
             // Replace Heat Blast and Auto crossbow with Hypercharge when not overheated
             if (Configuration.IsEnabled(CustomComboPreset.MachinistOverheatFeature))
             {
@@ -714,18 +739,8 @@ namespace XIVComboExpandedPlugin
                 if (actionID == AST.Play)
                 {
                     var gauge = GetJobGauge<ASTGauge>();
-                    return gauge.DrawnCard() switch
-                    {
-                        CardType.BALANCE => AST.Balance,
-                        CardType.BOLE => AST.Bole,
-                        CardType.ARROW => AST.Arrow,
-                        CardType.SPEAR => AST.Spear,
-                        CardType.EWER => AST.Ewer,
-                        CardType.SPIRE => AST.Spire,
-                        // CardType.LORD => AST.LordOfCrowns,
-                        // CardType.LADY => AST.LadyOfCrowns,
-                        _ => AST.Draw,
-                    };
+                    if (gauge.DrawnCard() == CardType.NONE)
+                        return AST.Draw;
                 }
             }
 
@@ -1130,20 +1145,20 @@ namespace XIVComboExpandedPlugin
             #endregion
             // ====================================================================================
 
-            return GetIconHook.Original(self, actionID);
+            return GetIconHook.Original(actionManager, actionID);
         }
 
-        #region BuffArray
+        #region Buffs
 
         private bool HasBuff(short effectId) => FindBuff(effectId) != null;
 
         private bool TargetHasBuff(short effectId) => FindTargetBuff(effectId) != null;
 
-        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId) => FindBuff(effectId, ClientState.LocalPlayer, null);
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId) => FindBuff(effectId, Interface.ClientState.LocalPlayer, null);
 
-        private Dalamud.Game.ClientState.Structs.StatusEffect? FindTargetBuff(short effectId) => FindBuff(effectId, ClientState.Targets.CurrentTarget, ClientState.LocalPlayer?.ActorId);
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindTargetBuff(short effectId) => FindBuff(effectId, Interface.ClientState.Targets.CurrentTarget, Interface.ClientState.LocalPlayer?.ActorId);
 
-        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId, Dalamud.Game.ClientState.Actors.Types.Actor actor, int? ownerId)
+        private Dalamud.Game.ClientState.Structs.StatusEffect? FindBuff(short effectId, Actor actor, int? ownerId)
         {
             if (actor == null)
                 return null;
@@ -1158,42 +1173,43 @@ namespace XIVComboExpandedPlugin
             return null;
         }
 
-        /*
-        private IntPtr ActiveBuffArray = IntPtr.Zero;
-        private unsafe delegate int* GetBuffArray(long* address);
+        #endregion
 
-        private bool HasBuff(params short[] needle)
+        #region Cooldown
+
+        private readonly Dictionary<uint, byte> CooldownGroups = new();
+
+        private byte GetCooldownGroup(uint actionID)
         {
-            if (ActiveBuffArray == IntPtr.Zero)
-                return false;
+            if (CooldownGroups.TryGetValue(actionID, out var cooldownGroup))
+                return cooldownGroup;
 
-            for (var i = 0; i < 60; i++)
-                if (needle.Contains(Marshal.ReadInt16(ActiveBuffArray + (12 * i))))
-                    return true;
-            return false;
+            var sheet = Interface.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>();
+            var row = sheet.GetRow(actionID);
+
+            return CooldownGroups[actionID] = row.CooldownGroup;
         }
 
-        private void UpdateBuffAddress()
+        [StructLayout(LayoutKind.Explicit)]
+        public struct CooldownData
         {
-            try
-            {
-                ActiveBuffArray = FindBuffAddress();
-            }
-            catch (Exception)
-            {
-                ActiveBuffArray = IntPtr.Zero;
-            }
+            [FieldOffset(0x0)] public bool IsCooldown;
+            [FieldOffset(0x4)] public uint ActionID;
+            [FieldOffset(0x8)] public float CooldownElapsed;
+            [FieldOffset(0xC)] public float CooldownTotal;
+
+            public float CooldownRemaining => IsCooldown ? CooldownTotal - CooldownElapsed : 0;
         }
 
-        private unsafe IntPtr FindBuffAddress()
+        internal CooldownData GetCooldown(uint actionID)
         {
-            var num = Marshal.ReadIntPtr(Address.BuffVTableAddr);
-            var step2 = (IntPtr)(Marshal.ReadInt64(num) + 0x280);
-            var step3 = Marshal.ReadIntPtr(step2);
-            var callback = Marshal.GetDelegateForFunctionPointer<GetBuffArray>(step3);
-            return (IntPtr)callback((long*)num) + 8;
+            var cooldownGroup = GetCooldownGroup(actionID);
+            if (ActionManager == IntPtr.Zero)
+                return new CooldownData() { ActionID = actionID };
+
+            var cooldownPtr = GetActionCooldownSlot(ActionManager, cooldownGroup - 1);
+            return Marshal.PtrToStructure<CooldownData>(cooldownPtr);
         }
-        */
 
         #endregion
     }

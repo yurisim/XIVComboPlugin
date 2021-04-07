@@ -4,7 +4,7 @@ namespace XIVComboExpandedPlugin
 {
     public enum CustomComboPreset
     {
-        // Last enum used: 65
+        // Last enum used: 66
         // ====================================================================================
         #region DRAGOON
 
@@ -151,6 +151,9 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active", MCH.JobID, MCH.RookAutoturret, MCH.AutomatonQueen)]
         MachinistOverdriveFeature = 58,
+
+        [CustomComboInfo("Gauss Round / Ricochet Feature", "Replace Gauss Round and Ricochet with one or the other depending on which has more charges", MCH.JobID, MCH.GaussRound, MCH.Ricochet)]
+        MachinistGaussRoundRicochetFeature = 66,
 
         #endregion
         // ====================================================================================

@@ -371,6 +371,8 @@ namespace XIVComboExpandedPlugin
             SplitShot = 2866,
             HeatedSplitShot = 7411,
             SlugShot = 2868,
+            GaussRound = 2874,
+            Ricochet = 2890,
             HeatedSlugshot = 7412,
             Hypercharge = 17209,
             HeatBlast = 7410,
@@ -395,14 +397,17 @@ namespace XIVComboExpandedPlugin
         {
             public const byte
                 SlugShot = 2,
+                GaussRound = 15,
                 CleanShot = 26,
                 Hypercharge = 30,
                 HeatBlast = 35,
                 RookOverdrive = 40,
+                Ricochet = 50,
                 AutoCrossbow = 52,
                 HeatedSplitShot = 54,
                 HeatedSlugshot = 60,
                 HeatedCleanShot = 64,
+                ChargedActionMastery = 74,
                 QueenOverdrive = 80;
         }
     }
