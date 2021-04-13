@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>attick, daemitus</Authors>
     <Company>-</Company>
-    <Version>1.0.4.0</Version>
+    <Version>1.0.4.1</Version>
     <Description>This plugin condenses combos and mutually exclusive abilities onto a single button.</Description>
     <Copyright>Copyleft attick 2020 baybeeee</Copyright>
     <PackageProjectUrl>https://github.com/daemitus/XIVComboPlugin</PackageProjectUrl>
@@ -49,7 +49,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="1.2.0" />
+    <PackageReference Include="DalamudPackager" Version="1.2.1" />
     <!--<PackageReference Include="ILRepack" Version="2.0.18" GeneratePathProperty="true" />-->
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
@@ -71,8 +71,8 @@
       <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Lumina.Generated">
-      <HintPath>$(DalamudLibPath)Lumina.Generated.dll</HintPath>
+    <Reference Include="Lumina.Excel">
+      <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -96,7 +96,7 @@
   -->
 
   <Target Name="PackagePlugin" AfterTargets="CleanOutDir" Condition=" '$(Configuration)' == 'Release' ">
-    <Message Text="Starting DalamudPackager" Importance="high"/>
+    <Message Text="Starting DalamudPackager" Importance="high" />
     <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" VersionComponents="4" MakeZip="true" />
   </Target>
 </Project>
