@@ -4,7 +4,7 @@ namespace XIVComboExpandedPlugin
 {
     public enum CustomComboPreset
     {
-        // Last enum used: 67
+        // Last enum used: 68
         // ====================================================================================
         #region DRAGOON
 
@@ -155,6 +155,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active", MCH.JobID, MCH.RookAutoturret, MCH.AutomatonQueen)]
         MachinistOverdriveFeature = 58,
 
+        [SecretCustomCombo]
         [CustomComboInfo("Gauss Round / Ricochet Feature", "Replace Gauss Round and Ricochet with one or the other depending on which has more charges", MCH.JobID, MCH.GaussRound, MCH.Ricochet)]
         MachinistGaussRoundRicochetFeature = 66,
 
@@ -265,9 +266,15 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Verproc into Jolt", "Replaces Verstone/Verfire with Jolt/Scorch when no proc is available.", RDM.JobID, RDM.Verstone, RDM.Verfire)]
         RedMageVerprocCombo = 53,
 
+        [SecretCustomCombo]
+        [CustomComboInfo("Verdoublement Feature", "Replaces Redoublement with Verflare/Verholy after Enchanted Redoublement, whichever is more appropriate", RDM.JobID, RDM.Redoublement)]
+        RedMageVerdoublementFeature = 68,
+
         #endregion
         // ====================================================================================
     }
+
+    internal class SecretCustomComboAttribute : Attribute { }
 
     internal class CustomComboInfoAttribute : Attribute
     {

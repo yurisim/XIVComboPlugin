@@ -1109,6 +1109,26 @@ namespace XIVComboExpandedPlugin
                 if (actionID == RDM.Redoublement)
                 {
                     var gauge = GetJobGauge<RDMGauge>();
+
+                    if (Configuration.IsEnabled(CustomComboPreset.RedMageVerdoublementFeature))
+                    {
+                        if (lastMove == RDM.EnchantedRedoublement)
+                        {
+                            if (gauge.BlackGauge >= gauge.WhiteGauge && level >= RDM.Levels.Verholy)
+                            {
+                                if (HasBuff(RDM.Buffs.VerstoneReady) && !HasBuff(RDM.Buffs.VerfireReady) && (gauge.BlackGauge - gauge.WhiteGauge <= 9))
+                                    return RDM.Verflare;
+                                return RDM.Verholy;
+                            }
+                            else if (level >= RDM.Levels.Verflare)
+                            {
+                                if ((!HasBuff(RDM.Buffs.VerstoneReady) && HasBuff(RDM.Buffs.VerfireReady)) && level >= RDM.Levels.Verholy && (gauge.WhiteGauge - gauge.BlackGauge <= 9))
+                                    return RDM.Verholy;
+                                return RDM.Verflare;
+                            }
+                        }
+                    }
+
                     if ((lastMove == RDM.Riposte || lastMove == RDM.EnchantedRiposte) && level >= RDM.Levels.Zwerchhau)
                     {
                         if (gauge.BlackGauge >= 25 && gauge.WhiteGauge >= 25)
@@ -1135,16 +1155,21 @@ namespace XIVComboExpandedPlugin
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
                         return RDM.Scorch;
+                    if (lastMove == RDM.EnchantedRedoublement && level >= RDM.Levels.Verholy)
+                        return RDM.Verholy;
                     if (HasBuff(RDM.Buffs.VerstoneReady))
                         return RDM.Verstone;
                     if (level >= RDM.Levels.Jolt2)
                         return RDM.Jolt2;
                     return RDM.Jolt;
                 }
+
                 if (actionID == RDM.Verfire)
                 {
                     if (level >= RDM.Levels.Scorch && (lastMove == RDM.Verflare || lastMove == RDM.Verholy))
                         return RDM.Scorch;
+                    if (lastMove == RDM.EnchantedRedoublement && level >= RDM.Levels.Verflare)
+                        return RDM.Verflare;
                     if (HasBuff(RDM.Buffs.VerfireReady))
                         return RDM.Verfire;
                     if (level >= RDM.Levels.Jolt2)

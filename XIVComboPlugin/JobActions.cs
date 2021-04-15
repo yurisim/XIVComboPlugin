@@ -524,6 +524,8 @@ namespace XIVComboExpandedPlugin
                 Redoublement = 50,
                 Jolt2 = 62,
                 Impact = 66,
+                Verflare = 68,
+                Verholy = 70,
                 Scorch = 80;
         }
     }

@@ -77,6 +77,8 @@ namespace XIVComboExpandedPlugin
 
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5));
 
+            bool showSecrets = Configuration.ShowSecrets;
+
             int i = 1;
             foreach (var jobName in GroupedPresets.Keys)
             {
@@ -85,6 +87,10 @@ namespace XIVComboExpandedPlugin
                     foreach (var (preset, info) in GroupedPresets[jobName])
                     {
                         bool enabled = Configuration.IsEnabled(preset);
+                        bool secret = Configuration.IsSecret(preset);
+
+                        if (secret && !showSecrets)
+                            continue;
 
                         ImGui.PushItemWidth(200);
                         if (ImGui.Checkbox(info.FancyName, ref enabled))
@@ -160,6 +166,14 @@ namespace XIVComboExpandedPlugin
                             Interface.Framework.Gui.Chat.Print($"{preset} SET");
                         }
                     }
+                    break;
+                case "secrets":
+                    Configuration.ShowSecrets = !Configuration.ShowSecrets;
+                    if (Configuration.ShowSecrets)
+                        Interface.Framework.Gui.Chat.Print($"Secret combos are now shown");
+                    else
+                        Interface.Framework.Gui.Chat.Print($"Secret combos are now hidden");
+                    SaveConfiguration();
                     break;
                 case "toggle":
                     {
