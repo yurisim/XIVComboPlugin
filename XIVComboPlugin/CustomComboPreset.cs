@@ -176,6 +176,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up.", BLM.JobID, BLM.Fire)]
         BlackFire3Feature = 70,
 
+        [CustomComboInfo("Blizzard 1/2/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice. Freeze becomes Blizzard 2 when synced.", BLM.JobID, BLM.Blizzard, BLM.Freeze)]
+        BlackBlizzardFeature = 71,
+
         #endregion
         // ====================================================================================
         #region ASTROLOGIAN

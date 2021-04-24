@@ -726,6 +726,19 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
+            if (Configuration.IsEnabled(CustomComboPreset.BlackBlizzardFeature))
+            {
+                if (actionID == BLM.Blizzard)
+                {
+                    var gauge = GetJobGauge<BLMGauge>();
+                    if (level >= BLM.Levels.Blizzard3 && !gauge.InUmbralIce())
+                        return BLM.Blizzard3;
+                }
+
+                if (actionID == BLM.Freeze && level < BLM.Levels.Freeze)
+                    return BLM.Blizzard2;
+            }
+
             // Umbral Soul and Transpose
             if (Configuration.IsEnabled(CustomComboPreset.BlackManaFeature))
             {
