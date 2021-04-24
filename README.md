@@ -1,4 +1,4 @@
-﻿# XIVComboPlugin
+# XIVComboPlugin
 This plugin condenses combos and mutually exclusive abilities onto a single button. Thanks to Meli for the initial start, and obviously goat for making any of this possible.
 
 ## About
@@ -42,6 +42,7 @@ New additions from the original plugin are noted with a 🟢 icon.
 | WAR | Storms Path Combo | Replace Storms Path with its combo chain |
 | WAR | Storms Eye Combo | Replace Storms Eye with its combo chain |
 | WAR | Mythril Tempest Combo | Replace Mythril Tempest with its combo chain |
+| WAR | Nascent Flash Feature | Replace Nascent Flash with Intuition when synced | 
 | SAM | Yukikaze Combo | Replace Yukikaze with its combo chain |
 | SAM | Gekko Combo | Replace Gekko with its combo chain |
 | SAM | Kasha Combo | Replace Kasha with its combo chain |
@@ -50,6 +51,8 @@ New additions from the original plugin are noted with a 🟢 icon.
 | SAM | Seigan to Third Eye | Replace Seigan with Third Eye when not procced |
 | SAM | 🟢Tsubame-gaeshi to Iaijutsu | Replace Tsubame-gaeshi with Iaijutsu when Sen is empty |
 | SAM | 🟢Tsubame-gaeshi to Shoha | Replace Tsubame-gaeshi with Shoha when meditation is 3 |
+| SAM | 🟢Iaijutsu to Tsubame-gaeshi | Replace Iaijutsu with Tsubame-gaeshi when Sen is not empty |
+| SAM | 🟢Iaijutsu to Shoha | Replace Iaijutsu with Shoha when meditation is 3 |
 | NIN | Armor Crush Combo | Replace Armor Crush with its combo chain |
 | NIN | Aeolian Edge Combo | Replace Aeolian Edge with its combo chain |
 | NIN | Hakke Mujinsatsu Combo | Replace Hakke Mujinsatsu with its combo chain |
@@ -63,9 +66,12 @@ New additions from the original plugin are noted with a 🟢 icon.
 | MCH | Spread Shot Heat | Replace Spread Shot with Auto Crossbow when overheated |
 | MCH | 🟢Hypercharge Feature | Replace Heat Blast and Auto Crossbow with Hypercharge when not overheated |
 | MCH | 🟢Overdrive Feature | Replace Rook Autoturret and Automaton Queen with Overdrive while active |
+<!--| MCH | 🟢Gauss Round Feature | Replace Gauss Round and Ricochet with one or the other depending on which has more charges |-->
 | BLM | Enochian Stance Switcher | Change Enochian to Fire 4 or Blizzard 4 depending on stance |
 | BLM | Umbral Soul/Transpose Switcher | Change Transpose into Umbral Soul when Umbral Soul is usable |
 | BLM | (Between the) Ley Lines | Change Ley Lines into BTL when Ley Lines is active |
+| BLM | Fire 1/3 Feature | Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up |
+| BLM | Blizzard 1/2/3 Feature | Blizzard 1 becomes Blizzard 3 when out of Umbral Ice. Freeze becomes Blizzard 2 when synced |
 | AST | Draw on Play | Play turns into Draw when no card is drawn, as well as the usual Play behavior |
 | SMN | Demi-summon combiners | Dreadwyrm Trance, Summon Bahamut, and Firebird Trance are now one button.\nDeathflare, Enkindle Bahamut, and Enkindle Phoenix are now one button |
 | SMN | Brand of Purgatory Combo | Replaces Fountain of Fire with Brand of Purgatory when under the affect of Hellish Conduit |
@@ -74,7 +80,7 @@ New additions from the original plugin are noted with a 🟢 icon.
 | SCH | Seraph Fey Blessing/Consolation | Change Fey Blessing into Consolation when Seraph is out |
 | SCH | ED Aetherflow | Change Energy Drain into Aetherflow when you have no more Aetherflow stacks |
 | DNC | Fan Dance Combos | Change Fan Dance and Fan Dance 2 into Fan Dance 3 while flourishing |
-| DNC | 🟢Dance Step Combo | Change Standard Step and Technical Step into each dance step while dancing |
+<!--| DNC | 🟢Dance Step Combo | Change Standard Step and Technical Step into each dance step while dancing |-->
 | DNC | 🟢Flourish Proc Saver | Change Flourish into any available procs before using |
 | DNC | 🟢Single Target Multibutton | Change Cascade into procs and combos as available |
 | DNC | 🟢AoE Multibutton | Change Windmill into procs and combos as available |

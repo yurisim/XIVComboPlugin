@@ -16,9 +16,9 @@ namespace XIVComboExpandedPlugin
         public HashSet<CustomComboPreset> EnabledActions = new();
 
         [JsonProperty("Debug")]
-        public bool ShowSecrets = false;
+        public bool EnableSecretCombos = false;
 
-        public bool IsEnabled(CustomComboPreset preset) => EnabledActions.Contains(preset);
+        public bool IsEnabled(CustomComboPreset preset) => EnabledActions.Contains(preset) && (EnableSecretCombos || !IsSecret(preset));
 
         public bool IsSecret(CustomComboPreset preset) => preset.GetAttribute<SecretCustomComboAttribute>() != default;
 

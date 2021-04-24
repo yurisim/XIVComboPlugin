@@ -77,7 +77,7 @@ namespace XIVComboExpandedPlugin
 
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5));
 
-            bool showSecrets = Configuration.ShowSecrets;
+            bool showSecrets = Configuration.EnableSecretCombos;
 
             int i = 1;
             foreach (var jobName in GroupedPresets.Keys)
@@ -168,8 +168,8 @@ namespace XIVComboExpandedPlugin
                     }
                     break;
                 case "secrets":
-                    Configuration.ShowSecrets = !Configuration.ShowSecrets;
-                    if (Configuration.ShowSecrets)
+                    Configuration.EnableSecretCombos = !Configuration.EnableSecretCombos;
+                    if (Configuration.EnableSecretCombos)
                         Interface.Framework.Gui.Chat.Print($"Secret combos are now shown");
                     else
                         Interface.Framework.Gui.Chat.Print($"Secret combos are now hidden");
