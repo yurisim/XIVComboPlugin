@@ -95,6 +95,7 @@ namespace XIVComboExpandedPlugin
             var lastMove = Marshal.ReadInt32(Address.LastComboMove);
             var comboTime = Marshal.PtrToStructure<float>(Address.ComboTimer);
             var level = Interface.ClientState.LocalPlayer.Level;
+            var mp = Interface.ClientState.LocalPlayer.CurrentMp;
 
             // ====================================================================================
             #region DRAGOON
@@ -712,8 +713,16 @@ namespace XIVComboExpandedPlugin
                         if (level >= BLM.Levels.Fire4)
                             return BLM.Fire4;
                     }
+                }
+            }
 
-                    return BLM.Enochian;
+            if (Configuration.IsEnabled(CustomComboPreset.BlackFire3Feature))
+            {
+                if (actionID == BLM.Fire)
+                {
+                    var gauge = GetJobGauge<BLMGauge>();
+                    if (level >= BLM.Levels.Fire3 && (!gauge.InAstralFire() || HasBuff(BLM.Buffs.Firestarter)))
+                        return BLM.Fire3;
                 }
             }
 

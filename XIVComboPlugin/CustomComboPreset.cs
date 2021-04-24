@@ -120,6 +120,7 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Dream to Assassinate", "Replace Dream Within a Dream with Assassinate when Assassinate Ready", NIN.JobID, NIN.DreamWithinADream)]
         NinjaAssassinateFeature = 45,
+
         #endregion
         // ====================================================================================
         #region GUNBREAKER
@@ -171,6 +172,9 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("(Between the) Ley Lines", "Change Ley Lines into BTL when Ley Lines is active", BLM.JobID, BLM.LeyLines)]
         BlackLeyLines = 56,
+
+        [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up.", BLM.JobID, BLM.Fire)]
+        BlackFire3Feature = 70,
 
         #endregion
         // ====================================================================================
