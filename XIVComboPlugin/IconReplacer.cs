@@ -292,6 +292,23 @@ namespace XIVComboExpandedPlugin
                 }
             }
 
+            // Replace Holy Spirit/Circle with Confiteor if under 4000 MP
+            if (Configuration.IsEnabled(CustomComboPreset.PaladinConfiteorFeature))
+            {
+                if (actionID == PLD.HolySpirit)
+                {
+                    if (HasBuff(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && mp < 4000)
+                        return PLD.Confiteor;
+                    return PLD.HolySpirit;
+                }
+                if (actionID == PLD.HolyCircle)
+                {
+                    if (HasBuff(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && mp < 4000)
+                        return PLD.Confiteor;
+                    return PLD.HolyCircle;
+                }
+            }
+
             // Replace Requiescat with Confiteor when under the effect of Requiescat
             if (Configuration.IsEnabled(CustomComboPreset.PaladinRequiescatCombo))
             {

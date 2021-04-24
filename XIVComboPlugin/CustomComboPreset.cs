@@ -55,6 +55,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiter while under the effect of Requiescat", PLD.JobID, PLD.Requiescat)]
         PaladinRequiescatCombo = 55,
 
+        [SecretCustomCombo]
+        [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor while MP is under 4000 and Requiescat is up.", PLD.JobID, PLD.HolySpirit, PLD.HolyCircle)]
+        PaladinConfiteorFeature = 69,
+
         #endregion
         // ====================================================================================
         #region WARRIOR
