@@ -76,17 +76,7 @@ namespace XIVComboExpandedPlugin.Combos
                 //     return BRD.ApexArrow;
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
-                {
-                    if (level >= BRD.Levels.RefulgentArrow)
-                        return BRD.RefulgentArrow;
-
-                    return BRD.StraightShot;
-                }
-
-                if (level >= BRD.Levels.BurstShot)
-                    return BRD.BurstShot;
-
-                return BRD.HeavyShot;
+                    return OriginalHook(BRD.RefulgentArrow);
             }
 
             return actionID;
