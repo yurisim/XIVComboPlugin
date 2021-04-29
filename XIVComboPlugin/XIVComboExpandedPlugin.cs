@@ -86,13 +86,14 @@ namespace XIVComboExpandedPlugin
                 {
                     foreach (var (preset, info) in GroupedPresets[jobName])
                     {
-                        bool enabled = Configuration.IsEnabled(preset);
-                        bool secret = Configuration.IsSecret(preset);
+                        var enabled = Configuration.IsEnabled(preset);
+                        var secret = Configuration.IsSecret(preset);
 
                         if (secret && !showSecrets)
                             continue;
 
                         ImGui.PushItemWidth(200);
+
                         if (ImGui.Checkbox(info.FancyName, ref enabled))
                         {
                             if (enabled)
@@ -102,10 +103,26 @@ namespace XIVComboExpandedPlugin
                             IconReplacer.UpdateEnabledActionIDs();
                             SaveConfiguration();
                         }
+
                         ImGui.PopItemWidth();
 
                         ImGui.TextColored(new Vector4(0.68f, 0.68f, 0.68f, 1.0f), $"#{i}: {info.Description}");
                         ImGui.Spacing();
+
+                        if (preset == CustomComboPreset.DancerDanceComboCompatibility && enabled)
+                        {
+                            var actions = Configuration.DancerDanceCompatActionIDs.Select(i => (int)i).ToArray();
+                            if (ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0) ||
+                                ImGui.InputInt("Entrechat (Blue) ActionID", ref actions[1], 0) ||
+                                ImGui.InputInt("Jete (Green) ActionID", ref actions[2], 0) ||
+                                ImGui.InputInt("Pirouette (Yellow) ActionID", ref actions[3], 0))
+                            {
+                                Configuration.DancerDanceCompatActionIDs = actions.Select(i => (uint)i).ToArray();
+                                IconReplacer.UpdateEnabledActionIDs();
+                                SaveConfiguration();
+                            }
+                            ImGui.Spacing();
+                        }
 
                         i++;
                     }

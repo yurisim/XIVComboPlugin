@@ -4,6 +4,7 @@ using Dalamud.Plugin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using XIVComboExpandedPlugin.Combos;
 
 namespace XIVComboExpandedPlugin
 {
@@ -17,6 +18,14 @@ namespace XIVComboExpandedPlugin
 
         [JsonProperty("Debug")]
         public bool EnableSecretCombos = false;
+
+        public uint[] DancerDanceCompatActionIDs = new uint[]
+        {
+            DNC.Cascade,
+            DNC.Flourish,
+            DNC.FanDance1,
+            DNC.FanDance2,
+        };
 
         public bool IsEnabled(CustomComboPreset preset) => EnabledActions.Contains(preset) && (EnableSecretCombos || !IsSecret(preset));
 
