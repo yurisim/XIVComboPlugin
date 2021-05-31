@@ -110,12 +110,20 @@ namespace XIVComboExpandedPlugin
         /// </summary>
         private uint GetIconDetour(IntPtr actionManager, uint actionID)
         {
-            ActionManager = actionManager;
+            try
+            {
+                ActionManager = actionManager;
 
-            if (LocalPlayer == null || !CustomIds.Contains(actionID))
-                return OriginalHook(actionID);
+                if (LocalPlayer == null || !CustomIds.Contains(actionID))
+                    return OriginalHook(actionID);
 
-            return GetNewAction(actionID, LastComboMove, ComboTime, LocalPlayer.Level);
+                return GetNewAction(actionID, LastComboMove, ComboTime, LocalPlayer.Level);
+            }
+            catch (Exception ex)
+            {
+                PluginLog.Error(ex, "Don't crash the game");
+                return GetIconHook.Original(actionManager, actionID);
+            }
         }
 
         #region Getters
@@ -146,7 +154,7 @@ namespace XIVComboExpandedPlugin
 
         internal Structs.StatusEffect? FindTargetEffect(short effectId) => FindEffect(effectId, CurrentTarget, LocalPlayer?.ActorId);
 
-        internal Structs.StatusEffect? FindEffect(short effectId, Actor actor, int? ownerId)
+        internal static Structs.StatusEffect? FindEffect(short effectId, Actor actor, int? ownerId)
         {
             if (actor == null)
                 return null;

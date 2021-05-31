@@ -9,11 +9,11 @@ using System.Numerics;
 
 namespace XIVComboExpandedPlugin
 {
-    public class XIVComboExpandedPlugin : IDalamudPlugin
+    public sealed class XIVComboExpandedPlugin : IDalamudPlugin
     {
         public string Name => "XIV Combo Expanded Plugin";
-        public string Command => "/pcombo";
 
+        private readonly string Command = "/pcombo";
         internal XIVComboExpandedConfiguration Configuration;
         internal const int CURRENT_CONFIG_VERSION = 4;
 

@@ -55,27 +55,27 @@ namespace XIVComboExpandedPlugin.Combos
 
         #region Passthru
 
-        protected uint OriginalHook(uint actionID) => IconReplacer.OriginalHook(actionID);
+        protected static uint OriginalHook(uint actionID) => IconReplacer.OriginalHook(actionID);
 
-        protected PlayerCharacter LocalPlayer => IconReplacer.LocalPlayer;
+        protected static PlayerCharacter LocalPlayer => IconReplacer.LocalPlayer;
 
-        protected Actor CurrentTarget => IconReplacer.CurrentTarget;
+        protected static Actor CurrentTarget => IconReplacer.CurrentTarget;
 
-        protected bool IsEnabled(CustomComboPreset preset) => Configuration.IsEnabled(preset);
+        protected static bool IsEnabled(CustomComboPreset preset) => Configuration.IsEnabled(preset);
 
-        protected bool HasCondition(ConditionFlag flag) => IconReplacer.HasCondition(flag);
+        protected static bool HasCondition(ConditionFlag flag) => IconReplacer.HasCondition(flag);
 
-        protected bool HasEffect(short effectID) => IconReplacer.HasEffect(effectID);
+        protected static bool HasEffect(short effectID) => IconReplacer.HasEffect(effectID);
 
-        protected bool TargetHasEffect(short effectID) => IconReplacer.TargetHasEffect(effectID);
+        protected static bool TargetHasEffect(short effectID) => IconReplacer.TargetHasEffect(effectID);
 
-        protected Structs.StatusEffect? FindEffect(short effectId) => IconReplacer.FindEffect(effectId);
+        protected static Structs.StatusEffect? FindEffect(short effectId) => IconReplacer.FindEffect(effectId);
 
-        protected Structs.StatusEffect? FindTargetEffect(short effectId) => IconReplacer.FindTargetEffect(effectId);
+        protected static Structs.StatusEffect? FindTargetEffect(short effectId) => IconReplacer.FindTargetEffect(effectId);
 
-        protected CooldownData GetCooldown(uint actionID) => IconReplacer.GetCooldown(actionID);
+        protected static CooldownData GetCooldown(uint actionID) => IconReplacer.GetCooldown(actionID);
 
-        protected T GetJobGauge<T>() => IconReplacer.GetJobGauge<T>();
+        protected static T GetJobGauge<T>() => IconReplacer.GetJobGauge<T>();
 
         #endregion
     }

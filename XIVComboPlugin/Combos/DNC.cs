@@ -76,16 +76,16 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var actionIDs = Configuration.DancerDanceCompatActionIDs;
 
-                if (actionID == actionIDs[0] || actionIDs[0] == 0 && actionID == DNC.Cascade)
+                if (actionID == actionIDs[0] || (actionIDs[0] == 0 && actionID == DNC.Cascade))
                     return OriginalHook(DNC.Cascade);
 
-                if (actionID == actionIDs[1] || actionIDs[1] == 0 && actionID == DNC.Flourish)
+                if (actionID == actionIDs[1] || (actionIDs[1] == 0 && actionID == DNC.Flourish))
                     return OriginalHook(DNC.Fountain);
 
-                if (actionID == actionIDs[2] || actionIDs[2] == 0 && actionID == DNC.FanDance1)
+                if (actionID == actionIDs[2] || (actionIDs[2] == 0 && actionID == DNC.FanDance1))
                     return OriginalHook(DNC.ReverseCascade);
 
-                if (actionID == actionIDs[3] || actionIDs[3] == 0 && actionID == DNC.FanDance2)
+                if (actionID == actionIDs[3] || (actionIDs[3] == 0 && actionID == DNC.FanDance2))
                     return OriginalHook(DNC.Fountainfall);
             }
 
