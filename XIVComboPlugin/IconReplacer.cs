@@ -47,8 +47,8 @@ namespace XIVComboExpandedPlugin
 
             GetActionCooldownSlot = Marshal.GetDelegateForFunctionPointer<GetActionCooldownSlotDelegate>(Address.GetActionCooldown);
 
-            GetIconHook = new Hook<GetIconDelegate>(Address.GetIcon, new GetIconDelegate(GetIconDetour), this);
-            IsIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(Address.IsIconReplaceable, new IsIconReplaceableDelegate(IsIconReplaceableDetour), this);
+            GetIconHook = new Hook<GetIconDelegate>(Address.GetIcon, GetIconDetour);
+            IsIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(Address.IsIconReplaceable, IsIconReplaceableDetour);
 
             GetIconHook.Enable();
             IsIconReplaceableHook.Enable();
@@ -83,6 +83,7 @@ namespace XIVComboExpandedPlugin
                 .SelectMany(comboInfo => comboInfo.ActionIDs)
                 .Concat(Configuration.DancerDanceCompatActionIDs)
                 .ToHashSet();
+
             CustomIds.Clear();
             CustomIds.UnionWith(actionIDs);
         }
@@ -154,12 +155,15 @@ namespace XIVComboExpandedPlugin
 
         internal Structs.StatusEffect? FindTargetEffect(short effectId) => FindEffect(effectId, CurrentTarget, LocalPlayer?.ActorId);
 
-        internal static Structs.StatusEffect? FindEffect(short effectId, Actor actor, int? ownerId)
+        internal static Structs.StatusEffect? FindEffect(short effectId, Actor actor, uint? ownerId)
         {
             if (actor == null)
                 return null;
 
-            foreach (var status in actor.StatusEffects)
+            if (actor is not Chara chara)
+                return null;
+
+            foreach (var status in chara.StatusEffects)
             {
                 if (status.EffectId == effectId)
                     if (!ownerId.HasValue || status.OwnerId == ownerId)
