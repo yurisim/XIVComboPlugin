@@ -4,6 +4,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class SMN
     {
+        public const byte ClassID = 15;
         public const byte JobID = 27;
 
         public const uint

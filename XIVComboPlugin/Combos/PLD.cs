@@ -1,7 +1,8 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class PLD
     {
+        public const byte ClassID = 1;
         public const byte JobID = 19;
 
         public const uint

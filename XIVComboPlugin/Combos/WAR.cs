@@ -1,9 +1,8 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
-
-namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos
 {
     internal static class WAR
     {
+        public const byte ClassID = 3;
         public const byte JobID = 21;
 
         public const uint

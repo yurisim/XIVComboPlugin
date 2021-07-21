@@ -1,4 +1,4 @@
-using Dalamud.Game.Text;
+using Dalamud;
 using System;
 using XIVComboExpandedPlugin.Combos;
 
@@ -362,8 +362,10 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
     }
 
+    [AttributeUsage(AttributeTargets.Field)]
     internal class SecretCustomComboAttribute : Attribute { }
 
+    [AttributeUsage(AttributeTargets.Field)]
     internal class CustomComboInfoAttribute : Attribute
     {
         internal CustomComboInfoAttribute(string fancyName, string description, byte jobID, params uint[] actionIDs)

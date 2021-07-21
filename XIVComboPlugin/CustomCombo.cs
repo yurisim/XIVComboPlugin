@@ -22,6 +22,8 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected abstract CustomComboPreset Preset { get; }
 
+        protected byte ClassID { get; }
+
         protected byte JobID { get; set; }
 
         protected virtual uint[] ActionIDs { get; set; }
@@ -30,6 +32,20 @@ namespace XIVComboExpandedPlugin.Combos
         {
             var presetInfo = Preset.GetInfo();
             JobID = presetInfo.JobID;
+            ClassID = JobID switch
+            {
+                BLM.JobID => BLM.ClassID,
+                BRD.JobID => BRD.ClassID,
+                DRG.JobID => DRG.ClassID,
+                MNK.JobID => MNK.ClassID,
+                NIN.JobID => NIN.ClassID,
+                PLD.JobID => PLD.ClassID,
+                SCH.JobID => SCH.ClassID,
+                SMN.JobID => SMN.ClassID,
+                WAR.JobID => WAR.ClassID,
+                WHM.JobID => WHM.ClassID,
+                _ => 0xFF,
+            };
             ActionIDs = presetInfo.ActionIDs;
         }
 
@@ -40,7 +56,11 @@ namespace XIVComboExpandedPlugin.Combos
             if (!IsEnabled(Preset))
                 return false;
 
-            if (JobID != LocalPlayer.ClassJob.Id || !ActionIDs.Contains(actionID))
+            var classJobID = LocalPlayer.ClassJob.Id;
+            if (JobID != classJobID && ClassID != classJobID)
+                return false;
+
+            if (!ActionIDs.Contains(actionID))
                 return false;
 
             var resultingActionID = Invoke(actionID, lastComboMove, comboTime, level);

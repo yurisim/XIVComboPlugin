@@ -81,7 +81,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == AST.Benefic2)
             {
-                if (level < (AST.Levels.Benefic2))
+                if (level < AST.Levels.Benefic2)
                     return AST.Benefic;
             }
 

@@ -1,3 +1,4 @@
+using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.Text;
 using Dalamud.Plugin;
@@ -35,7 +36,7 @@ namespace XIVComboExpandedPlugin
 #pragma warning disable IDE1006 // Naming Styles
 
         [Flags]
-        [Obsolete]
+        [Obsolete("Old combo presets")]
         public enum LegacyCustomComboPreset : long
         {
             None = 0,

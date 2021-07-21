@@ -4,6 +4,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class WHM
     {
+        public const byte ClassID = 6;
         public const byte JobID = 24;
 
         public const uint

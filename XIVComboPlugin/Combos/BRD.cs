@@ -4,6 +4,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class BRD
     {
+        public const byte ClassID = 5;
         public const byte JobID = 23;
 
         public const uint

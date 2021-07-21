@@ -109,7 +109,7 @@ namespace XIVComboExpandedPlugin.Combos
                         }
                         else if (level >= RDM.Levels.Verflare)
                         {
-                            if ((!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady)) && level >= RDM.Levels.Verholy && (gauge.WhiteGauge - gauge.BlackGauge <= 9))
+                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && level >= RDM.Levels.Verholy && (gauge.WhiteGauge - gauge.BlackGauge <= 9))
                                 return RDM.Verholy;
 
                             return RDM.Verflare;
@@ -178,7 +178,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocComboPlus))
                 {
-                    if (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast) && level >= RDM.Levels.Verthunder)
+                    if ((HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast)) && level >= RDM.Levels.Verthunder)
                         return RDM.Verthunder;
                 }
 

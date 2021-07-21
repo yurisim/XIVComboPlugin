@@ -4,6 +4,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class BLM
     {
+        public const byte ClassID = 7;
         public const byte JobID = 25;
 
         public const uint

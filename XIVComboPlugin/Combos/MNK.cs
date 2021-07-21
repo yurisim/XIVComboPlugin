@@ -2,6 +2,7 @@
 {
     internal static class MNK
     {
+        public const byte ClassID = 2;
         public const byte JobID = 20;
 
         public const uint

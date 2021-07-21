@@ -4,6 +4,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class DRG
     {
+        public const byte ClassID = 4;
         public const byte JobID = 22;
 
         public const uint
