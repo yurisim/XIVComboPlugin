@@ -1,7 +1,9 @@
 using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.Text;
+using Dalamud.Logging;
 using Dalamud.Plugin;
+using Dalamud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -109,7 +111,7 @@ namespace XIVComboExpandedPlugin
 
         [JsonIgnore]
         [Obsolete("This was added to prevent serialization of another obsolete property")]
-        private List<bool> _HiddenActionsBacker = new();
+        private List<bool>? _HiddenActionsBacker = new();
 
 #pragma warning restore IDE1006 // Naming Styles
         #endregion
@@ -127,7 +129,7 @@ namespace XIVComboExpandedPlugin
             PluginLog.Information("Upgrading configuration to version 3");
             foreach (var _ in Enum.GetValues(typeof(CustomComboPreset)))
 #pragma warning disable CS0618 // Type or member is obsolete
-                _HiddenActionsBacker.Add(false);
+                _HiddenActionsBacker!.Add(false);
 #pragma warning restore CS0618 // Type or member is obsolete
             Version = 3;
         }

@@ -1,4 +1,4 @@
-namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos
 {
     internal static class NIN
     {
@@ -28,6 +28,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Buffs
         {
             public const short
+                Mudra = 496,
                 Kassatsu = 497,
                 Suiton = 507,
                 Hidden = 614,

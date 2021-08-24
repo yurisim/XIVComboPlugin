@@ -1,6 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
-
-namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos
 {
     internal static class DRK
     {

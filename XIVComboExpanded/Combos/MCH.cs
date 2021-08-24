@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -111,7 +111,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.HeatBlast || actionID == MCH.AutoCrossbow)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (!gauge.IsOverheated() && level >= MCH.Levels.Hypercharge)
+                if (!gauge.IsOverheated && level >= MCH.Levels.Hypercharge)
                     return MCH.Hypercharge;
 
                 if (level < MCH.Levels.AutoCrossbow)
@@ -131,7 +131,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.SpreadShot)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (gauge.IsOverheated() && level >= MCH.Levels.AutoCrossbow)
+                if (gauge.IsOverheated && level >= MCH.Levels.AutoCrossbow)
                     return MCH.AutoCrossbow;
             }
 
@@ -148,7 +148,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.RookAutoturret || actionID == MCH.AutomatonQueen)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (gauge.IsRobotActive())
+                if (gauge.IsRobotActive)
                     return OriginalHook(MCH.QueenOverdrive);
             }
 

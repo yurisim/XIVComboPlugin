@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -55,7 +56,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
-                if (gauge.IsPhoenixReady())
+                if (gauge.IsPhoenixReady)
                     return SMN.EnkindlePhoenix;
 
                 if (gauge.TimerRemaining > 0 && gauge.ReturnSummon != SummonPet.NONE)
@@ -80,10 +81,10 @@ namespace XIVComboExpandedPlugin.Combos
                 //     return SMN.Deathflare;
                 // }
 
-                if (gauge.IsBahamutReady())
+                if (gauge.IsBahamutReady)
                     return SMN.SummonBahamut;
 
-                if (gauge.IsPhoenixReady())
+                if (gauge.IsPhoenixReady)
                     return OriginalHook(SMN.FirebirdTranceLow);
 
                 return actionID;
@@ -103,7 +104,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
                 if (gauge.TimerRemaining > 0)
-                    if (gauge.IsPhoenixReady())
+                    if (gauge.IsPhoenixReady)
                     {
                         if (HasEffect(SMN.Buffs.HellishConduit))
                             return SMN.BrandOfPurgatory;
@@ -127,7 +128,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Fester)
             {
                 var gauge = GetJobGauge<SMNGauge>();
-                if (!gauge.HasAetherflowStacks())
+                if (!gauge.HasAetherflowStacks)
                     return SMN.EnergyDrain;
             }
 
@@ -144,7 +145,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Painflare)
             {
                 var gauge = GetJobGauge<SMNGauge>();
-                if (!gauge.HasAetherflowStacks())
+                if (!gauge.HasAetherflowStacks)
                     return SMN.EnergySyphon;
 
                 if (level >= SMN.Levels.Painflare)

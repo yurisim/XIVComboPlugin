@@ -1,7 +1,9 @@
-﻿using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Actors.Types;
+﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
-using Structs = Dalamud.Game.ClientState.Structs;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -9,13 +11,13 @@ namespace XIVComboExpandedPlugin.Combos
     {
         #region static 
 
-        private static IconReplacer IconReplacer;
-        protected static XIVComboExpandedConfiguration Configuration;
+        private static IconReplacer? IconReplacer;
+        protected static XIVComboExpandedConfiguration? Configuration;
 
         public static void Initialize(IconReplacer iconReplacer, XIVComboExpandedConfiguration configuration)
         {
-            IconReplacer = iconReplacer;
-            Configuration = configuration;
+            IconReplacer = iconReplacer!;
+            Configuration = configuration!;
         }
 
         #endregion
@@ -56,7 +58,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (!IsEnabled(Preset))
                 return false;
 
-            var classJobID = LocalPlayer.ClassJob.Id;
+            var classJobID = LocalPlayer?.ClassJob.Id;
             if (JobID != classJobID && ClassID != classJobID)
                 return false;
 
@@ -75,27 +77,27 @@ namespace XIVComboExpandedPlugin.Combos
 
         #region Passthru
 
-        protected static uint OriginalHook(uint actionID) => IconReplacer.OriginalHook(actionID);
+        protected static uint OriginalHook(uint actionID) => IconReplacer!.OriginalHook(actionID);
 
-        protected static PlayerCharacter LocalPlayer => IconReplacer.LocalPlayer;
+        protected static PlayerCharacter? LocalPlayer => IconReplacer!.LocalPlayer;
 
-        protected static Actor CurrentTarget => IconReplacer.CurrentTarget;
+        protected static GameObject? CurrentTarget => IconReplacer!.CurrentTarget;
 
-        protected static bool IsEnabled(CustomComboPreset preset) => Configuration.IsEnabled(preset);
+        protected static bool IsEnabled(CustomComboPreset preset) => Configuration!.IsEnabled(preset);
 
-        protected static bool HasCondition(ConditionFlag flag) => IconReplacer.HasCondition(flag);
+        protected static bool HasCondition(ConditionFlag flag) => IconReplacer!.HasCondition(flag);
 
-        protected static bool HasEffect(short effectID) => IconReplacer.HasEffect(effectID);
+        protected static bool HasEffect(short effectID) => IconReplacer!.HasEffect(effectID);
 
-        protected static bool TargetHasEffect(short effectID) => IconReplacer.TargetHasEffect(effectID);
+        protected static bool TargetHasEffect(short effectID) => IconReplacer!.TargetHasEffect(effectID);
 
-        protected static Structs.StatusEffect? FindEffect(short effectId) => IconReplacer.FindEffect(effectId);
+        protected static Status? FindEffect(short effectId) => IconReplacer!.FindEffect(effectId);
 
-        protected static Structs.StatusEffect? FindTargetEffect(short effectId) => IconReplacer.FindTargetEffect(effectId);
+        protected static Status? FindTargetEffect(short effectId) => IconReplacer!.FindTargetEffect(effectId);
 
-        protected static CooldownData GetCooldown(uint actionID) => IconReplacer.GetCooldown(actionID);
+        protected static CooldownData GetCooldown(uint actionID) => IconReplacer!.GetCooldown(actionID);
 
-        protected static T GetJobGauge<T>() => IconReplacer.GetJobGauge<T>();
+        protected static T GetJobGauge<T>() where T : JobGaugeBase => IconReplacer!.GetJobGauge<T>();
 
         #endregion
     }

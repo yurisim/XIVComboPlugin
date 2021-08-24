@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -67,14 +67,14 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected override CustomComboPreset Preset => CustomComboPreset.DancerDanceComboCompatibility;
 
-        protected override uint[] ActionIDs => Configuration.DancerDanceCompatActionIDs;
+        protected override uint[] ActionIDs => Configuration!.DancerDanceCompatActionIDs;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             var gauge = GetJobGauge<DNCGauge>();
-            if (gauge.IsDancing())
+            if (gauge.IsDancing)
             {
-                var actionIDs = Configuration.DancerDanceCompatActionIDs;
+                var actionIDs = Configuration!.DancerDanceCompatActionIDs;
 
                 if (actionID == actionIDs[0] || (actionIDs[0] == 0 && actionID == DNC.Cascade))
                     return OriginalHook(DNC.Cascade);
@@ -128,10 +128,10 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.StandardStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
-                if (gauge.IsDancing() && HasEffect(DNC.Buffs.StandardStep))
+                if (gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
                 {
-                    if (gauge.NumCompleteSteps < 2)
-                        return (uint)gauge.NextStep();
+                    if (gauge.CompletedSteps < 2)
+                        return (uint)gauge.NextStep;
 
                     return DNC.StandardFinish2;
                 }
@@ -140,10 +140,10 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.TechnicalStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
-                if (gauge.IsDancing() && HasEffect(DNC.Buffs.TechnicalStep))
+                if (gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
                 {
-                    if (gauge.NumCompleteSteps < 4)
-                        return (uint)gauge.NextStep();
+                    if (gauge.CompletedSteps < 4)
+                        return (uint)gauge.NextStep;
 
                     return DNC.TechnicalFinish4;
                 }

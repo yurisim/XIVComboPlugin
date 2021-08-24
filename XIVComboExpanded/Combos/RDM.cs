@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Structs.JobGauge;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -100,16 +101,16 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (lastComboMove == RDM.EnchantedRedoublement)
                     {
-                        if (gauge.BlackGauge >= gauge.WhiteGauge && level >= RDM.Levels.Verholy)
+                        if (gauge.BlackMana >= gauge.WhiteMana && level >= RDM.Levels.Verholy)
                         {
-                            if (HasEffect(RDM.Buffs.VerstoneReady) && !HasEffect(RDM.Buffs.VerfireReady) && (gauge.BlackGauge - gauge.WhiteGauge <= 9))
+                            if (HasEffect(RDM.Buffs.VerstoneReady) && !HasEffect(RDM.Buffs.VerfireReady) && (gauge.BlackMana - gauge.WhiteMana <= 9))
                                 return RDM.Verflare;
 
                             return RDM.Verholy;
                         }
                         else if (level >= RDM.Levels.Verflare)
                         {
-                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && level >= RDM.Levels.Verholy && (gauge.WhiteGauge - gauge.BlackGauge <= 9))
+                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && level >= RDM.Levels.Verholy && (gauge.WhiteMana - gauge.BlackMana <= 9))
                                 return RDM.Verholy;
 
                             return RDM.Verflare;

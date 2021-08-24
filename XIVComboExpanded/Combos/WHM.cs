@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -43,7 +43,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == WHM.AfflatusSolace)
             {
                 var gauge = GetJobGauge<WHMGauge>();
-                if (gauge.NumBloodLily == 3)
+                if (gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
             }
 
@@ -60,7 +60,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == WHM.AfflatusRapture)
             {
                 var gauge = GetJobGauge<WHMGauge>();
-                if (gauge.NumBloodLily == 3)
+                if (gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
             }
 

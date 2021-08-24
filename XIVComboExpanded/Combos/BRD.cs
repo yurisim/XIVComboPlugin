@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -56,7 +57,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == BRD.WanderersMinuet)
             {
-                if (GetJobGauge<BRDGauge>().ActiveSong == CurrentSong.WANDERER)
+                if (GetJobGauge<BRDGauge>().Song == Song.WANDERER)
                     return BRD.PitchPerfect;
             }
 
@@ -96,13 +97,13 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     var venomous = FindTargetEffect(BRD.Debuffs.VenomousBite);
                     var windbite = FindTargetEffect(BRD.Debuffs.Windbite);
-                    if (venomous.HasValue && windbite.HasValue)
+                    if (venomous is not null && windbite is not null)
                     {
-                        if (venomous?.Duration < windbite?.Duration)
+                        if (venomous?.RemainingTime < windbite?.RemainingTime)
                             return BRD.VenomousBite;
                         return BRD.Windbite;
                     }
-                    else if (windbite.HasValue || level < BRD.Levels.Windbite)
+                    else if (windbite is not null || level < BRD.Levels.Windbite)
                         return BRD.VenomousBite;
                     return BRD.Windbite;
                 }

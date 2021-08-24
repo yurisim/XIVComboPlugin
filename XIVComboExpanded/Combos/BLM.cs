@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -66,9 +66,9 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == BLM.Enochian)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (gauge.IsEnoActive())
+                if (gauge.IsEnochianActive)
                 {
-                    if (gauge.InUmbralIce() && level >= BLM.Levels.Blizzard4)
+                    if (gauge.InUmbralIce && level >= BLM.Levels.Blizzard4)
                         return BLM.Blizzard4;
                     if (level >= BLM.Levels.Fire4)
                         return BLM.Fire4;
@@ -77,7 +77,7 @@ namespace XIVComboExpandedPlugin.Combos
                 if (level < BLM.Levels.Fire3)
                     return BLM.Fire;
 
-                if (gauge.InAstralFire() && (level < BLM.Levels.Enochian || gauge.IsEnoActive()))
+                if (gauge.InAstralFire && (level < BLM.Levels.Enochian || gauge.IsEnochianActive))
                 {
                     if (HasEffect(BLM.Buffs.Firestarter))
                         return BLM.Fire3;
@@ -98,7 +98,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == BLM.Transpose)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (gauge.InUmbralIce() && gauge.IsEnoActive() && level >= BLM.Levels.UmbralSoul)
+                if (gauge.InUmbralIce && gauge.IsEnochianActive && level >= BLM.Levels.UmbralSoul)
                     return BLM.UmbralSoul;
             }
 
@@ -131,7 +131,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == BLM.Blizzard)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (level >= BLM.Levels.Blizzard3 && !gauge.InUmbralIce())
+                if (level >= BLM.Levels.Blizzard3 && !gauge.InUmbralIce)
                     return BLM.Blizzard3;
             }
 
@@ -154,7 +154,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == BLM.Fire)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (level >= BLM.Levels.Fire3 && (!gauge.InAstralFire() || HasEffect(BLM.Buffs.Firestarter)))
+                if (level >= BLM.Levels.Fire3 && (!gauge.InAstralFire || HasEffect(BLM.Buffs.Firestarter)))
                     return BLM.Fire3;
             }
 

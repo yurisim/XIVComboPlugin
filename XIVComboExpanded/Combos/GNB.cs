@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -103,7 +103,7 @@ namespace XIVComboExpandedPlugin.Combos
                 }
 
                 var gauge = GetJobGauge<GNBGauge>();
-                return gauge.AmmoComboStepNumber switch
+                return gauge.AmmoComboStep switch
                 {
                     1 => GNB.SavageClaw,
                     2 => GNB.WickedTalon,
@@ -128,7 +128,7 @@ namespace XIVComboExpandedPlugin.Combos
                     if (IsEnabled(CustomComboPreset.GunbreakerFatedCircleFeature))
                     {
                         var gauge = GetJobGauge<GNBGauge>();
-                        if (gauge.NumAmmo == 2 && level >= GNB.Levels.FatedCircle)
+                        if (gauge.Ammo == 2 && level >= GNB.Levels.FatedCircle)
                         {
                             return GNB.FatedCircle;
                         }

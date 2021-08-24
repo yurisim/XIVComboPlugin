@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Structs.JobGauge;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -48,7 +49,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == AST.Play)
             {
                 var gauge = GetJobGauge<ASTGauge>();
-                if (gauge.DrawnCard() == CardType.NONE)
+                if (gauge.DrawnCard == CardType.NONE)
                     return AST.Draw;
             }
 

@@ -1,4 +1,4 @@
-namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos
 {
     internal static class PLD
     {
@@ -8,9 +8,11 @@ namespace XIVComboExpandedPlugin.Combos
         public const uint
             FastBlade = 9,
             RiotBlade = 15,
+            ShieldBash = 16,
             RageOfHalone = 21,
             GoringBlade = 3538,
             RoyalAuthority = 3539,
+            LowBlow = 7540,
             TotalEclipse = 7381,
             Requiescat = 7383,
             HolySpirit = 7384,
@@ -161,7 +163,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == PLD.HolySpirit)
             {
-                if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && LocalPlayer.CurrentMp < 4000)
+                if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && LocalPlayer?.CurrentMp < 4000)
                     return PLD.Confiteor;
 
                 return PLD.HolySpirit;
@@ -169,7 +171,7 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (actionID == PLD.HolyCircle)
             {
-                if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && LocalPlayer.CurrentMp < 4000)
+                if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.Confiteor && LocalPlayer?.CurrentMp < 4000)
                     return PLD.Confiteor;
 
                 return PLD.HolyCircle;
