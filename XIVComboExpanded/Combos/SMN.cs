@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -65,19 +65,19 @@ namespace XIVComboExpandedPlugin.Combos
                 return actionID;
             }
 
-            //Replace DWT with demi summons
+            // Replace DWT with demi summons
             if (actionID == SMN.DreadwyrmTrance)
             {
                 var gauge = GetJobGauge<SMNGauge>();
-                
+
                 // if (IsEnabled(CustomComboPreset.SummonerDemiComboUltra) && gauge.TimerRemaining > 0)
                 // {
                 //     if (gauge.IsPhoenixReady())
                 //         return SMN.EnkindlePhoenix;
-                // 
+                //
                 //     if (gauge.ReturnSummon != SummonPet.NONE)
                 //         return SMN.EnkindleBahamut;
-                // 
+                //
                 //     return SMN.Deathflare;
                 // }
 
@@ -103,14 +103,13 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Ruin1 || actionID == SMN.Ruin3)
             {
                 var gauge = GetJobGauge<SMNGauge>();
-                if (gauge.TimerRemaining > 0)
-                    if (gauge.IsPhoenixReady)
-                    {
-                        if (HasEffect(SMN.Buffs.HellishConduit))
-                            return SMN.BrandOfPurgatory;
+                if (gauge.TimerRemaining > 0 && gauge.IsPhoenixReady)
+                {
+                    if (HasEffect(SMN.Buffs.HellishConduit))
+                        return SMN.BrandOfPurgatory;
 
-                        return SMN.FountainOfFire;
-                    }
+                    return SMN.FountainOfFire;
+                }
 
                 return OriginalHook(SMN.Ruin3);
             }

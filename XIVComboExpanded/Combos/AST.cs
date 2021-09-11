@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -60,7 +60,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class AstrologianSleeveDrawFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.AstrologianSleeveDrawFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == AST.MinorArcana)
@@ -69,7 +69,7 @@ namespace XIVComboExpandedPlugin.Combos
     //             if (gauge.DrawnCard() == CardType.NONE && level >= AST.Levels.SleeveDraw)
     //                 return AST.SleeveDraw;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

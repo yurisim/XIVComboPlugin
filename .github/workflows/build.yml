@@ -10,7 +10,7 @@ on:
 
 env:
   PUBLIC_NAME: XIVComboExpanded
-  SOLUTION_NAME: XIVCombo
+  SOLUTION_NAME: XIVComboExpanded
   INTERNAL_NAME: XIVComboExpanded
   RELEASE_DIR: XIVComboExpanded\bin\Release\XIVComboExpanded
   PERSONAL_PLUGIN_REPO: daemitus/MyDalamudPlugins

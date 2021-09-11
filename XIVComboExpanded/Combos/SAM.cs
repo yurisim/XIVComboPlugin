@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -192,7 +192,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class SamuraiJinpuShifuFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.SamuraiJinpuShifuFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == SAM.MeikyoShisui)
@@ -201,14 +201,14 @@ namespace XIVComboExpandedPlugin.Combos
     //             {
     //                 if (!HasEffect(SAM.Buffs.Jinpu))
     //                     return SAM.Jinpu;
-    // 
+    //
     //                 if (!HasEffect(SAM.Buffs.Shifu))
     //                     return SAM.Shifu;
-    // 
+    //
     //             }
     //             return SAM.MeikyoShisui;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

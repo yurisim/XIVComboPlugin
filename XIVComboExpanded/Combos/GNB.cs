@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -147,7 +147,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class GunbreakerBloodfestOvercapFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBloodfestOvercapFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == GNB.BurstStrike)
@@ -156,7 +156,7 @@ namespace XIVComboExpandedPlugin.Combos
     //             if (gauge.NumAmmo == 0 && level >= GNB.Levels.Bloodfest)
     //                 return GNB.Bloodfest;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }
@@ -164,7 +164,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class GunbreakerNoMercyFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerNoMercyFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == GNB.NoMercy)
@@ -173,12 +173,12 @@ namespace XIVComboExpandedPlugin.Combos
     //             {
     //                 if (level >= GNB.Levels.BowShock && !TargetHasEffect(GNB.Debuffs.BowShock))
     //                     return GNB.BowShock;
-    // 
+    //
     //                 if (level >= GNB.Levels.SonicBreak)
     //                     return GNB.SonicBreak;
     //             }
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

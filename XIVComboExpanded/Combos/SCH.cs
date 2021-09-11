@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -55,7 +55,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SCH.EnergyDrain)
             {
                 var gauge = GetJobGauge<SCHGauge>();
-                if (gauge.Aetherflow== 0)
+                if (gauge.Aetherflow == 0)
                     return SCH.Aetherflow;
             }
 

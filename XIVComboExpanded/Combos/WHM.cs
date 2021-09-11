@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -87,7 +87,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class WhiteMageAfflatusFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.WhiteMageAfflatusFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == WHM.Cure2)
@@ -95,25 +95,25 @@ namespace XIVComboExpandedPlugin.Combos
     //             var gauge = GetJobGauge<WHMGauge>();
     //             if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature) && gauge.NumBloodLily == 3)
     //                 return WHM.AfflatusMisery;
-    // 
+    //
     //             if (level >= WHM.Levels.AfflatusSolace && gauge.NumLilies > 0)
     //                 return WHM.AfflatusSolace;
-    // 
+    //
     //             return actionID;
     //         }
-    // 
+    //
     //         if (actionID == WHM.Medica)
     //         {
     //             var gauge = GetJobGauge<WHMGauge>();
     //             if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature) && gauge.NumBloodLily == 3)
     //                 return WHM.AfflatusMisery;
-    // 
+    //
     //             if (level >= WHM.Levels.AfflatusRapture && gauge.NumLilies > 0)
     //                 return WHM.AfflatusRapture;
-    // 
+    //
     //             return WHM.Medica;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

@@ -1,4 +1,4 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class MNK
     {
@@ -73,7 +73,7 @@
     // internal class MnkBootshineFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.MnkBootshineFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == MNK.DragonKick)
@@ -82,11 +82,11 @@
     //                 HasEffect(MNK.Buffs.FormlessFist) || HasEffect(MNK.Buffs.PerfectBalance) ||
     //                 HasEffect(MNK.Buffs.OpoOpoForm) || HasEffect(MNK.Buffs.RaptorForm) || HasEffect(MNK.Buffs.CoerlForm)))
     //                 return MNK.Bootshine;
-    // 
+    //
     //             if (level < MNK.Levels.DragonKick)
     //                 return MNK.Bootshine;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

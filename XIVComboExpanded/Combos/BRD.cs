@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -104,7 +104,10 @@ namespace XIVComboExpandedPlugin.Combos
                         return BRD.Windbite;
                     }
                     else if (windbite is not null || level < BRD.Levels.Windbite)
+                    {
                         return BRD.VenomousBite;
+                    }
+
                     return BRD.Windbite;
                 }
 
@@ -112,19 +115,25 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     var venomous = TargetHasEffect(BRD.Debuffs.VenomousBite);
                     var windbite = TargetHasEffect(BRD.Debuffs.Windbite);
+
                     if (venomous && windbite)
                         return BRD.IronJaws;
+
                     if (windbite)
                         return BRD.VenomousBite;
+
                     return BRD.Windbite;
                 }
 
                 var caustic = TargetHasEffect(BRD.Debuffs.CausticBite);
                 var stormbite = TargetHasEffect(BRD.Debuffs.Stormbite);
+
                 if (caustic && stormbite)
                     return BRD.IronJaws;
+
                 if (stormbite)
                     return BRD.CausticBite;
+
                 return BRD.Stormbite;
             }
 
@@ -135,7 +144,7 @@ namespace XIVComboExpandedPlugin.Combos
     // internal class BardApexFeature : CustomCombo
     // {
     //     protected override CustomComboPreset Preset => CustomComboPreset.BardApexFeature;
-    // 
+    //
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID == BRD.QuickNock)
@@ -144,7 +153,7 @@ namespace XIVComboExpandedPlugin.Combos
     //             if (gauge.SoulVoiceValue == 100)
     //                 return BRD.ApexArrow;
     //         }
-    // 
+    //
     //         return actionID;
     //     }
     // }

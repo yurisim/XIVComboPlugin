@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -65,7 +65,7 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
                         return OriginalHook(MCH.SlugShot);
-                    
+
                     if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
                         return OriginalHook(MCH.CleanShot);
                 }

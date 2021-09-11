@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -33,6 +33,7 @@ namespace XIVComboExpandedPlugin.Combos
                 LeyLines = 737,
                 Firestarter = 165;
         }
+
         public static class Debuffs
         {
             public const short

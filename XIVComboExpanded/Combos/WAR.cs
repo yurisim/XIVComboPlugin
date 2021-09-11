@@ -1,4 +1,4 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class WAR
     {

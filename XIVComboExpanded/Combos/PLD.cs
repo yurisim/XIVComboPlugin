@@ -1,4 +1,4 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class PLD
     {
@@ -62,7 +62,7 @@
                 //     {
                 //         if (IsEnabled(CustomComboPreset.PaladinConfiteorFeature) && level >= PLD.Levels.Confiteor && LocalPlayer.CurrentMp < 4000)
                 //             return PLD.Confiteor;
-                // 
+                //
                 //         return PLD.HolySpirit;
                 //     }
                 // }
@@ -139,14 +139,16 @@
                 //     {
                 //         if (IsEnabled(CustomComboPreset.PaladinConfiteorFeature) && level >= PLD.Levels.Confiteor && LocalPlayer.CurrentMp < 4000)
                 //             return PLD.Confiteor;
-                // 
+                //
                 //         return PLD.HolyCircle;
                 //     }
                 // }
 
                 if (comboTime > 0)
+                {
                     if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
                         return PLD.Prominence;
+                }
 
                 return PLD.TotalEclipse;
             }

@@ -1,4 +1,4 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class DRK
     {
@@ -23,6 +23,7 @@
                 BloodWeapon = 742,
                 Delirium = 1972;
         }
+
         public static class Debuffs
         {
             // public const short placeholder = 0;
@@ -52,8 +53,10 @@
             if (actionID == DRK.Souleater)
             {
                 if (IsEnabled(CustomComboPreset.DeliriumFeature))
+                {
                     if (level >= DRK.Levels.Bloodpiller && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
                         return DRK.Bloodspiller;
+                }
 
                 if (comboTime > 0)
                 {
@@ -89,8 +92,10 @@
 #endif
 
                 if (IsEnabled(CustomComboPreset.DeliriumFeature))
+                {
                     if (level >= DRK.Levels.Quietus && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
                         return DRK.Quietus;
+                }
 
                 if (comboTime > 0 && lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
                     return DRK.StalwartSoul;

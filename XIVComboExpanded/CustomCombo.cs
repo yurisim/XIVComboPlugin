@@ -1,40 +1,29 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System.Linq;
+
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
-using System.Linq;
+using Dalamud.Utility;
 
 namespace XIVComboExpandedPlugin.Combos
 {
-    internal abstract class CustomCombo
+    /// <summary>
+    /// Base class for each combo.
+    /// </summary>
+    internal abstract partial class CustomCombo
     {
-        #region static 
+        private const uint InvalidObjectID = 0xE000_0000;
 
-        private static IconReplacer? IconReplacer;
-        protected static XIVComboExpandedConfiguration? Configuration;
-
-        public static void Initialize(IconReplacer iconReplacer, XIVComboExpandedConfiguration configuration)
-        {
-            IconReplacer = iconReplacer!;
-            Configuration = configuration!;
-        }
-
-        #endregion
-
-        protected abstract CustomComboPreset Preset { get; }
-
-        protected byte ClassID { get; }
-
-        protected byte JobID { get; set; }
-
-        protected virtual uint[] ActionIDs { get; set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomCombo"/> class.
+        /// </summary>
         protected CustomCombo()
         {
-            var presetInfo = Preset.GetInfo();
-            JobID = presetInfo.JobID;
-            ClassID = JobID switch
+            var presetInfo = this.Preset.GetAttribute<CustomComboInfoAttribute>();
+            this.JobID = presetInfo.JobID;
+            this.ClassID = this.JobID switch
             {
                 BLM.JobID => BLM.ClassID,
                 BRD.JobID => BRD.ClassID,
@@ -48,24 +37,53 @@ namespace XIVComboExpandedPlugin.Combos
                 WHM.JobID => WHM.ClassID,
                 _ => 0xFF,
             };
-            ActionIDs = presetInfo.ActionIDs;
+            this.ActionIDs = presetInfo.ActionIDs;
         }
 
-        public bool TryInvoke(uint actionID, uint lastComboMove, float comboTime, byte level, out uint newActionID)
+        /// <summary>
+        /// Gets the preset associated with this combo.
+        /// </summary>
+        protected abstract CustomComboPreset Preset { get; }
+
+        /// <summary>
+        /// Gets the class ID associated with this combo.
+        /// </summary>
+        protected byte ClassID { get; }
+
+        /// <summary>
+        /// Gets the job ID associated with this combo.
+        /// </summary>
+        protected byte JobID { get; }
+
+        /// <summary>
+        /// Gets the action IDs associated with this combo.
+        /// </summary>
+        protected virtual uint[] ActionIDs { get; }
+
+        /// <summary>
+        /// Performs various checks then attempts to invoke the combo.
+        /// </summary>
+        /// <param name="actionID">Starting action ID.</param>
+        /// <param name="lastComboActionID">Last combo action.</param>
+        /// <param name="comboTime">Current combo time.</param>
+        /// <param name="level">Current player level.</param>
+        /// <param name="newActionID">Replacement action ID.</param>
+        /// <returns>True if the action has changed, otherwise false.</returns>
+        public bool TryInvoke(uint actionID, uint lastComboActionID, float comboTime, byte level, out uint newActionID)
         {
             newActionID = 0;
 
-            if (!IsEnabled(Preset))
+            if (!IsEnabled(this.Preset))
                 return false;
 
             var classJobID = LocalPlayer?.ClassJob.Id;
-            if (JobID != classJobID && ClassID != classJobID)
+            if (this.JobID != classJobID && this.ClassID != classJobID)
                 return false;
 
-            if (!ActionIDs.Contains(actionID))
+            if (!this.ActionIDs.Contains(actionID))
                 return false;
 
-            var resultingActionID = Invoke(actionID, lastComboMove, comboTime, level);
+            var resultingActionID = this.Invoke(actionID, lastComboActionID, comboTime, level);
             if (resultingActionID == 0 || actionID == resultingActionID)
                 return false;
 
@@ -73,32 +91,180 @@ namespace XIVComboExpandedPlugin.Combos
             return true;
         }
 
-        protected abstract uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level);
+        /// <summary>
+        /// Invokes the combo.
+        /// </summary>
+        /// <param name="actionID">Starting action ID.</param>
+        /// <param name="lastComboActionID">Last combo action.</param>
+        /// <param name="comboTime">Current combo time.</param>
+        /// <param name="level">Current player level.</param>
+        /// <returns>The replacement action ID.</returns>
+        protected abstract uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level);
+    }
 
-        #region Passthru
+    /// <summary>
+    /// Passthrough methods and properties to IconReplacer. Shortens what it takes to call each method.
+    /// </summary>
+    internal abstract partial class CustomCombo
+    {
+        /// <summary>
+        /// Gets the player or null.
+        /// </summary>
+        protected static PlayerCharacter? LocalPlayer => Plugin.ClientState.LocalPlayer;
 
-        protected static uint OriginalHook(uint actionID) => IconReplacer!.OriginalHook(actionID);
+        /// <summary>
+        /// Gets the current target or null.
+        /// </summary>
+        protected static GameObject? CurrentTarget => Plugin.TargetManager.Target;
 
-        protected static PlayerCharacter? LocalPlayer => IconReplacer!.LocalPlayer;
+        /// <summary>
+        /// Calls the original hook.
+        /// </summary>
+        /// <param name="actionID">Action ID.</param>
+        /// <returns>The result from the hook.</returns>
+        protected static uint OriginalHook(uint actionID) => IconReplacer.OriginalHook(actionID);
 
-        protected static GameObject? CurrentTarget => IconReplacer!.CurrentTarget;
+        /// <summary>
+        /// Determine if the given preset is enabled.
+        /// </summary>
+        /// <param name="preset">Preset to check.</param>
+        /// <returns>A value indicating whether the preset is enabled.</returns>
+        protected static bool IsEnabled(CustomComboPreset preset) => Configuration.IsEnabled(preset);
 
-        protected static bool IsEnabled(CustomComboPreset preset) => Configuration!.IsEnabled(preset);
+        /// <summary>
+        /// Find if the player is in condition.
+        /// </summary>
+        /// <param name="flag">Condition flag.</param>
+        /// <returns>A value indicating whether the player is in the condition.</returns>
+        protected static bool HasCondition(ConditionFlag flag) => Plugin.Condition[flag];
 
-        protected static bool HasCondition(ConditionFlag flag) => IconReplacer!.HasCondition(flag);
+        /// <summary>
+        /// Find if an effect on the player exists.
+        /// The effect may be owned by the player or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>A value indicating if the effect exists.</returns>
+        protected static bool HasEffect(short effectID) => FindEffect(effectID) is not null;
 
-        protected static bool HasEffect(short effectID) => IconReplacer!.HasEffect(effectID);
+        /// <summary>
+        /// Finds an effect on the player.
+        /// The effect must be owned by the player or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>Status object or null.</returns>
+        protected static Status? FindEffect(short effectID) => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
 
-        protected static bool TargetHasEffect(short effectID) => IconReplacer!.TargetHasEffect(effectID);
+        /// <summary>
+        /// Find if an effect on the target exists.
+        /// The effect must be owned by the player or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>A value indicating if the effect exists.</returns>
+        protected static bool TargetHasEffect(short effectID) => FindTargetEffect(effectID) is not null;
 
-        protected static Status? FindEffect(short effectId) => IconReplacer!.FindEffect(effectId);
+        /// <summary>
+        /// Finds an effect on the current target.
+        /// The effect must be owned by the player or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>Status object or null.</returns>
+        protected static Status? FindTargetEffect(short effectID) => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
 
-        protected static Status? FindTargetEffect(short effectId) => IconReplacer!.FindTargetEffect(effectId);
+        /// <summary>
+        /// Find if an effect on the player exists.
+        /// The effect may be owned by anyone or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>A value indicating if the effect exists.</returns>
+        protected static bool HasEffectAny(short effectID) => FindEffectAny(effectID) is not null;
 
-        protected static CooldownData GetCooldown(uint actionID) => IconReplacer!.GetCooldown(actionID);
+        /// <summary>
+        /// Finds an effect on the player.
+        /// The effect may be owned by anyone or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>Status object or null.</returns>
+        protected static Status? FindEffectAny(short effectID) => FindEffect(effectID, LocalPlayer, null);
 
-        protected static T GetJobGauge<T>() where T : JobGaugeBase => IconReplacer!.GetJobGauge<T>();
+        /// <summary>
+        /// Find if an effect on the target exists.
+        /// The effect may be owned by anyone or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>A value indicating if the effect exists.</returns>
+        protected static bool TargetHasEffectAny(short effectID) => FindTargetEffectAny(effectID) is not null;
 
-        #endregion
+        /// <summary>
+        /// Finds an effect on the current target.
+        /// The effect may be owned by anyone or unowned.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <returns>Status object or null.</returns>
+        protected static Status? FindTargetEffectAny(short effectID) => FindEffect(effectID, CurrentTarget, null);
+
+        /// <summary>
+        /// Finds an effect on the given object.
+        /// </summary>
+        /// <param name="effectID">Status effect ID.</param>
+        /// <param name="obj">Object to look for effects on.</param>
+        /// <param name="sourceID">Source object ID.</param>
+        /// <returns>Status object or null.</returns>
+        protected static Status? FindEffect(short effectID, GameObject? obj, uint? sourceID)
+        {
+            if (obj is null)
+                return null;
+
+            if (obj is not BattleChara chara)
+                return null;
+
+            foreach (var status in chara.StatusList)
+            {
+                if (status.StatusId == effectID && (!sourceID.HasValue || status.SourceID == 0 || status.SourceID == InvalidObjectID || status.SourceID == sourceID))
+                    return status;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the cooldown data for an action.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>Cooldown data.</returns>
+        protected static IconReplacer.CooldownData GetCooldown(uint actionID) => IconReplacer.GetCooldown(actionID);
+
+        /// <summary>
+        /// Gets the job gauge.
+        /// </summary>
+        /// <typeparam name="T">Type of job gauge.</typeparam>
+        /// <returns>The job gauge.</returns>
+        protected static T GetJobGauge<T>() where T : JobGaugeBase => Plugin.JobGauges.Get<T>();
+    }
+
+    /// <summary>
+    /// Static initializer and properties.
+    /// </summary>
+    internal abstract partial class CustomCombo
+    {
+        /// <summary>
+        /// Gets the plugin configuration.
+        /// </summary>
+        protected static PluginConfiguration Configuration { get; private set; } = null!;
+
+        private static XIVComboExpandedPlugin Plugin { get; set; } = null!;
+
+        private static IconReplacer IconReplacer { get; set; } = null!;
+
+        /// <summary>
+        /// Initialize all combos with shared references.
+        /// </summary>
+        /// <param name="plugin">Plugin instance.</param>
+        /// <param name="iconReplacer">IconReplacer instance.</param>
+        public static void Initialize(XIVComboExpandedPlugin plugin, IconReplacer iconReplacer)
+        {
+            Plugin = plugin;
+            IconReplacer = iconReplacer!;
+            Configuration = plugin.Configuration!;
+        }
     }
 }
