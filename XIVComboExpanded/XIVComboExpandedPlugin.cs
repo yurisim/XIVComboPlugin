@@ -27,21 +27,33 @@ namespace XIVComboExpandedPlugin
         /// Initializes a new instance of the <see cref="XIVComboExpandedPlugin"/> class.
         /// </summary>
         /// <param name="pluginInterface">Dalamud plugin interface.</param>
-        public XIVComboExpandedPlugin(DalamudPluginInterface pluginInterface)
+        /// <param name="chatGui">Dalamud ChatGui object.</param>
+        /// <param name="clientState">Dalamud ClientState object.</param>
+        /// <param name="commandManager">Dalamud CommandManager object.</param>
+        /// <param name="condition">Dalamud Condition object.</param>
+        /// <param name="dataManager">Dalamud DataManager object.</param>
+        /// <param name="jobGauges">Dalamud JobGauges object.</param>
+        /// <param name="targetManager">Dalamud TargetManager object.</param>
+        public XIVComboExpandedPlugin(
+            DalamudPluginInterface pluginInterface,
+            ChatGui chatGui,
+            ClientState clientState,
+            CommandManager commandManager,
+            Condition condition,
+            DataManager dataManager,
+            JobGauges jobGauges,
+            TargetManager targetManager)
         {
             this.Interface = pluginInterface;
-            if (!pluginInterface.Inject(this))
-            {
-                throw new Exception("Could not initialize plugin.");
-            }
+            this.ChatGui = chatGui;
+            this.ClientState = clientState;
+            this.CommandManager = commandManager;
+            this.Condition = condition;
+            this.DataManager = dataManager;
+            this.JobGauges = jobGauges;
+            this.TargetManager = targetManager;
 
             this.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
-
-            this.CommandManager.AddHandler(Command, new CommandInfo(this.OnCommand)
-            {
-                HelpMessage = "Open a window to edit custom combo settings.",
-                ShowInHelp = true,
-            });
 
             this.Address = new PluginAddressResolver();
             this.Address.Setup();
@@ -54,6 +66,12 @@ namespace XIVComboExpandedPlugin
 
             this.Interface.UiBuilder.OpenConfigUi += this.UiBuilder_OpenConfigUi;
             this.Interface.UiBuilder.Draw += this.windowSystem.Draw;
+
+            this.CommandManager.AddHandler(Command, new CommandInfo(this.OnCommand)
+            {
+                HelpMessage = "Open a window to edit custom combo settings.",
+                ShowInHelp = true,
+            });
         }
 
         /// <inheritdoc/>
