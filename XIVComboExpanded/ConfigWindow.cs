@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
+using Dalamud.Interface;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using ImGuiNET;
@@ -48,12 +50,25 @@ namespace XIVComboExpandedPlugin
         {
             ImGui.Text("This window allows you to enable and disable custom combos to your liking.");
 
+            var showSecrets = this.plugin.Configuration.EnableSecretCombos;
+            if (ImGui.Checkbox("Enable secret forbidden knowledge", ref showSecrets))
+            {
+                this.plugin.Configuration.EnableSecretCombos = showSecrets;
+                this.plugin.SaveConfiguration();
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.TextUnformatted("Combos too dangerous for the common folk");
+                ImGui.EndTooltip();
+            }
+
             ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
 
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 5));
 
             var i = 1;
-            var showSecrets = this.plugin.Configuration.EnableSecretCombos;
 
             foreach (var jobName in this.groupedPresets.Keys)
             {
@@ -63,6 +78,7 @@ namespace XIVComboExpandedPlugin
                     {
                         var enabled = this.plugin.Configuration.IsEnabled(preset);
                         var secret = this.plugin.Configuration.IsSecret(preset);
+                        var conflicts = this.plugin.Configuration.GetConflicts(preset);
 
                         if (secret && !showSecrets)
                             continue;
@@ -74,6 +90,10 @@ namespace XIVComboExpandedPlugin
                             if (enabled)
                             {
                                 this.plugin.Configuration.EnabledActions.Add(preset);
+                                foreach (var conflict in conflicts)
+                                {
+                                    this.plugin.Configuration.EnabledActions.Remove(conflict);
+                                }
                             }
                             else
                             {
@@ -84,10 +104,41 @@ namespace XIVComboExpandedPlugin
                             this.plugin.SaveConfiguration();
                         }
 
+                        if (secret)
+                        {
+                            ImGui.SameLine();
+                            ImGui.Text("  ");
+                            ImGui.SameLine();
+                            ImGui.PushFont(UiBuilder.IconFont);
+                            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
+                            ImGui.Text(FontAwesomeIcon.Star.ToIconString());
+                            ImGui.PopStyleColor();
+                            ImGui.PopFont();
+
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.TextUnformatted("Secret");
+                                ImGui.EndTooltip();
+                            }
+                        }
+
                         ImGui.PopItemWidth();
 
                         ImGui.TextColored(this.shadedColor, $"#{i}: {info.Description}");
                         ImGui.Spacing();
+
+                        if (conflicts.Length > 0)
+                        {
+                            var conflictText = conflicts.Select(preset =>
+                            {
+                                var info = preset.GetAttribute<CustomComboInfoAttribute>();
+                                return $"\n - {info.FancyName}";
+                            }).Aggregate((t1, t2) => $"{t1}{t2}");
+
+                            ImGui.TextColored(this.shadedColor, $"Conflicts with: {conflictText}");
+                            ImGui.Spacing();
+                        }
 
                         if (preset == CustomComboPreset.DancerDanceComboCompatibility && enabled)
                         {

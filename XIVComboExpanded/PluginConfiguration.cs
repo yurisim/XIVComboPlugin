@@ -47,13 +47,23 @@ namespace XIVComboExpandedPlugin
         /// </summary>
         /// <param name="preset">Preset to check.</param>
         /// <returns>The boolean representation.</returns>
-        public bool IsEnabled(CustomComboPreset preset) => this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
+        public bool IsEnabled(CustomComboPreset preset)
+            => this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
 
         /// <summary>
         /// Gets a value indicating whether a preset is secret.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
         /// <returns>The boolean representation.</returns>
-        public bool IsSecret(CustomComboPreset preset) => preset.GetAttribute<SecretCustomComboAttribute>() != default;
+        public bool IsSecret(CustomComboPreset preset)
+            => preset.GetAttribute<SecretCustomComboAttribute>() != default;
+
+        /// <summary>
+        /// Gets an array of conflicting combo presets.
+        /// </summary>
+        /// <param name="preset">Preset to check.</param>
+        /// <returns>The conflicting presets.</returns>
+        public CustomComboPreset[] GetConflicts(CustomComboPreset preset)
+            => preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? Array.Empty<CustomComboPreset>();
     }
 }
