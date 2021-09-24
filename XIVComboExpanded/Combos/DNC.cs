@@ -67,14 +67,14 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected override CustomComboPreset Preset => CustomComboPreset.DancerDanceComboCompatibility;
 
-        protected override uint[] ActionIDs => Configuration!.DancerDanceCompatActionIDs;
+        protected override uint[] ActionIDs => Service.Configuration.DancerDanceCompatActionIDs;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             var gauge = GetJobGauge<DNCGauge>();
             if (gauge.IsDancing)
             {
-                var actionIDs = Configuration!.DancerDanceCompatActionIDs;
+                var actionIDs = Service.Configuration.DancerDanceCompatActionIDs;
 
                 if (actionID == actionIDs[0] || (actionIDs[0] == 0 && actionID == DNC.Cascade))
                     return OriginalHook(DNC.Cascade);

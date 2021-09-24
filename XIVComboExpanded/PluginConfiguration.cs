@@ -43,6 +43,12 @@ namespace XIVComboExpandedPlugin
         };
 
         /// <summary>
+        /// Save the configuration to disk.
+        /// </summary>
+        public void Save()
+            => Service.Interface.SavePluginConfig(this);
+
+        /// <summary>
         /// Gets a value indicating whether a preset is enabled.
         /// </summary>
         /// <param name="preset">Preset to check.</param>

@@ -22,7 +22,6 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     internal sealed partial class IconReplacer : IDisposable
     {
-        private readonly XIVComboExpandedPlugin plugin;
         private readonly List<CustomCombo> customCombos;
         private readonly Hook<IsIconReplaceableDelegate> isIconReplaceableHook;
         private readonly Hook<GetIconDelegate> getIconHook;
@@ -33,13 +32,8 @@ namespace XIVComboExpandedPlugin
         /// <summary>
         /// Initializes a new instance of the <see cref="IconReplacer"/> class.
         /// </summary>
-        /// <param name="plugin">Plugin instance.</param>
-        public IconReplacer(XIVComboExpandedPlugin plugin)
+        public IconReplacer()
         {
-            this.plugin = plugin;
-
-            CustomCombo.Initialize(plugin, this);
-
             this.customCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
                 .Where(t => t.BaseType == typeof(CustomCombo))
                 .Select(t => Activator.CreateInstance(t))
@@ -48,10 +42,10 @@ namespace XIVComboExpandedPlugin
 
             this.UpdateEnabledActionIDs();
 
-            this.getActionCooldownSlot = Marshal.GetDelegateForFunctionPointer<GetActionCooldownSlotDelegate>(this.plugin.Address.GetActionCooldown);
+            this.getActionCooldownSlot = Marshal.GetDelegateForFunctionPointer<GetActionCooldownSlotDelegate>(Service.Address.GetActionCooldown);
 
-            this.getIconHook = new Hook<GetIconDelegate>(this.plugin.Address.GetAdjustedActionId, this.GetIconDetour);
-            this.isIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(this.plugin.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
+            this.getIconHook = new Hook<GetIconDelegate>(Service.Address.GetAdjustedActionId, this.GetIconDetour);
+            this.isIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
 
             this.getIconHook.Enable();
             this.isIconReplaceableHook.Enable();
@@ -77,7 +71,7 @@ namespace XIVComboExpandedPlugin
                 .GetValues<CustomComboPreset>()
                 .Select(preset => preset.GetAttribute<CustomComboInfoAttribute>()!)
                 .SelectMany(comboInfo => comboInfo.ActionIDs)
-                .Concat(this.plugin.Configuration.DancerDanceCompatActionIDs)
+                .Concat(Service.Configuration.DancerDanceCompatActionIDs)
                 .ToHashSet();
         }
 
@@ -94,12 +88,12 @@ namespace XIVComboExpandedPlugin
 
             try
             {
-                var localPlayer = this.plugin.ClientState.LocalPlayer;
+                var localPlayer = Service.ClientState.LocalPlayer;
                 if (localPlayer == null || !this.comboActionIDs.Contains(actionID))
                     return this.OriginalHook(actionID);
 
-                var lastComboMove = *(uint*)this.plugin.Address.LastComboMove;
-                var comboTime = *(float*)this.plugin.Address.ComboTimer;
+                var lastComboMove = *(uint*)Service.Address.LastComboMove;
+                var comboTime = *(float*)Service.Address.ComboTimer;
                 var level = localPlayer.Level;
 
                 foreach (var combo in this.customCombos)
@@ -150,7 +144,7 @@ namespace XIVComboExpandedPlugin
             if (this.cooldownGroupCache.TryGetValue(actionID, out var cooldownGroup))
                 return cooldownGroup;
 
-            var sheet = this.plugin.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()!;
+            var sheet = Service.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()!;
             var row = sheet.GetRow(actionID);
 
             return this.cooldownGroupCache[actionID] = row!.CooldownGroup;

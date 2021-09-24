@@ -27,47 +27,24 @@ namespace XIVComboExpandedPlugin
         /// Initializes a new instance of the <see cref="XIVComboExpandedPlugin"/> class.
         /// </summary>
         /// <param name="pluginInterface">Dalamud plugin interface.</param>
-        /// <param name="chatGui">Dalamud ChatGui object.</param>
-        /// <param name="clientState">Dalamud ClientState object.</param>
-        /// <param name="commandManager">Dalamud CommandManager object.</param>
-        /// <param name="condition">Dalamud Condition object.</param>
-        /// <param name="dataManager">Dalamud DataManager object.</param>
-        /// <param name="jobGauges">Dalamud JobGauges object.</param>
-        /// <param name="targetManager">Dalamud TargetManager object.</param>
-        public XIVComboExpandedPlugin(
-            DalamudPluginInterface pluginInterface,
-            ChatGui chatGui,
-            ClientState clientState,
-            CommandManager commandManager,
-            Condition condition,
-            DataManager dataManager,
-            JobGauges jobGauges,
-            TargetManager targetManager)
+        public XIVComboExpandedPlugin(DalamudPluginInterface pluginInterface)
         {
-            this.Interface = pluginInterface;
-            this.ChatGui = chatGui;
-            this.ClientState = clientState;
-            this.CommandManager = commandManager;
-            this.Condition = condition;
-            this.DataManager = dataManager;
-            this.JobGauges = jobGauges;
-            this.TargetManager = targetManager;
+            pluginInterface.Create<Service>();
 
-            this.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
+            Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
+            Service.Address = new PluginAddressResolver();
+            Service.Address.Setup();
 
-            this.Address = new PluginAddressResolver();
-            this.Address.Setup();
+            Service.IconReplacer = new IconReplacer();
 
-            this.IconReplacer = new IconReplacer(this);
-
-            this.configWindow = new(this);
+            this.configWindow = new();
             this.windowSystem = new("XIVComboExpanded");
             this.windowSystem.AddWindow(this.configWindow);
 
-            this.Interface.UiBuilder.OpenConfigUi += this.UiBuilder_OpenConfigUi;
-            this.Interface.UiBuilder.Draw += this.windowSystem.Draw;
+            Service.Interface.UiBuilder.OpenConfigUi += this.OnOpenConfigUi;
+            Service.Interface.UiBuilder.Draw += this.windowSystem.Draw;
 
-            this.CommandManager.AddHandler(Command, new CommandInfo(this.OnCommand)
+            Service.CommandManager.AddHandler(Command, new CommandInfo(this.OnCommand)
             {
                 HelpMessage = "Open a window to edit custom combo settings.",
                 ShowInHelp = true,
@@ -77,78 +54,18 @@ namespace XIVComboExpandedPlugin
         /// <inheritdoc/>
         public string Name => "XIV Combo Expanded";
 
-        /// <summary>
-        /// Gets the PluginAddressResolver object.
-        /// </summary>
-        internal PluginAddressResolver Address { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the IconReplacer object.
-        /// </summary>
-        internal IconReplacer IconReplacer { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the plugin configuration.
-        /// </summary>
-        internal PluginConfiguration Configuration { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud plugin interface.
-        /// </summary>
-        internal DalamudPluginInterface Interface { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud ChatGui.
-        /// </summary>
-        internal ChatGui ChatGui { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud ClientState object.
-        /// </summary>
-        internal ClientState ClientState { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud CommandManager object.
-        /// </summary>
-        internal CommandManager CommandManager { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud Condition object.
-        /// </summary>
-        internal Condition Condition { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud DataManager object.
-        /// </summary>
-        internal DataManager DataManager { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud JobGauges object.
-        /// </summary>
-        internal JobGauges JobGauges { get; init; } = null!;
-
-        /// <summary>
-        /// Gets the Dalamud TargetManager object.
-        /// </summary>
-        internal TargetManager TargetManager { get; init; } = null!;
-
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.Interface.UiBuilder.Draw -= this.windowSystem.Draw;
-            this.Interface.UiBuilder.OpenConfigUi -= this.UiBuilder_OpenConfigUi;
+            Service.CommandManager.RemoveHandler(Command);
 
-            this.CommandManager.RemoveHandler(Command);
-            this.IconReplacer.Dispose();
+            Service.Interface.UiBuilder.OpenConfigUi -= this.OnOpenConfigUi;
+            Service.Interface.UiBuilder.Draw -= this.windowSystem.Draw;
+
+            Service.IconReplacer.Dispose();
         }
 
-        /// <summary>
-        /// Save the configuration to disk.
-        /// </summary>
-        internal void SaveConfiguration()
-            => this.Interface.SavePluginConfig(this.Configuration);
-
-        private void UiBuilder_OpenConfigUi()
+        private void OnOpenConfigUi()
             => this.configWindow.IsOpen = true;
 
         private void OnCommand(string command, string arguments)
@@ -161,11 +78,11 @@ namespace XIVComboExpandedPlugin
                     {
                         foreach (var preset in Enum.GetValues<CustomComboPreset>())
                         {
-                            this.Configuration.EnabledActions.Add(preset);
+                            Service.Configuration.EnabledActions.Add(preset);
                         }
 
-                        this.ChatGui.Print("All SET");
-                        this.SaveConfiguration();
+                        Service.ChatGui.Print("All SET");
+                        Service.Configuration.Save();
                         break;
                     }
 
@@ -173,11 +90,11 @@ namespace XIVComboExpandedPlugin
                     {
                         foreach (var preset in Enum.GetValues<CustomComboPreset>())
                         {
-                            this.Configuration.EnabledActions.Remove(preset);
+                            Service.Configuration.EnabledActions.Remove(preset);
                         }
 
-                        this.ChatGui.Print("All UNSET");
-                        this.SaveConfiguration();
+                        Service.ChatGui.Print("All UNSET");
+                        Service.Configuration.Save();
                         break;
                     }
 
@@ -189,23 +106,23 @@ namespace XIVComboExpandedPlugin
                             if (preset.ToString().ToLowerInvariant() != targetPreset)
                                 continue;
 
-                            this.Configuration.EnabledActions.Add(preset);
-                            this.ChatGui.Print($"{preset} SET");
+                            Service.Configuration.EnabledActions.Add(preset);
+                            Service.ChatGui.Print($"{preset} SET");
                         }
 
-                        this.SaveConfiguration();
+                        Service.Configuration.Save();
                         break;
                     }
 
                 case "secrets":
                     {
-                        this.Configuration.EnableSecretCombos = !this.Configuration.EnableSecretCombos;
+                        Service.Configuration.EnableSecretCombos = !Service.Configuration.EnableSecretCombos;
 
-                        this.ChatGui.Print(this.Configuration.EnableSecretCombos
+                        Service.ChatGui.Print(Service.Configuration.EnableSecretCombos
                             ? $"Secret combos are now shown"
                             : $"Secret combos are now hidden");
 
-                        this.SaveConfiguration();
+                        Service.Configuration.Save();
                         break;
                     }
 
@@ -217,19 +134,19 @@ namespace XIVComboExpandedPlugin
                             if (preset.ToString().ToLowerInvariant() != targetPreset)
                                 continue;
 
-                            if (this.Configuration.EnabledActions.Contains(preset))
+                            if (Service.Configuration.EnabledActions.Contains(preset))
                             {
-                                this.Configuration.EnabledActions.Remove(preset);
-                                this.ChatGui.Print($"{preset} UNSET");
+                                Service.Configuration.EnabledActions.Remove(preset);
+                                Service.ChatGui.Print($"{preset} UNSET");
                             }
                             else
                             {
-                                this.Configuration.EnabledActions.Add(preset);
-                                this.ChatGui.Print($"{preset} SET");
+                                Service.Configuration.EnabledActions.Add(preset);
+                                Service.ChatGui.Print($"{preset} SET");
                             }
                         }
 
-                        this.SaveConfiguration();
+                        Service.Configuration.Save();
                         break;
                     }
 
@@ -241,11 +158,11 @@ namespace XIVComboExpandedPlugin
                             if (preset.ToString().ToLowerInvariant() != targetPreset)
                                 continue;
 
-                            this.Configuration.EnabledActions.Remove(preset);
-                            this.ChatGui.Print($"{preset} UNSET");
+                            Service.Configuration.EnabledActions.Remove(preset);
+                            Service.ChatGui.Print($"{preset} UNSET");
                         }
 
-                        this.SaveConfiguration();
+                        Service.Configuration.Save();
                         break;
                     }
 
@@ -258,29 +175,29 @@ namespace XIVComboExpandedPlugin
                         if (filter == "set")
                         {
                             foreach (var preset in Enum.GetValues<CustomComboPreset>()
-                                .Select(preset => this.Configuration.IsEnabled(preset)))
+                                .Select(preset => Service.Configuration.IsEnabled(preset)))
                             {
-                                this.ChatGui.Print(preset.ToString());
+                                Service.ChatGui.Print(preset.ToString());
                             }
                         }
                         else if (filter == "unset")
                         {
                             foreach (var preset in Enum.GetValues<CustomComboPreset>()
-                                .Select(preset => !this.Configuration.IsEnabled(preset)))
+                                .Select(preset => !Service.Configuration.IsEnabled(preset)))
                             {
-                                this.ChatGui.Print(preset.ToString());
+                                Service.ChatGui.Print(preset.ToString());
                             }
                         }
                         else if (filter == "all")
                         {
                             foreach (var preset in Enum.GetValues<CustomComboPreset>())
                             {
-                                this.ChatGui.Print(preset.ToString());
+                                Service.ChatGui.Print(preset.ToString());
                             }
                         }
                         else
                         {
-                            this.ChatGui.PrintError("Available list filters: set, unset, all");
+                            Service.ChatGui.PrintError("Available list filters: set, unset, all");
                         }
 
                         break;
@@ -291,7 +208,7 @@ namespace XIVComboExpandedPlugin
                     break;
             }
 
-            this.Interface.SavePluginConfig(this.Configuration);
+            Service.Configuration.Save();
         }
     }
 }

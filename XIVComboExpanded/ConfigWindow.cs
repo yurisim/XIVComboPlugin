@@ -16,19 +16,15 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     internal class ConfigWindow : Window
     {
-        private readonly XIVComboExpandedPlugin plugin;
         private readonly Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> groupedPresets;
         private readonly Vector4 shadedColor = new(0.68f, 0.68f, 0.68f, 1.0f);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigWindow"/> class.
         /// </summary>
-        /// <param name="plugin">The plugin itself.</param>
-        public ConfigWindow(XIVComboExpandedPlugin plugin)
+        public ConfigWindow()
             : base("Custom Combo Setup")
         {
-            this.plugin = plugin;
-
             this.RespectCloseHotkey = true;
 
             this.groupedPresets = Enum
@@ -50,11 +46,11 @@ namespace XIVComboExpandedPlugin
         {
             ImGui.Text("This window allows you to enable and disable custom combos to your liking.");
 
-            var showSecrets = this.plugin.Configuration.EnableSecretCombos;
+            var showSecrets = Service.Configuration.EnableSecretCombos;
             if (ImGui.Checkbox("Enable secret forbidden knowledge", ref showSecrets))
             {
-                this.plugin.Configuration.EnableSecretCombos = showSecrets;
-                this.plugin.SaveConfiguration();
+                Service.Configuration.EnableSecretCombos = showSecrets;
+                Service.Configuration.Save();
             }
 
             if (ImGui.IsItemHovered())
@@ -76,9 +72,9 @@ namespace XIVComboExpandedPlugin
                 {
                     foreach (var (preset, info) in this.groupedPresets[jobName])
                     {
-                        var enabled = this.plugin.Configuration.IsEnabled(preset);
-                        var secret = this.plugin.Configuration.IsSecret(preset);
-                        var conflicts = this.plugin.Configuration.GetConflicts(preset);
+                        var enabled = Service.Configuration.IsEnabled(preset);
+                        var secret = Service.Configuration.IsSecret(preset);
+                        var conflicts = Service.Configuration.GetConflicts(preset);
 
                         if (secret && !showSecrets)
                             continue;
@@ -89,19 +85,19 @@ namespace XIVComboExpandedPlugin
                         {
                             if (enabled)
                             {
-                                this.plugin.Configuration.EnabledActions.Add(preset);
+                                Service.Configuration.EnabledActions.Add(preset);
                                 foreach (var conflict in conflicts)
                                 {
-                                    this.plugin.Configuration.EnabledActions.Remove(conflict);
+                                    Service.Configuration.EnabledActions.Remove(conflict);
                                 }
                             }
                             else
                             {
-                                this.plugin.Configuration.EnabledActions.Remove(preset);
+                                Service.Configuration.EnabledActions.Remove(preset);
                             }
 
-                            this.plugin.IconReplacer.UpdateEnabledActionIDs();
-                            this.plugin.SaveConfiguration();
+                            Service.IconReplacer.UpdateEnabledActionIDs();
+                            Service.Configuration.Save();
                         }
 
                         if (secret)
@@ -142,7 +138,7 @@ namespace XIVComboExpandedPlugin
 
                         if (preset == CustomComboPreset.DancerDanceComboCompatibility && enabled)
                         {
-                            var actions = this.plugin.Configuration.DancerDanceCompatActionIDs.Cast<int>().ToArray();
+                            var actions = Service.Configuration.DancerDanceCompatActionIDs.Cast<int>().ToArray();
 
                             var inputChanged = false;
                             inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0);
@@ -152,9 +148,9 @@ namespace XIVComboExpandedPlugin
 
                             if (inputChanged)
                             {
-                                this.plugin.Configuration.DancerDanceCompatActionIDs = actions.Cast<uint>().ToArray();
-                                this.plugin.IconReplacer.UpdateEnabledActionIDs();
-                                this.plugin.SaveConfiguration();
+                                Service.Configuration.DancerDanceCompatActionIDs = actions.Cast<uint>().ToArray();
+                                Service.IconReplacer.UpdateEnabledActionIDs();
+                                Service.Configuration.Save();
                             }
 
                             ImGui.Spacing();

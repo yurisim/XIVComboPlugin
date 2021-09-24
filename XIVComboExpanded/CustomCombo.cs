@@ -110,33 +110,33 @@ namespace XIVComboExpandedPlugin.Combos
         /// <summary>
         /// Gets the player or null.
         /// </summary>
-        protected static PlayerCharacter? LocalPlayer => Plugin.ClientState.LocalPlayer;
+        protected static PlayerCharacter? LocalPlayer => Service.ClientState.LocalPlayer;
 
         /// <summary>
         /// Gets the current target or null.
         /// </summary>
-        protected static GameObject? CurrentTarget => Plugin.TargetManager.Target;
+        protected static GameObject? CurrentTarget => Service.TargetManager.Target;
 
         /// <summary>
         /// Calls the original hook.
         /// </summary>
         /// <param name="actionID">Action ID.</param>
         /// <returns>The result from the hook.</returns>
-        protected static uint OriginalHook(uint actionID) => IconReplacer.OriginalHook(actionID);
+        protected static uint OriginalHook(uint actionID) => Service.IconReplacer.OriginalHook(actionID);
 
         /// <summary>
         /// Determine if the given preset is enabled.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
         /// <returns>A value indicating whether the preset is enabled.</returns>
-        protected static bool IsEnabled(CustomComboPreset preset) => Configuration.IsEnabled(preset);
+        protected static bool IsEnabled(CustomComboPreset preset) => Service.Configuration.IsEnabled(preset);
 
         /// <summary>
         /// Find if the player is in condition.
         /// </summary>
         /// <param name="flag">Condition flag.</param>
         /// <returns>A value indicating whether the player is in the condition.</returns>
-        protected static bool HasCondition(ConditionFlag flag) => Plugin.Condition[flag];
+        protected static bool HasCondition(ConditionFlag flag) => Service.Condition[flag];
 
         /// <summary>
         /// Find if an effect on the player exists.
@@ -231,40 +231,13 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="actionID">Action ID to check.</param>
         /// <returns>Cooldown data.</returns>
-        protected static IconReplacer.CooldownData GetCooldown(uint actionID) => IconReplacer.GetCooldown(actionID);
+        protected static IconReplacer.CooldownData GetCooldown(uint actionID) => Service.IconReplacer.GetCooldown(actionID);
 
         /// <summary>
         /// Gets the job gauge.
         /// </summary>
         /// <typeparam name="T">Type of job gauge.</typeparam>
         /// <returns>The job gauge.</returns>
-        protected static T GetJobGauge<T>() where T : JobGaugeBase => Plugin.JobGauges.Get<T>();
-    }
-
-    /// <summary>
-    /// Static initializer and properties.
-    /// </summary>
-    internal abstract partial class CustomCombo
-    {
-        /// <summary>
-        /// Gets the plugin configuration.
-        /// </summary>
-        protected static PluginConfiguration Configuration { get; private set; } = null!;
-
-        private static XIVComboExpandedPlugin Plugin { get; set; } = null!;
-
-        private static IconReplacer IconReplacer { get; set; } = null!;
-
-        /// <summary>
-        /// Initialize all combos with shared references.
-        /// </summary>
-        /// <param name="plugin">Plugin instance.</param>
-        /// <param name="iconReplacer">IconReplacer instance.</param>
-        public static void Initialize(XIVComboExpandedPlugin plugin, IconReplacer iconReplacer)
-        {
-            Plugin = plugin;
-            IconReplacer = iconReplacer!;
-            Configuration = plugin.Configuration!;
-        }
+        protected static T GetJobGauge<T>() where T : JobGaugeBase => Service.JobGauges.Get<T>();
     }
 }
