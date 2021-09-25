@@ -40,12 +40,10 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == WHM.AfflatusSolace)
-            {
-                var gauge = GetJobGauge<WHMGauge>();
-                if (gauge.BloodLily == 3)
-                    return WHM.AfflatusMisery;
-            }
+            var gauge = GetJobGauge<WHMGauge>();
+
+            if (gauge.BloodLily == 3)
+                return WHM.AfflatusMisery;
 
             return actionID;
         }
@@ -57,12 +55,10 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == WHM.AfflatusRapture)
-            {
-                var gauge = GetJobGauge<WHMGauge>();
-                if (gauge.BloodLily == 3)
-                    return WHM.AfflatusMisery;
-            }
+            var gauge = GetJobGauge<WHMGauge>();
+
+            if (gauge.BloodLily == 3)
+                return WHM.AfflatusMisery;
 
             return actionID;
         }
@@ -74,47 +70,38 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == WHM.Cure2)
-            {
-                if (level < WHM.Levels.Cure2)
-                    return WHM.Cure;
-            }
+            if (level < WHM.Levels.Cure2)
+                return WHM.Cure;
 
             return actionID;
         }
     }
 
-    // internal class WhiteMageAfflatusFeature : CustomCombo
-    // {
-    //     protected override CustomComboPreset Preset => CustomComboPreset.WhiteMageAfflatusFeature;
-    //
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID == WHM.Cure2)
-    //         {
-    //             var gauge = GetJobGauge<WHMGauge>();
-    //             if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature) && gauge.NumBloodLily == 3)
-    //                 return WHM.AfflatusMisery;
-    //
-    //             if (level >= WHM.Levels.AfflatusSolace && gauge.NumLilies > 0)
-    //                 return WHM.AfflatusSolace;
-    //
-    //             return actionID;
-    //         }
-    //
-    //         if (actionID == WHM.Medica)
-    //         {
-    //             var gauge = GetJobGauge<WHMGauge>();
-    //             if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature) && gauge.NumBloodLily == 3)
-    //                 return WHM.AfflatusMisery;
-    //
-    //             if (level >= WHM.Levels.AfflatusRapture && gauge.NumLilies > 0)
-    //                 return WHM.AfflatusRapture;
-    //
-    //             return WHM.Medica;
-    //         }
-    //
-    //         return actionID;
-    //     }
-    // }
+    internal class WhiteMageAfflatusFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.WhiteMageAfflatusFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var gauge = GetJobGauge<WHMGauge>();
+
+            if (actionID == WHM.Cure2)
+            {
+                if (level >= WHM.Levels.AfflatusSolace && gauge.Lily > 0)
+                    return WHM.AfflatusSolace;
+
+                return actionID;
+            }
+
+            if (actionID == WHM.Medica)
+            {
+                if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
+                    return WHM.AfflatusRapture;
+
+                return actionID;
+            }
+
+            return actionID;
+        }
+    }
 }
