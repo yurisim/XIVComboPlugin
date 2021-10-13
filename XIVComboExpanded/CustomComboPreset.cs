@@ -138,6 +138,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Wicked Talon Continuation", "In addition to the Wicked Talon combo chain, put Continuation moves on Wicked Talon when appropriate.", GNB.JobID, GNB.WickedTalon)]
         GunbreakerGnashingFangCont = 52,
 
+        [SecretCustomCombo]
+        [CustomComboInfo("Bow Shock / Sonic Break Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.", GNB.JobID, GNB.BowShock, GNB.SonicBreak)]
+        GunbreakerBowShockSonicBreakFeature = 97,
+
         [CustomComboInfo("Demon Slaughter Combo", "Replace Demon Slaughter with its combo chain.", GNB.JobID, GNB.DemonSlaughter)]
         GunbreakerDemonSlaughterCombo = 22,
 

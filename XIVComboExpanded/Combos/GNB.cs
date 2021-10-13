@@ -115,6 +115,30 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal class GunbreakerBowShockSonicBreakFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBowShockSonicBreakFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == GNB.BowShock || actionID == GNB.SonicBreak)
+            {
+                var bowCd = GetCooldown(GNB.BowShock);
+                var sonicCd = GetCooldown(GNB.SonicBreak);
+
+                // Prioritize the original if both are off cooldown
+                if (!bowCd.IsCooldown && !sonicCd.IsCooldown)
+                    return actionID;
+
+                return bowCd.CooldownRemaining < sonicCd.CooldownRemaining
+                    ? GNB.BowShock
+                    : GNB.SonicBreak;
+            }
+
+            return actionID;
+        }
+    }
+
     internal class GunbreakerDemonSlaughterCombo : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerDemonSlaughterCombo;
