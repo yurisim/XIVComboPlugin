@@ -2,7 +2,7 @@ namespace XIVComboExpandedPlugin.Combos
 {
     internal static class NIN
     {
-        public const byte ClassID = 18;
+        public const byte ClassID = 29;
         public const byte JobID = 30;
 
         public const uint
