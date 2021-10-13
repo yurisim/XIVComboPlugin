@@ -25,13 +25,13 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 StraightShotReady = 122;
         }
 
         public static class Debuffs
         {
-            public const short
+            public const ushort
                 VenomousBite = 124,
                 Windbite = 129,
                 CausticBite = 1200,

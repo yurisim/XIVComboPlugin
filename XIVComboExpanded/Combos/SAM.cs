@@ -27,7 +27,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 MeikyoShisui = 1233,
                 EyesOpen = 1252,
                 Jinpu = 1298,
@@ -36,7 +36,8 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels

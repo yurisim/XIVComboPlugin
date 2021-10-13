@@ -52,6 +52,7 @@ namespace XIVComboExpandedPlugin
         {
             return key switch
             {
+                0 => "Adventurer",
                 1 => "Gladiator",
                 2 => "Pugilist",
                 3 => "Marauder",

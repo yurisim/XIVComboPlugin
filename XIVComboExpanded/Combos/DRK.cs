@@ -19,14 +19,15 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 BloodWeapon = 742,
                 Delirium = 1972;
         }
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels

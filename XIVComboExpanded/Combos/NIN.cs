@@ -27,7 +27,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 Mudra = 496,
                 Kassatsu = 497,
                 Suiton = 507,
@@ -37,7 +37,8 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels
@@ -58,8 +59,11 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (OriginalHook(NIN.JinNormal) == OriginalHook(NIN.Jin))
-                return OriginalHook(NIN.Ninjutsu);
+            if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush || actionID == NIN.HakkeMujinsatsu)
+            {
+                if (OriginalHook(NIN.JinNormal) == OriginalHook(NIN.Jin))
+                    return OriginalHook(NIN.Ninjutsu);
+            }
 
             return actionID;
         }
@@ -137,8 +141,11 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (HasEffect(NIN.Buffs.AssassinateReady))
-                return NIN.Assassinate;
+            if (actionID == NIN.DreamWithinADream)
+            {
+                if (HasEffect(NIN.Buffs.AssassinateReady))
+                    return NIN.Assassinate;
+            }
 
             return actionID;
         }
@@ -200,8 +207,11 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (level >= NIN.Levels.EnhancedKassatsu && HasEffect(NIN.Buffs.Kassatsu))
-                return NIN.Jin;
+            if (actionID == NIN.Chi)
+            {
+                if (level >= NIN.Levels.EnhancedKassatsu && HasEffect(NIN.Buffs.Kassatsu))
+                    return NIN.Jin;
+            }
 
             return actionID;
         }

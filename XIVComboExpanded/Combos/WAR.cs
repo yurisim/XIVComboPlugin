@@ -24,14 +24,15 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 InnerRelease = 1177,
                 NascentChaos = 1897;
         }
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels

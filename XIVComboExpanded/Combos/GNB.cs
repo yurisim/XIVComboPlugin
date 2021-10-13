@@ -28,7 +28,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 NoMercy = 1831,
                 ReadyToRip = 1842,
                 ReadyToTear = 1843,
@@ -37,7 +37,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            public const short
+            public const ushort
                 BowShock = 1838;
         }
 

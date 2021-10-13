@@ -26,12 +26,14 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels
@@ -92,10 +94,9 @@ namespace XIVComboExpandedPlugin.Combos
                 if (!gaussCd.IsCooldown && !ricochetCd.IsCooldown)
                     return actionID;
 
-                if (gaussCd.CooldownRemaining < ricochetCd.CooldownRemaining)
-                    return MCH.GaussRound;
-                else
-                    return MCH.Ricochet;
+                return gaussCd.CooldownRemaining < ricochetCd.CooldownRemaining
+                    ? MCH.GaussRound
+                    : MCH.Ricochet;
             }
 
             return actionID;

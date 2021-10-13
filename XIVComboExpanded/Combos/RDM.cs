@@ -30,7 +30,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 Swiftcast = 167,
                 VerfireReady = 1234,
                 VerstoneReady = 1235,
@@ -39,7 +39,8 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels

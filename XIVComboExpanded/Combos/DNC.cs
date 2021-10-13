@@ -20,14 +20,6 @@ namespace XIVComboExpandedPlugin.Combos
             // Dancing
             StandardStep = 15997,
             TechnicalStep = 15998,
-            StandardFinish0 = 16003,
-            StandardFinish1 = 16191,
-            StandardFinish2 = 16192,
-            TechnicalFinish0 = 16004,
-            TechnicalFinish1 = 16193,
-            TechnicalFinish2 = 16194,
-            TechnicalFinish3 = 16195,
-            TechnicalFinish4 = 16196,
             // Fans
             FanDance1 = 16007,
             FanDance2 = 16008,
@@ -40,7 +32,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 FlourishingCascade = 1814,
                 FlourishingFountain = 1815,
                 FlourishingWindmill = 1816,
@@ -52,7 +44,8 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels
@@ -131,9 +124,9 @@ namespace XIVComboExpandedPlugin.Combos
                 if (gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
                 {
                     if (gauge.CompletedSteps < 2)
-                        return (uint)gauge.NextStep;
+                        return gauge.NextStep;
 
-                    return DNC.StandardFinish2;
+                    return OriginalHook(DNC.StandardStep);
                 }
             }
 
@@ -143,9 +136,9 @@ namespace XIVComboExpandedPlugin.Combos
                 if (gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
                 {
                     if (gauge.CompletedSteps < 4)
-                        return (uint)gauge.NextStep;
+                        return gauge.NextStep;
 
-                    return DNC.TechnicalFinish4;
+                    return OriginalHook(DNC.TechnicalStep);
                 }
             }
 

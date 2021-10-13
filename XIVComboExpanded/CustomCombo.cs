@@ -25,6 +25,7 @@ namespace XIVComboExpandedPlugin.Combos
             this.JobID = presetInfo.JobID;
             this.ClassID = this.JobID switch
             {
+                ADV.JobID => ADV.ClassID,
                 BLM.JobID => BLM.ClassID,
                 BRD.JobID => BRD.ClassID,
                 DRG.JobID => DRG.ClassID,
@@ -77,7 +78,8 @@ namespace XIVComboExpandedPlugin.Combos
                 return false;
 
             var classJobID = LocalPlayer?.ClassJob.Id;
-            if (this.JobID != classJobID && this.ClassID != classJobID)
+            if (this.JobID != ADV.JobID && this.ClassID != ADV.ClassID &&
+                this.JobID != classJobID && this.ClassID != classJobID)
                 return false;
 
             if (!this.ActionIDs.Contains(actionID))
@@ -144,7 +146,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool HasEffect(short effectID) => FindEffect(effectID) is not null;
+        protected static bool HasEffect(ushort effectID) => FindEffect(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the player.
@@ -152,7 +154,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindEffect(short effectID) => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
+        protected static Status? FindEffect(ushort effectID) => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
 
         /// <summary>
         /// Find if an effect on the target exists.
@@ -160,7 +162,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool TargetHasEffect(short effectID) => FindTargetEffect(effectID) is not null;
+        protected static bool TargetHasEffect(ushort effectID) => FindTargetEffect(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the current target.
@@ -168,7 +170,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindTargetEffect(short effectID) => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
+        protected static Status? FindTargetEffect(ushort effectID) => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
 
         /// <summary>
         /// Find if an effect on the player exists.
@@ -176,7 +178,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool HasEffectAny(short effectID) => FindEffectAny(effectID) is not null;
+        protected static bool HasEffectAny(ushort effectID) => FindEffectAny(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the player.
@@ -184,7 +186,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindEffectAny(short effectID) => FindEffect(effectID, LocalPlayer, null);
+        protected static Status? FindEffectAny(ushort effectID) => FindEffect(effectID, LocalPlayer, null);
 
         /// <summary>
         /// Find if an effect on the target exists.
@@ -192,7 +194,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool TargetHasEffectAny(short effectID) => FindTargetEffectAny(effectID) is not null;
+        protected static bool TargetHasEffectAny(ushort effectID) => FindTargetEffectAny(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the current target.
@@ -200,7 +202,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindTargetEffectAny(short effectID) => FindEffect(effectID, CurrentTarget, null);
+        protected static Status? FindTargetEffectAny(ushort effectID) => FindEffect(effectID, CurrentTarget, null);
 
         /// <summary>
         /// Finds an effect on the given object.
@@ -209,7 +211,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// <param name="obj">Object to look for effects on.</param>
         /// <param name="sourceID">Source object ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindEffect(short effectID, GameObject? obj, uint? sourceID)
+        protected static Status? FindEffect(ushort effectID, GameObject? obj, uint? sourceID)
         {
             if (obj is null)
                 return null;

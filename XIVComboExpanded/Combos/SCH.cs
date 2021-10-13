@@ -15,17 +15,20 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Debuffs
         {
-            // public const short placeholder = 0;
+            public const ushort
+                Placeholder = 0;
         }
 
         public static class Levels
         {
-            // public const byte placeholder = 0;
+            public const byte
+                Placeholder = 0;
         }
     }
 

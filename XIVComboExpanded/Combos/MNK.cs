@@ -17,7 +17,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Buffs
         {
-            public const short
+            public const ushort
                 TwinSnakes = 101,
                 OpoOpoForm = 107,
                 RaptorForm = 108,
@@ -29,7 +29,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         public static class Debuffs
         {
-            public const short
+            public const ushort
                 Demolish = 246;
         }
 
