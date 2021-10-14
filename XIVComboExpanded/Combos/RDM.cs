@@ -157,7 +157,7 @@ namespace XIVComboExpandedPlugin.Combos
                         return RDM.Veraero;
                 }
 
-                if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeature))
+                if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeatureStone))
                 {
                     if (!HasEffect(RDM.Buffs.VerstoneReady) && !HasCondition(ConditionFlag.InCombat) && level >= RDM.Levels.Veraero)
                         return RDM.Veraero;
@@ -183,7 +183,7 @@ namespace XIVComboExpandedPlugin.Combos
                         return RDM.Verthunder;
                 }
 
-                if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeature))
+                if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeatureFire))
                 {
                     if (!HasEffect(RDM.Buffs.VerfireReady) && !HasCondition(ConditionFlag.InCombat) && level >= RDM.Levels.Verthunder)
                         return RDM.Verthunder;
