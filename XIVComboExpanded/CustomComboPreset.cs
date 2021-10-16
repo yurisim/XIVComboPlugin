@@ -7,7 +7,7 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     public enum CustomComboPreset
     {
-        // Last enum used: 95
+        // Last enum used: 102
         // ====================================================================================
         #region ASTROLOGIAN
 
@@ -208,10 +208,15 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.", MCH.JobID, MCH.RookAutoturret, MCH.AutomatonQueen)]
         MachinistOverdriveFeature = 58,
 
-        [SecretCustomCombo]
         [OrderedEnum]
+        [SecretCustomCombo]
         [CustomComboInfo("Gauss Round / Ricochet Feature", "Replace Gauss Round and Ricochet with one or the other depending on which has more charges.", MCH.JobID, MCH.GaussRound, MCH.Ricochet)]
         MachinistGaussRoundRicochetFeature = 66,
+
+        [OrderedEnum]
+        [SecretCustomCombo]
+        [CustomComboInfo("Drill / Air Anchor Feature", "Replace Drill and Air Anchor with one or the other depending on which is on cooldown.", MCH.JobID, MCH.Drill, MCH.AirAnchor)]
+        MachinistDrillAirAnchortFeature = 102,
 
         #endregion
         // ====================================================================================

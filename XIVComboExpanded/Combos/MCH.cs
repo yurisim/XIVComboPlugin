@@ -7,22 +7,29 @@ namespace XIVComboExpandedPlugin.Combos
         public const byte JobID = 31;
 
         public const uint
+            // Single target
             CleanShot = 2873,
             HeatedCleanShot = 7413,
             SplitShot = 2866,
             HeatedSplitShot = 7411,
             SlugShot = 2868,
+            HeatedSlugshot = 7412,
+            // Charges
             GaussRound = 2874,
             Ricochet = 2890,
-            HeatedSlugshot = 7412,
-            Hypercharge = 17209,
-            HeatBlast = 7410,
+            // AoE
             SpreadShot = 2870,
             AutoCrossbow = 16497,
+            // Rook
             RookAutoturret = 2864,
             RookOverdrive = 7415,
             AutomatonQueen = 16501,
-            QueenOverdrive = 16502;
+            QueenOverdrive = 16502,
+            // Other
+            Hypercharge = 17209,
+            HeatBlast = 7410,
+            Drill = 16498,
+            AirAnchor = 16500;
 
         public static class Buffs
         {
@@ -151,6 +158,30 @@ namespace XIVComboExpandedPlugin.Combos
                 var gauge = GetJobGauge<MCHGauge>();
                 if (gauge.IsRobotActive)
                     return OriginalHook(MCH.QueenOverdrive);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MachinistDrillAirAnchorFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.MachinistDrillAirAnchortFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MCH.Drill || actionID == MCH.AirAnchor)
+            {
+                var drillCd = GetCooldown(MCH.Drill);
+                var anchorCd = GetCooldown(MCH.AirAnchor);
+
+                // Prioritize the original if both are off cooldown
+                if (!drillCd.IsCooldown && !anchorCd.IsCooldown)
+                    return actionID;
+
+                return drillCd.CooldownRemaining < anchorCd.CooldownRemaining
+                    ? MCH.Drill
+                    : MCH.AirAnchor;
             }
 
             return actionID;
