@@ -28,6 +28,7 @@ namespace XIVComboExpandedPlugin.Combos
             // Other
             Hypercharge = 17209,
             HeatBlast = 7410,
+            HotShot = 2872,
             Drill = 16498,
             AirAnchor = 16500;
 
@@ -55,9 +56,11 @@ namespace XIVComboExpandedPlugin.Combos
                 Ricochet = 50,
                 AutoCrossbow = 52,
                 HeatedSplitShot = 54,
+                Drill = 58,
                 HeatedSlugshot = 60,
                 HeatedCleanShot = 64,
                 ChargedActionMastery = 74,
+                AirAnchor = 76,
                 QueenOverdrive = 80;
         }
     }
@@ -166,14 +169,18 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistDrillAirAnchorFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistDrillAirAnchortFeature;
+        protected override CustomComboPreset Preset => CustomComboPreset.MachinistDrillAirAnchorFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.Drill || actionID == MCH.AirAnchor)
+            if (actionID == MCH.Drill || actionID == MCH.HotShot || actionID == MCH.AirAnchor)
             {
+                if (level < MCH.Levels.Drill)
+                    return MCH.HotShot;
+
+                var anchorID = OriginalHook(MCH.AirAnchor);
+                var anchorCd = GetCooldown(anchorID);
                 var drillCd = GetCooldown(MCH.Drill);
-                var anchorCd = GetCooldown(MCH.AirAnchor);
 
                 // Prioritize the original if both are off cooldown
                 if (!drillCd.IsCooldown && !anchorCd.IsCooldown)
@@ -181,7 +188,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 return drillCd.CooldownRemaining < anchorCd.CooldownRemaining
                     ? MCH.Drill
-                    : MCH.AirAnchor;
+                    : anchorID;
             }
 
             return actionID;

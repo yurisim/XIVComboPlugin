@@ -215,8 +215,8 @@ namespace XIVComboExpandedPlugin
 
         [OrderedEnum]
         [SecretCustomCombo]
-        [CustomComboInfo("Drill / Air Anchor Feature", "Replace Drill and Air Anchor with one or the other depending on which is on cooldown.", MCH.JobID, MCH.Drill, MCH.AirAnchor)]
-        MachinistDrillAirAnchortFeature = 102,
+        [CustomComboInfo("Drill / Air Anchor (Hot Shot) Feature", "Replace Drill and Air Anchor (Hot Shot) with one or the other depending on which is on cooldown.", MCH.JobID, MCH.Drill, MCH.HotShot, MCH.AirAnchor)]
+        MachinistDrillAirAnchorFeature = 102,
 
         #endregion
         // ====================================================================================
