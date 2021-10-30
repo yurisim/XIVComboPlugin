@@ -1,4 +1,6 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
@@ -109,6 +111,8 @@ namespace XIVComboExpandedPlugin.Combos
     /// </summary>
     internal abstract partial class CustomCombo
     {
+        private static readonly Dictionary<Type, JobGaugeBase> JobGaugeCache = new();
+
         /// <summary>
         /// Gets the player or null.
         /// </summary>
@@ -240,6 +244,12 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <typeparam name="T">Type of job gauge.</typeparam>
         /// <returns>The job gauge.</returns>
-        protected static T GetJobGauge<T>() where T : JobGaugeBase => Service.JobGauges.Get<T>();
+        protected static T GetJobGauge<T>() where T : JobGaugeBase
+        {
+            if (!JobGaugeCache.TryGetValue(typeof(T), out var gauge))
+                gauge = JobGaugeCache[typeof(T)] = Service.JobGauges.Get<T>();
+
+            return (T)gauge;
+        }
     }
 }
