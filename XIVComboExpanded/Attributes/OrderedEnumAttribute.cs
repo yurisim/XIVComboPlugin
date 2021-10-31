@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace XIVComboExpandedPlugin
+namespace XIVComboExpandedPlugin.Attributes
 {
     /// <summary>
     /// An attribute that allows for sorting an enum by declaration order.

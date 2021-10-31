@@ -1,3 +1,4 @@
+using XIVComboExpandedPlugin.Attributes;
 using XIVComboExpandedPlugin.Combos;
 
 namespace XIVComboExpandedPlugin

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XIVComboExpandedPlugin
+namespace XIVComboExpandedPlugin.Attributes
 {
     /// <summary>
     /// Attribute documenting conflicting presets for each combo.

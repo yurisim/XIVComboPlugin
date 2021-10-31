@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XIVComboExpandedPlugin
+namespace XIVComboExpandedPlugin.Attributes
 {
     /// <summary>
     /// Attribute designating secret combos.
