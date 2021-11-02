@@ -23,7 +23,12 @@ namespace XIVComboExpandedPlugin.Combos
             TenChiJin = 7403,
             HakkeMujinsatsu = 16488,
             Meisui = 16489,
-            Jin = 18807;
+            Jin = 18807,
+            Bunshin = uint.MaxValue,
+            Huraijin = uint.MaxValue,
+            PhantomKamaitachi = uint.MaxValue,
+            ForkedRaiju = uint.MaxValue,
+            FleetingRaiju = uint.MaxValue;
 
         public static class Buffs
         {
@@ -32,7 +37,9 @@ namespace XIVComboExpandedPlugin.Combos
                 Kassatsu = 497,
                 Suiton = 507,
                 Hidden = 614,
-                AssassinateReady = 1955;
+                Bunshin = 1954,
+                ForkedRaijuReady = ushort.MaxValue,
+                FleetingRaijuReady = ushort.MaxValue;
         }
 
         public static class Debuffs
@@ -48,8 +55,12 @@ namespace XIVComboExpandedPlugin.Combos
                 AeolianEdge = 26,
                 HakkeMujinsatsu = 52,
                 ArmorCrush = 54,
+                Huraijin = 60,
                 Meisui = 72,
-                EnhancedKassatsu = 76;
+                EnhancedKassatsu = 76,
+                Bunshin = 80,
+                PhantomKamaitachi = 82,
+                ForkedRaiju = 90;
         }
     }
 
@@ -129,22 +140,6 @@ namespace XIVComboExpandedPlugin.Combos
                     return NIN.HakkeMujinsatsu;
 
                 return NIN.DeathBlossom;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class NinjaAssassinateFeature : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.NinjaAssassinateFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == NIN.DreamWithinADream)
-            {
-                if (HasEffect(NIN.Buffs.AssassinateReady))
-                    return NIN.Assassinate;
             }
 
             return actionID;
@@ -234,4 +229,43 @@ namespace XIVComboExpandedPlugin.Combos
     //         return actionID;
     //     }
     // }
+
+    internal class NinjaBunshinKamaitachiFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaBunshinKamaitachiFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == NIN.Bunshin)
+            {
+                if (level >= NIN.Levels.PhantomKamaitachi && HasEffect(NIN.Buffs.Bunshin))
+                    return NIN.PhantomKamaitachi;
+
+                return NIN.Bunshin;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class NinjaHuraijinRaijuFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaHuraijinRaijuFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == NIN.Huraijin)
+            {
+                if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.ForkedRaijuReady))
+                    return NIN.ForkedRaiju;
+
+                if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.FleetingRaijuReady))
+                    return NIN.FleetingRaiju;
+
+                return NIN.Huraijin;
+            }
+
+            return actionID;
+        }
+    }
 }

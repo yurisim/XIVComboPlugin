@@ -13,7 +13,8 @@ namespace XIVComboExpandedPlugin.Combos
             Cure2 = 135,
             AfflatusSolace = 16531,
             AfflatusRapture = 16534,
-            AfflatusMisery = 16535;
+            AfflatusMisery = 16535,
+            Lilybell = uint.MaxValue;
 
         public static class Buffs
         {

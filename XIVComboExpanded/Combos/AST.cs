@@ -18,13 +18,14 @@ namespace XIVComboExpandedPlugin.Combos
             Ewer = 4405,
             Spire = 4406,
             MinorArcana = 7443,
-            SleeveDraw = 7448,
-            Play = 17055;
+            Play = 17055,
+            CrownPlay = uint.MaxValue;
 
         public static class Buffs
         {
             public const ushort
-                Placeholder = 0;
+                LordOfCrownsDrawn = ushort.MaxValue,
+                LadyOfCrownsDrawn = ushort.MaxValue;
         }
 
         public static class Debuffs
@@ -37,8 +38,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Benefic2 = 26,
-                MinorArcana = 50,
-                SleeveDraw = 70;
+                MinorArcana = 70,
+                CrownPlay = 70;
         }
     }
 
@@ -59,22 +60,21 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    // internal class AstrologianSleeveDrawFeature : CustomCombo
-    // {
-    //     protected override CustomComboPreset Preset => CustomComboPreset.AstrologianSleeveDrawFeature;
-    //
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID == AST.MinorArcana)
-    //         {
-    //             var gauge = GetJobGauge<ASTGauge>();
-    //             if (gauge.DrawnCard() == CardType.NONE && level >= AST.Levels.SleeveDraw)
-    //                 return AST.SleeveDraw;
-    //         }
-    //
-    //         return actionID;
-    //     }
-    // }
+    internal class AstrologianMinorArcanaPlayFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianMinorArcanaPlayFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == AST.MinorArcana)
+            {
+                if (level >= AST.Levels.MinorArcana && (HasEffect(AST.Buffs.LordOfCrownsDrawn) || HasEffect(AST.Buffs.LadyOfCrownsDrawn)))
+                    return AST.CrownPlay;
+            }
+
+            return actionID;
+        }
+    }
 
     internal class AstrologianBeneficFeature : CustomCombo
     {

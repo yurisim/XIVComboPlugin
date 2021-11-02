@@ -26,7 +26,8 @@ namespace XIVComboExpandedPlugin.Combos
             Jolt2 = 7524,
             Verholy = 7526,
             Verflare = 7525,
-            Scorch = 16530;
+            Scorch = 16530,
+            Resolution = uint.MaxValue;
 
         public static class Buffs
         {
@@ -58,7 +59,8 @@ namespace XIVComboExpandedPlugin.Combos
                 Impact = 66,
                 Verflare = 68,
                 Verholy = 70,
-                Scorch = 80;
+                Scorch = 80,
+                Resolution = 90;
         }
     }
 
@@ -146,22 +148,28 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Verstone)
             {
+                if (level >= RDM.Levels.Resolution && lastComboMove == RDM.Scorch)
+                    return RDM.Resolution;
+
                 if (level >= RDM.Levels.Scorch && (lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy))
                     return RDM.Scorch;
 
-                if (lastComboMove == RDM.EnchantedRedoublement && level >= RDM.Levels.Verholy)
-                    return RDM.Verholy;
+                // TODO
+                // if (level >= RDM.Levels.Verholy && gauge.Stacks == 3)
+                //     return RDM.Verholy;
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocComboPlus))
                 {
                     if ((HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)) && level >= RDM.Levels.Veraero)
-                        return RDM.Veraero;
+                        // Veraero3
+                        return OriginalHook(RDM.Veraero);
                 }
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeatureStone))
                 {
-                    if (!HasEffect(RDM.Buffs.VerstoneReady) && !HasCondition(ConditionFlag.InCombat) && level >= RDM.Levels.Veraero)
-                        return RDM.Veraero;
+                    if (level >= RDM.Levels.Veraero && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RDM.Buffs.VerstoneReady))
+                        // Veraero3
+                        return OriginalHook(RDM.Veraero);
                 }
 
                 if (HasEffect(RDM.Buffs.VerstoneReady))
@@ -172,22 +180,28 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (actionID == RDM.Verfire)
             {
+                if (level >= RDM.Levels.Resolution && lastComboMove == RDM.Scorch)
+                    return RDM.Resolution;
+
                 if (level >= RDM.Levels.Scorch && (lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy))
                     return RDM.Scorch;
 
-                if (lastComboMove == RDM.EnchantedRedoublement && level >= RDM.Levels.Verflare)
-                    return RDM.Verflare;
+                // TODO
+                // if (level >= RDM.Levels.Verflare && gauge.Stacks == 3)
+                //     return RDM.Verflare;
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocComboPlus))
                 {
-                    if ((HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)) && level >= RDM.Levels.Verthunder)
-                        return RDM.Verthunder;
+                    if (level >= RDM.Levels.Verthunder && (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)))
+                        // Verthunder3
+                        return OriginalHook(RDM.Verthunder);
                 }
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocOpenerFeatureFire))
                 {
-                    if (!HasEffect(RDM.Buffs.VerfireReady) && !HasCondition(ConditionFlag.InCombat) && level >= RDM.Levels.Verthunder)
-                        return RDM.Verthunder;
+                    if (level >= RDM.Levels.Verthunder && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RDM.Buffs.VerfireReady))
+                        // Verthunder3
+                        return OriginalHook(RDM.Verthunder);
                 }
 
                 if (HasEffect(RDM.Buffs.VerfireReady))

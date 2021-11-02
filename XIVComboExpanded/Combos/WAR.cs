@@ -20,13 +20,15 @@ namespace XIVComboExpandedPlugin.Combos
             MythrilTempest = 16462,
             ChaoticCyclone = 16463,
             NascentFlash = 16464,
-            InnerChaos = 16465;
+            InnerChaos = 16465,
+            PrimalRend = uint.MaxValue;
 
         public static class Buffs
         {
             public const ushort
                 InnerRelease = 1177,
-                NascentChaos = 1897;
+                NascentChaos = 1897,
+                PrimalRendReady = ushort.MaxValue;
         }
 
         public static class Debuffs
@@ -46,7 +48,8 @@ namespace XIVComboExpandedPlugin.Combos
                 Decimate = 60,
                 MythrilTempestTrait = 74,
                 NascentFlash = 76,
-                InnerChaos = 80;
+                InnerChaos = 80,
+                PrimalRend = 90;
         }
     }
 
@@ -143,8 +146,29 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == WAR.NascentFlash)
             {
                 if (level >= WAR.Levels.NascentFlash)
-                    return WAR.NascentFlash;
+                    // Bloodwhetting
+                    return OriginalHook(WAR.NascentFlash);
+
                 return WAR.RawIntuition;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class WArriorPrimalRendFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.WarriorPrimalRendFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == WAR.InnerBeast || actionID == WAR.SteelCyclone)
+            {
+                if (level >= WAR.Levels.PrimalRend && HasEffect(WAR.Buffs.PrimalRendReady))
+                    return WAR.PrimalRend;
+
+                // Fell Cleave or Decimate
+                return OriginalHook(actionID);
             }
 
             return actionID;

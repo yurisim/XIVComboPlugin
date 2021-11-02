@@ -46,79 +46,6 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerDemiCombo : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.SummonerDemiCombo;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            // Replace Deathflare with demi enkindles
-            if (actionID == SMN.Deathflare)
-            {
-                var gauge = GetJobGauge<SMNGauge>();
-
-                if (gauge.IsPhoenixReady)
-                    return SMN.EnkindlePhoenix;
-
-                if (gauge.TimerRemaining > 0 && gauge.ReturnSummon != SummonPet.NONE)
-                    return SMN.EnkindleBahamut;
-
-                return actionID;
-            }
-
-            // Replace DWT with demi summons
-            if (actionID == SMN.DreadwyrmTrance)
-            {
-                var gauge = GetJobGauge<SMNGauge>();
-
-                // if (IsEnabled(CustomComboPreset.SummonerDemiComboUltra) && gauge.TimerRemaining > 0)
-                // {
-                //     if (gauge.IsPhoenixReady())
-                //         return SMN.EnkindlePhoenix;
-                //
-                //     if (gauge.ReturnSummon != SummonPet.NONE)
-                //         return SMN.EnkindleBahamut;
-                //
-                //     return SMN.Deathflare;
-                // }
-
-                if (gauge.IsBahamutReady)
-                    return SMN.SummonBahamut;
-
-                if (gauge.IsPhoenixReady)
-                    return OriginalHook(SMN.FirebirdTranceLow);
-
-                return actionID;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class SummonerBoPCombo : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.SummonerBoPCombo;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == SMN.Ruin1 || actionID == SMN.Ruin3)
-            {
-                var gauge = GetJobGauge<SMNGauge>();
-                if (gauge.TimerRemaining > 0 && gauge.IsPhoenixReady)
-                {
-                    if (HasEffect(SMN.Buffs.HellishConduit))
-                        return SMN.BrandOfPurgatory;
-
-                    return SMN.FountainOfFire;
-                }
-
-                return OriginalHook(SMN.Ruin3);
-            }
-
-            return actionID;
-        }
-    }
-
     internal class SummonerEDFesterCombo : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.SummonerEDFesterCombo;
@@ -130,6 +57,8 @@ namespace XIVComboExpandedPlugin.Combos
                 var gauge = GetJobGauge<SMNGauge>();
                 if (!gauge.HasAetherflowStacks)
                     return SMN.EnergyDrain;
+
+                return SMN.Fester;
             }
 
             return actionID;
@@ -148,10 +77,8 @@ namespace XIVComboExpandedPlugin.Combos
                 if (!gauge.HasAetherflowStacks)
                     return SMN.EnergySyphon;
 
-                if (level >= SMN.Levels.Painflare)
-                    return SMN.Painflare;
-
-                return SMN.EnergySyphon;
+                // Painflare
+                return OriginalHook(SMN.EnergySyphon);
             }
 
             return actionID;

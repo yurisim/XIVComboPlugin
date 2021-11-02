@@ -8,22 +8,30 @@ namespace XIVComboExpandedPlugin.Combos
         public const byte JobID = 34;
 
         public const uint
+            // Single target
             Hakaze = 7477,
+            Jinpu = 7478,
+            Shifu = 7479,
             Yukikaze = 7480,
             Gekko = 7481,
-            Jinpu = 7478,
             Kasha = 7482,
-            Shifu = 7479,
-            Mangetsu = 7484,
+            // AoE
             Fuga = 7483,
+            Mangetsu = 7484,
             Oka = 7485,
-            MeikyoShisui = 7499,
-            Seigan = 7501,
-            ThirdEye = 7498,
+            Hyosetsu = uint.MaxValue,
+            // Iaijutsu and Tsubame
             Iaijutsu = 7867,
             TsubameGaeshi = 16483,
             KaeshiHiganbana = 16484,
-            Shoha = 16487;
+            Shoha = 1648,
+            // Misc
+            MeikyoShisui = 7499,
+            Seigan = 7501,
+            ThirdEye = 7498,
+            Ikishoten = uint.MaxValue,
+            OgiNamikiri = uint.MaxValue,
+            KaeshiNamikiri = uint.MaxValue;
 
         public static class Buffs
         {
@@ -31,7 +39,8 @@ namespace XIVComboExpandedPlugin.Combos
                 MeikyoShisui = 1233,
                 EyesOpen = 1252,
                 Jinpu = 1298,
-                Shifu = 1299;
+                Shifu = 1299,
+                OgiNamikiriReady = ushort.MaxValue;
         }
 
         public static class Debuffs
@@ -50,8 +59,11 @@ namespace XIVComboExpandedPlugin.Combos
                 Kasha = 40,
                 Oka = 45,
                 Yukikaze = 50,
+                MeikyoShisui = 50,
                 TsubameGaeshi = 76,
-                Shoha = 80;
+                Shoha = 80,
+                Hyosetsu = 86,
+                OgiNamikiri = 90;
         }
     }
 
@@ -63,11 +75,14 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SAM.Yukikaze)
             {
-                if (HasEffect(SAM.Buffs.MeikyoShisui))
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
                     return SAM.Yukikaze;
 
-                if (comboTime > 0 && lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze)
-                    return SAM.Yukikaze;
+                if (comboTime > 0)
+                {
+                    if (lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze)
+                        return SAM.Yukikaze;
+                }
 
                 return SAM.Hakaze;
             }
@@ -84,7 +99,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SAM.Gekko)
             {
-                if (HasEffect(SAM.Buffs.MeikyoShisui))
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
                     return SAM.Gekko;
 
                 if (comboTime > 0)
@@ -111,7 +126,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SAM.Kasha)
             {
-                if (HasEffect(SAM.Buffs.MeikyoShisui))
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
                     return SAM.Kasha;
 
                 if (comboTime > 0)
@@ -138,7 +153,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SAM.Mangetsu)
             {
-                if (HasEffect(SAM.Buffs.MeikyoShisui))
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
                     return SAM.Mangetsu;
 
                 if (comboTime > 0 && lastComboMove == SAM.Fuga && level >= SAM.Levels.Mangetsu)
@@ -159,7 +174,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SAM.Oka)
             {
-                if (HasEffect(SAM.Buffs.MeikyoShisui))
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
                     return SAM.Oka;
 
                 if (comboTime > 0 && lastComboMove == SAM.Fuga && level >= SAM.Levels.Oka)
@@ -172,18 +187,21 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiThirdEyeFeature : CustomCombo
+    internal class SamuraiHyosetsuCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.SamuraiThirdEyeFeature;
+        protected override CustomComboPreset Preset => CustomComboPreset.SamuraiHyosetsuCombo;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == SAM.Seigan)
+            if (actionID == SAM.Hyosetsu)
             {
-                if (HasEffect(SAM.Buffs.EyesOpen))
-                    return SAM.Seigan;
+                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
+                    return SAM.Hyosetsu;
 
-                return SAM.ThirdEye;
+                if (comboTime > 0 && lastComboMove == SAM.Fuga && level >= SAM.Levels.Hyosetsu)
+                    return SAM.Hyosetsu;
+
+                return SAM.Fuga;
             }
 
             return actionID;
@@ -278,6 +296,30 @@ namespace XIVComboExpandedPlugin.Combos
                 if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
                     return OriginalHook(SAM.TsubameGaeshi);
                 return OriginalHook(SAM.Iaijutsu);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SamuraiIkishotenNamikiriFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SamuraiIkishotenNamikiriFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SAM.Ikishoten)
+            {
+                if (level >= SAM.Levels.OgiNamikiri)
+                {
+                    if (HasEffect(SAM.Buffs.OgiNamikiriReady))
+                        return SAM.OgiNamikiri;
+
+                    if (lastComboMove == SAM.OgiNamikiri)
+                        return SAM.KaeshiNamikiri;
+                }
+
+                return SAM.Ikishoten;
             }
 
             return actionID;

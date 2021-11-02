@@ -78,7 +78,8 @@ namespace XIVComboExpandedPlugin.Combos
                 //     return BRD.ApexArrow;
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
-                    return OriginalHook(BRD.RefulgentArrow);
+                    // Refulgent Arrow
+                    return OriginalHook(BRD.StraightShot);
             }
 
             return actionID;

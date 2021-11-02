@@ -20,26 +20,31 @@ namespace XIVComboExpandedPlugin.Combos
             // Dancing
             StandardStep = 15997,
             TechnicalStep = 15998,
+            Tillana = uint.MaxValue,
             // Fans
             FanDance1 = 16007,
             FanDance2 = 16008,
             FanDance3 = 16009,
+            FanDance4 = uint.MaxValue,
             // Other
             SaberDance = 16005,
             EnAvant = 16010,
+            Devilment = 16011,
             Flourish = 16013,
-            Improvisation = 16014;
+            Improvisation = 16014,
+            StarfallDance = uint.MaxValue;
 
         public static class Buffs
         {
             public const ushort
-                FlourishingCascade = 1814,
-                FlourishingFountain = 1815,
-                FlourishingWindmill = 1816,
-                FlourishingShower = 1817,
+                FlourishingSymmetry = ushort.MaxValue,
+                FlourishingFlow = ushort.MaxValue,
+                FlourishingFinish = ushort.MaxValue,
+                FlourishingStarfall = ushort.MaxValue,
                 StandardStep = 1818,
                 TechnicalStep = 1819,
-                FlourishingFanDance = 1820;
+                ThreefoldFanDance = ushort.MaxValue,
+                FourfoldFanDance = ushort.MaxValue;
         }
 
         public static class Debuffs
@@ -51,8 +56,20 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                Cascade = 1,
                 Fountain = 2,
-                Bladeshower = 25;
+                Windmill = 15,
+                StandardStep = 15,
+                ReverseCascade = 20,
+                Bladeshower = 25,
+                RisingWindmill = 35,
+                Fountainfall = 40,
+                Bloodshower = 45,
+                FanDance3 = 66,
+                TechnicalStep = 70,
+                Tillana = 82,
+                FanDance4 = 86,
+                StarfallDance = 90;
         }
     }
 
@@ -92,20 +109,15 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == DNC.FanDance1)
+            if (actionID == DNC.FanDance1 || actionID == DNC.FanDance2)
             {
-                if (HasEffect(DNC.Buffs.FlourishingFanDance))
+                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                    return DNC.FanDance4;
+
+                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
                     return DNC.FanDance3;
 
-                return DNC.FanDance1;
-            }
-
-            if (actionID == DNC.FanDance2)
-            {
-                if (HasEffect(DNC.Buffs.FlourishingFanDance))
-                    return DNC.FanDance3;
-
-                return DNC.FanDance2;
+                return actionID;
             }
 
             return actionID;
@@ -121,25 +133,28 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.StandardStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
-                if (gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
+                if (gauge.IsDancing && level >= DNC.Levels.StandardStep && HasEffect(DNC.Buffs.StandardStep))
                 {
                     if (gauge.CompletedSteps < 2)
                         return gauge.NextStep;
 
                     return OriginalHook(DNC.StandardStep);
                 }
+
+                return DNC.StandardStep;
             }
 
             if (actionID == DNC.TechnicalStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
-                if (gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
+                if (gauge.IsDancing && level >= DNC.Levels.TechnicalStep && HasEffect(DNC.Buffs.TechnicalStep))
                 {
                     if (gauge.CompletedSteps < 4)
                         return gauge.NextStep;
-
-                    return OriginalHook(DNC.TechnicalStep);
                 }
+
+                // Tillana
+                return OriginalHook(DNC.TechnicalStep);
             }
 
             return actionID;
@@ -154,17 +169,17 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DNC.Flourish)
             {
-                if (HasEffect(DNC.Buffs.FlourishingFountain))
+                if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
                     return DNC.Fountainfall;
 
-                if (HasEffect(DNC.Buffs.FlourishingCascade))
+                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                    return DNC.FanDance4;
+
+                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
                     return DNC.ReverseCascade;
 
-                if (HasEffect(DNC.Buffs.FlourishingShower))
-                    return DNC.Bloodshower;
-
-                if (HasEffect(DNC.Buffs.FlourishingWindmill))
-                    return DNC.RisingWindmill;
+                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                    return DNC.FanDance3;
 
                 return DNC.Flourish;
             }
@@ -182,11 +197,11 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.Cascade)
             {
                 // From Fountain
-                if (HasEffect(DNC.Buffs.FlourishingFountain))
+                if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
                     return DNC.Fountainfall;
 
                 // From Cascade
-                if (HasEffect(DNC.Buffs.FlourishingCascade))
+                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
                     return DNC.ReverseCascade;
 
                 // Cascade Combo
@@ -209,11 +224,11 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.Windmill)
             {
                 // From Bladeshower
-                if (HasEffect(DNC.Buffs.FlourishingShower))
+                if (level >= DNC.Levels.Bloodshower && HasEffect(DNC.Buffs.FlourishingFlow))
                     return DNC.Bloodshower;
 
                 // From Windmill
-                if (HasEffect(DNC.Buffs.FlourishingWindmill))
+                if (level >= DNC.Levels.RisingWindmill && HasEffect(DNC.Buffs.FlourishingSymmetry))
                     return DNC.RisingWindmill;
 
                 // Windmill Combo
@@ -221,6 +236,24 @@ namespace XIVComboExpandedPlugin.Combos
                     return DNC.Bladeshower;
 
                 return DNC.Windmill;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DancerDevilmentFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerDevilmentFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DNC.Devilment)
+            {
+                if (level >= DNC.Levels.StarfallDance && HasEffect(DNC.Buffs.FlourishingStarfall))
+                    return DNC.StarfallDance;
+
+                return DNC.Devilment;
             }
 
             return actionID;

@@ -20,7 +20,6 @@ namespace XIVComboExpandedPlugin.Combos
             Freeze = 159,
             Flare = 162,
             LeyLines = 3573,
-            Enochian = 3575,
             Blizzard4 = 3576,
             Fire4 = 3577,
             BetweenTheLines = 7419,
@@ -46,18 +45,19 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
-                Fire3 = 34,
-                Freeze = 35,
-                Blizzard3 = 40,
+                Fire3 = 35,
+                Blizzard3 = 35,
+                Freeze = 40,
                 Thunder3 = 45,
                 Flare = 50,
-                Enochian = 56,
-                Blizzard4 = 58,
-                Fire4 = 60,
+                Enochian = 60,
                 BetweenTheLines = 62,
                 Despair = 72,
                 UmbralSoul = 76,
-                Xenoglossy = 80;
+                Xenoglossy = 80,
+                HighFire2 = 82,
+                HighBlizzard2 = 82,
+                Paradox = 90;
         }
     }
 
@@ -67,25 +67,15 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Enochian)
+            if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (gauge.IsEnochianActive)
+                if (level >= BLM.Levels.Enochian)
                 {
-                    if (gauge.InUmbralIce && level >= BLM.Levels.Blizzard4)
+                    if (gauge.InUmbralIce)
                         return BLM.Blizzard4;
-                    if (level >= BLM.Levels.Fire4)
-                        return BLM.Fire4;
-                }
 
-                if (level < BLM.Levels.Fire3)
-                    return BLM.Fire;
-
-                if (gauge.InAstralFire && (level < BLM.Levels.Enochian || gauge.IsEnochianActive))
-                {
-                    if (HasEffect(BLM.Buffs.Firestarter))
-                        return BLM.Fire3;
-                    return BLM.Fire;
+                    return BLM.Fire4;
                 }
             }
 
@@ -170,6 +160,9 @@ namespace XIVComboExpandedPlugin.Combos
                 var gauge = GetJobGauge<BLMGauge>();
                 if (level >= BLM.Levels.Fire3 && (!gauge.InAstralFire || HasEffect(BLM.Buffs.Firestarter)))
                     return BLM.Fire3;
+
+                // Paradox
+                return OriginalHook(BLM.Fire);
             }
 
             return actionID;
