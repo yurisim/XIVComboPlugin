@@ -1,3 +1,5 @@
+using System;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -97,16 +99,23 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
             {
-                var gaussCd = GetCooldown(MCH.GaussRound);
-                var ricochetCd = GetCooldown(MCH.Ricochet);
+                if (level >= MCH.Levels.Ricochet)
+                {
+                    var gauss = (MCH.GaussRound, GetCooldown(MCH.GaussRound));
+                    var ricochet = (MCH.Ricochet, GetCooldown(MCH.Ricochet));
 
-                // Prioritize the original if both are off cooldown
-                if (!gaussCd.IsCooldown && !ricochetCd.IsCooldown)
+                    // Prioritize whichever is slotted action.
+                    (actionID, _) = actionID switch
+                    {
+                        MCH.GaussRound => CalcBestAction(gauss, ricochet),
+                        MCH.Ricochet => CalcBestAction(ricochet, gauss),
+                        _ => throw new NotImplementedException(),
+                    };
+
                     return actionID;
+                }
 
-                return gaussCd.CooldownRemaining < ricochetCd.CooldownRemaining
-                    ? MCH.GaussRound
-                    : MCH.Ricochet;
+                return MCH.GaussRound;
             }
 
             return actionID;
@@ -160,6 +169,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<MCHGauge>();
                 if (gauge.IsRobotActive)
+                    // Rook Autoturret
                     return OriginalHook(MCH.QueenOverdrive);
             }
 
@@ -175,20 +185,39 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MCH.Drill || actionID == MCH.HotShot || actionID == MCH.AirAnchor)
             {
-                if (level < MCH.Levels.Drill)
-                    return MCH.HotShot;
+                if (level >= MCH.Levels.AirAnchor)
+                {
+                    var drill = (MCH.Drill, GetCooldown(MCH.Drill));
+                    var anchor = (MCH.AirAnchor, GetCooldown(MCH.AirAnchor));
 
-                var anchorID = OriginalHook(MCH.AirAnchor);
-                var anchorCd = GetCooldown(anchorID);
-                var drillCd = GetCooldown(MCH.Drill);
+                    // Prioritize whichever is slotted action.
+                    (actionID, _) = actionID switch
+                    {
+                        MCH.Drill => CalcBestAction(drill, anchor),
+                        MCH.AirAnchor => CalcBestAction(anchor, drill),
+                        _ => throw new NotImplementedException(),
+                    };
 
-                // Prioritize the original if both are off cooldown
-                if (!drillCd.IsCooldown && !anchorCd.IsCooldown)
                     return actionID;
+                }
 
-                return drillCd.CooldownRemaining < anchorCd.CooldownRemaining
-                    ? MCH.Drill
-                    : anchorID;
+                if (level >= MCH.Levels.Drill)
+                {
+                    var drill = (MCH.Drill, GetCooldown(MCH.Drill));
+                    var hotshot = (MCH.HotShot, GetCooldown(MCH.HotShot));
+
+                    // Prioritize whichever is slotted action.
+                    (actionID, _) = actionID switch
+                    {
+                        MCH.Drill => CalcBestAction(drill, hotshot),
+                        MCH.HotShot => CalcBestAction(hotshot, drill),
+                        _ => throw new NotImplementedException(),
+                    };
+
+                    return actionID;
+                }
+
+                return MCH.HotShot;
             }
 
             return actionID;

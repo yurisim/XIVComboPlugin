@@ -97,6 +97,32 @@ namespace XIVComboExpandedPlugin.Combos
         }
 
         /// <summary>
+        /// Calculate the best action to use, based on cooldown remaining.
+        /// </summary>
+        /// <param name="actions">Action data.</param>
+        /// <returns>The appropriate action to use.</returns>
+        protected static (uint ActionID, IconReplacer.CooldownData Data) CalcBestAction(params (uint ActionID, IconReplacer.CooldownData Data)[] actions)
+        {
+            static (uint ActionID, IconReplacer.CooldownData Data) Compare(
+                (uint ActionID, IconReplacer.CooldownData Data) a1,
+                (uint ActionID, IconReplacer.CooldownData Data) a2)
+            {
+                // Neither, return the first parameter
+                if (!a1.Data.IsCooldown && !a2.Data.IsCooldown)
+                    return a1;
+
+                // Both, return soonest available
+                if (a1.Data.IsCooldown && a2.Data.IsCooldown)
+                    return a1.Data.CooldownRemaining < a2.Data.CooldownRemaining ? a1 : a2;
+
+                // One or the other
+                return a1.Data.IsCooldown ? a2 : a1;
+            }
+
+            return actions.Aggregate((a1, a2) => Compare(a1, a2));
+        }
+
+        /// <summary>
         /// Invokes the combo.
         /// </summary>
         /// <param name="actionID">Starting action ID.</param>
