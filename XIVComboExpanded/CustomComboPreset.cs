@@ -8,7 +8,8 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     public enum CustomComboPreset
     {
-        // Last enum used: 102
+        // Last enum used: 110
+        // Available: 28,38,45,46
         // ====================================================================================
         #region ASTROLOGIAN
 
@@ -45,8 +46,12 @@ namespace XIVComboExpandedPlugin
         BlackFireFeature = 70,
 
         [OrderedEnum]
-        [CustomComboInfo("Blizzard 1/2/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice. Freeze becomes Blizzard 2 when synced.", BLM.JobID, BLM.Blizzard, BLM.Freeze)]
+        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice.", BLM.JobID, BLM.Blizzard)]
         BlackBlizzardFeature = 71,
+
+        [OrderedEnum]
+        [CustomComboInfo("Freeze Feature", "Freeze becomes Blizzard 2 when synced.", BLM.JobID, BLM.Freeze)]
+        BlackFreezeFeature = 110,
 
         [OrderedEnum]
         [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID, BLM.Scathe)]

@@ -139,6 +139,16 @@ namespace XIVComboExpandedPlugin.Combos
                     return BLM.Blizzard3;
             }
 
+            return actionID;
+        }
+    }
+
+    internal class BlackFreezeFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackFreezeFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
             if (actionID == BLM.Freeze)
             {
                 if (level < BLM.Levels.Freeze)
