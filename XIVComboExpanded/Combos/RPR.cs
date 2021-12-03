@@ -79,7 +79,7 @@
                         return RPR.NightmareScythe;
                 }
 
-                return RPR.Slice;
+                return RPR.SpinningScythe;
             }
 
             return actionID;
