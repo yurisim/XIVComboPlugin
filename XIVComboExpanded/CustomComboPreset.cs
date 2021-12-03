@@ -397,10 +397,6 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Oka Combo", "Replace Oka with its combo chain.", SAM.JobID, SAM.Oka)]
         SamuraiOkaCombo = 15,
 
-        [OrderedEnum]
-        [CustomComboInfo("Hyosetsu Combo", "Replace Hyosetsu with its combo chain.", SAM.JobID, SAM.Hyosetsu)]
-        SamuraiHyosetsuCombo = 100,
-
         // [OrderedEnum]
         // [CustomComboInfo("Jinpu/Shifu Feature", "Replace Meikyo Shisui with Jinpu or Shifu depending on what is needed.", SAM.JobID, SAM.MeikyoShisui)]
         // SamuraiJinpuShifuFeature = 81,

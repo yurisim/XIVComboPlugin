@@ -19,7 +19,6 @@ namespace XIVComboExpandedPlugin.Combos
             Fuga = 7483,
             Mangetsu = 7484,
             Oka = 7485,
-            Hyosetsu = uint.MaxValue,
             // Iaijutsu and Tsubame
             Iaijutsu = 7867,
             TsubameGaeshi = 16483,
@@ -179,27 +178,6 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (comboTime > 0 && lastComboMove == SAM.Fuga && level >= SAM.Levels.Oka)
                     return SAM.Oka;
-
-                return SAM.Fuga;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class SamuraiHyosetsuCombo : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.SamuraiHyosetsuCombo;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == SAM.Hyosetsu)
-            {
-                if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
-                    return SAM.Hyosetsu;
-
-                if (comboTime > 0 && lastComboMove == SAM.Fuga && level >= SAM.Levels.Hyosetsu)
-                    return SAM.Hyosetsu;
 
                 return SAM.Fuga;
             }
