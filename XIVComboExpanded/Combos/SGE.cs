@@ -2,7 +2,7 @@
 {
     internal static class SGE
     {
-        public const byte JobID = byte.MaxValue;
+        public const byte JobID = 40;
 
         public const uint
             Diagnosis = 24284,
