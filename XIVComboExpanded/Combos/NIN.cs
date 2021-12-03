@@ -9,7 +9,7 @@ namespace XIVComboExpandedPlugin.Combos
             SpinningEdge = 2240,
             GustSlash = 2242,
             Hide = 2245,
-            Assassinate = 2246,
+            Assassinate = 8814,
             Mug = 2248,
             DeathBlossom = 2254,
             AeolianEdge = 2255,
