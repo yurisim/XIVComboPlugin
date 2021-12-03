@@ -33,7 +33,7 @@ namespace XIVComboExpandedPlugin.Combos
             HotShot = 2872,
             Drill = 16498,
             AirAnchor = 16500,
-            Chainsaw = uint.MaxValue;
+            Chainsaw = 25788;
 
         public static class Buffs
         {

@@ -27,7 +27,7 @@ namespace XIVComboExpandedPlugin.Combos
             Verholy = 7526,
             Verflare = 7525,
             Scorch = 16530,
-            Resolution = uint.MaxValue;
+            Resolution = 25858;
 
         public static class Buffs
         {

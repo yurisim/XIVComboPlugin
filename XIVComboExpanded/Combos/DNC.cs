@@ -20,31 +20,31 @@ namespace XIVComboExpandedPlugin.Combos
             // Dancing
             StandardStep = 15997,
             TechnicalStep = 15998,
-            Tillana = uint.MaxValue,
+            Tillana = 25790,
             // Fans
             FanDance1 = 16007,
             FanDance2 = 16008,
             FanDance3 = 16009,
-            FanDance4 = uint.MaxValue,
+            FanDance4 = 25791,
             // Other
             SaberDance = 16005,
             EnAvant = 16010,
             Devilment = 16011,
             Flourish = 16013,
             Improvisation = 16014,
-            StarfallDance = uint.MaxValue;
+            StarfallDance = 25792;
 
         public static class Buffs
         {
             public const ushort
-                FlourishingSymmetry = ushort.MaxValue,
-                FlourishingFlow = ushort.MaxValue,
-                FlourishingFinish = ushort.MaxValue,
-                FlourishingStarfall = ushort.MaxValue,
+                FlourishingSymmetry = 2693,
+                FlourishingFlow = 2694,
+                FlourishingFinish = 2698,
+                FlourishingStarfall = 2700,
                 StandardStep = 1818,
                 TechnicalStep = 1819,
-                ThreefoldFanDance = ushort.MaxValue,
-                FourfoldFanDance = ushort.MaxValue;
+                ThreefoldFanDance = 1820,
+                FourfoldFanDance = 2699;
         }
 
         public static class Debuffs

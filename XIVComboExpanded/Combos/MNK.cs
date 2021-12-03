@@ -17,8 +17,8 @@ namespace XIVComboExpandedPlugin.Combos
             Rockbreaker = 70,
             Meditation = 3546,
             FourPointFury = 16473,
-            HowlingFist = uint.MaxValue,
-            Enlightenment = uint.MaxValue;
+            HowlingFist = 25763,
+            Enlightenment = 16474;
 
         public static class Buffs
         {

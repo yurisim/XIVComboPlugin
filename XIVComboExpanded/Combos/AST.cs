@@ -19,13 +19,13 @@ namespace XIVComboExpandedPlugin.Combos
             Spire = 4406,
             MinorArcana = 7443,
             Play = 17055,
-            CrownPlay = uint.MaxValue;
+            CrownPlay = 25869;
 
         public static class Buffs
         {
             public const ushort
-                LordOfCrownsDrawn = ushort.MaxValue,
-                LadyOfCrownsDrawn = ushort.MaxValue;
+                LordOfCrownsDrawn = 2054,
+                LadyOfCrownsDrawn = 2055;
         }
 
         public static class Debuffs

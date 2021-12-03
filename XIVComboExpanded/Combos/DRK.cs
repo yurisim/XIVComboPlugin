@@ -16,7 +16,7 @@ namespace XIVComboExpandedPlugin.Combos
             StalwartSoul = 16468,
             FloodOfShadow = 16469,
             EdgeOfShadow = 16470,
-            Shadowbringer = uint.MaxValue;
+            Shadowbringer = 25757;
 
         public static class Buffs
         {

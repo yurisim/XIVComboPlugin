@@ -15,8 +15,8 @@ namespace XIVComboExpandedPlugin.Combos
             Disembowel = 87,
             FullThrust = 84,
             ChaosThrust = 88,
-            HeavensThrust = uint.MaxValue,
-            ChaoticSpring = uint.MaxValue,
+            HeavensThrust = 25771,
+            ChaoticSpring = 25772,
             WheelingThrust = 3556,
             FangAndClaw = 3554,
             RaidenThrust = 16479,
@@ -24,7 +24,7 @@ namespace XIVComboExpandedPlugin.Combos
             DoomSpike = 86,
             SonicThrust = 7397,
             CoerthanTorment = 16477,
-            DraconianFury = uint.MaxValue,
+            DraconianFury = 25770,
             // Combined
             // Jumps
             Jump = 92,
@@ -32,7 +32,7 @@ namespace XIVComboExpandedPlugin.Combos
             MirageDive = 7399,
             // Dragon
             Stardiver = 16480,
-            WyrmwindThrust = uint.MaxValue;
+            WyrmwindThrust = 25773;
 
         public static class Buffs
         {

@@ -20,9 +20,9 @@ namespace XIVComboExpandedPlugin.Combos
             HolyCircle = 16458,
             Confiteor = 16459,
             Atonement = 16460,
-            BladeOfFaith = ushort.MaxValue,
-            BladeOfTruth = ushort.MaxValue,
-            BladeOfValor = ushort.MaxValue;
+            BladeOfFaith = 25748,
+            BladeOfTruth = 25749,
+            BladeOfValor = 25750;
 
         public static class Buffs
         {

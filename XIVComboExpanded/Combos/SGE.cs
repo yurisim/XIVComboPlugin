@@ -5,9 +5,9 @@
         public const byte JobID = byte.MaxValue;
 
         public const uint
-            Diagnosis = uint.MaxValue,
-            Holos = uint.MaxValue,
-            Ixochole = uint.MaxValue;
+            Diagnosis = 24284,
+            Holos = 24310,
+            Ixochole = 24299;
 
         public static class Buffs
         {

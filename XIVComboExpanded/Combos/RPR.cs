@@ -6,20 +6,20 @@
 
         public const uint
             // Single Target
-            Slice = uint.MaxValue,
-            WaxingSlice = uint.MaxValue,
-            InfernalSlice = uint.MaxValue,
+            Slice = 24373,
+            WaxingSlice = 24374,
+            InfernalSlice = 24375,
             // AoE
-            SpinningScythe = uint.MaxValue,
-            NightmareScythe = uint.MaxValue,
+            SpinningScythe = 24376,
+            NightmareScythe = 24377,
             // Shroud
-            Enshroud = uint.MaxValue,
-            Communio = uint.MaxValue;
+            Enshroud = 24394,
+            Communio = 24398;
 
         public static class Buffs
         {
             public const ushort
-                Enshrouded = ushort.MaxValue;
+                Enshrouded = 2593;
         }
 
         public static class Debuffs

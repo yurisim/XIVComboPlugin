@@ -29,9 +29,9 @@ namespace XIVComboExpandedPlugin.Combos
             MeikyoShisui = 7499,
             Seigan = 7501,
             ThirdEye = 7498,
-            Ikishoten = uint.MaxValue,
-            OgiNamikiri = uint.MaxValue,
-            KaeshiNamikiri = uint.MaxValue;
+            Ikishoten = 16482,
+            OgiNamikiri = 25781,
+            KaeshiNamikiri = 25782;
 
         public static class Buffs
         {
@@ -40,7 +40,7 @@ namespace XIVComboExpandedPlugin.Combos
                 EyesOpen = 1252,
                 Jinpu = 1298,
                 Shifu = 1299,
-                OgiNamikiriReady = ushort.MaxValue;
+                OgiNamikiriReady = 2959;
         }
 
         public static class Debuffs

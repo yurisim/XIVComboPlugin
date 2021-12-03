@@ -23,8 +23,8 @@ namespace XIVComboExpandedPlugin.Combos
             BurstStrike = 16162,
             FatedCircle = 16163,
             Bloodfest = 16164,
-            DoubleDown = uint.MaxValue,
-            Hypervelocity = uint.MaxValue;
+            DoubleDown = 25760,
+            Hypervelocity = 25759;
 
         public static class Buffs
         {
@@ -33,7 +33,7 @@ namespace XIVComboExpandedPlugin.Combos
                 ReadyToRip = 1842,
                 ReadyToTear = 1843,
                 ReadyToGouge = 1844,
-                ReadyToBlast = ushort.MaxValue;
+                ReadyToBlast = 2686;
         }
 
         public static class Debuffs

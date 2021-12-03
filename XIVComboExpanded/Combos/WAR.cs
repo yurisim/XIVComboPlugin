@@ -21,14 +21,14 @@ namespace XIVComboExpandedPlugin.Combos
             ChaoticCyclone = 16463,
             NascentFlash = 16464,
             InnerChaos = 16465,
-            PrimalRend = uint.MaxValue;
+            PrimalRend = 25753;
 
         public static class Buffs
         {
             public const ushort
                 InnerRelease = 1177,
                 NascentChaos = 1897,
-                PrimalRendReady = ushort.MaxValue;
+                PrimalRendReady = 2624;
         }
 
         public static class Debuffs

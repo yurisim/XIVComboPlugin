@@ -24,11 +24,11 @@ namespace XIVComboExpandedPlugin.Combos
             HakkeMujinsatsu = 16488,
             Meisui = 16489,
             Jin = 18807,
-            Bunshin = uint.MaxValue,
-            Huraijin = uint.MaxValue,
-            PhantomKamaitachi = uint.MaxValue,
-            ForkedRaiju = uint.MaxValue,
-            FleetingRaiju = uint.MaxValue;
+            Bunshin = 16493,
+            Huraijin = 25876,
+            PhantomKamaitachi = 25774,
+            ForkedRaiju = 25777,
+            FleetingRaiju = 25778;
 
         public static class Buffs
         {
@@ -38,8 +38,8 @@ namespace XIVComboExpandedPlugin.Combos
                 Suiton = 507,
                 Hidden = 614,
                 Bunshin = 1954,
-                ForkedRaijuReady = ushort.MaxValue,
-                FleetingRaijuReady = ushort.MaxValue;
+                ForkedRaijuReady = 2690,
+                FleetingRaijuReady = 2691;
         }
 
         public static class Debuffs
