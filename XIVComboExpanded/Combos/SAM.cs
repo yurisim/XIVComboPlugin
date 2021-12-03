@@ -24,7 +24,7 @@ namespace XIVComboExpandedPlugin.Combos
             Iaijutsu = 7867,
             TsubameGaeshi = 16483,
             KaeshiHiganbana = 16484,
-            Shoha = 1648,
+            Shoha = 16487,
             // Misc
             MeikyoShisui = 7499,
             Seigan = 7501,
