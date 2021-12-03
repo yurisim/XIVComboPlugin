@@ -91,6 +91,8 @@ namespace XIVComboExpandedPlugin.Attributes
                 36 => "Blue Mage",
                 37 => "Gunbreaker",
                 38 => "Dancer",
+                39 => "Reaper",
+                40 => "Sage",
                 _ => "Unknown",
             };
         }
