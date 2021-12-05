@@ -69,11 +69,11 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == GNB.KeenEdge && level >= GNB.Levels.BrutalShell)
-                        return GNB.BrutalShell;
-
                     if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
                         return GNB.SolidBarrel;
+
+                    if (lastComboMove == GNB.KeenEdge && level >= GNB.Levels.BrutalShell)
+                        return GNB.BrutalShell;
                 }
 
                 return GNB.KeenEdge;
@@ -93,14 +93,14 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= GNB.Levels.Continuation)
                 {
-                    if (HasEffect(GNB.Buffs.ReadyToRip))
-                        return GNB.JugularRip;
+                    if (HasEffect(GNB.Buffs.ReadyToGouge))
+                        return GNB.EyeGouge;
 
                     if (HasEffect(GNB.Buffs.ReadyToTear))
                         return GNB.AbdomenTear;
 
-                    if (HasEffect(GNB.Buffs.ReadyToGouge))
-                        return GNB.EyeGouge;
+                    if (HasEffect(GNB.Buffs.ReadyToRip))
+                        return GNB.JugularRip;
                 }
 
                 // Gnashing Fang > Savage Claw > Wicked Talon
@@ -135,16 +135,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == GNB.BowShock || actionID == GNB.SonicBreak)
             {
-                var bowCd = GetCooldown(GNB.BowShock);
-                var sonicCd = GetCooldown(GNB.SonicBreak);
-
-                // Prioritize the original if both are off cooldown
-                if (!bowCd.IsCooldown && !sonicCd.IsCooldown)
-                    return actionID;
-
-                return bowCd.CooldownRemaining < sonicCd.CooldownRemaining
-                    ? GNB.BowShock
-                    : GNB.SonicBreak;
+                if (level >= GNB.Levels.BowShock && level >= GNB.Levels.SonicBreak)
+                    return CalcBestAction(actionID, GNB.BowShock, GNB.SonicBreak);
             }
 
             return actionID;

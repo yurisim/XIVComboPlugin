@@ -38,6 +38,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Benefic2 = 26,
+                Draw = 30,
                 MinorArcana = 70,
                 CrownPlay = 70;
         }
@@ -52,7 +53,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == AST.Play)
             {
                 var gauge = GetJobGauge<ASTGauge>();
-                if (gauge.DrawnCard == CardType.NONE)
+                if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
                     return AST.Draw;
             }
 
@@ -68,7 +69,9 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == AST.MinorArcana)
             {
-                if (level >= AST.Levels.MinorArcana && (HasEffect(AST.Buffs.LordOfCrownsDrawn) || HasEffect(AST.Buffs.LadyOfCrownsDrawn)))
+                // var gauge = GetJobGauge<ASTGauge>();
+                // if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
+                if (level >= AST.Levels.CrownPlay && (HasEffect(AST.Buffs.LordOfCrownsDrawn) || HasEffect(AST.Buffs.LadyOfCrownsDrawn)))
                     return AST.CrownPlay;
             }
 

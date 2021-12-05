@@ -18,13 +18,19 @@ namespace XIVComboExpandedPlugin
         /// <summary>
         /// Gets or sets the configuration version.
         /// </summary>
-        public int Version { get; set; } = 4;
+        public int Version { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets the collection of enabled combos.
+        /// </summary>
+        [JsonProperty("EnabledActionsV5")]
+        public HashSet<CustomComboPreset> EnabledActions { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the collection of enabled combos.
         /// </summary>
         [JsonProperty("EnabledActionsV4")]
-        public HashSet<CustomComboPreset> EnabledActions { get; set; } = new();
+        public HashSet<CustomComboPreset> EnabledActions4 { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow and display secret combos.

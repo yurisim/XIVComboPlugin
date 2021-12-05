@@ -1,4 +1,4 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+namespace XIVComboExpandedPlugin.Combos
 {
     internal static class RPR
     {
@@ -12,6 +12,14 @@
             // AoE
             SpinningScythe = 24376,
             NightmareScythe = 24377,
+            // Soul Reaver
+            BloodStalk = 24389,
+            Gibbet = 24382,
+            Gallows = 24383,
+            Guillotine = 24384,
+            // Sacrifice
+            ArcaneCircle = 24405,
+            PlentifulHarvest = 24385,
             // Shroud
             Enshroud = 24394,
             Communio = 24398;
@@ -19,6 +27,12 @@
         public static class Buffs
         {
             public const ushort
+                SoulReaver = 2587,
+                ImmortalSacrifice = 2592,
+                EnhancedGibbet = 2588,
+                EnhancedGallows = 2589,
+                EnhancedVoidReaping = 2590,
+                EnhancedCrossReaping = 2591,
                 Enshrouded = 2593;
         }
 
@@ -31,12 +45,12 @@
         public static class Levels
         {
             public const byte
-                Slice = 1,
                 WaxingSlice = 5,
                 SpinningScythe = 25,
                 InfernalSlice = 30,
                 NightmareScythe = 45,
                 Enshroud = 80,
+                PlentifulHarvest = 88,
                 Communio = 90;
         }
     }
@@ -47,15 +61,15 @@
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == RPR.Slice)
+            if (actionID == RPR.InfernalSlice)
             {
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == RPR.Slice && level >= RPR.Levels.WaxingSlice)
-                        return RPR.WaxingSlice;
-
                     if (lastComboMove == RPR.WaxingSlice && level >= RPR.Levels.InfernalSlice)
                         return RPR.InfernalSlice;
+
+                    if (lastComboMove == RPR.Slice && level >= RPR.Levels.WaxingSlice)
+                        return RPR.WaxingSlice;
                 }
 
                 return RPR.Slice;
@@ -71,7 +85,7 @@
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == RPR.SpinningScythe)
+            if (actionID == RPR.NightmareScythe)
             {
                 if (comboTime > 0)
                 {
@@ -80,6 +94,22 @@
                 }
 
                 return RPR.SpinningScythe;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ReaperHarvestFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ReaperHarvestFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.ArcaneCircle)
+            {
+                if (level >= RPR.Levels.PlentifulHarvest && HasEffect(RPR.Buffs.ImmortalSacrifice))
+                    return RPR.PlentifulHarvest;
             }
 
             return actionID;
@@ -96,8 +126,6 @@
             {
                 if (level >= RPR.Levels.Communio && HasEffect(RPR.Buffs.Enshrouded))
                     return RPR.Communio;
-
-                return RPR.Enshroud;
             }
 
             return actionID;

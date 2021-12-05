@@ -61,16 +61,13 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.StormsPath)
             {
-                // if (IsEnabled(CustomComboPreset.WarriorInnerReleaseFeature) && HasEffect(WAR.Buffs.InnerRelease))
-                //     return OriginalHook(WAR.FellCleave);
-
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
-                        return WAR.Maim;
-
                     if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
                         return WAR.StormsPath;
+
+                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                        return WAR.Maim;
                 }
 
                 return WAR.HeavySwing;
@@ -88,16 +85,13 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.StormsEye)
             {
-                // if (Configuration.IsEnabled(CustomComboPreset.WarriorInnerReleaseFeature) && HasEffect(WAR.Buffs.InnerRelease))
-                //     return OriginalHook(WAR.FellCleave);
-
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
-                        return WAR.Maim;
-
                     if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsEye)
                         return WAR.StormsEye;
+
+                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                        return WAR.Maim;
                 }
 
                 return WAR.HeavySwing;
@@ -115,19 +109,10 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.MythrilTempest)
             {
-                // if (IsEnabled(CustomComboPreset.WarriorInnerReleaseFeature) && HasEffect(WAR.Buffs.InnerRelease))
-                //     return OriginalHook(WAR.Decimate);
-
                 if (comboTime > 0)
                 {
                     if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
-                    {
-                        // var gauge = GetJobGauge<WARGauge>().BeastGaugeAmount;
-                        // if (IsEnabled(CustomComboPreset.WarriorGaugeOvercapFeature) && gauge >= 90 && level >= WAR.Levels.MythrilTempestTrait)
-                        //     return OriginalHook(WAR.Decimate);
-
                         return WAR.MythrilTempest;
-                    }
                 }
 
                 return WAR.Overpower;

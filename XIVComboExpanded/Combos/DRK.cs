@@ -62,11 +62,11 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
-                        return DRK.SyphonStrike;
-
                     if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
                         return DRK.Souleater;
+
+                    if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
+                        return DRK.SyphonStrike;
                 }
 
                 return DRK.HardSlash;
@@ -84,23 +84,17 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DRK.StalwartSoul)
             {
-#if EXPANDEDEST
-                if (IsEnabled(CustomComboPreset.DRKOvercapFeature))
-                {
-                    var gauge = GetJobGauge<DRKGauge>();
-                    if (gauge.Blood >= 90 && HasEffect(DRK.Buffs.BloodWeapon))
-                        return DRK.Quietus;
-                }
-#endif
-
                 if (IsEnabled(CustomComboPreset.DeliriumFeature))
                 {
                     if (level >= DRK.Levels.Quietus && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
                         return DRK.Quietus;
                 }
 
-                if (comboTime > 0 && lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
-                    return DRK.StalwartSoul;
+                if (comboTime > 0)
+                {
+                    if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
+                        return DRK.StalwartSoul;
+                }
 
                 return DRK.Unleash;
             }

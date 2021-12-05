@@ -28,7 +28,8 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
-                Placeholder = 0;
+                Aetherflow = 45,
+                Consolation = 80;
         }
     }
 
@@ -41,7 +42,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SCH.FeyBless)
             {
                 var gauge = GetJobGauge<SCHGauge>();
-                if (gauge.SeraphTimer > 0)
+                if (level >= SCH.Levels.Consolation && gauge.SeraphTimer > 0)
                     return SCH.Consolation;
             }
 
@@ -58,7 +59,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SCH.EnergyDrain)
             {
                 var gauge = GetJobGauge<SCHGauge>();
-                if (gauge.Aetherflow == 0)
+                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
                     return SCH.Aetherflow;
             }
 

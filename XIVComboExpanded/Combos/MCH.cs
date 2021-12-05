@@ -102,20 +102,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
             {
                 if (level >= MCH.Levels.Ricochet)
-                {
-                    var gauss = (MCH.GaussRound, GetCooldown(MCH.GaussRound));
-                    var ricochet = (MCH.Ricochet, GetCooldown(MCH.Ricochet));
-
-                    // Prioritize whichever is slotted action.
-                    (actionID, _) = actionID switch
-                    {
-                        MCH.GaussRound => CalcBestAction(gauss, ricochet),
-                        MCH.Ricochet => CalcBestAction(ricochet, gauss),
-                        _ => throw new NotImplementedException(),
-                    };
-
-                    return actionID;
-                }
+                    return CalcBestAction(actionID, MCH.GaussRound, MCH.Ricochet);
 
                 return MCH.GaussRound;
             }
@@ -191,55 +178,13 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.HotShot || actionID == MCH.AirAnchor || actionID == MCH.Drill || actionID == MCH.Chainsaw)
             {
                 if (level >= MCH.Levels.Chainsaw)
-                {
-                    var drill = (MCH.Drill, GetCooldown(MCH.Drill));
-                    var anchor = (MCH.AirAnchor, GetCooldown(MCH.AirAnchor));
-                    var chainsaw = (MCH.Chainsaw, GetCooldown(MCH.Chainsaw));
-
-                    // Prioritize whichever is slotted action.
-                    (actionID, _) = actionID switch
-                    {
-                        // We'll modify this later based on the opener/rotation
-                        MCH.Drill => CalcBestAction(drill, anchor, chainsaw),
-                        MCH.AirAnchor => CalcBestAction(anchor, chainsaw, drill),
-                        MCH.Chainsaw => CalcBestAction(chainsaw, anchor, drill),
-                        _ => throw new NotImplementedException(),
-                    };
-
-                    return actionID;
-                }
+                    return CalcBestAction(actionID, MCH.Chainsaw, MCH.AirAnchor, MCH.Drill);
 
                 if (level >= MCH.Levels.AirAnchor)
-                {
-                    var drill = (MCH.Drill, GetCooldown(MCH.Drill));
-                    var anchor = (MCH.AirAnchor, GetCooldown(MCH.AirAnchor));
-
-                    // Prioritize whichever is slotted action.
-                    (actionID, _) = actionID switch
-                    {
-                        MCH.Drill => CalcBestAction(drill, anchor),
-                        MCH.AirAnchor => CalcBestAction(anchor, drill),
-                        _ => throw new NotImplementedException(),
-                    };
-
-                    return actionID;
-                }
+                    return CalcBestAction(actionID, MCH.AirAnchor, MCH.Drill);
 
                 if (level >= MCH.Levels.Drill)
-                {
-                    var drill = (MCH.Drill, GetCooldown(MCH.Drill));
-                    var hotshot = (MCH.HotShot, GetCooldown(MCH.HotShot));
-
-                    // Prioritize whichever is slotted action.
-                    (actionID, _) = actionID switch
-                    {
-                        MCH.Drill => CalcBestAction(drill, hotshot),
-                        MCH.HotShot => CalcBestAction(hotshot, drill),
-                        _ => throw new NotImplementedException(),
-                    };
-
-                    return actionID;
-                }
+                    return CalcBestAction(actionID, MCH.Drill, MCH.HotShot);
 
                 return MCH.HotShot;
             }

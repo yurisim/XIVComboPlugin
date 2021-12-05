@@ -139,7 +139,7 @@ namespace XIVComboExpandedPlugin
             if (this.cooldownGroupCache.TryGetValue(actionID, out var cooldownGroup))
                 return cooldownGroup;
 
-            var sheet = Service.DataManager.GetExcelSheet<MyActionSheet>()!;
+            var sheet = Service.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()!;
             var row = sheet.GetRow(actionID);
 
             return this.cooldownGroupCache[actionID] = row!.CooldownGroup;
@@ -179,22 +179,6 @@ namespace XIVComboExpandedPlugin
             /// Gets the cooldown time remaining.
             /// </summary>
             public float CooldownRemaining => this.IsCooldown ? this.CooldownTotal - this.CooldownElapsed : 0;
-        }
-
-        [Lumina.Excel.Sheet("Action")]
-        public class MyActionSheet : Lumina.Excel.ExcelRow
-        {
-            public byte CooldownGroup
-            {
-                get;
-                set;
-            }
-
-            public override void PopulateData(Lumina.Excel.RowParser parser, Lumina.GameData gameData, Lumina.Data.Language language)
-            {
-                base.PopulateData(parser, gameData, language);
-                this.CooldownGroup = parser.ReadColumn<byte>(40);
-            }
         }
     }
 }

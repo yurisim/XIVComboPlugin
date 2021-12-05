@@ -35,6 +35,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Swiftcast = 167,
                 VerfireReady = 1234,
                 VerstoneReady = 1235,
+                Acceleration = 1238,
                 Dualcast = 1249,
                 LostChainspell = 2560;
         }
@@ -70,20 +71,10 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == RDM.Veraero2)
+            if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
             {
-                if (HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.LostChainspell))
+                if (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Acceleration) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell))
                     return OriginalHook(RDM.Impact);
-
-                return RDM.Veraero2;
-            }
-
-            if (actionID == RDM.Verthunder2)
-            {
-                if (HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.LostChainspell))
-                    return OriginalHook(RDM.Impact);
-
-                return RDM.Verthunder2;
             }
 
             return actionID;
@@ -102,18 +93,27 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.RedMageMeleeComboPlus))
                 {
-                    if (lastComboMove == RDM.EnchantedRedoublement)
+                    if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
+                        return RDM.Resolution;
+
+                    if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
+                        return RDM.Scorch;
+
+                    if (gauge.ManaStacks == 3)
                     {
-                        if (gauge.BlackMana >= gauge.WhiteMana && level >= RDM.Levels.Verholy)
+                        if (level < RDM.Levels.Verholy)
+                            return RDM.Verflare;
+
+                        if (gauge.BlackMana >= gauge.WhiteMana)
                         {
                             if (HasEffect(RDM.Buffs.VerstoneReady) && !HasEffect(RDM.Buffs.VerfireReady) && (gauge.BlackMana - gauge.WhiteMana <= 9))
                                 return RDM.Verflare;
 
                             return RDM.Verholy;
                         }
-                        else if (level >= RDM.Levels.Verflare)
+                        else
                         {
-                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && level >= RDM.Levels.Verholy && (gauge.WhiteMana - gauge.BlackMana <= 9))
+                            if (HasEffect(RDM.Buffs.VerfireReady) && !HasEffect(RDM.Buffs.VerstoneReady) && (gauge.WhiteMana - gauge.BlackMana <= 9))
                                 return RDM.Verholy;
 
                             return RDM.Verflare;
@@ -121,17 +121,11 @@ namespace XIVComboExpandedPlugin.Combos
                     }
                 }
 
-                if ((lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte) && level >= RDM.Levels.Zwerchhau)
-                    return OriginalHook(RDM.Zwerchhau);
-
                 if (lastComboMove == RDM.Zwerchhau && level >= RDM.Levels.Redoublement)
                     return OriginalHook(RDM.Redoublement);
 
-                if (IsEnabled(CustomComboPreset.RedMageMeleeComboPlus))
-                {
-                    if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
-                        return RDM.Scorch;
-                }
+                if ((lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte) && level >= RDM.Levels.Zwerchhau)
+                    return OriginalHook(RDM.Zwerchhau);
 
                 return OriginalHook(RDM.Riposte);
             }
@@ -148,19 +142,23 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Verstone)
             {
-                if (level >= RDM.Levels.Resolution && lastComboMove == RDM.Scorch)
+                var gauge = GetJobGauge<RDMGauge>();
+
+                if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
                     return RDM.Resolution;
 
-                if (level >= RDM.Levels.Scorch && (lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy))
+                if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                     return RDM.Scorch;
 
-                // TODO
-                // if (level >= RDM.Levels.Verholy && gauge.Stacks == 3)
-                //     return RDM.Verholy;
+                if (level >= RDM.Levels.Verholy && gauge.ManaStacks == 3)
+                    return RDM.Verholy;
+
+                if (level >= RDM.Levels.Verflare && gauge.ManaStacks == 3)
+                    return RDM.Verflare;
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocComboPlus))
                 {
-                    if ((HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)) && level >= RDM.Levels.Veraero)
+                    if (level >= RDM.Levels.Veraero && (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Acceleration) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)))
                         // Veraero3
                         return OriginalHook(RDM.Veraero);
                 }
@@ -175,20 +173,22 @@ namespace XIVComboExpandedPlugin.Combos
                 if (HasEffect(RDM.Buffs.VerstoneReady))
                     return RDM.Verstone;
 
+                // Jolt
                 return OriginalHook(RDM.Jolt2);
             }
 
             if (actionID == RDM.Verfire)
             {
+                var gauge = GetJobGauge<RDMGauge>();
+
                 if (level >= RDM.Levels.Resolution && lastComboMove == RDM.Scorch)
                     return RDM.Resolution;
 
                 if (level >= RDM.Levels.Scorch && (lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy))
                     return RDM.Scorch;
 
-                // TODO
-                // if (level >= RDM.Levels.Verflare && gauge.Stacks == 3)
-                //     return RDM.Verflare;
+                if (level >= RDM.Levels.Verflare && gauge.ManaStacks == 3)
+                    return RDM.Verflare;
 
                 if (IsEnabled(CustomComboPreset.RedMageVerprocComboPlus))
                 {

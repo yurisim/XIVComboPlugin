@@ -13,8 +13,7 @@ namespace XIVComboExpandedPlugin.Combos
             Cure2 = 135,
             AfflatusSolace = 16531,
             AfflatusRapture = 16534,
-            AfflatusMisery = 16535,
-            Lilybell = uint.MaxValue;
+            AfflatusMisery = 16535;
 
         public static class Buffs
         {
@@ -33,6 +32,7 @@ namespace XIVComboExpandedPlugin.Combos
             public const byte
                 Cure2 = 30,
                 AfflatusSolace = 52,
+                AfflatusMisery = 74,
                 AfflatusRapture = 76;
         }
     }
@@ -47,7 +47,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (gauge.BloodLily == 3)
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
             }
 
@@ -65,7 +65,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (gauge.BloodLily == 3)
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
             }
 
