@@ -42,33 +42,43 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Meditation = 15,
+                ArmOfTheDestroyer = 26,
                 Rockbreaker = 30,
                 Demolish = 30,
                 FourPointFury = 45,
                 HowlingFist = 40,
                 DragonKick = 50,
-                Enlightenment = 70;
+                PerfectBalance = 50,
+                FormShift = 52,
+                Enlightenment = 70,
+                ShadowOfTheDestroyer = 82;
         }
     }
 
     internal class MonkAoECombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MonkAoECombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkAoECombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MNK.Rockbreaker };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MNK.Rockbreaker)
             {
-                if (HasEffect(MNK.Buffs.PerfectBalance) || HasEffect(MNK.Buffs.FormlessFist))
+                if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                     return MNK.Rockbreaker;
 
-                if (HasEffect(MNK.Buffs.OpoOpoForm))
-                    return MNK.ArmOfTheDestroyer;
+                if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+                    return MNK.Rockbreaker;
 
-                if (HasEffect(MNK.Buffs.RaptorForm) && level >= MNK.Levels.FourPointFury)
+                if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
+                    // Shadow of the Destroyer
+                    return OriginalHook(MNK.ArmOfTheDestroyer);
+
+                if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
                     return MNK.FourPointFury;
 
-                if (HasEffect(MNK.Buffs.CoerlForm) && level >= MNK.Levels.Rockbreaker)
+                if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
                     return MNK.Rockbreaker;
 
                 return MNK.ArmOfTheDestroyer;
@@ -78,37 +88,19 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    // internal class MnkBootshineFeature : CustomCombo
-    // {
-    //     protected override CustomComboPreset Preset => CustomComboPreset.MnkBootshineFeature;
-    //
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID == MNK.DragonKick)
-    //         {
-    //             if (HasEffect(MNK.Buffs.LeadenFist) && (
-    //                 HasEffect(MNK.Buffs.FormlessFist) || HasEffect(MNK.Buffs.PerfectBalance) ||
-    //                 HasEffect(MNK.Buffs.OpoOpoForm) || HasEffect(MNK.Buffs.RaptorForm) || HasEffect(MNK.Buffs.CoerlForm)))
-    //                 return MNK.Bootshine;
-    //
-    //             if (level < MNK.Levels.DragonKick)
-    //                 return MNK.Bootshine;
-    //         }
-    //
-    //         return actionID;
-    //     }
-    // }
-
     internal class MonkHowlingFistMeditationFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MonkHowlingFistMeditationFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkHowlingFistMeditationFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MNK.HowlingFist };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MNK.HowlingFist)
             {
                 var gauge = GetJobGauge<MNKGauge>();
-                if (gauge.Chakra < 5)
+
+                if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
                     return MNK.Meditation;
 
                 // Enlightenment

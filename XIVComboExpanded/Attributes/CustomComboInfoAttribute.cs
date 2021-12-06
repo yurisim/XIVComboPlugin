@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace XIVComboExpandedPlugin.Attributes
 {
@@ -14,13 +15,13 @@ namespace XIVComboExpandedPlugin.Attributes
         /// <param name="fancyName">Display name.</param>
         /// <param name="description">Combo description.</param>
         /// <param name="jobID">Associated job ID.</param>
-        /// <param name="actionIDs">Associated action IDs.</param>
-        internal CustomComboInfoAttribute(string fancyName, string description, byte jobID, params uint[] actionIDs)
+        /// <param name="order">Display order.</param>
+        internal CustomComboInfoAttribute(string fancyName, string description, byte jobID, [CallerLineNumber] int order = 0)
         {
             this.FancyName = fancyName;
             this.Description = description;
             this.JobID = jobID;
-            this.ActionIDs = actionIDs;
+            this.Order = order;
         }
 
         /// <summary>
@@ -39,14 +40,14 @@ namespace XIVComboExpandedPlugin.Attributes
         public byte JobID { get; }
 
         /// <summary>
+        /// Gets the display order.
+        /// </summary>
+        public int Order { get; }
+
+        /// <summary>
         /// Gets the job name.
         /// </summary>
         public string JobName => JobIDToName(this.JobID);
-
-        /// <summary>
-        /// Gets the action IDs associated with the combo.
-        /// </summary>
-        public uint[] ActionIDs { get; }
 
         private static string JobIDToName(byte key)
         {

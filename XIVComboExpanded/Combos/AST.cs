@@ -46,7 +46,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class AstrologianCardsOnDrawFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianCardsOnDrawFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianCardsOnDrawFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { AST.Play };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -63,15 +65,16 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class AstrologianMinorArcanaPlayFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianMinorArcanaPlayFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaPlayFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { AST.MinorArcana };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == AST.MinorArcana)
             {
-                // var gauge = GetJobGauge<ASTGauge>();
-                // if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
-                if (level >= AST.Levels.CrownPlay && (HasEffect(AST.Buffs.LordOfCrownsDrawn) || HasEffect(AST.Buffs.LadyOfCrownsDrawn)))
+                var gauge = GetJobGauge<ASTGauge>();
+                if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
                     return AST.CrownPlay;
             }
 
@@ -81,7 +84,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class AstrologianBeneficFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianBeneficFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { AST.Benefic2 };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

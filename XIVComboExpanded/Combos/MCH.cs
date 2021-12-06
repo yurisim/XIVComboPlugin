@@ -71,21 +71,26 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistMainCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistMainCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistMainCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.CleanShot };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.CleanShot || actionID == MCH.HeatedCleanShot)
+            if (actionID == MCH.CleanShot)
             {
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
-                        return OriginalHook(MCH.SlugShot);
-
                     if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
+                        // Heated
                         return OriginalHook(MCH.CleanShot);
+
+                    if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
+                        // Heated
+                        return OriginalHook(MCH.SlugShot);
                 }
 
+                // Heated
                 return OriginalHook(MCH.SplitShot);
             }
 
@@ -95,7 +100,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistGaussRoundRicochetFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistGaussRoundRicochetFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistGaussRoundRicochetFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.GaussRound, MCH.Ricochet };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -113,14 +120,17 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistOverheatFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistOverheatFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverheatFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.HeatBlast, MCH.AutoCrossbow };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MCH.HeatBlast || actionID == MCH.AutoCrossbow)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (!gauge.IsOverheated && level >= MCH.Levels.Hypercharge)
+
+                if (level >= MCH.Levels.Hypercharge && !gauge.IsOverheated)
                     return MCH.Hypercharge;
 
                 if (level < MCH.Levels.AutoCrossbow)
@@ -133,18 +143,18 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistSpreadShotFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistSpreadShotFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistSpreadShotFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.SpreadShot };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MCH.SpreadShot)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (gauge.IsOverheated && level >= MCH.Levels.AutoCrossbow)
-                    return MCH.AutoCrossbow;
 
-                // Scattergun
-                return OriginalHook(MCH.SpreadShot);
+                if (level >= MCH.Levels.AutoCrossbow && gauge.IsOverheated)
+                    return MCH.AutoCrossbow;
             }
 
             return actionID;
@@ -153,16 +163,19 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistOverdriveFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistOverdriveFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverdriveFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.RookAutoturret };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.RookAutoturret || actionID == MCH.AutomatonQueen)
+            if (actionID == MCH.RookAutoturret)
             {
                 var gauge = GetJobGauge<MCHGauge>();
-                if (gauge.IsRobotActive)
-                    // Rook Autoturret
-                    return OriginalHook(MCH.QueenOverdrive);
+
+                if (level >= MCH.Levels.RookOverdrive && gauge.IsRobotActive)
+                    // Queen Overdrive
+                    return OriginalHook(MCH.RookOverdrive);
             }
 
             return actionID;
@@ -171,7 +184,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class MachinistDrillAirAnchorFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.MachinistHotShotDrillChainsawFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotDrillChainsawFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.HotShot, MCH.AirAnchor, MCH.Drill, MCH.Chainsaw };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

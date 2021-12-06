@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,13 +41,17 @@ namespace XIVComboExpandedPlugin.Combos
                 WHM.JobID => WHM.ClassID,
                 _ => 0xFF,
             };
-            this.ActionIDs = presetInfo.ActionIDs;
         }
 
         /// <summary>
         /// Gets the preset associated with this combo.
         /// </summary>
-        protected abstract CustomComboPreset Preset { get; }
+        protected internal abstract CustomComboPreset Preset { get; }
+
+        /// <summary>
+        /// Gets the action IDs associated with this combo.
+        /// </summary>
+        protected internal abstract uint[] ActionIDs { get; }
 
         /// <summary>
         /// Gets the class ID associated with this combo.
@@ -58,11 +62,6 @@ namespace XIVComboExpandedPlugin.Combos
         /// Gets the job ID associated with this combo.
         /// </summary>
         protected byte JobID { get; }
-
-        /// <summary>
-        /// Gets the action IDs associated with this combo.
-        /// </summary>
-        protected virtual uint[] ActionIDs { get; }
 
         /// <summary>
         /// Performs various checks then attempts to invoke the combo.

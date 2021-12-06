@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -30,16 +30,14 @@ namespace XIVComboExpandedPlugin
 
             this.groupedPresets = Enum
                 .GetValues<CustomComboPreset>()
-                .Select(preset => (
-                    PresetInfo: (preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()),
-                    Ordering: preset.GetAttribute<OrderedEnumAttribute>()))
-                .Where(tpl => tpl.PresetInfo.Info != null && tpl.Ordering != null)
-                .OrderBy(tpl => tpl.PresetInfo.Info.JobName)
-                .ThenBy(tpl => tpl.Ordering.Order)
-                .GroupBy(tpl => tpl.PresetInfo.Info.JobName)
+                .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
+                .Where(tpl => tpl.Info != null)
+                .OrderBy(tpl => tpl.Info.JobName)
+                .ThenBy(tpl => tpl.Info.Order)
+                .GroupBy(tpl => tpl.Info.JobName)
                 .ToDictionary(
                     tpl => tpl.Key,
-                    tpl => tpl.Select(tpl => tpl.PresetInfo).ToList());
+                    tpl => tpl.ToList());
 
             this.SizeCondition = ImGuiCond.FirstUseEver;
             this.Size = new Vector2(740, 490);

@@ -62,11 +62,9 @@ namespace XIVComboExpandedPlugin
         /// </summary>
         internal void UpdateEnabledActionIDs()
         {
-            this.comboActionIDs = Enum
-                .GetValues<CustomComboPreset>()
-                .Select(preset => preset.GetAttribute<CustomComboInfoAttribute>()!)
-                .SelectMany(comboInfo => comboInfo.ActionIDs)
-                .Concat(Service.Configuration.DancerDanceCompatActionIDs)
+            this.comboActionIDs = this.customCombos
+                .Where(combo => Service.Configuration.EnabledActions.Contains(combo.Preset))
+                .SelectMany(combo => combo.ActionIDs)
                 .ToHashSet();
         }
 

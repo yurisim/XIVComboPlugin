@@ -61,7 +61,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class GunbreakerSolidBarrelCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerSolidBarrelCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerSolidBarrelCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.SolidBarrel };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -85,7 +87,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class GunbreakerGnashingFangContinuation : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerGnashingFangCont;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerGnashingFangCont;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.GnashingFang };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -113,7 +117,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class GunbreakerBurstStrikeContinuation : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBurstStrikeCont;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerBurstStrikeCont;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.BurstStrike };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -129,13 +135,15 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class GunbreakerBowShockSonicBreakFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBowShockSonicBreakFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerBowShockSonicBreakFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.BowShock, GNB.SonicBreak };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == GNB.BowShock || actionID == GNB.SonicBreak)
             {
-                if (level >= GNB.Levels.BowShock && level >= GNB.Levels.SonicBreak)
+                if (level >= GNB.Levels.BowShock)
                     return CalcBestAction(actionID, GNB.BowShock, GNB.SonicBreak);
             }
 
@@ -145,7 +153,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class GunbreakerDemonSlaughterCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerDemonSlaughterCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerDemonSlaughterCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.DemonSlaughter };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -171,43 +181,4 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
-
-    // internal class GunbreakerBloodfestOvercapFeature : CustomCombo
-    // {
-    //     protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBloodfestOvercapFeature;
-    //
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID == GNB.BurstStrike)
-    //         {
-    //             var gauge = GetJobGauge<GNBGauge>();
-    //             if (gauge.NumAmmo == 0 && level >= GNB.Levels.Bloodfest)
-    //                 return GNB.Bloodfest;
-    //         }
-    //
-    //         return actionID;
-    //     }
-    // }
-
-    // internal class GunbreakerNoMercyFeature : CustomCombo
-    // {
-    //     protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerNoMercyFeature;
-    //
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID == GNB.NoMercy)
-    //         {
-    //             if (HasEffect(GNB.Buffs.NoMercy))
-    //             {
-    //                 if (level >= GNB.Levels.BowShock && !TargetHasEffect(GNB.Debuffs.BowShock))
-    //                     return GNB.BowShock;
-    //
-    //                 if (level >= GNB.Levels.SonicBreak)
-    //                     return GNB.SonicBreak;
-    //             }
-    //         }
-    //
-    //         return actionID;
-    //     }
-    // }
 }

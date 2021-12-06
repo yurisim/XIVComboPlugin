@@ -55,7 +55,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class WarriorStormsPathCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.WarriorStormsPathCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsPathCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { WAR.StormsPath };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -79,7 +81,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class WarriorStormsEyeCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.WarriorStormsEyeCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsEyeCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { WAR.StormsEye };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -103,7 +107,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class WarriorMythrilTempestCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.WarriorMythrilTempestCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorMythrilTempestCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { WAR.MythrilTempest };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -124,7 +130,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class WarriorNascentFlashFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.WarriorNascentFlashFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorNascentFlashFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { WAR.NascentFlash };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -143,7 +151,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class WArriorPrimalRendFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.WarriorPrimalRendFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorPrimalRendFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { WAR.InnerBeast, WAR.SteelCyclone };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

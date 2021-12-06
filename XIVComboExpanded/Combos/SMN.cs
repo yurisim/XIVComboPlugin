@@ -48,7 +48,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SummonerEDFesterCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.SummonerEDFesterCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerEDFesterCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Fester };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -67,7 +69,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SummonerESPainflareCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.SummonerESPainflareCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerESPainflareCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Painflare };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

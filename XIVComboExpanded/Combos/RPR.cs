@@ -1,4 +1,4 @@
-namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos
 {
     internal static class RPR
     {
@@ -55,9 +55,41 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal class ReaperSoulReaverFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // ReaperSoulReaverFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { RPR.InfernalSlice, RPR.BloodStalk, RPR.NightmareScythe };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.InfernalSlice)
+            {
+                if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Enshrouded))
+                    return OriginalHook(RPR.Gibbet);
+            }
+
+            if (actionID == RPR.BloodStalk)
+            {
+                if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Enshrouded))
+                    return OriginalHook(RPR.Gallows);
+            }
+
+            if (actionID == RPR.NightmareScythe)
+            {
+                if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Enshrouded))
+                    return OriginalHook(RPR.Guillotine);
+            }
+
+            return actionID;
+        }
+    }
+
     internal class ReaperSliceCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.ReaperSliceCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ReaperSliceCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { RPR.InfernalSlice };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -81,7 +113,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class ReaperScytheCombo : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.ReaperScytheCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ReaperScytheCombo;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { RPR.NightmareScythe };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -102,7 +136,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class ReaperHarvestFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.ReaperHarvestFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ReaperHarvestFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { RPR.ArcaneCircle };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -118,7 +154,9 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class EnshroudCommunioFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.ReaperEnshroudCommunioFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ReaperEnshroudCommunioFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { RPR.Enshroud };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
