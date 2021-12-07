@@ -183,15 +183,15 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerBloodfestFeature : CustomCombo
+    internal class GunbreakerEmptyBloodfestFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerBloodfestOvercapFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerEmptyBloodfestFeature;
 
         protected internal override uint[] ActionIDs { get; } = new[] { GNB.BurstStrike };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == GNB.BurstStrike)
+            if (actionID == GNB.BurstStrike || actionID == GNB.FatedCircle)
             {
                 if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeCont) && level >= GNB.Levels.EnhancedContinuation && HasEffect(GNB.Buffs.ReadyToBlast))
                     return GNB.Hypervelocity;

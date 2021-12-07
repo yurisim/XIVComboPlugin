@@ -25,7 +25,8 @@ namespace XIVComboExpandedPlugin.Combos
             BetweenTheLines = 7419,
             Despair = 16505,
             UmbralSoul = 16506,
-            Xenoglossy = 16507;
+            Xenoglossy = 16507,
+            Paradox = 25797;
 
         public static class Buffs
         {

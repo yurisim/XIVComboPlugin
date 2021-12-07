@@ -169,8 +169,8 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Fated Circle Feature", "In addition to the Demon Slaughter combo, add Fated Circle when charges are full.", GNB.JobID)]
         GunbreakerFatedCircleFeature = 3706,
 
-        [CustomComboInfo("Empty Bloodfest Feature", "Replace Burst Strike with Bloodfest if the powder gauge is empty.", GNB.JobID)]
-        GunbreakerBloodfestOvercapFeature = 3707,
+        [CustomComboInfo("Empty Bloodfest Feature", "Replace Burst Strike and Fated Circle with Bloodfest if the powder gauge is empty.", GNB.JobID)]
+        GunbreakerEmptyBloodfestFeature = 3707,
 
         [SecretCustomCombo]
         [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
@@ -385,7 +385,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Iaijutsu to Shoha", "Replace Iaijutsu with Shoha when meditation is 3.", SAM.JobID)]
         SamuraiIaijutsuShohaFeature = 3410,
 
-        [CustomComboInfo("Ikishoten Namikiri Feature", "Replace Ikishoten with Ogi Namikiri and then Kaeshi Namikiri when available.", SAM.JobID)]
+        [CustomComboInfo("Kyuten to Shoha II", "Replace Hissatsu: Kyuten with Shoha II when Meditation is full.", SAM.JobID)]
+        SamuraiShoha2Feature = 3412,
+
+        [CustomComboInfo("Ikishoten Namikiri Feature", "Replace Ikishoten with Ogi Namikiri, Shoha, and then Kaeshi Namikiri when available.", SAM.JobID)]
         SamuraiIkishotenNamikiriFeature = 3411,
 
         #endregion

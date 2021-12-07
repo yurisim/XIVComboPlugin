@@ -19,16 +19,16 @@ namespace XIVComboExpandedPlugin.Combos
             Fuga = 7483,
             Mangetsu = 7484,
             Oka = 7485,
+            Fuko = 25780,
             // Iaijutsu and Tsubame
             Iaijutsu = 7867,
             TsubameGaeshi = 16483,
             KaeshiHiganbana = 16484,
             Shoha = 16487,
             // Misc
-            MeikyoShisui = 7499,
-            Seigan = 7501,
-            ThirdEye = 7498,
+            HissatsuKyuten = 7491,
             Ikishoten = 16482,
+            Shoha2 = 25779,
             OgiNamikiri = 25781,
             KaeshiNamikiri = 25782;
 
@@ -59,9 +59,12 @@ namespace XIVComboExpandedPlugin.Combos
                 Oka = 45,
                 Yukikaze = 50,
                 MeikyoShisui = 50,
+                HissatsuKyuten = 64,
                 TsubameGaeshi = 76,
                 Shoha = 80,
+                Shoha2 = 82,
                 Hyosetsu = 86,
+                Fuko = 86,
                 OgiNamikiri = 90;
         }
     }
@@ -165,7 +168,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == SAM.Fuga && level >= SAM.Levels.Mangetsu)
+                    if ((lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko) && level >= SAM.Levels.Mangetsu)
                         return SAM.Mangetsu;
                 }
 
@@ -192,7 +195,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == SAM.Fuga && level >= SAM.Levels.Oka)
+                    if ((lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko) && level >= SAM.Levels.Oka)
                         return SAM.Oka;
                 }
 
@@ -288,6 +291,26 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal class SamuraiShoha2Feature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiShoha2Feature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SAM.HissatsuKyuten };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SAM.HissatsuKyuten)
+            {
+                var gauge = GetJobGauge<SAMGauge>();
+
+                if (level >= SAM.Levels.Shoha2 && gauge.MeditationStacks >= 3)
+                    return SAM.Shoha2;
+            }
+
+            return actionID;
+        }
+    }
+
     internal class SamuraiIkishotenNamikiriFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiIkishotenNamikiriFeature;
@@ -300,14 +323,17 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= SAM.Levels.OgiNamikiri)
                 {
-                    if (lastComboMove == SAM.OgiNamikiri)
+                    var gauge = GetJobGauge<SAMGauge>();
+
+                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                        return SAM.Shoha;
+
+                    if (gauge.Kaeshi == Kaeshi.NAMIKIRI)
                         return SAM.KaeshiNamikiri;
 
                     if (HasEffect(SAM.Buffs.OgiNamikiriReady))
                         return SAM.OgiNamikiri;
                 }
-
-                return SAM.Ikishoten;
             }
 
             return actionID;

@@ -110,7 +110,7 @@ namespace XIVComboExpandedPlugin.Combos
                         return BRD.BlastArrow;
                 }
 
-                if (level >= BRD.StraightShot && HasEffect(BRD.Buffs.StraightShotReady))
+                if (level >= BRD.Levels.StraightShot && HasEffect(BRD.Buffs.StraightShotReady))
                     // Refulgent Arrow
                     return OriginalHook(BRD.StraightShot);
             }
