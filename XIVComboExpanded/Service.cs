@@ -74,6 +74,12 @@ namespace XIVComboExpandedPlugin
         internal static JobGauges JobGauges { get; private set; } = null!;
 
         /// <summary>
+        /// Gets the Dalamud object table.
+        /// </summary>
+        [PluginService]
+        internal static ObjectTable ObjectTable { get; private set; } = null!;
+
+        /// <summary>
         /// Gets the Dalamud target manager.
         /// </summary>
         [PluginService]

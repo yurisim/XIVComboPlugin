@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -9,26 +8,22 @@ namespace XIVComboExpandedPlugin.Combos
         public const byte JobID = 27;
 
         public const uint
-            Deathflare = 3582,
-            EnkindlePhoenix = 16516,
-            EnkindleBahamut = 7429,
-            DreadwyrmTrance = 3581,
-            SummonBahamut = 7427,
-            FirebirdTranceLow = 16513,
-            FirebirdTranceHigh = 16549,
-            Ruin1 = 163,
-            Ruin3 = 3579,
-            BrandOfPurgatory = 16515,
-            FountainOfFire = 16514,
             Fester = 181,
-            EnergyDrain = 16508,
             Painflare = 3578,
-            EnergySyphon = 16510;
+            Ruin4 = 7426,
+            EnkindleBahamut = 7429,
+            EnergySyphon = 16510,
+            EnergyDrain = 16508,
+            SummonCarbuncle = 25798,
+            RadiantAegis = 25799,
+            SearingLight = 25801,
+            Gemshine = 25883,
+            PreciousBrilliance = 25884;
 
         public static class Buffs
         {
             public const ushort
-                HellishConduit = 1867;
+                FurtherRuin = 2701;
         }
 
         public static class Debuffs
@@ -40,15 +35,20 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                RadiantAegis = 2,
                 Painflare = 52,
                 Ruin3 = 54,
-                EnhancedFirebirdTrance = 80;
+                Ruin4 = 62,
+                SearingLight = 66,
+                EnkindleBahamut = 70,
+                Rekindle = 80,
+                SummonPhoenix = 80;
         }
     }
 
     internal class SummonerEDFesterCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerEDFesterCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerEDFesterFeature;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SMN.Fester };
 
@@ -57,8 +57,15 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Fester)
             {
                 var gauge = GetJobGauge<SMNGauge>();
+
                 if (!gauge.HasAetherflowStacks)
                     return SMN.EnergyDrain;
+
+                if (IsEnabled(CustomComboPreset.SummonerFesterRuinFeature))
+                {
+                    if (level >= SMN.Levels.Ruin4 && HasEffect(SMN.Buffs.FurtherRuin))
+                        return SMN.Ruin4;
+                }
 
                 return SMN.Fester;
             }
@@ -69,7 +76,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SummonerESPainflareCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerESPainflareCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerESPainflareFeature;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SMN.Painflare };
 
@@ -78,11 +85,38 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Painflare)
             {
                 var gauge = GetJobGauge<SMNGauge>();
+
                 if (!gauge.HasAetherflowStacks)
                     return SMN.EnergySyphon;
 
+                if (IsEnabled(CustomComboPreset.SummonerPainflareRuinFeature))
+                {
+                    if (level >= SMN.Levels.Ruin4 && HasEffect(SMN.Buffs.FurtherRuin))
+                        return SMN.Ruin4;
+                }
+
                 // Painflare
                 return OriginalHook(SMN.EnergySyphon);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SummonerDemiFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerDemiFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Gemshine, SMN.PreciousBrilliance };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SMN.Gemshine || actionID == SMN.PreciousBrilliance)
+            {
+                var gauge = GetJobGauge<SMNGauge>();
+
+                if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned)
+                    return SMN.EnkindleBahamut;
             }
 
             return actionID;

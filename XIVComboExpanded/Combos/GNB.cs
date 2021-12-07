@@ -45,6 +45,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                NoMercy = 2,
                 BrutalShell = 4,
                 SolidBarrel = 26,
                 DemonSlaughter = 40,
@@ -176,6 +177,53 @@ namespace XIVComboExpandedPlugin.Combos
                 }
 
                 return GNB.DemonSlice;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class GunbreakerBloodfestFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerBloodfestOvercapFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.BurstStrike };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == GNB.BurstStrike)
+            {
+                if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeCont) && level >= GNB.Levels.EnhancedContinuation && HasEffect(GNB.Buffs.ReadyToBlast))
+                    return GNB.Hypervelocity;
+
+                var gauge = GetJobGauge<GNBGauge>();
+
+                if (level >= GNB.Levels.Bloodfest && gauge.Ammo == 0)
+                    return GNB.Bloodfest;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class GunbreakerNoMercyFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerNoMercyFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.NoMercy };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == GNB.NoMercy)
+            {
+                if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
+                {
+                    if (level >= GNB.Levels.BowShock)
+                        return CalcBestAction(GNB.SonicBreak, GNB.SonicBreak, GNB.BowShock);
+
+                    if (level >= GNB.Levels.SonicBreak)
+                        return GNB.SonicBreak;
+                }
             }
 
             return actionID;

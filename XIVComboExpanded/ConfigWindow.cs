@@ -78,6 +78,11 @@ namespace XIVComboExpandedPlugin
                         var secret = Service.Configuration.IsSecret(preset);
                         var conflicts = Service.Configuration.GetConflicts(preset);
 
+#if !DEBUG
+                        if (preset == CustomComboPreset.Disabled)
+                            continue;
+#endif
+
                         if (secret && !showSecrets)
                             continue;
 

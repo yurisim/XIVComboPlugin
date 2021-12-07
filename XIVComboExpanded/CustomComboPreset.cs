@@ -9,6 +9,7 @@ namespace XIVComboExpandedPlugin
     public enum CustomComboPreset
     {
         // A placeholder for disabled combos due to various issues.
+        [CustomComboInfo("Disabled", "This should not be used.", ADV.JobID)]
         Disabled = 99999,
 
         // ====================================================================================
@@ -168,11 +169,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Fated Circle Feature", "In addition to the Demon Slaughter combo, add Fated Circle when charges are full.", GNB.JobID)]
         GunbreakerFatedCircleFeature = 3706,
 
-        // [CustomComboInfo("Burst Strike to Bloodfest Feature", "Replace Burst Strike with Bloodfest if you have no powder gauge.", GNB.JobID)]
-        // GunbreakerBloodfestOvercapFeature = 3707,
+        [CustomComboInfo("Empty Bloodfest Feature", "Replace Burst Strike with Bloodfest if the powder gauge is empty.", GNB.JobID)]
+        GunbreakerBloodfestOvercapFeature = 3707,
 
-        // [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
-        // GunbreakerNoMercyFeature = 3708,
+        [SecretCustomCombo]
+        [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
+        GunbreakerNoMercyFeature = 3708,
 
         #endregion
         // ====================================================================================
@@ -273,9 +275,43 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor when Requiescat is up and MP is under 2000 or only one stack remains.", PLD.JobID)]
         PaladinConfiteorFeature = 1907,
 
-        // [SecretCustomCombo]
-        // [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
-        // PaladinScornfulSpiritsFeature = 1908,
+        [SecretCustomCombo]
+        [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
+        PaladinScornfulSpiritsFeature = 1908,
+
+        #endregion
+        // ====================================================================================
+        #region REAPER
+
+        [CustomComboInfo("Slice Combo", "Replace Infernal Slice with its combo chain.", RPR.JobID)]
+        ReaperSliceCombo = 3901,
+
+        [CustomComboInfo("Scythe Combo", "Replace Nightmare Scythe with its combo chain.", RPR.JobID)]
+        ReaperScytheCombo = 3902,
+
+        [CustomComboInfo("Soul Reaver Gibbet Feature", "Replace Infernal Slice with Gibbet while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperSoulReaverGibbetFeature = 3903,
+
+        [CustomComboInfo("Soul Reaver Gibbet Option", "Replace Infernal Slice with Gallows instead while Reaving or Enshrouded.\nRequires Soul Reaver Gibbet Feature", RPR.JobID)]
+        ReaperSoulReaverGibbetOption = 3904,
+
+        [CustomComboInfo("Soul Reaver Gallows Feature", "Replace Shadow of Death with Gallows while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperSoulReaverGallowsFeature = 3905,
+
+        [CustomComboInfo("Soul Reaver Gallows Option", "Replace Shadow of Death with Gibbet instead while Reaving or Enshrouded.\nRequires Soul Reaver Gallows Feature.", RPR.JobID)]
+        ReaperSoulReaverGallowsOption = 3906,
+
+        [CustomComboInfo("Soul Reaver Guillotine Option", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperSoulReaverGuillotineFeature = 3907,
+
+        [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
+        ReaperHarvestFeature = 3908,
+
+        [CustomComboInfo("Enshroud Communio Feature", "Replace Enshroud with Communio when Enshrouded.", RPR.JobID)]
+        ReaperEnshroudCommunioFeature = 3909,
+
+        [CustomComboInfo("Regress Feature", "Both Hell's Ingress and Egress turn into Regress when Threshold is active, instead of just the opposite of the one used.", RPR.JobID)]
+        ReaperRegressFeature = 3910,
 
         #endregion
         // ====================================================================================
@@ -309,22 +345,10 @@ namespace XIVComboExpandedPlugin
 
         #endregion
         // ====================================================================================
-        #region REAPER
+        #region SAGE
 
-        [CustomComboInfo("Slice Combo", "Replace Infernal Slice with its combo chain.", RPR.JobID)]
-        ReaperSliceCombo = 3901,
-
-        [CustomComboInfo("Scythe Combo", "Replace Nightmare Scythe with its combo chain.", RPR.JobID)]
-        ReaperScytheCombo = 3902,
-
-        // [CustomComboInfo("Soul Reaver Feature", "Replace Infernal Slice and Blood Stalk with .", RPR.JobID)]
-        // ReaperSoulReaverFeature = 3903,
-
-        [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
-        ReaperHarvestFeature = 3904,
-
-        [CustomComboInfo("Enshroud Communio Feature", "Replace Enshroud with Communio when Enshrouded.", RPR.JobID)]
-        ReaperEnshroudCommunioFeature = 3905,
+        // [CustomComboInfo("Kardia Into Soteria", "Kardia turns into Soteria when active and Soteria is off-cooldown.", SGE.JobID)]
+        // SageKardiaFeature = 4001,
 
         #endregion
         // ====================================================================================
@@ -366,10 +390,6 @@ namespace XIVComboExpandedPlugin
 
         #endregion
         // ====================================================================================
-        #region SAGE
-
-        #endregion
-        // ====================================================================================
         #region SCHOLAR
 
         [CustomComboInfo("Seraph Fey Blessing/Consolation", "Change Fey Blessing into Consolation when Seraph is out.", SCH.JobID)]
@@ -382,11 +402,20 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region SUMMONER
 
-        [CustomComboInfo("ED Fester", "Change Fester into Energy Drain when out of Aetherflow stacks.", SMN.JobID)]
-        SummonerEDFesterCombo = 2701,
+        [CustomComboInfo("ED Fester Feature", "Change Fester into Energy Drain when out of Aetherflow stacks.", SMN.JobID)]
+        SummonerEDFesterFeature = 2701,
 
-        [CustomComboInfo("ES Painflare", "Change Painflare into Energy Syphon when out of Aetherflow stacks.", SMN.JobID)]
-        SummonerESPainflareCombo = 2702,
+        [CustomComboInfo("ES Painflare Feature", "Change Painflare into Energy Syphon when out of Aetherflow stacks.", SMN.JobID)]
+        SummonerESPainflareFeature = 2702,
+
+        [CustomComboInfo("Festering Ruin Feature", "Change Fester into Ruin4 when available.", SMN.JobID)]
+        SummonerFesterRuinFeature = 2706,
+
+        [CustomComboInfo("Painful Ruin Feature", "Change Painflare into Ruin4 when available.", SMN.JobID)]
+        SummonerPainflareRuinFeature = 2707,
+
+        [CustomComboInfo("Enkindle Feature", "When not attuned, Enkindle will replace Gemshine and Precious Brilliance.", SMN.JobID)]
+        SummonerDemiFeature = 2703,
 
         #endregion
         // ====================================================================================
@@ -400,6 +429,9 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", WAR.JobID)]
         WarriorMythrilTempestCombo = 2103,
+
+        // [CustomComboInfo("Overpower Combo", "Replace Overpower with its combo chain (so that you can still use Mythril Tempest by itself in pulls)", WAR.JobID, WAR.Overpower)]
+        // WarriorOverpowerCombo = 2104,
 
         // [CustomComboInfo("Warrior Gauge Overcap Feature", "Replace Single-target or AoE combo with gauge spender if you are about to overcap and are before a step of a combo that would generate beast gauge.", WAR.JobID)]
         // WarriorGaugeOvercapFeature = 2104,
