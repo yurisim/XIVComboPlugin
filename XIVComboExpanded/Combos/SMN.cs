@@ -41,7 +41,9 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 RadiantAegis = 2,
+                Gemshine = 6,
                 EnergyDrain = 10,
+                PreciousBrilliance = 26,
                 Painflare = 40,
                 EnergySyphon = 52,
                 Ruin3 = 54,
@@ -93,9 +95,9 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerRuinFeature : CustomCombo
+    internal class SummonerShinyRuinFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerRuinFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerShinyRuinFeature;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SMN.Ruin, SMN.Ruin2, SMN.Ruin3 };
 
@@ -105,19 +107,23 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
-                if (level >= SMN.Levels.Ruin4
-                    && (gauge.AttunmentTimerRemaining == 0 || gauge.IsIfritAttuned || gauge.IsTitanAttuned || gauge.IsGarudaAttuned)
-                    && HasEffect(SMN.Buffs.FurtherRuin))
-                    return SMN.Ruin4;
+                if (level >= SMN.Levels.Gemshine && (gauge.IsIfritAttuned || gauge.IsTitanAttuned || gauge.IsGarudaAttuned))
+                    return OriginalHook(SMN.Gemshine);
+
+                if (IsEnabled(CustomComboPreset.SummonerShinyRuinFeature))
+                {
+                    if (level >= SMN.Levels.Ruin4 && gauge.SummonTimerRemaining == 0 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
+                        return SMN.Ruin4;
+                }
             }
 
             return actionID;
         }
     }
 
-    internal class SummonerRuinAoeFeature : CustomCombo
+    internal class SummonerShinyOutburstFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerRuinAoeFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerFurtherOutburstFeature;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SMN.Outburst, SMN.TriDisaster };
 
@@ -127,7 +133,53 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
-                if (level >= SMN.Levels.Ruin4 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
+                if (level >= SMN.Levels.PreciousBrilliance && (gauge.IsIfritAttuned || gauge.IsTitanAttuned || gauge.IsGarudaAttuned))
+                    return OriginalHook(SMN.PreciousBrilliance);
+
+                if (IsEnabled(CustomComboPreset.SummonerFurtherOutburstFeature))
+                {
+                    if (level >= SMN.Levels.Ruin4 && gauge.SummonTimerRemaining == 0 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
+                        return SMN.Ruin4;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SummonerFurtherRuinFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerFurtherRuinFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Ruin, SMN.Ruin2, SMN.Ruin3 };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SMN.Ruin || actionID == SMN.Ruin2 || actionID == SMN.Ruin3)
+            {
+                var gauge = GetJobGauge<SMNGauge>();
+
+                if (level >= SMN.Levels.Ruin4 && gauge.SummonTimerRemaining == 0 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
+                    return SMN.Ruin4;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SummonerFurtherOutburstFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerFurtherOutburstFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Outburst, SMN.TriDisaster };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+            {
+                var gauge = GetJobGauge<SMNGauge>();
+
+                if (level >= SMN.Levels.Ruin4 && gauge.SummonTimerRemaining == 0 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
                     return SMN.Ruin4;
             }
 

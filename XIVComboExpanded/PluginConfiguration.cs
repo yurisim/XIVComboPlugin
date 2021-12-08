@@ -78,5 +78,13 @@ namespace XIVComboExpandedPlugin
         /// <returns>The conflicting presets.</returns>
         public CustomComboPreset[] GetConflicts(CustomComboPreset preset)
             => preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? Array.Empty<CustomComboPreset>();
+
+        /// <summary>
+        /// Gets the parent combo preset if it exists, or null.
+        /// </summary>
+        /// <param name="preset">Preset to check.</param>
+        /// <returns>The parent preset.</returns>
+        public CustomComboPreset? GetParent(CustomComboPreset preset)
+            => preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
     }
 }

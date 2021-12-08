@@ -8,6 +8,10 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     public enum CustomComboPreset
     {
+        // A placeholder for when an attribute fails to be found.
+        [CustomComboInfo("None", "This should not be used.", ADV.JobID)]
+        None = 0,
+
         // A placeholder for disabled combos due to various issues.
         [CustomComboInfo("Disabled", "This should not be used.", ADV.JobID)]
         Disabled = 99999,
@@ -298,13 +302,15 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Soul Reaver Gibbet Feature", "Replace Infernal Slice with Gibbet while Reaving or Enshrouded.", RPR.JobID)]
         ReaperSoulReaverGibbetFeature = 3903,
 
-        [CustomComboInfo("Soul Reaver Gibbet Option", "Replace Infernal Slice with Gallows instead while Reaving or Enshrouded.\nRequires Soul Reaver Gibbet Feature", RPR.JobID)]
+        [ParentCombo(ReaperSoulReaverGibbetFeature)]
+        [CustomComboInfo("Soul Reaver Gibbet Option", "Replace Infernal Slice with Gallows instead while Reaving or Enshrouded.", RPR.JobID)]
         ReaperSoulReaverGibbetOption = 3904,
 
         [CustomComboInfo("Soul Reaver Gallows Feature", "Replace Shadow of Death with Gallows while Reaving or Enshrouded.", RPR.JobID)]
         ReaperSoulReaverGallowsFeature = 3905,
 
-        [CustomComboInfo("Soul Reaver Gallows Option", "Replace Shadow of Death with Gibbet instead while Reaving or Enshrouded.\nRequires Soul Reaver Gallows Feature.", RPR.JobID)]
+        [ParentCombo(ReaperSoulReaverGallowsFeature)]
+        [CustomComboInfo("Soul Reaver Gallows Option", "Replace Shadow of Death with Gibbet instead while Reaving or Enshrouded.", RPR.JobID)]
         ReaperSoulReaverGallowsOption = 3906,
 
         [CustomComboInfo("Soul Reaver Guillotine Option", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
@@ -330,19 +336,23 @@ namespace XIVComboExpandedPlugin
         RedMageMeleeCombo = 3502,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement with Verflare/Verholy (and then Scorch and Resolution) after Enchanted Redoublement, whichever is more appropriate.\nRequires Redoublement Combo.", RDM.JobID)]
+        [ParentCombo(RedMageMeleeCombo)]
+        [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement with Verflare/Verholy (and then Scorch and Resolution) after Enchanted Redoublement, whichever is more appropriate.", RDM.JobID)]
         RedMageMeleeComboPlus = 3503,
 
         [CustomComboInfo("Verproc into Jolt", "Replaces Verstone/Verfire with Jolt/Scorch when no proc is available.", RDM.JobID)]
         RedMageVerprocCombo = 3504,
 
-        [CustomComboInfo("Verproc into Jolt Plus", "Additionally replaces Verstone/Verfire with Veraero/Verthunder if Dualcast, Swiftcast, or Lost Chainspell are up.\nRequires Verproc into Jolt.", RDM.JobID)]
+        [ParentCombo(RedMageVerprocCombo)]
+        [CustomComboInfo("Verproc into Jolt Plus", "Additionally replaces Verstone/Verfire with Veraero/Verthunder if Dualcast, Swiftcast, or Lost Chainspell are up.", RDM.JobID)]
         RedMageVerprocComboPlus = 3505,
 
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Turns Verstone into Veraero when out of combat.\nRequires Verproc into Jolt Plus.", RDM.JobID)]
+        [ParentCombo(RedMageVerprocComboPlus)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Turns Verstone into Veraero when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureStone = 3506,
 
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Turns Verfire into Verthunder when out of combat.\nRequires Verproc into Jolt Plus.", RDM.JobID)]
+        [ParentCombo(RedMageVerprocComboPlus)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Turns Verfire into Verthunder when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureFire = 3507,
 
         // [SecretCustomCombo]
@@ -417,13 +427,31 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("ES Painflare Feature", "Change Painflare into Energy Syphon when out of Aetherflow stacks.", SMN.JobID)]
         SummonerESPainflareFeature = 2702,
 
-        [CustomComboInfo("Further Ruin Feature", "Change Ruin into Ruin4 when available.", SMN.JobID)]
-        SummonerRuinFeature = 2706,
+        [ConflictingCombos(SummonerFurtherRuinFeature)]
+        [CustomComboInfo("Shiny Ruin Feature", "Change Ruin into Gemburst when attuned.", SMN.JobID)]
+        SummonerShinyRuinFeature = 2706,
 
-        [CustomComboInfo("Further Ruin (AoE) Feature", "Change Outburst into Ruin4 when available.", SMN.JobID)]
-        SummonerRuinAoeFeature = 2707,
+        [ParentCombo(SummonerShinyRuinFeature)]
+        [CustomComboInfo("Further Shiny Ruin Feature", "Change Ruin into Ruin4 when available and appropriate.", SMN.JobID)]
+        SummoneFurtherShinyRuinFeature = 2708,
 
-        [CustomComboInfo("Enkindle Feature", "When not attuned, Enkindle will replace Gemshine and Precious Brilliance.", SMN.JobID)]
+        [ConflictingCombos(SummonerFurtherOutburstFeature)]
+        [CustomComboInfo("Shiny Outburst Feature", "Change Outburst into Precious Brilliance when attuned.", SMN.JobID)]
+        SummonerShinyOutburstFeature = 2707,
+
+        [ParentCombo(SummonerShinyOutburstFeature)]
+        [CustomComboInfo("Further Shiny Outburst Feature", "Change Outburst into Ruin4 when available and appropriate.", SMN.JobID)]
+        SummonerFurtherShinyOutburstFeature = 2709,
+
+        [ConflictingCombos(SummonerShinyRuinFeature)]
+        [CustomComboInfo("Further Ruin Feature", "Change Ruin into Ruin4 when available and appropriate.", SMN.JobID)]
+        SummonerFurtherRuinFeature = 2710,
+
+        [ConflictingCombos(SummoneFurtherShinyRuinFeature)]
+        [CustomComboInfo("Further Outburst Feature", "Change Outburst into Ruin4 when available and appropriate.", SMN.JobID)]
+        SummonerFurtherOutburstFeature = 2711,
+
+        [CustomComboInfo("Enkindle Feature", "When not attuned, changes Gemshine and Precious Brilliance with Enkindle.", SMN.JobID)]
         SummonerDemiFeature = 2703,
 
         #endregion
