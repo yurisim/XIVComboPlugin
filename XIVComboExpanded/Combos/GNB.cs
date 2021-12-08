@@ -187,7 +187,7 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerEmptyBloodfestFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { GNB.BurstStrike };
+        protected internal override uint[] ActionIDs { get; } = new[] { GNB.BurstStrike, GNB.FatedCircle };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
