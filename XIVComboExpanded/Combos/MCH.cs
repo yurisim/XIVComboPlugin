@@ -73,11 +73,11 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistMainCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.CleanShot };
+        protected internal override uint[] ActionIDs { get; } = new[] { MCH.CleanShot, MCH.HeatedCleanShot };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.CleanShot)
+            if (actionID == MCH.CleanShot || actionID == MCH.HeatedCleanShot)
             {
                 if (comboTime > 0)
                 {
