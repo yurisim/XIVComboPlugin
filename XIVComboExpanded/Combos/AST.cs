@@ -75,7 +75,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<ASTGauge>();
                 if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
-                    return AST.CrownPlay;
+                    return OriginalHook(AST.CrownPlay);
             }
 
             return actionID;
