@@ -113,7 +113,8 @@ namespace XIVComboExpandedPlugin.Combos
                 var gauge = GetJobGauge<SMNGauge>();
 
                 if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned)
-                    return SMN.EnkindleBahamut;
+                    // Rekindle
+                    return OriginalHook(SMN.EnkindleBahamut);
             }
 
             return actionID;
