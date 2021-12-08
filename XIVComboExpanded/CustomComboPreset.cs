@@ -411,11 +411,11 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("ES Painflare Feature", "Change Painflare into Energy Syphon when out of Aetherflow stacks.", SMN.JobID)]
         SummonerESPainflareFeature = 2702,
 
-        [CustomComboInfo("Festering Ruin Feature", "Change Fester into Ruin4 when available.", SMN.JobID)]
-        SummonerFesterRuinFeature = 2706,
+        [CustomComboInfo("Further Ruin Feature", "Change Ruin into Ruin4 when available.", SMN.JobID)]
+        SummonerRuinFeature = 2706,
 
-        [CustomComboInfo("Painful Ruin Feature", "Change Painflare into Ruin4 when available.", SMN.JobID)]
-        SummonerPainflareRuinFeature = 2707,
+        [CustomComboInfo("Further Ruin (AoE) Feature", "Change Outburst into Ruin4 when available.", SMN.JobID)]
+        SummonerRuinAoeFeature = 2707,
 
         [CustomComboInfo("Enkindle Feature", "When not attuned, Enkindle will replace Gemshine and Precious Brilliance.", SMN.JobID)]
         SummonerDemiFeature = 2703,
