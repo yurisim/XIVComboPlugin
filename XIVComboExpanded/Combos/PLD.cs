@@ -88,11 +88,11 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinRageOfHaloneCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.RageOfHalone };
+        protected internal override uint[] ActionIDs { get; } = new[] { PLD.RageOfHalone, PLD.RoyalAuthority };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == PLD.RageOfHalone)
+            if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
             {
                 if (IsEnabled(CustomComboPreset.PaladinAtonementFeature))
                 {
