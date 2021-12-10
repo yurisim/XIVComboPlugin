@@ -8,9 +8,8 @@ namespace XIVComboExpandedPlugin
     /// </summary>
     public enum CustomComboPreset
     {
-        // A placeholder for when an attribute fails to be found.
-        [CustomComboInfo("None", "This should not be used.", ADV.JobID)]
-        None = 0,
+        [CustomComboInfo("Any", "This should not be displayed. This always returns true when used with IsEnabled.", ADV.JobID)]
+        Any = 0,
 
         // A placeholder for disabled combos due to various issues.
         [CustomComboInfo("Disabled", "This should not be used.", ADV.JobID)]
@@ -179,6 +178,10 @@ namespace XIVComboExpandedPlugin
         [SecretCustomCombo]
         [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
         GunbreakerNoMercyFeature = 3708,
+
+        [SecretCustomCombo]
+        [CustomComboInfo("Double Down Feature", "Replace Burst Strike and Fated Circle with Double Down when available.", GNB.JobID)]
+        GunbreakerDoubleDownFeature = 3709,
 
         #endregion
         // ====================================================================================
