@@ -99,9 +99,13 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MNK.HowlingFist)
             {
                 var gauge = GetJobGauge<MNKGauge>();
+                unsafe
+                {
+                    var chakra = *(byte*)gauge.Address + 0x8;
 
-                if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
-                    return MNK.Meditation;
+                    if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
+                        return MNK.Meditation;
+                }
 
                 // Enlightenment
                 return OriginalHook(MNK.HowlingFist);
