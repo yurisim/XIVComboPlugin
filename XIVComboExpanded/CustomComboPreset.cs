@@ -208,7 +208,7 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region MONK
 
-        [CustomComboInfo("Monk AoE Combo", "Replaces Rockbreaker with the AoE combo chain, or Rockbreaker when Perfect Balance is active.", MNK.JobID)]
+        [CustomComboInfo("Monk AoE Combo", "Replaces Rockbreaker and Four Point Fury with the AoE combo chain, when Perfect Balance is active, Rockbreaker does not change.", MNK.JobID)]
         MonkAoECombo = 2001,
 
         // [CustomComboInfo("Monk Bootshine Feature", "Replaces Dragon Kick with Bootshine if both a form and Leaden Fist are up.", MNK.JobID)]

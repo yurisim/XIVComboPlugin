@@ -59,17 +59,20 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkAoECombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MNK.Rockbreaker };
+        protected internal override uint[] ActionIDs { get; } = new[] { MNK.Rockbreaker, MNK.FourPointFury };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MNK.Rockbreaker)
+            if (actionID == MNK.Rockbreaker || actionID == MNK.FourPointFury)
             {
-                if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
-                    return MNK.Rockbreaker;
+                if (actionID == MNK.Rockbreaker)
+                {
+                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
+                        return MNK.Rockbreaker;
 
-                if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
-                    return MNK.Rockbreaker;
+                    if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+                        return MNK.Rockbreaker;
+                }
 
                 if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
                     // Shadow of the Destroyer
