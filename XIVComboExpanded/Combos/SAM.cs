@@ -207,9 +207,9 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiTsubameGaeshiShohaFeature : CustomCombo
+    internal class SamuraiTsubameFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiTsubameGaeshiShohaFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.TsubameGaeshi };
 
@@ -219,39 +219,28 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SAMGauge>();
 
-                if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
-                    return SAM.Shoha;
+                if (IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiShohaFeature))
+                {
+                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                        return SAM.Shoha;
+                }
+
+                if (IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature))
+                {
+                    if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
+                        return OriginalHook(SAM.TsubameGaeshi);
+
+                    return OriginalHook(SAM.Iaijutsu);
+                }
             }
 
             return actionID;
         }
     }
 
-    internal class SamuraiTsubameGaeshiIaijutsuFeature : CustomCombo
+    internal class SamuraiIaijutsuFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.TsubameGaeshi };
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == SAM.TsubameGaeshi)
-            {
-                var gauge = GetJobGauge<SAMGauge>();
-
-                if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
-                    return OriginalHook(SAM.TsubameGaeshi);
-
-                return OriginalHook(SAM.Iaijutsu);
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class SamuraiIaijutsuShohaFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiIaijutsuShohaFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.Iaijutsu };
 
@@ -261,30 +250,19 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SAMGauge>();
 
-                if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
-                    return SAM.Shoha;
-            }
+                if (IsEnabled(CustomComboPreset.SamuraiIaijutsuShohaFeature))
+                {
+                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                        return SAM.Shoha;
+                }
 
-            return actionID;
-        }
-    }
+                if (IsEnabled(CustomComboPreset.SamuraiIaijutsuTsubameGaeshiFeature))
+                {
+                    if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
+                        return OriginalHook(SAM.TsubameGaeshi);
 
-    internal class SamuraiIaijutsuTsubameGaeshiFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiIaijutsuTsubameGaeshiFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Iaijutsu };
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == SAM.Iaijutsu)
-            {
-                var gauge = GetJobGauge<SAMGauge>();
-
-                if (level >= SAM.Levels.TsubameGaeshi && gauge.Sen == Sen.NONE)
-                    return OriginalHook(SAM.TsubameGaeshi);
-
-                return OriginalHook(SAM.Iaijutsu);
+                    return OriginalHook(SAM.Iaijutsu);
+                }
             }
 
             return actionID;
