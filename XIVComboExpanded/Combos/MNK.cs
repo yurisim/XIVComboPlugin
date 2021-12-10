@@ -101,7 +101,7 @@ namespace XIVComboExpandedPlugin.Combos
                 var gauge = GetJobGauge<MNKGauge>();
                 unsafe
                 {
-                    var chakra = *(byte*)gauge.Address + 0x8;
+                    var chakra = *(byte*)(gauge.Address + 0x8);
 
                     if (level >= MNK.Levels.Meditation && chakra < 5)
                         return MNK.Meditation;
