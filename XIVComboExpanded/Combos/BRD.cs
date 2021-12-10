@@ -93,11 +93,11 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardStraightShotUpgradeFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.HeavyShot };
+        protected internal override uint[] ActionIDs { get; } = new[] { BRD.HeavyShot, BRD.BurstShot };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BRD.HeavyShot)
+            if (actionID == BRD.HeavyShot || actionID == BRD.BurstShot)
             {
                 if (IsEnabled(CustomComboPreset.BardApexFeature))
                 {
@@ -183,11 +183,11 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardShadowbiteFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.QuickNock };
+        protected internal override uint[] ActionIDs { get; } = new[] { BRD.QuickNock, BRD.Ladonsbite };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BRD.QuickNock)
+            if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
             {
                 if (IsEnabled(CustomComboPreset.BardApexFeature))
                 {
