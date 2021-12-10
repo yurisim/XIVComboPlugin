@@ -103,7 +103,7 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     var chakra = *(byte*)gauge.Address + 0x8;
 
-                    if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
+                    if (level >= MNK.Levels.Meditation && chakra < 5)
                         return MNK.Meditation;
                 }
 
