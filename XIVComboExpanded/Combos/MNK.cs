@@ -1,4 +1,6 @@
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using System.Linq;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -81,25 +83,27 @@ namespace XIVComboExpandedPlugin.Combos
                 if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
                     return MNK.Rockbreaker;
 
-                return MNK.ArmOfTheDestroyer;
+                // Shadow of the Destroyer
+                return OriginalHook(MNK.ArmOfTheDestroyer);
             }
 
-            // if (actionID == MNK.FourPointFury)
-            // {
-            //     var gauge = GetJobGauge<MNKGauge>();
-            //
-            //     if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
-            //         // Shadow of the Destroyer
-            //         return OriginalHook(MNK.ArmOfTheDestroyer);
-            //
-            //     if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
-            //         return MNK.FourPointFury;
-            //
-            //     if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
-            //         return MNK.Rockbreaker;
-            //
-            //     return MNK.ArmOfTheDestroyer;
-            // }
+            if (actionID == MNK.FourPointFury)
+            {
+                var gauge = GetJobGauge<MNKGauge>();
+
+                if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
+                    // Shadow of the Destroyer
+                    return OriginalHook(MNK.ArmOfTheDestroyer);
+
+                if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
+                    return MNK.FourPointFury;
+
+                if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
+                    return MNK.Rockbreaker;
+
+                // Shadow of the Destroyer
+                return OriginalHook(MNK.ArmOfTheDestroyer);
+            }
 
             return actionID;
         }
