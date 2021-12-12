@@ -202,7 +202,7 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     var gauge = GetJobGauge<DRGGauge>();
 
-                    if (gauge.BOTDState == BOTDState.LOTD)
+                    if (gauge.IsLOTDActive)
                         return CalcBestAction(actionID, DRG.SpineshatterDive, DRG.DragonfireDive, DRG.Stardiver);
 
                     return CalcBestAction(actionID, DRG.SpineshatterDive, DRG.DragonfireDive);
