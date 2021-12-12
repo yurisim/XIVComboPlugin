@@ -60,7 +60,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class PaladinGoringBladeCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinGoringBladeCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
 
         protected internal override uint[] ActionIDs { get; } = new[] { PLD.GoringBlade };
 
@@ -68,16 +68,25 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == PLD.GoringBlade)
             {
-                if (comboTime > 0)
+                if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
                 {
-                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.GoringBlade)
-                        return PLD.GoringBlade;
-
-                    if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
-                        return PLD.RiotBlade;
+                    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath))
+                        return PLD.Atonement;
                 }
 
-                return PLD.FastBlade;
+                if (IsEnabled(CustomComboPreset.PaladinGoringBladeCombo))
+                {
+                    if (comboTime > 0)
+                    {
+                        if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.GoringBlade)
+                            return PLD.GoringBlade;
+
+                        if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
+                            return PLD.RiotBlade;
+                    }
+
+                    return PLD.FastBlade;
+                }
             }
 
             return actionID;
@@ -94,13 +103,13 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
             {
-                if (IsEnabled(CustomComboPreset.PaladinAtonementFeature))
+                if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
                 {
                     if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath))
                         return PLD.Atonement;
                 }
 
-                if (IsEnabled(CustomComboPreset.PaladinRageOfHaloneCombo))
+                if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityCombo))
                 {
                     if (comboTime > 0)
                     {
