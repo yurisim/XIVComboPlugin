@@ -86,7 +86,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class PaladinRageOfHaloneCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinRageOfHaloneCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
 
         protected internal override uint[] ActionIDs { get; } = new[] { PLD.RageOfHalone, PLD.RoyalAuthority };
 
@@ -100,16 +100,19 @@ namespace XIVComboExpandedPlugin.Combos
                         return PLD.Atonement;
                 }
 
-                if (comboTime > 0)
+                if (IsEnabled(CustomComboPreset.PaladinRageOfHaloneCombo))
                 {
-                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
-                        return OriginalHook(PLD.RageOfHalone);
+                    if (comboTime > 0)
+                    {
+                        if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
+                            return OriginalHook(PLD.RageOfHalone);
 
-                    if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
-                        return PLD.RiotBlade;
+                        if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
+                            return PLD.RiotBlade;
+                    }
+
+                    return PLD.FastBlade;
                 }
-
-                return PLD.FastBlade;
             }
 
             return actionID;
