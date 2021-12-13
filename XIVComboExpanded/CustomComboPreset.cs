@@ -22,7 +22,10 @@ namespace XIVComboExpandedPlugin
         #region ASTROLOGIAN
 
         [CustomComboInfo("Draw on Play", "Play turns into Draw when no card is drawn, as well as the usual Play behavior.", AST.JobID)]
-        AstrologianCardsOnDrawFeature = 3301,
+        AstrologianDrawPlayFeature = 3301,
+
+        [CustomComboInfo("Astrodyne on Play", "Play turns into Astrodyne when seals are full.", AST.JobID)]
+        AstrologianAstrodynePlayFeature = 3304,
 
         [CustomComboInfo("Minor Arcana Play Feature", "Changes Minor Arcana to Crown Play when a card drawn.", AST.JobID)]
         AstrologianMinorArcanaPlayFeature = 3302,
