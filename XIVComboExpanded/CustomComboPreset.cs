@@ -226,11 +226,15 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Monk AoE Combo", "Replaces Rockbreaker and Four Point Fury with the AoE combo chain, when Perfect Balance is active, Rockbreaker does not change.", MNK.JobID)]
         MonkAoECombo = 2001,
 
-        // [CustomComboInfo("Monk Bootshine Feature", "Replaces Dragon Kick with Bootshine if both a form and Leaden Fist are up.", MNK.JobID)]
-        // MnkBootshineFeature = 2002,
+        [ParentCombo(MonkAoECombo)]
+        [CustomComboInfo("Monk AoE Balance Feature", "Replaces Monk's AoE Combo with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
+        MonkAoEBalanceFeature = 2002,
 
-        [CustomComboInfo("Howling Fist / Meditation Feature", "Howling Fist with Meditation when the Fifth Chakra is not open.", MNK.JobID)]
+        [CustomComboInfo("Howling Fist / Meditation Feature", "Replace Howling Fist with Meditation when the Fifth Chakra is not open.", MNK.JobID)]
         MonkHowlingFistMeditationFeature = 2003,
+
+        [CustomComboInfo("Perfect Balance Feature", "Replace Perfect Balance with Masterful Blitz when you have 3 Beast Chakra.", MNK.JobID)]
+        MonkPerfectBalanceFeature = 2004,
 
         #endregion
         // ====================================================================================

@@ -17,11 +17,13 @@ namespace XIVComboExpandedPlugin.Combos
             TwinSnakes = 61,
             ArmOfTheDestroyer = 62,
             Demolish = 66,
+            PerfectBalance = 69,
             Rockbreaker = 70,
             Meditation = 3546,
             FourPointFury = 16473,
             Enlightenment = 16474,
-            HowlingFist = 25763;
+            HowlingFist = 25763,
+            MasterfulBlitz = 25764;
 
         public static class Buffs
         {
@@ -53,6 +55,7 @@ namespace XIVComboExpandedPlugin.Combos
                 DragonKick = 50,
                 PerfectBalance = 50,
                 FormShift = 52,
+                MasterfulBlitz = 60,
                 Enlightenment = 70,
                 ShadowOfTheDestroyer = 82;
         }
@@ -66,6 +69,17 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
+            if (actionID == MNK.Rockbreaker || actionID == MNK.FourPointFury)
+            {
+                if (IsEnabled(CustomComboPreset.MonkAoEBalanceFeature))
+                {
+                    var gauge = GetJobGauge<MNKGauge>();
+
+                    if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                        return OriginalHook(MNK.MasterfulBlitz);
+                }
+            }
+
             if (actionID == MNK.Rockbreaker)
             {
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
@@ -114,11 +128,11 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkHowlingFistMeditationFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MNK.HowlingFist };
+        protected internal override uint[] ActionIDs { get; } = new[] { MNK.HowlingFist, MNK.Enlightenment };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MNK.HowlingFist)
+            if (actionID == MNK.HowlingFist || actionID == MNK.Enlightenment)
             {
                 var gauge = GetJobGauge<MNKGauge>();
 
@@ -127,6 +141,26 @@ namespace XIVComboExpandedPlugin.Combos
 
                 // Enlightenment
                 return OriginalHook(MNK.HowlingFist);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MonkPerfectBalanceFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkPerfectBalanceFeature;
+
+        protected internal override uint[] ActionIDs { get; } = new[] { MNK.PerfectBalance };
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MNK.PerfectBalance)
+            {
+                var gauge = GetJobGauge<MNKGauge>();
+
+                if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                    return OriginalHook(MNK.MasterfulBlitz);
             }
 
             return actionID;
