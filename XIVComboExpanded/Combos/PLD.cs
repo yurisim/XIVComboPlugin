@@ -68,7 +68,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == PLD.GoringBlade)
             {
-                if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
+                if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
                 {
                     if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath))
                         return PLD.Atonement;
