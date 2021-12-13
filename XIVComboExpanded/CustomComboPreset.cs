@@ -16,6 +16,9 @@ namespace XIVComboExpandedPlugin
         Disabled = 99999,
 
         // ====================================================================================
+        #region ADV
+        #endregion
+        // ====================================================================================
         #region ASTROLOGIAN
 
         [CustomComboInfo("Draw on Play", "Play turns into Draw when no card is drawn, as well as the usual Play behavior.", AST.JobID)]
@@ -48,6 +51,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Freeze/Flare Feature", "Freeze and Flare become whichever action you can currently use.", BLM.JobID)]
         BlackFreezeFlareFeature = 2506,
+
+        [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire with 1 or fewer Umbral Hearts.", BLM.JobID)]
+        BlackFire2Feature = 2508,
+
+        [CustomComboInfo("Ice 2 Feature", "(High) Blizzard 2 becomes Freeze in Umbral Ice.", BLM.JobID)]
+        BlackBlizzard2Feature = 2509,
 
         [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
         BlackScatheFeature = 2507,
@@ -144,6 +153,9 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Full Thrust Combo", "Replace Full Thrust with its combo chain.", DRG.JobID)]
         DragoonFullThrustCombo = 2204,
+
+        [CustomComboInfo("Wheeling Thrust / Fang and Claw Option", "When you have either Enhanced Fang and Claw or Wheeling Thrust, Chaos Thrust becomes Wheeling Thrust and Full Thrust becomes Fang and Claw.", DRG.JobID)]
+        DragoonFangThrustFeature = 2205,
 
         // [SecretCustomCombo]
         // [CustomComboInfo("Dive Dive Dive!", "Replace Spineshatter Dive, Dragonfire Dive, and Stardiver with whichever is available.", DRG.JobID)]
@@ -343,7 +355,7 @@ namespace XIVComboExpandedPlugin
 
         [SecretCustomCombo]
         [ParentCombo(RedMageMeleeCombo)]
-        [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement with Verflare/Verholy (and then Scorch and Resolution) after Enchanted Redoublement, whichever is more appropriate.", RDM.JobID)]
+        [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement (and Moulinet) with Verflare/Verholy (and then Scorch and Resolution) after 3 mana stacks, whichever is more appropriate.", RDM.JobID)]
         RedMageMeleeComboPlus = 3503,
 
         [CustomComboInfo("Verproc into Jolt", "Replaces Verstone/Verfire with Jolt/Scorch when no proc is available.", RDM.JobID)]

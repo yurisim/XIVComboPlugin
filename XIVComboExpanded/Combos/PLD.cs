@@ -114,6 +114,7 @@ namespace XIVComboExpandedPlugin.Combos
                     if (comboTime > 0)
                     {
                         if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
+                            // Royal Authority
                             return OriginalHook(PLD.RageOfHalone);
 
                         if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)

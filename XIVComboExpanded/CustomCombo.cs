@@ -79,7 +79,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (!IsEnabled(this.Preset))
                 return false;
 
-            var classJobID = LocalPlayer?.ClassJob.Id;
+            var classJobID = LocalPlayer!.ClassJob.Id;
             if (this.JobID != ADV.JobID && this.ClassID != ADV.ClassID &&
                 this.JobID != classJobID && this.ClassID != classJobID)
                 return false;
