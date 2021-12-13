@@ -10,6 +10,7 @@ namespace XIVComboExpandedPlugin.Combos
         public const uint
             Verthunder = 7505,
             Veraero = 7507,
+            Scatter = 7509,
             Veraero2 = 16525,
             Verthunder2 = 16524,
             Impact = 16526,
@@ -20,7 +21,6 @@ namespace XIVComboExpandedPlugin.Combos
             Riposte = 7504,
             EnchantedRiposte = 7527,
             Jolt = 7503,
-            Scatter = 7509,
             Verstone = 7511,
             Verfire = 7510,
             Moulinet = 7513,
@@ -55,6 +55,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Jolt = 2,
                 Verthunder = 4,
                 Veraero = 10,
+                Scatter = 15,
                 Zwerchhau = 35,
                 Fleche = 45,
                 Redoublement = 50,
@@ -80,8 +81,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
             {
-                if (level >= RDM.Levels.Impact && (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Acceleration) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)))
-                    return OriginalHook(RDM.Impact);
+                if (level >= RDM.Levels.Scatter && (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Acceleration) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)))
+                    return OriginalHook(RDM.Scatter);
             }
 
             return actionID;
