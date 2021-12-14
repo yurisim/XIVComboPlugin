@@ -214,7 +214,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SamuraiTsubameFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.TsubameGaeshi };
 
@@ -245,7 +245,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SamuraiIaijutsuFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.Iaijutsu };
 
@@ -276,7 +276,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SamuraiShinten : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.HissatsuShinten };
 
@@ -305,7 +305,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class SamuraiKyuten : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Any;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
         protected internal override uint[] ActionIDs { get; } = new[] { SAM.HissatsuKyuten };
 
