@@ -66,7 +66,7 @@ namespace XIVComboExpandedPlugin
         SgeAny = AdvAny + SGE.JobID,
 
         [CustomComboInfo("Any", "This should not be displayed. This always returns true when used with IsEnabled.", SMN.JobID)]
-        SmnAny = AdvAny + SAM.JobID,
+        SmnAny = AdvAny + SMN.JobID,
 
         [CustomComboInfo("Any", "This should not be displayed. This always returns true when used with IsEnabled.", WAR.JobID)]
         WarAny = AdvAny + WAR.JobID,

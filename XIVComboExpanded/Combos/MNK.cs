@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -71,8 +72,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.Rockbreaker)
             {
-                var gauge1 = GetJobGauge<MNKGauge>();
-                var gauge = new MyMNKGauge(gauge1);
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (IsEnabled(CustomComboPreset.MonkAoEBalanceFeature))
                 {
@@ -108,8 +108,7 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (actionID == MNK.FourPointFury)
             {
-                var gauge1 = GetJobGauge<MNKGauge>();
-                var gauge = new MyMNKGauge(gauge1);
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                 {
@@ -141,8 +140,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.HowlingFist || actionID == MNK.Enlightenment)
             {
-                var gauge1 = GetJobGauge<MNKGauge>();
-                var gauge = new MyMNKGauge(gauge1);
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
                     return MNK.Meditation;
@@ -165,8 +163,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.PerfectBalance)
             {
-                var gauge1 = GetJobGauge<MNKGauge>();
-                var gauge = new MyMNKGauge(gauge1);
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
                     return OriginalHook(MNK.MasterfulBlitz);
@@ -174,47 +171,5 @@ namespace XIVComboExpandedPlugin.Combos
 
             return actionID;
         }
-    }
-
-    internal unsafe class MyMNKGauge
-    {
-        private readonly IntPtr address;
-
-        internal MyMNKGauge(MNKGauge gauge)
-        {
-            this.address = gauge.Address;
-        }
-
-        public byte Chakra => *(byte*)(this.address + 0x8);
-
-        public BeastChakra[] BeastChakra => new[]
-        {
-            *(BeastChakra*)(this.address + 0x9),
-            *(BeastChakra*)(this.address + 0xA),
-            *(BeastChakra*)(this.address + 0xB),
-        };
-
-        public Nadi Nadi => *(Nadi*)(this.address + 0xC);
-
-        public ushort BlitzTimeRemaining => *(ushort*)(this.address + 0xE);
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Pending PR")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum BeastChakra : byte
-    {
-        NONE = 0,
-        COEURL = 1,
-        RAPTOR = 2,
-        OPOOPO = 3,
-    }
-
-    [Flags]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum Nadi : byte
-    {
-        NONE = 0,
-        LUNAR = 2,
-        SOLAR = 4,
     }
 }
