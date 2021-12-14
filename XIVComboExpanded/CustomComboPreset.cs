@@ -543,8 +543,8 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Shiny Enkindle Feature", "Change Gemshine and Precious Brilliance to Enkindle when Bahamut or Phoenix are summoned.", SMN.JobID)]
         SummonerShinyEnkindleFeature = 2709,
 
-        [CustomComboInfo("Astral Enkindle Feature", "Change Astral Flow into Enkindle when available.", SMN.JobID)]
-        SummonerAstralEnkindleFeature = 2710,
+        [CustomComboInfo("Demi Enkindle Feature", "Change Summon Bahamut and Summon Phoenix into Enkindle when Bahamut or Phoenix are summoned.", SMN.JobID)]
+        SummonerDemiEnkindleFeature = 2710,
 
         [CustomComboInfo("Radiant Carbuncle Feature", "Change Radiant Aegis into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
         SummonerRadiantCarbuncleFeature = 2711,

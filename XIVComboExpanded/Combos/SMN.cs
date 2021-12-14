@@ -14,12 +14,15 @@ namespace XIVComboExpandedPlugin.Combos
             Ruin4 = 7426,
             Fester = 181,
             Painflare = 3578,
+            DreadwyrmTrance = 3581,
+            SummonBahamut = 7427,
             EnkindleBahamut = 7429,
             EnergySyphon = 16510,
             Outburst = 16511,
             EnergyDrain = 16508,
             SummonCarbuncle = 25798,
             RadiantAegis = 25799,
+            Aethercharge = 25800,
             SearingLight = 25801,
             AstralFlow = 25822,
             TriDisaster = 25826,
@@ -205,21 +208,21 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerAstralFlow : CustomCombo
+    internal class SummonerDemiFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.AstralFlow };
+        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Aethercharge, SMN.DreadwyrmTrance, SMN.SummonBahamut };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == SMN.AstralFlow)
+            if (actionID == SMN.Aethercharge || actionID == SMN.DreadwyrmTrance || actionID == SMN.SummonBahamut)
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
-                if (IsEnabled(CustomComboPreset.SummonerAstralEnkindleFeature))
+                if (IsEnabled(CustomComboPreset.SummonerDemiEnkindleFeature))
                 {
-                    if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned)
+                    if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
                         // Rekindle
                         return OriginalHook(SMN.EnkindleBahamut);
                 }
