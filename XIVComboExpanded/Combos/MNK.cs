@@ -24,7 +24,8 @@ namespace XIVComboExpandedPlugin.Combos
             FourPointFury = 16473,
             Enlightenment = 16474,
             HowlingFist = 25763,
-            MasterfulBlitz = 25764;
+            MasterfulBlitz = 25764,
+            ShadowOfTheDestroyer = 25767;
 
         public static class Buffs
         {
@@ -82,13 +83,12 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.MonkAoECombo))
                 {
-                    if ((level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance)) || (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist)))
+                    if ((level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance)) ||
+                        (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist)))
                     {
-                        if (level >= MNK.Levels.ShadowOfTheDestroyer)
-                            // Shadow of the Destroyer
-                            return OriginalHook(MNK.ArmOfTheDestroyer);
-
-                        return MNK.Rockbreaker;
+                        return level >= MNK.Levels.ShadowOfTheDestroyer
+                            ? MNK.ShadowOfTheDestroyer
+                            : MNK.Rockbreaker;
                     }
 
                     if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
@@ -112,13 +112,14 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                 {
-                    if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
+                    if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains((BeastChakra)MyBeastChakra.OPOOPO))
+                        // Shadow of the Destroyer
                         return OriginalHook(MNK.ArmOfTheDestroyer);
 
-                    if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
+                    if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains((BeastChakra)MyBeastChakra.RAPTOR))
                         return MNK.FourPointFury;
 
-                    if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
+                    if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains((BeastChakra)MyBeastChakra.COEURL))
                         return MNK.Rockbreaker;
 
                     // Shadow of the Destroyer
@@ -171,5 +172,15 @@ namespace XIVComboExpandedPlugin.Combos
 
             return actionID;
         }
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Pending PR")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
+    internal enum MyBeastChakra : byte
+    {
+        NONE = 0,
+        COEURL = 1,
+        OPOOPO = 2,
+        RAPTOR = 3,
     }
 }
