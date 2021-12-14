@@ -192,7 +192,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.SummonerShinyEnkindleFeature))
                 {
-                    if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned)
+                    if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
                         // Rekindle
                         return OriginalHook(SMN.EnkindleBahamut);
                 }
