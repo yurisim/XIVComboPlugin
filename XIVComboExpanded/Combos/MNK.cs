@@ -35,7 +35,8 @@ namespace XIVComboExpandedPlugin.Combos
                 CoerlForm = 109,
                 PerfectBalance = 110,
                 LeadenFist = 1861,
-                FormlessFist = 2513;
+                FormlessFist = 2513,
+                DisciplinedFist = 3001;
         }
 
         public static class Debuffs
@@ -80,22 +81,58 @@ namespace XIVComboExpandedPlugin.Combos
                         return OriginalHook(MNK.MasterfulBlitz);
                 }
 
-                if (IsEnabled(CustomComboPreset.MonkAoECombo))
+                if (IsEnabled(CustomComboPreset.MonkAoESolarFeature))
                 {
-                    if ((level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance)) ||
-                        (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist)))
+                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && !gauge.Nadi.HasFlag(Nadi.SOLAR))
+                    {
+                        // Refresh Disciplined Fist if missing or about to expire
+                        var fist = FindEffect(MNK.Buffs.DisciplinedFist);
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR) && (fist == null || fist.RemainingTime < 3))
+                            return MNK.FourPointFury;
+
+                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
+                            // Shadow of the Destroyer
+                            return OriginalHook(MNK.ArmOfTheDestroyer);
+
+                        if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
+                            return MNK.Rockbreaker;
+
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
+                            return MNK.FourPointFury;
+
+                        return level >= MNK.Levels.ShadowOfTheDestroyer
+                            ? MNK.ShadowOfTheDestroyer
+                            : MNK.Rockbreaker;
+                    }
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkAoELunarFeature))
+                {
+                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && !gauge.Nadi.HasFlag(Nadi.LUNAR))
                     {
                         return level >= MNK.Levels.ShadowOfTheDestroyer
                             ? MNK.ShadowOfTheDestroyer
                             : MNK.Rockbreaker;
                     }
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkAoEDisciplinedFeature))
+                {
+                    if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+                    {
+                        if (level >= MNK.Levels.FourPointFury)
+                            return MNK.FourPointFury;
+                    }
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkAoECombo))
+                {
+                    if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
+                        return MNK.FourPointFury;
 
                     if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
                         // Shadow of the Destroyer
                         return OriginalHook(MNK.ArmOfTheDestroyer);
-
-                    if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
-                        return MNK.FourPointFury;
 
                     if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
                         return MNK.Rockbreaker;
@@ -107,22 +144,14 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (actionID == MNK.FourPointFury)
             {
-                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
-
-                if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
+                if (IsEnabled(CustomComboPreset.MonkAoEFpfFeature))
                 {
-                    if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
-                        // Shadow of the Destroyer
-                        return OriginalHook(MNK.ArmOfTheDestroyer);
-
-                    if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
-                        return MNK.FourPointFury;
-
-                    if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
-                        return MNK.Rockbreaker;
-
-                    // Shadow of the Destroyer
-                    return OriginalHook(MNK.ArmOfTheDestroyer);
+                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
+                    {
+                        return level >= MNK.Levels.ShadowOfTheDestroyer
+                            ? MNK.ShadowOfTheDestroyer
+                            : MNK.Rockbreaker;
+                    }
                 }
             }
 
