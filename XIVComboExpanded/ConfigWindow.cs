@@ -131,7 +131,9 @@ namespace XIVComboExpandedPlugin
                             description += $"\nRequires {parentInfo.FancyName}";
                         }
 
-                        ImGui.TextColored(this.shadedColor, description);
+                        ImGui.PushStyleColor(ImGuiCol.Text, this.shadedColor);
+                        ImGui.TextWrapped(description);
+                        ImGui.PopStyleColor();
                         ImGui.Spacing();
 
                         if (conflicts.Length > 0)
