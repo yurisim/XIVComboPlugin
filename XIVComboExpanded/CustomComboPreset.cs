@@ -525,11 +525,17 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Ruin Feature", "Change Ruin into Gemburst when attuned.", SMN.JobID)]
         SummonerRuinFeature = 2703,
 
-        [CustomComboInfo("Outburst Feature", "Change Outburst into Precious Brilliance when attuned.", SMN.JobID)]
-        SummonerOutburstFeature = 2704,
+        [CustomComboInfo("Titan's Favor Ruin Feature", "Change Ruin into Mountain Buster (oGCD) when available.", SMN.JobID)]
+        SummonerRuinTitansFavorFeature = 2713,
 
         [CustomComboInfo("Further Ruin Feature", "Change Ruin into Ruin4 when available and appropriate.", SMN.JobID)]
         SummonerFurtherRuinFeature = 2705,
+
+        [CustomComboInfo("Outburst Feature", "Change Outburst into Precious Brilliance when attuned.", SMN.JobID)]
+        SummonerOutburstFeature = 2704,
+
+        [CustomComboInfo("Titan's Favor Outburst Feature", "Change Outburst into Mountain Buster (oGCD) when available.", SMN.JobID)]
+        SummonerOutburstTitansFavorFeature = 2714,
 
         [CustomComboInfo("Further Outburst Feature", "Change Outburst into Ruin4 when available and appropriate.", SMN.JobID)]
         SummonerFurtherOutburstFeature = 2706,

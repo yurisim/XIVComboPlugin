@@ -120,6 +120,12 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
+                if (IsEnabled(CustomComboPreset.SummonerRuinTitansFavorFeature))
+                {
+                    if (level >= SMN.Levels.ElementalMastery && HasEffect(SMN.Buffs.TitansFavor))
+                        return SMN.MountainBuster;
+                }
+
                 if (IsEnabled(CustomComboPreset.SummonerRuinFeature))
                 {
                     if (level >= SMN.Levels.Gemshine)
@@ -151,6 +157,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
             {
                 var gauge = GetJobGauge<SMNGauge>();
+
+                if (IsEnabled(CustomComboPreset.SummonerOutburstTitansFavorFeature))
+                {
+                    if (level >= SMN.Levels.ElementalMastery && HasEffect(SMN.Buffs.TitansFavor))
+                        return SMN.MountainBuster;
+                }
 
                 if (IsEnabled(CustomComboPreset.SummonerOutburstFeature))
                 {
