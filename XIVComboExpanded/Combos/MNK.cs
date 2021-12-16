@@ -83,7 +83,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.MonkAoESolarFeature))
                 {
-                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && !gauge.Nadi.HasFlag(Nadi.SOLAR))
+                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi == (Nadi.LUNAR | Nadi.SOLAR)))
                     {
                         // Refresh Disciplined Fist if missing or about to expire
                         var fist = FindEffect(MNK.Buffs.DisciplinedFist);
