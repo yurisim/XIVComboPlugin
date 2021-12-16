@@ -243,5 +243,4 @@ namespace XIVComboExpandedPlugin.Combos
         LUNAR = 2,
         SOLAR = 4,
     }
-
 }

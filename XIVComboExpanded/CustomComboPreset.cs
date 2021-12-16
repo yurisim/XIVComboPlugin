@@ -415,11 +415,11 @@ namespace XIVComboExpandedPlugin
         ReaperSoulReaverGuillotineFeature = 3907,
 
         [CustomComboInfo("Lemure's Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine (and in other combos) with Lemure's Slice or Scythe when two or more stacks of Void Shroud are active.", RPR.JobID)]
-        ReaperLemuresSoulReaverFeature = 3910,
+        ReaperLemuresSoulReaverFeature = 3911,
 
         [SecretCustomCombo]
         [CustomComboInfo("Communio Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine (and in other combos) with Communio when one stack is left of Shroud.", RPR.JobID)]
-        ReaperCommunioSoulReaverFeature = 3911,
+        ReaperCommunioSoulReaverFeature = 3912,
 
         [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
         ReaperHarvestFeature = 3908,
