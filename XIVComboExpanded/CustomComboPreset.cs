@@ -481,8 +481,16 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Gekko Combo", "Replace Gekko with its combo chain.", SAM.JobID)]
         SamuraiGekkoCombo = 3402,
 
+        [ParentCombo(SamuraiGekkoCombo)]
+        [CustomComboInfo("Gekko Combo Option", "Start the Gekko combo chain with Jinpu instead of Hakaze.", SAM.JobID)]
+        SamuraiGekkoOption = 3416,
+
         [CustomComboInfo("Kasha Combo", "Replace Kasha with its combo chain.", SAM.JobID)]
         SamuraiKashaCombo = 3403,
+
+        [ParentCombo(SamuraiKashaCombo)]
+        [CustomComboInfo("Kasha Combo Option", "Start the Kasha combo chain with Shifu instead of Hakaze.", SAM.JobID)]
+        SamuraiKashaOption = 3417,
 
         [CustomComboInfo("Mangetsu Combo", "Replace Mangetsu with its combo chain.", SAM.JobID)]
         SamuraiMangetsuCombo = 3404,

@@ -122,6 +122,9 @@ namespace XIVComboExpandedPlugin.Combos
                         return SAM.Jinpu;
                 }
 
+                if (IsEnabled(CustomComboPreset.SamuraiGekkoOption))
+                    return SAM.Jinpu;
+
                 return SAM.Hakaze;
             }
 
@@ -150,6 +153,9 @@ namespace XIVComboExpandedPlugin.Combos
                     if (lastComboMove == SAM.Hakaze && level >= SAM.Levels.Shifu)
                         return SAM.Shifu;
                 }
+
+                if (IsEnabled(CustomComboPreset.SamuraiKashaOption))
+                    return SAM.Shifu;
 
                 return SAM.Hakaze;
             }
