@@ -83,7 +83,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -101,7 +101,7 @@ namespace XIVComboExpandedPlugin.Combos
                 if (IsEnabled(CustomComboPreset.ReaperSoulReaverGibbetFeature))
                 {
                     if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
-                        (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded)))
+                        (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                     {
                         if (IsEnabled(CustomComboPreset.ReaperSoulReaverGibbetOption))
                             // Cross Reaping
@@ -140,7 +140,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -158,7 +158,7 @@ namespace XIVComboExpandedPlugin.Combos
                 if (IsEnabled(CustomComboPreset.ReaperSoulReaverGuillotineFeature))
                 {
                     if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
-                        (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded)))
+                        (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                         // Grim Reaping
                         return OriginalHook(RPR.Guillotine);
                 }
@@ -188,7 +188,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -206,7 +206,7 @@ namespace XIVComboExpandedPlugin.Combos
                 if (level >= RPR.Levels.SoulReaver)
                 {
                     if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
-                        (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded)))
+                        (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                     {
                         if (IsEnabled(CustomComboPreset.ReaperSoulReaverGallowsOption))
                             // Void Reaping
@@ -234,7 +234,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -254,7 +254,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && HasEffect(RPR.Buffs.Enshrouded))
+                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -302,7 +302,9 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RPR.Enshroud)
             {
-                if (level >= RPR.Levels.Communio && HasEffect(RPR.Buffs.Enshrouded))
+                var gauge = GetJobGauge<RPRGauge>();
+
+                if (level >= RPR.Levels.Communio && gauge.EnshroudedTimeRemaining > 0)
                     return RPR.Communio;
             }
 
