@@ -81,6 +81,12 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
             {
+                if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
+                    return RDM.Resolution;
+
+                if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
+                    return RDM.Scorch;
+
                 if (level >= RDM.Levels.Scatter && (HasEffect(RDM.Buffs.Dualcast) || HasEffect(RDM.Buffs.Acceleration) || HasEffect(RDM.Buffs.Swiftcast) || HasEffect(RDM.Buffs.LostChainspell)))
                     return OriginalHook(RDM.Scatter);
             }
