@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Dalamud.Game.ClientState.Conditions;
@@ -17,8 +16,6 @@ namespace XIVComboExpandedPlugin.Combos
     /// </summary>
     internal abstract partial class CustomCombo
     {
-        private const uint InvalidObjectID = 0xE000_0000;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomCombo"/> class.
         /// </summary>
@@ -51,7 +48,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// <summary>
         /// Gets the action IDs associated with this combo.
         /// </summary>
-        protected internal abstract uint[] ActionIDs { get; }
+        protected internal virtual uint[] ActionIDs { get; } = Array.Empty<uint>();
 
         /// <summary>
         /// Gets the class ID associated with this combo.
@@ -67,12 +64,9 @@ namespace XIVComboExpandedPlugin.Combos
         /// Performs various checks then attempts to invoke the combo.
         /// </summary>
         /// <param name="actionID">Starting action ID.</param>
-        /// <param name="lastComboActionID">Last combo action.</param>
-        /// <param name="comboTime">Current combo time.</param>
-        /// <param name="level">Current player level.</param>
         /// <param name="newActionID">Replacement action ID.</param>
         /// <returns>True if the action has changed, otherwise false.</returns>
-        public bool TryInvoke(uint actionID, uint lastComboActionID, float comboTime, byte level, out uint newActionID)
+        public bool TryInvoke(uint actionID, out uint newActionID)
         {
             newActionID = 0;
 
@@ -94,7 +88,11 @@ namespace XIVComboExpandedPlugin.Combos
             if (this.ActionIDs.Length > 0 && !this.ActionIDs.Contains(actionID))
                 return false;
 
-            var resultingActionID = this.Invoke(actionID, lastComboActionID, comboTime, level);
+            var resultingActionID = this.Invoke(
+                actionID,
+                Service.ComboCache.LastComboMove,
+                Service.ComboCache.ComboTime,
+                Service.ComboCache.LocalPlayer?.Level ?? 0);
             if (resultingActionID == 0 || actionID == resultingActionID)
                 return false;
 
@@ -111,10 +109,10 @@ namespace XIVComboExpandedPlugin.Combos
         /// <returns>The appropriate action to use.</returns>
         protected static uint CalcBestAction(uint original, params uint[] actions)
         {
-            static (uint ActionID, IconReplacer.CooldownData Data) Compare(
+            static (uint ActionID, CooldownData Data) Compare(
                 uint original,
-                (uint ActionID, IconReplacer.CooldownData Data) a1,
-                (uint ActionID, IconReplacer.CooldownData Data) a2)
+                (uint ActionID, CooldownData Data) a1,
+                (uint ActionID, CooldownData Data) a2)
             {
                 // Neither, return the first parameter
                 if (!a1.Data.IsCooldown && !a2.Data.IsCooldown)
@@ -128,10 +126,8 @@ namespace XIVComboExpandedPlugin.Combos
                 return a1.Data.IsCooldown ? a2 : a1;
             }
 
-            static (uint ActionID, IconReplacer.CooldownData Data) Selector(uint actionID)
-            {
-                return (actionID, GetCooldown(actionID));
-            }
+            static (uint ActionID, CooldownData Data) Selector(uint actionID)
+                => (actionID, GetCooldown(actionID));
 
             return actions
                 .Select(Selector)
@@ -155,44 +151,48 @@ namespace XIVComboExpandedPlugin.Combos
     /// </summary>
     internal abstract partial class CustomCombo
     {
-        private static readonly Dictionary<Type, JobGaugeBase> JobGaugeCache = new();
-
         /// <summary>
         /// Gets the player or null.
         /// </summary>
-        protected static PlayerCharacter? LocalPlayer => Service.ClientState.LocalPlayer;
+        protected static PlayerCharacter? LocalPlayer
+            => Service.ComboCache.LocalPlayer;
 
         /// <summary>
         /// Gets the current target or null.
         /// </summary>
-        protected static GameObject? CurrentTarget => Service.TargetManager.Target;
+        protected static GameObject? CurrentTarget
+            => Service.ComboCache.Target;
 
         /// <summary>
         /// Calls the original hook.
         /// </summary>
         /// <param name="actionID">Action ID.</param>
         /// <returns>The result from the hook.</returns>
-        protected static uint OriginalHook(uint actionID) => Service.IconReplacer.OriginalHook(actionID);
+        protected static uint OriginalHook(uint actionID)
+            => Service.IconReplacer.OriginalHook(actionID);
 
         /// <summary>
         /// Determine if the given preset is enabled.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
         /// <returns>A value indicating whether the preset is enabled.</returns>
-        protected static bool IsEnabled(CustomComboPreset preset) => (int)preset < 100 || Service.Configuration.IsEnabled(preset);
+        protected static bool IsEnabled(CustomComboPreset preset)
+            => (int)preset < 100 || Service.Configuration.IsEnabled(preset);
 
         /// <summary>
         /// Find if the player is in condition.
         /// </summary>
         /// <param name="flag">Condition flag.</param>
         /// <returns>A value indicating whether the player is in the condition.</returns>
-        protected static bool HasCondition(ConditionFlag flag) => Service.Condition[flag];
+        protected static bool HasCondition(ConditionFlag flag)
+            => Service.Condition[flag];
 
         /// <summary>
         /// Find if the player has a pet present.
         /// </summary>
         /// <returns>A value indicating whether the play has a pet present.</returns>
-        protected static bool HasPetPresent() => Service.BuddyList.PetBuddyPresent;
+        protected static bool HasPetPresent()
+            => Service.ComboCache.Pet != null;
 
         /// <summary>
         /// Find if an effect on the player exists.
@@ -200,7 +200,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool HasEffect(ushort effectID) => FindEffect(effectID) is not null;
+        protected static bool HasEffect(ushort effectID)
+            => FindEffect(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the player.
@@ -208,7 +209,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindEffect(ushort effectID) => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
+        protected static Status? FindEffect(ushort effectID)
+            => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
 
         /// <summary>
         /// Find if an effect on the target exists.
@@ -216,7 +218,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool TargetHasEffect(ushort effectID) => FindTargetEffect(effectID) is not null;
+        protected static bool TargetHasEffect(ushort effectID)
+            => FindTargetEffect(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the current target.
@@ -224,7 +227,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindTargetEffect(ushort effectID) => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
+        protected static Status? FindTargetEffect(ushort effectID)
+            => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
 
         /// <summary>
         /// Find if an effect on the player exists.
@@ -232,7 +236,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool HasEffectAny(ushort effectID) => FindEffectAny(effectID) is not null;
+        protected static bool HasEffectAny(ushort effectID)
+            => FindEffectAny(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the player.
@@ -240,7 +245,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindEffectAny(ushort effectID) => FindEffect(effectID, LocalPlayer, null);
+        protected static Status? FindEffectAny(ushort effectID)
+            => FindEffect(effectID, LocalPlayer, null);
 
         /// <summary>
         /// Find if an effect on the target exists.
@@ -248,7 +254,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>A value indicating if the effect exists.</returns>
-        protected static bool TargetHasEffectAny(ushort effectID) => FindTargetEffectAny(effectID) is not null;
+        protected static bool TargetHasEffectAny(ushort effectID)
+            => FindTargetEffectAny(effectID) is not null;
 
         /// <summary>
         /// Finds an effect on the current target.
@@ -256,7 +263,8 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <param name="effectID">Status effect ID.</param>
         /// <returns>Status object or null.</returns>
-        protected static Status? FindTargetEffectAny(ushort effectID) => FindEffect(effectID, CurrentTarget, null);
+        protected static Status? FindTargetEffectAny(ushort effectID)
+            => FindEffect(effectID, CurrentTarget, null);
 
         /// <summary>
         /// Finds an effect on the given object.
@@ -266,40 +274,30 @@ namespace XIVComboExpandedPlugin.Combos
         /// <param name="sourceID">Source object ID.</param>
         /// <returns>Status object or null.</returns>
         protected static Status? FindEffect(ushort effectID, GameObject? obj, uint? sourceID)
-        {
-            if (obj is null)
-                return null;
-
-            if (obj is not BattleChara chara)
-                return null;
-
-            foreach (var status in chara.StatusList)
-            {
-                if (status.StatusId == effectID && (!sourceID.HasValue || status.SourceID == 0 || status.SourceID == InvalidObjectID || status.SourceID == sourceID))
-                    return status;
-            }
-
-            return null;
-        }
+            => Service.ComboCache.GetStatus(effectID, obj, sourceID);
 
         /// <summary>
         /// Gets the cooldown data for an action.
         /// </summary>
         /// <param name="actionID">Action ID to check.</param>
         /// <returns>Cooldown data.</returns>
-        protected static IconReplacer.CooldownData GetCooldown(uint actionID) => Service.IconReplacer.GetCooldown(actionID);
+        protected static CooldownData GetCooldown(uint actionID)
+            => Service.ComboCache.GetCooldown(actionID);
 
         /// <summary>
-        /// Gets the job gauge.
+        /// Gets a value indicating whether an action is on cooldown.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>True or false.</returns>
+        protected static bool IsOnCooldown(uint actionID)
+            => GetCooldown(actionID).IsCooldown;
+
+        /// <summary>
+        /// Get a job gauge.
         /// </summary>
         /// <typeparam name="T">Type of job gauge.</typeparam>
         /// <returns>The job gauge.</returns>
         protected static T GetJobGauge<T>() where T : JobGaugeBase
-        {
-            if (!JobGaugeCache.TryGetValue(typeof(T), out var gauge))
-                gauge = JobGaugeCache[typeof(T)] = Service.JobGauges.Get<T>();
-
-            return (T)gauge;
-        }
+            => Service.ComboCache.GetJobGauge<T>();
     }
 }

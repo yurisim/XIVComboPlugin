@@ -38,6 +38,7 @@ namespace XIVComboExpandedPlugin
             if (Service.Configuration.Version == 4)
                 this.UpgradeConfig4();
 
+            Service.ComboCache = new CustomComboCache();
             Service.IconReplacer = new IconReplacer();
 
             this.configWindow = new();
@@ -65,7 +66,8 @@ namespace XIVComboExpandedPlugin
             Service.Interface.UiBuilder.OpenConfigUi -= this.OnOpenConfigUi;
             Service.Interface.UiBuilder.Draw -= this.windowSystem.Draw;
 
-            Service.IconReplacer.Dispose();
+            Service.IconReplacer?.Dispose();
+            Service.ComboCache?.Dispose();
         }
 
         private void OnOpenConfigUi()

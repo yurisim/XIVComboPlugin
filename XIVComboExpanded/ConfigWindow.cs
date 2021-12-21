@@ -127,7 +127,7 @@ namespace XIVComboExpandedPlugin
                         var description = $"#{i}: {info.Description}";
                         if (parent != null)
                         {
-                            var parentInfo = preset.GetAttribute<CustomComboInfoAttribute>();
+                            var parentInfo = parent.GetAttribute<CustomComboInfoAttribute>();
                             description += $"\nRequires {parentInfo.FancyName}";
                         }
 

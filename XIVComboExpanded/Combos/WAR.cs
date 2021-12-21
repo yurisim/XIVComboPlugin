@@ -1,3 +1,5 @@
+using Dalamud.Game.ClientState.JobGauge.Types;
+
 namespace XIVComboExpandedPlugin.Combos
 {
     internal static class WAR
@@ -46,6 +48,7 @@ namespace XIVComboExpandedPlugin.Combos
                 StormsPath = 26,
                 MythrilTempest = 40,
                 StormsEye = 50,
+                Infuriate = 50,
                 FellCleave = 54,
                 Decimate = 60,
                 MythrilTempestTrait = 74,
@@ -55,11 +58,14 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal abstract class WarriorCustomCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
+    }
+
     internal class WarriorStormsPathCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsPathCombo;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.StormsPath };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -85,8 +91,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsEyeCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.StormsEye };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WAR.StormsEye)
@@ -111,8 +115,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorMythrilTempestCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.MythrilTempest };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WAR.MythrilTempest)
@@ -134,8 +136,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorNascentFlashFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.NascentFlash };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WAR.NascentFlash)
@@ -151,18 +151,25 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class WArriorPrimalBeastFeature : CustomCombo
+    internal class WarriorFellCleaveDecimate : WarriorCustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorPrimalBeastFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.InnerBeast, WAR.FellCleave, WAR.SteelCyclone, WAR.Decimate };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WAR.InnerBeast || actionID == WAR.FellCleave || actionID == WAR.SteelCyclone || actionID == WAR.Decimate)
             {
-                if (level >= WAR.Levels.PrimalRend && HasEffect(WAR.Buffs.PrimalRendReady))
-                    return WAR.PrimalRend;
+                if (IsEnabled(CustomComboPreset.WarriorPrimalBeastFeature))
+                {
+                    if (level >= WAR.Levels.PrimalRend && HasEffect(WAR.Buffs.PrimalRendReady))
+                        return WAR.PrimalRend;
+                }
+
+                if (IsEnabled(CustomComboPreset.WarriorInfuriateBeastFeature))
+                {
+                    var gauge = GetJobGauge<WARGauge>();
+
+                    if (level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && !HasEffect(WAR.Buffs.InnerRelease))
+                        return WAR.Infuriate;
+                }
             }
 
             return actionID;
@@ -172,8 +179,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class WArriorPrimalReleaseFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorPrimalReleaseFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { WAR.Berserk, WAR.InnerRelease };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

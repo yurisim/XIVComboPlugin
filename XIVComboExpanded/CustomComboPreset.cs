@@ -233,6 +233,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Solid Barrel Combo", "Replace Solid Barrel with its combo chain.", GNB.JobID)]
         GunbreakerSolidBarrelCombo = 3701,
 
+        [ParentCombo(GunbreakerSolidBarrelCombo)]
+        [CustomComboInfo("Burst Strike Feature", "In addition to the Solid Barrel Combo, add Burst Strike when charges are full.", GNB.JobID)]
+        GunbreakerBurstStrikeFeature = 3710,
+
         [CustomComboInfo("Gnashing Fang Continuation", "Replace Gnashing Fang with Continuation moves when appropriate.", GNB.JobID)]
         GunbreakerGnashingFangCont = 3702,
 
@@ -240,12 +244,13 @@ namespace XIVComboExpandedPlugin
         GunbreakerBurstStrikeCont = 3703,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Bow Shock / Sonic Break Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.", GNB.JobID)]
+        [CustomComboInfo("Sonic Shock Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.", GNB.JobID)]
         GunbreakerBowShockSonicBreakFeature = 3704,
 
         [CustomComboInfo("Demon Slaughter Combo", "Replace Demon Slaughter with its combo chain.", GNB.JobID)]
         GunbreakerDemonSlaughterCombo = 3705,
 
+        [ParentCombo(GunbreakerDemonSlaughterCombo)]
         [CustomComboInfo("Fated Circle Feature", "In addition to the Demon Slaughter combo, add Fated Circle when charges are full.", GNB.JobID)]
         GunbreakerFatedCircleFeature = 3706,
 
@@ -394,38 +399,75 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Slice Combo", "Replace Infernal Slice with its combo chain.", RPR.JobID)]
         ReaperSliceCombo = 3901,
 
+        [ConflictingCombos(ReaperSliceGallowsFeature)]
+        [CustomComboInfo("Slice Gibbet Feature", "Replace Infernal Slice with Gibbet while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperSliceGibbetFeature = 3903,
+
+        [ConflictingCombos(ReaperSliceGibbetFeature)]
+        [CustomComboInfo("Slice Gallows Feature", "Replace Infernal Slice with Gallows while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperSliceGallowsFeature = 3904,
+
+        [CustomComboInfo("Slice Enhanced Soul Reaver Feature", "Replace Infernal Slice with whichever of Gibbet or Gallows is currently enhanced while Reaving.", RPR.JobID)]
+        ReaperSliceEnhancedSoulReaverFeature = 3913,
+
+        [CustomComboInfo("Slice Enhanced Enshrouded Feature", "Replace Infernal Slice with whichever of Gibbet or Gallows is currently enhanced while Enshrouded.", RPR.JobID)]
+        ReaperSliceEnhancedEnshroudedFeature = 3914,
+
+        [CustomComboInfo("Slice Lemure's Feature", "Replace Infernal Slice with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        ReaperSliceLemuresFeature = 3919,
+
+        [CustomComboInfo("Slice Communio Feature", "Replace Infernal Slice with Communio when one stack is left of Shroud.", RPR.JobID)]
+        ReaperSliceCommunioFeature = 3920,
+
+        [ConflictingCombos(ReaperShadowGibbetFeature)]
+        [CustomComboInfo("Shadow Gallows Feature", "Replace Shadow of Death with Gallows while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperShadowGallowsFeature = 3905,
+
+        [ConflictingCombos(ReaperShadowGallowsFeature)]
+        [CustomComboInfo("Shadow Gibbet Feature", "Replace Shadow of Death with Gibbet while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperShadowGibbetFeature = 3906,
+
+        [CustomComboInfo("Shadow Lemure's Feature", "Replace Shadow of Death with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        ReaperShadowLemuresFeature = 3923,
+
+        [CustomComboInfo("Shadow Communio Feature", "Replace Shadow of Death with Communio when one stack is left of Shroud.", RPR.JobID)]
+        ReaperShadowCommunioFeature = 3924,
+
         [CustomComboInfo("Scythe Combo", "Replace Nightmare Scythe with its combo chain.", RPR.JobID)]
         ReaperScytheCombo = 3902,
 
-        [CustomComboInfo("Soul Reaver Gibbet Feature", "Replace Infernal Slice with Gibbet while Reaving or Enshrouded.", RPR.JobID)]
-        ReaperSoulReaverGibbetFeature = 3903,
+        [CustomComboInfo("Scythe Guillotine Feature", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
+        ReaperScytheGuillotineFeature = 3907,
 
-        [ParentCombo(ReaperSoulReaverGibbetFeature)]
-        [CustomComboInfo("Soul Reaver Gibbet Option", "Replace Infernal Slice with Gallows instead while Reaving or Enshrouded.", RPR.JobID)]
-        ReaperSoulReaverGibbetOption = 3904,
+        [CustomComboInfo("Scythe Lemure's Feature", "Replace Infernal Slice with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        ReaperScytheLemuresFeature = 3921,
 
-        [CustomComboInfo("Soul Reaver Gallows Feature", "Replace Shadow of Death with Gallows while Reaving or Enshrouded.", RPR.JobID)]
-        ReaperSoulReaverGallowsFeature = 3905,
+        [CustomComboInfo("Scythe Communio Feature", "Replace Infernal Slice with Communio when one stack is left of Shroud.", RPR.JobID)]
+        ReaperScytheCommunioFeature = 3922,
 
-        [ParentCombo(ReaperSoulReaverGallowsFeature)]
-        [CustomComboInfo("Soul Reaver Gallows Option", "Replace Shadow of Death with Gibbet instead while Reaving or Enshrouded.", RPR.JobID)]
-        ReaperSoulReaverGallowsOption = 3906,
+        [CustomComboInfo("Enhanced Soul Reaver Feature", "Replace Gibbet and Gallows with whichever is currently enhanced while Reaving.", RPR.JobID)]
+        ReaperEnhancedSoulReaverFeature = 3917,
 
-        [CustomComboInfo("Soul Reaver Guillotine Option", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
-        ReaperSoulReaverGuillotineFeature = 3907,
+        [CustomComboInfo("Enhanced Enshrouded Feature", "Replace Gibbet and Gallows with whichever is currently enhanced while Enshrouded.", RPR.JobID)]
+        ReaperEnhancedEnshroudedFeature = 3918,
 
-        [CustomComboInfo("Lemure's Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine (and in other combos) with Lemure's Slice or Scythe when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        [CustomComboInfo("Lemure's Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine with Lemure's Slice or Scythe when two or more stacks of Void Shroud are active.", RPR.JobID)]
         ReaperLemuresSoulReaverFeature = 3911,
 
-        [SecretCustomCombo]
-        [CustomComboInfo("Communio Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine (and in other combos) with Communio when one stack is left of Shroud.", RPR.JobID)]
+        [CustomComboInfo("Communio Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine with Communio when one stack is left of Shroud.", RPR.JobID)]
         ReaperCommunioSoulReaverFeature = 3912,
 
-        [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
-        ReaperHarvestFeature = 3908,
+        [CustomComboInfo("Enshroud Enhanced Feature", "Replace Enshroud with whichever of Gibbet or Gallows is currently enhanced when Enshrouded.", RPR.JobID)]
+        ReaperEnshroudEnhancedFeature = 3915,
+
+        [CustomComboInfo("Enshroud Lemure's Feature", "Replace Enshroud with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        ReaperEnshroudLemuresFeature = 3916,
 
         [CustomComboInfo("Enshroud Communio Feature", "Replace Enshroud with Communio when Enshrouded.", RPR.JobID)]
         ReaperEnshroudCommunioFeature = 3909,
+
+        [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
+        ReaperHarvestFeature = 3908,
 
         [CustomComboInfo("Regress Feature", "Both Hell's Ingress and Egress turn into Regress when Threshold is active, instead of just the opposite of the one used.", RPR.JobID)]
         ReaperRegressFeature = 3910,
@@ -598,17 +640,11 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", WAR.JobID)]
         WarriorMythrilTempestCombo = 2103,
 
-        // [CustomComboInfo("Overpower Combo", "Replace Overpower with its combo chain (so that you can still use Mythril Tempest by itself in pulls)", WAR.JobID, WAR.Overpower)]
-        // WarriorOverpowerCombo = 2104,
-
-        // [CustomComboInfo("Warrior Gauge Overcap Feature", "Replace Single-target or AoE combo with gauge spender if you are about to overcap and are before a step of a combo that would generate beast gauge.", WAR.JobID)]
-        // WarriorGaugeOvercapFeature = 2104,
-
-        // [CustomComboInfo("Inner Release Feature", "Replace Single-target and AoE combo with Fell Cleave/Decimate during Inner Release.", WAR.JobID)]
-        // WarriorInnerReleaseFeature = 2105,
-
         [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
         WarriorNascentFlashFeature = 2106,
+
+        [CustomComboInfo("Angry Beast Feature", "Replace Inner Beast and Steel Cyclone with Infuriate when less then 50 Beast Gauge is available.", WAR.JobID)]
+        WarriorInfuriateBeastFeature = 2107,
 
         [CustomComboInfo("Primal Beast Feature", "Replace Inner Beast and Steel Cyclone with Primal Rend when available", WAR.JobID)]
         WarriorPrimalBeastFeature = 2107,

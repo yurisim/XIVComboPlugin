@@ -1,4 +1,5 @@
 using Dalamud.Data;
+using Dalamud.Game;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Buddy;
 using Dalamud.Game.ClientState.Conditions;
@@ -20,6 +21,11 @@ namespace XIVComboExpandedPlugin
         /// Gets or sets the plugin configuration.
         /// </summary>
         internal static PluginConfiguration Configuration { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the plugin caching mechanism.
+        /// </summary>
+        internal static CustomComboCache ComboCache { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the plugin icon replacer.
@@ -72,6 +78,12 @@ namespace XIVComboExpandedPlugin
         /// </summary>
         [PluginService]
         internal static DataManager DataManager { get; private set; } = null!;
+
+        /// <summary>
+        /// Gets the Dalamud framework manager.
+        /// </summary>
+        [PluginService]
+        internal static Framework Framework { get; private set; } = null!;
 
         /// <summary>
         /// Gets the Dalamud job gauges.
