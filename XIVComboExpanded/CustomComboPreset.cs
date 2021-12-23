@@ -102,6 +102,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Enochian Feature", "Change Fire 4 or Blizzard 4 to whichever action you can currently use.", BLM.JobID)]
         BlackEnochianFeature = 2501,
 
+        [SecretCustomCombo]
+        [CustomComboInfo("Enochian Despair Feature", "Change Fire 4 or Blizzard 4 to Despair when in Astral Fire with less than 2400 mana.", BLM.JobID)]
+        BlackEnochianDespairFeature = 2510,
+
         [CustomComboInfo("Umbral Soul/Transpose Switcher", "Change Transpose into Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
         BlackManaFeature = 2502,
 
@@ -510,8 +514,20 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region SAGE
 
-        // [CustomComboInfo("Kardia Into Soteria", "Kardia turns into Soteria when active and Soteria is off-cooldown.", SGE.JobID)]
-        // SageKardiaFeature = 4001,
+        [CustomComboInfo("Taurochole Into Druochole Feature", "Replace Taurochole with Druochole when on cooldown", SGE.JobID)]
+        SageTaurocholeDruocholeFeature = 4001,
+
+        [CustomComboInfo("Taurochole Into Rhizomata Feature", "Replace Taurochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
+        SageTaurocholeRhizomataFeature = 4002,
+
+        [CustomComboInfo("Druochole Into Rhizomata Feature", "Replace Druochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
+        SageDruocholeRhizomataFeature = 4003,
+
+        [CustomComboInfo("Ixochole Into Rhizomata Feature", "Replace Ixochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
+        SageIxocholeRhizomataFeature = 4004,
+
+        [CustomComboInfo("Kerachole Into Rhizomata Feature", "Replace Kerachole with Rhizomata when Addersgall is empty.", SGE.JobID)]
+        SageKeracholaRhizomataFeature = 4005,
 
         #endregion
         // ====================================================================================
@@ -579,7 +595,13 @@ namespace XIVComboExpandedPlugin
         ScholarSeraphConsolationFeature = 2801,
 
         [CustomComboInfo("ED Aetherflow", "Change Energy Drain into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
-        ScholarEnergyDrainFeature = 2802,
+        ScholarEnergyDrainAetherflowFeature = 2802,
+
+        [CustomComboInfo("Lustrous Aetherflow", "Change Lustrate into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+        ScholarLustrateAetherflowFeature = 2803,
+
+        [CustomComboInfo("Indomitable Aetherflow", "Change Indomitability into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+        ScholarIndomAetherflowFeature = 2804,
 
         #endregion
         // ====================================================================================
@@ -644,7 +666,7 @@ namespace XIVComboExpandedPlugin
         WarriorNascentFlashFeature = 2106,
 
         [CustomComboInfo("Angry Beast Feature", "Replace Inner Beast and Steel Cyclone with Infuriate when less then 50 Beast Gauge is available.", WAR.JobID)]
-        WarriorInfuriateBeastFeature = 2107,
+        WarriorInfuriateBeastFeature = 2109,
 
         [CustomComboInfo("Primal Beast Feature", "Replace Inner Beast and Steel Cyclone with Primal Rend when available", WAR.JobID)]
         WarriorPrimalBeastFeature = 2107,

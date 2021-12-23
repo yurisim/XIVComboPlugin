@@ -88,11 +88,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (this.ActionIDs.Length > 0 && !this.ActionIDs.Contains(actionID))
                 return false;
 
-            var resultingActionID = this.Invoke(
-                actionID,
-                Service.ComboCache.LastComboMove,
-                Service.ComboCache.ComboTime,
-                Service.ComboCache.LocalPlayer?.Level ?? 0);
+            var lastComboMove = Service.ComboCache.LastComboMove;
+            var comboTime = Service.ComboCache.ComboTime;
+            var level = Service.ComboCache.LocalPlayer?.Level ?? 0;
+
+            var resultingActionID = this.Invoke(actionID, lastComboMove, comboTime, level);
+
             if (resultingActionID == 0 || actionID == resultingActionID)
                 return false;
 
@@ -291,6 +292,14 @@ namespace XIVComboExpandedPlugin.Combos
         /// <returns>True or false.</returns>
         protected static bool IsOnCooldown(uint actionID)
             => GetCooldown(actionID).IsCooldown;
+
+        /// <summary>
+        /// Gets a value indicating whether an action is off cooldown.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>True or false.</returns>
+        protected static bool IsOffCooldown(uint actionID)
+            => !GetCooldown(actionID).IsCooldown;
 
         /// <summary>
         /// Get a job gauge.

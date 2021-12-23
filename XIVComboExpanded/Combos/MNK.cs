@@ -67,8 +67,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MNK.Rockbreaker, MNK.FourPointFury };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MNK.Rockbreaker)
@@ -85,20 +83,15 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi == (Nadi.LUNAR | Nadi.SOLAR)))
                     {
-                        // Refresh Disciplined Fist if missing or about to expire
-                        var fist = FindEffect(MNK.Buffs.DisciplinedFist);
-                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR) && (fist == null || fist.RemainingTime < 3))
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
                             return MNK.FourPointFury;
-
-                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
-                            // Shadow of the Destroyer
-                            return OriginalHook(MNK.ArmOfTheDestroyer);
 
                         if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
                             return MNK.Rockbreaker;
 
-                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
-                            return MNK.FourPointFury;
+                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
+                            // Shadow of the Destroyer
+                            return OriginalHook(MNK.ArmOfTheDestroyer);
 
                         return level >= MNK.Levels.ShadowOfTheDestroyer
                             ? MNK.ShadowOfTheDestroyer
@@ -163,8 +156,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkHowlingFistMeditationFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MNK.HowlingFist, MNK.Enlightenment };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MNK.HowlingFist || actionID == MNK.Enlightenment)
@@ -185,8 +176,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class MonkPerfectBalanceFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkPerfectBalanceFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { MNK.PerfectBalance };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

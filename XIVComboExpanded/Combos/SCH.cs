@@ -11,7 +11,9 @@ namespace XIVComboExpandedPlugin.Combos
             FeyBless = 16543,
             Consolation = 16546,
             EnergyDrain = 167,
-            Aetherflow = 166;
+            Aetherflow = 166,
+            Lustrate = 189,
+            Indomitability = 3583;
 
         public static class Buffs
         {
@@ -37,8 +39,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSeraphConsolationFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SCH.FeyBless };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SCH.FeyBless)
@@ -53,15 +53,49 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class ScholarEnergyDrainFeature : CustomCombo
+    internal class ScholarEnergyDrain : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarEnergyDrainFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SCH.EnergyDrain };
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarEnergyDrainAetherflowFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SCH.EnergyDrain)
+            {
+                var gauge = GetJobGauge<SCHGauge>();
+
+                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+                    return SCH.Aetherflow;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ScholarLustrate : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarLustrateAetherflowFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SCH.Lustrate)
+            {
+                var gauge = GetJobGauge<SCHGauge>();
+
+                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+                    return SCH.Aetherflow;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ScholarIndomitability : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarIndomAetherflowFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SCH.Indomitability)
             {
                 var gauge = GetJobGauge<SCHGauge>();
 

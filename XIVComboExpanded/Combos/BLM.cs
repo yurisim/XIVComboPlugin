@@ -82,7 +82,15 @@ namespace XIVComboExpandedPlugin.Combos
                     return BLM.Blizzard4;
 
                 if (level >= BLM.Levels.Fire4 && gauge.InAstralFire)
+                {
+                    if (IsEnabled(CustomComboPreset.BlackEnochianDespairFeature))
+                    {
+                        if (level >= BLM.Levels.Despair && LocalPlayer?.CurrentMp < 2400)
+                            return BLM.Despair;
+                    }
+
                     return BLM.Fire4;
+                }
             }
 
             return actionID;

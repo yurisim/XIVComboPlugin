@@ -78,10 +78,17 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
                     {
+
                         if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeFeature))
                         {
                             var gauge = GetJobGauge<GNBGauge>();
                             var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
+
+                            if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeCont))
+                            {
+                                if (level >= GNB.Levels.EnhancedContinuation && HasEffect(GNB.Buffs.ReadyToBlast))
+                                    return GNB.Hypervelocity;
+                            }
 
                             if (level >= GNB.Levels.BurstStrike && gauge.Ammo == maxAmmo)
                                 return GNB.BurstStrike;
