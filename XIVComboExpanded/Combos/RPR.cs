@@ -249,7 +249,8 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
+                if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
+                    (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                 {
                     if (IsEnabled(CustomComboPreset.ReaperCommunioSoulReaverFeature))
                     {
@@ -261,6 +262,26 @@ namespace XIVComboExpandedPlugin.Combos
                     {
                         if (level >= RPR.Levels.EnhancedShroud && gauge.VoidShroud >= 2)
                             return RPR.LemuresSlice;
+                    }
+
+                    if (IsEnabled(CustomComboPreset.ReaperEnhancedEnshroudedFeature))
+                    {
+                        if (HasEffect(RPR.Buffs.EnhancedVoidReaping))
+                            return RPR.VoidReaping;
+
+                        if (HasEffect(RPR.Buffs.EnhancedCrossReaping))
+                            return RPR.CrossReaping;
+                    }
+
+                    if (IsEnabled(CustomComboPreset.ReaperEnhancedSoulReaverFeature))
+                    {
+                        if (HasEffect(RPR.Buffs.EnhancedGibbet))
+                            // Void Reaping
+                            return OriginalHook(RPR.Gibbet);
+
+                        if (HasEffect(RPR.Buffs.EnhancedGallows))
+                            // Cross Reaping
+                            return OriginalHook(RPR.Gallows);
                     }
                 }
             }
@@ -297,32 +318,10 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
+                if (IsEnabled(CustomComboPreset.ReaperEnshroudCommunioFeature))
                 {
-                    if (IsEnabled(CustomComboPreset.ReaperEnshroudCommunioFeature))
-                    {
-                        if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1 && gauge.VoidShroud == 0)
-                            return RPR.Communio;
-                    }
-
-                    if (IsEnabled(CustomComboPreset.ReaperEnshroudLemuresFeature))
-                    {
-                        if (level >= RPR.Levels.EnhancedShroud && gauge.VoidShroud >= 2)
-                            return RPR.LemuresSlice;
-                    }
-                }
-
-                if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
-                    (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
-                {
-                    if (IsEnabled(CustomComboPreset.ReaperEnshroudEnhancedFeature))
-                    {
-                        if (HasEffect(RPR.Buffs.EnhancedVoidReaping))
-                            return RPR.VoidReaping;
-
-                        if (HasEffect(RPR.Buffs.EnhancedCrossReaping))
-                            return RPR.CrossReaping;
-                    }
+                    if (level >= RPR.Levels.Communio && gauge.EnshroudedTimeRemaining > 0)
+                        return RPR.Communio;
                 }
             }
 

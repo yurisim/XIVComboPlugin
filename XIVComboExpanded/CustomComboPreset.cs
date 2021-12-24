@@ -420,7 +420,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Slice Lemure's Feature", "Replace Infernal Slice with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
         ReaperSliceLemuresFeature = 3919,
 
-        [CustomComboInfo("Slice Communio Feature", "Replace Infernal Slice with Communio when one stack is left of Shroud.", RPR.JobID)]
+        [CustomComboInfo("Slice Communio Feature", "Replace Infernal Slice with Communio when one stack of Shroud is left.", RPR.JobID)]
         ReaperSliceCommunioFeature = 3920,
 
         [ConflictingCombos(ReaperShadowGibbetFeature)]
@@ -434,7 +434,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Shadow Lemure's Feature", "Replace Shadow of Death with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
         ReaperShadowLemuresFeature = 3923,
 
-        [CustomComboInfo("Shadow Communio Feature", "Replace Shadow of Death with Communio when one stack is left of Shroud.", RPR.JobID)]
+        [CustomComboInfo("Shadow Communio Feature", "Replace Shadow of Death with Communio when one stack of Shroud is left.", RPR.JobID)]
         ReaperShadowCommunioFeature = 3924,
 
         [CustomComboInfo("Scythe Combo", "Replace Nightmare Scythe with its combo chain.", RPR.JobID)]
@@ -460,12 +460,6 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Communio Soul Reaver Feature", "Replace Gibbet, Gallows, and Guillotine with Communio when one stack is left of Shroud.", RPR.JobID)]
         ReaperCommunioSoulReaverFeature = 3912,
-
-        [CustomComboInfo("Enshroud Enhanced Feature", "Replace Enshroud with whichever of Gibbet or Gallows is currently enhanced when Enshrouded.", RPR.JobID)]
-        ReaperEnshroudEnhancedFeature = 3915,
-
-        [CustomComboInfo("Enshroud Lemure's Feature", "Replace Enshroud with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
-        ReaperEnshroudLemuresFeature = 3916,
 
         [CustomComboInfo("Enshroud Communio Feature", "Replace Enshroud with Communio when Enshrouded.", RPR.JobID)]
         ReaperEnshroudCommunioFeature = 3909,
