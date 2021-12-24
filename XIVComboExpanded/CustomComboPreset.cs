@@ -443,10 +443,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Scythe Guillotine Feature", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
         ReaperScytheGuillotineFeature = 3907,
 
-        [CustomComboInfo("Scythe Lemure's Feature", "Replace Infernal Slice with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+        [CustomComboInfo("Scythe Lemure's Feature", "Replace Nightmare Scythe with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
         ReaperScytheLemuresFeature = 3921,
 
-        [CustomComboInfo("Scythe Communio Feature", "Replace Infernal Slice with Communio when one stack is left of Shroud.", RPR.JobID)]
+        [CustomComboInfo("Scythe Communio Feature", "Replace Nightmare Scythe with Communio when one stack is left of Shroud.", RPR.JobID)]
         ReaperScytheCommunioFeature = 3922,
 
         [CustomComboInfo("Enhanced Soul Reaver Feature", "Replace Gibbet and Gallows with whichever is currently enhanced while Reaving.", RPR.JobID)]

@@ -224,22 +224,16 @@ namespace XIVComboExpandedPlugin.Combos
                     }
                 }
 
-                if (IsEnabled(CustomComboPreset.ReaperShadowGallowsFeature))
+                if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
+                    (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                 {
-                    if (level >= RPR.Levels.SoulReaver)
-                    {
-                        if ((level >= RPR.Levels.SoulReaver && HasEffect(RPR.Buffs.SoulReaver)) ||
-                            (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
-                        {
-                            if (IsEnabled(CustomComboPreset.ReaperShadowGallowsFeature))
-                                // Cross Reaping
-                                return OriginalHook(RPR.Gallows);
+                    if (IsEnabled(CustomComboPreset.ReaperShadowGallowsFeature))
+                        // Cross Reaping
+                        return OriginalHook(RPR.Gallows);
 
-                            if (IsEnabled(CustomComboPreset.ReaperShadowGibbetFeature))
-                                // Void Reaping
-                                return OriginalHook(RPR.Gibbet);
-                        }
-                    }
+                    if (IsEnabled(CustomComboPreset.ReaperShadowGibbetFeature))
+                        // Void Reaping
+                        return OriginalHook(RPR.Gibbet);
                 }
             }
 
