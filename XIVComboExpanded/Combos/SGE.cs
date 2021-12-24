@@ -57,10 +57,13 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == SGE.Soteria)
             {
-                if (HasEffect(SGE.Buffs.Kardion) && IsOffCooldown(SGE.Soteria))
-                    return SGE.Soteria;
+                if (IsEnabled(CustomComboPreset.SageSoteriaKardionFeature))
+                {
+                    if (HasEffect(SGE.Buffs.Kardion) && IsOffCooldown(SGE.Soteria))
+                        return SGE.Soteria;
 
-                return SGE.Kardia;
+                    return SGE.Kardia;
+                }
             }
 
             return actionID;
