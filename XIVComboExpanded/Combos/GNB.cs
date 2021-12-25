@@ -78,7 +78,6 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
                     {
-
                         if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeFeature))
                         {
                             var gauge = GetJobGauge<GNBGauge>();

@@ -64,9 +64,12 @@ namespace XIVComboExpandedPlugin.Combos
         /// Performs various checks then attempts to invoke the combo.
         /// </summary>
         /// <param name="actionID">Starting action ID.</param>
+        /// <param name="level">Player level.</param>
+        /// <param name="lastComboMove">Last combo action ID.</param>
+        /// <param name="comboTime">Combo timer.</param>
         /// <param name="newActionID">Replacement action ID.</param>
         /// <returns>True if the action has changed, otherwise false.</returns>
-        public bool TryInvoke(uint actionID, out uint newActionID)
+        public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
         {
             newActionID = 0;
 
@@ -87,10 +90,6 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (this.ActionIDs.Length > 0 && !this.ActionIDs.Contains(actionID))
                 return false;
-
-            var lastComboMove = Service.ComboCache.LastComboMove;
-            var comboTime = Service.ComboCache.ComboTime;
-            var level = Service.ComboCache.LocalPlayer?.Level ?? 0;
 
             var resultingActionID = this.Invoke(actionID, lastComboMove, comboTime, level);
 
@@ -156,13 +155,13 @@ namespace XIVComboExpandedPlugin.Combos
         /// Gets the player or null.
         /// </summary>
         protected static PlayerCharacter? LocalPlayer
-            => Service.ComboCache.LocalPlayer;
+            => Service.ClientState.LocalPlayer;
 
         /// <summary>
         /// Gets the current target or null.
         /// </summary>
         protected static GameObject? CurrentTarget
-            => Service.ComboCache.Target;
+            => Service.TargetManager.Target;
 
         /// <summary>
         /// Calls the original hook.
@@ -193,7 +192,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// </summary>
         /// <returns>A value indicating whether the play has a pet present.</returns>
         protected static bool HasPetPresent()
-            => Service.ComboCache.Pet != null;
+            => Service.BuddyList.PetBuddyPresent;
 
         /// <summary>
         /// Find if an effect on the player exists.

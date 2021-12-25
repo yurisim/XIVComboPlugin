@@ -198,10 +198,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == NIN.Kassatsu)
             {
-                if (level >= NIN.Levels.Hide && HasEffect(NIN.Buffs.Hidden))
-                    return NIN.TrickAttack;
-
-                if (level >= NIN.Levels.Suiton && HasEffect(NIN.Buffs.Suiton))
+                if ((level >= NIN.Levels.Hide && HasEffect(NIN.Buffs.Hidden)) ||
+                    (level >= NIN.Levels.Suiton && HasEffect(NIN.Buffs.Suiton)))
                     return NIN.TrickAttack;
             }
 

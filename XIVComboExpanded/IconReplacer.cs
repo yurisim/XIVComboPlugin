@@ -64,12 +64,16 @@ namespace XIVComboExpandedPlugin
 
             try
             {
-                if (Service.ComboCache.LocalPlayer == null)
+                if (Service.ClientState.LocalPlayer == null)
                     return this.OriginalHook(actionID);
+
+                var lastComboMove = *(uint*)Service.Address.LastComboMove;
+                var comboTime = *(float*)Service.Address.ComboTimer;
+                var level = Service.ClientState.LocalPlayer?.Level ?? 0;
 
                 foreach (var combo in this.customCombos)
                 {
-                    if (combo.TryInvoke(actionID, out var newActionID))
+                    if (combo.TryInvoke(actionID, level, lastComboMove, comboTime, out var newActionID))
                         return newActionID;
                 }
 

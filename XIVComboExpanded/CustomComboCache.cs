@@ -42,31 +42,6 @@ namespace XIVComboExpandedPlugin
 
         private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
 
-        /// <summary>
-        /// Gets the local player.
-        /// </summary>
-        public PlayerCharacter? LocalPlayer { get; private set; } = null;
-
-        /// <summary>
-        /// Gets the current target.
-        /// </summary>
-        public GameObject? Target { get; private set; } = null;
-
-        /// <summary>
-        /// Gets the player's pet.
-        /// </summary>
-        public BuddyMember? Pet { get; private set; } = null;
-
-        /// <summary>
-        /// Gets the action ID of the last combo move.
-        /// </summary>
-        public uint LastComboMove { get; private set; } = 0;
-
-        /// <summary>
-        /// Gets the remaining combo time.
-        /// </summary>
-        public float ComboTime { get; private set; } = 0;
-
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -154,13 +129,6 @@ namespace XIVComboExpandedPlugin
 
         private unsafe void Framework_Update(Framework framework)
         {
-            this.LocalPlayer = Service.ClientState.LocalPlayer;
-            this.Target = Service.TargetManager.Target;
-            this.Pet = Service.BuddyList.PetBuddy;
-
-            this.LastComboMove = *(uint*)Service.Address.LastComboMove;
-            this.ComboTime = *(float*)Service.Address.ComboTimer;
-
             this.statusCache.Clear();
             this.cooldownCache.Clear();
         }
