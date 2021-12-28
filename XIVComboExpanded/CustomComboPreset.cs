@@ -385,7 +385,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Prominence Combo", "Replace Prominence with its combo chain.", PLD.JobID)]
         PaladinProminenceCombo = 1904,
 
-        [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiter while under the effect of Requiescat.", PLD.JobID)]
+        [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiteor while under the effect of Requiescat.", PLD.JobID)]
         PaladinRequiescatCombo = 1905,
 
         [SecretCustomCombo]
