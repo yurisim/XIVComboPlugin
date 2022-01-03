@@ -200,11 +200,11 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DNC.Cascade)
             {
-                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
-                    return DNC.ReverseCascade;
-
                 if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
                     return DNC.Fountainfall;
+
+                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                    return DNC.ReverseCascade;
 
                 if (lastComboMove == DNC.Cascade && level >= DNC.Levels.Fountain)
                     return DNC.Fountain;
@@ -224,11 +224,11 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DNC.Windmill)
             {
-                if (level >= DNC.Levels.RisingWindmill && HasEffect(DNC.Buffs.FlourishingSymmetry))
-                    return DNC.RisingWindmill;
-
                 if (level >= DNC.Levels.Bloodshower && HasEffect(DNC.Buffs.FlourishingFlow))
                     return DNC.Bloodshower;
+
+                if (level >= DNC.Levels.RisingWindmill && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                    return DNC.RisingWindmill;
 
                 if (lastComboMove == DNC.Windmill && level >= DNC.Levels.Bladeshower)
                     return DNC.Bladeshower;
