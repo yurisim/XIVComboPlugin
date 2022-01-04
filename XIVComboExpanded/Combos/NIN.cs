@@ -40,8 +40,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Suiton = 507,
                 Hidden = 614,
                 Bunshin = 1954,
-                ForkedRaijuReady = 2690,
-                FleetingRaijuReady = 2691;
+                RaijuReady = 2690;
         }
 
         public static class Debuffs
@@ -67,7 +66,7 @@ namespace XIVComboExpandedPlugin.Combos
                 EnhancedKassatsu = 76,
                 Bunshin = 80,
                 PhantomKamaitachi = 82,
-                ForkedRaiju = 90;
+                Raiju = 90;
         }
     }
 
@@ -97,10 +96,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.NinjaArmorCrushRaijuFeature))
                 {
-                    if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.FleetingRaijuReady))
-                        return NIN.FleetingRaiju;
-
-                    if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.ForkedRaijuReady))
+                    if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                         return NIN.ForkedRaiju;
                 }
 
@@ -133,11 +129,8 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
                 {
-                    if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.FleetingRaijuReady))
+                    if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                         return NIN.FleetingRaiju;
-
-                    if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.ForkedRaijuReady))
-                        return NIN.ForkedRaiju;
                 }
 
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
@@ -267,10 +260,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == NIN.Huraijin)
             {
-                if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.FleetingRaijuReady))
-                    return NIN.FleetingRaiju;
-
-                if (level >= NIN.Levels.ForkedRaiju && HasEffect(NIN.Buffs.ForkedRaijuReady))
+                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                     return NIN.ForkedRaiju;
             }
 
