@@ -46,11 +46,6 @@ namespace XIVComboExpandedPlugin.Combos
         protected internal abstract CustomComboPreset Preset { get; }
 
         /// <summary>
-        /// Gets the action IDs associated with this combo.
-        /// </summary>
-        protected internal virtual uint[] ActionIDs { get; } = Array.Empty<uint>();
-
-        /// <summary>
         /// Gets the class ID associated with this combo.
         /// </summary>
         protected byte ClassID { get; }
@@ -86,9 +81,6 @@ namespace XIVComboExpandedPlugin.Combos
 
             if (this.JobID != ADV.JobID && this.ClassID != ADV.ClassID &&
                 this.JobID != classJobID && this.ClassID != classJobID)
-                return false;
-
-            if (this.ActionIDs.Length > 0 && !this.ActionIDs.Contains(actionID))
                 return false;
 
             var resultingActionID = this.Invoke(actionID, lastComboMove, comboTime, level);

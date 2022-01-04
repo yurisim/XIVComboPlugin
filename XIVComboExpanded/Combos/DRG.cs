@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -76,8 +75,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonJumpFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { DRG.Jump, DRG.HighJump };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DRG.Jump || actionID == DRG.HighJump)
@@ -96,8 +93,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class DragoonCoerthanTormentCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonCoerthanTormentCombo;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { DRG.CoerthanTorment };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -123,8 +118,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class DragoonChaosThrustCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { DRG.ChaosThrust, DRG.ChaoticSpring };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -167,8 +160,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { DRG.FullThrust, DRG.HeavensThrust };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DRG.FullThrust || actionID == DRG.HeavensThrust)
@@ -209,8 +200,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class DragoonDiveFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DragoonDiveFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { DRG.SpineshatterDive, DRG.DragonfireDive, DRG.Stardiver };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

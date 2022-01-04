@@ -78,8 +78,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiYukikazeCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Yukikaze };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.Yukikaze)
@@ -103,8 +101,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class SamuraiGekkoCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiGekkoCombo;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Gekko };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -136,8 +132,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiKashaCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Kasha };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.Kasha)
@@ -168,8 +162,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiMangetsuCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Mangetsu };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.Mangetsu)
@@ -195,8 +187,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiOkaCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Oka };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.Oka)
@@ -221,8 +211,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class SamuraiTsubameFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.TsubameGaeshi };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -253,8 +241,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Iaijutsu };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.Iaijutsu)
@@ -284,8 +270,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.HissatsuShinten };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.HissatsuShinten)
@@ -313,8 +297,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.HissatsuKyuten };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SAM.HissatsuKyuten)
@@ -341,8 +323,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class SamuraiIkishotenNamikiriFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiIkishotenNamikiriFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SAM.Ikishoten };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

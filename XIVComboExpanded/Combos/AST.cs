@@ -50,8 +50,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { AST.Play };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == AST.Play)
@@ -79,8 +77,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaPlayFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { AST.MinorArcana };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == AST.MinorArcana)
@@ -97,8 +93,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class AstrologianBeneficFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { AST.Benefic2 };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

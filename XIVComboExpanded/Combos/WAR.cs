@@ -58,11 +58,6 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal abstract class WarriorCustomCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
-    }
-
     internal class WarriorStormsPathCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsPathCombo;
@@ -151,8 +146,10 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class WarriorFellCleaveDecimate : WarriorCustomCombo
+    internal class WarriorFellCleaveDecimate : CustomCombo
     {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
+
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WAR.InnerBeast || actionID == WAR.FellCleave || actionID == WAR.SteelCyclone || actionID == WAR.Decimate)

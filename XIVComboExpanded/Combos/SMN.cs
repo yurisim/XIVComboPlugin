@@ -72,8 +72,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerEDFesterFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Fester };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.Fester)
@@ -92,8 +90,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerESPainflareFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Painflare };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.Painflare)
@@ -111,8 +107,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class SummonerRuinFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Ruin, SMN.Ruin2, SMN.Ruin3 };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -150,8 +144,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Outburst, SMN.TriDisaster };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
@@ -188,8 +180,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Gemshine, SMN.PreciousBrilliance };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.Gemshine || actionID == SMN.PreciousBrilliance)
@@ -224,8 +214,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.Aethercharge, SMN.DreadwyrmTrance, SMN.SummonBahamut };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.Aethercharge || actionID == SMN.DreadwyrmTrance || actionID == SMN.SummonBahamut)
@@ -248,8 +236,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerRadiantCarbuncleFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.RadiantAegis };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SMN.RadiantAegis)
@@ -267,8 +253,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class SummonerSearingCarbuncleFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerSearingCarbuncleFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { SMN.SearingLight };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

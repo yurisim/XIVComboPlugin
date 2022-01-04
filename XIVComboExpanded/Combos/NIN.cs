@@ -75,8 +75,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaGCDNinjutsuFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.AeolianEdge, NIN.ArmorCrush, NIN.HakkeMujinsatsu };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush || actionID == NIN.HakkeMujinsatsu)
@@ -92,8 +90,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class NinjaArmorCrushCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.ArmorCrush };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -131,8 +127,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.AeolianEdge };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.AeolianEdge)
@@ -169,8 +163,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHakkeMujinsatsuCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.HakkeMujinsatsu };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.HakkeMujinsatsu)
@@ -192,8 +184,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaKassatsuTrickFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.Kassatsu };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.Kassatsu)
@@ -211,8 +201,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHideMugFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.Hide };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.Hide)
@@ -228,8 +216,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class NinjaKassatsuChiJinFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaKassatsuChiJinFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.Chi };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -247,8 +233,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaTCJMeisuiFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.TenChiJin };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.TenChiJin)
@@ -263,10 +247,6 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class NinjaBunshinKamaitachiFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaBunshinKamaitachiFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.Bunshin };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.Bunshin)
@@ -282,8 +262,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class NinjaHuraijinRaijuFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHuraijinRaijuFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { NIN.Huraijin };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

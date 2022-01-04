@@ -41,8 +41,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageSolaceMiseryFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { WHM.AfflatusSolace };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WHM.AfflatusSolace)
@@ -60,8 +58,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class WhiteMageRaptureMiseryFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageRaptureMiseryFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { WHM.AfflatusRapture };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -81,8 +77,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageCureFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { WHM.Cure2 };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == WHM.Cure2)
@@ -98,8 +92,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class WhiteMageAfflatusFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { WHM.Cure2, WHM.Medica };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

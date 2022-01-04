@@ -70,8 +70,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackEnochianFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Fire4, BLM.Blizzard4 };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
@@ -101,8 +99,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackManaFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Transpose };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.Transpose)
@@ -121,8 +117,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackLeyLinesFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.LeyLines };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.LeyLines)
@@ -138,8 +132,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BlackFireFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackFireFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Fire };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -162,8 +154,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackBlizzardFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Blizzard };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.Blizzard)
@@ -184,8 +174,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BlackFreezeFlareFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackFreezeFlareFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Freeze, BLM.Flare };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -208,8 +196,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackFire2Feature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Fire2, BLM.HighFire2 };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.Fire2 || actionID == BLM.HighFire2)
@@ -228,8 +214,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackBlizzard2Feature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Blizzard2, BLM.HighBlizzard2 };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BLM.Blizzard2 || actionID == BLM.HighBlizzard2)
@@ -247,8 +231,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BlackScatheFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackScatheFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BLM.Scathe };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

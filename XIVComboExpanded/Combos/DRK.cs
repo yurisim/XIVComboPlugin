@@ -60,8 +60,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { DRK.Souleater };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DRK.Souleater)
@@ -95,8 +93,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { DRK.StalwartSoul };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DRK.StalwartSoul)
@@ -126,8 +122,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class DarkShadowbringerFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DarkShadowbringerFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { DRK.CarveAndSpit, DRK.AbyssalDrain };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

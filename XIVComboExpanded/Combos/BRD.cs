@@ -73,8 +73,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardWanderersPitchPerfectFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.WanderersMinuet };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BRD.WanderersMinuet)
@@ -92,8 +90,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BardStraightShotUpgradeFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BrdAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.HeavyShot, BRD.BurstShot };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -125,8 +121,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BardIronJawsFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardIronJawsFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.IronJaws };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -186,8 +180,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BrdAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.QuickNock, BRD.Ladonsbite };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
@@ -218,8 +210,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // BardBloodletterFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.Bloodletter };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == BRD.Bloodletter)
@@ -241,8 +231,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class BardRainOfDeathFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // BardRainOfDeathFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { BRD.RainOfDeath };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

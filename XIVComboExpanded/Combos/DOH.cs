@@ -86,17 +86,17 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DohTouchCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[]
-        {
-            DOH.CrpBasicTouch,
-            DOH.BsmBasicTouch,
-            DOH.ArmBasicTouch,
-            DOH.LtwBasicTouch,
-            DOH.WvrBasicTouch,
-            DOH.GsmBasicTouch,
-            DOH.AlcBasicTouch,
-            DOH.CulBasicTouch,
-        };
+        // protected internal override uint[] ActionIDs { get; } = new[]
+        // {
+        //     DOH.CrpBasicTouch,
+        //     DOH.BsmBasicTouch,
+        //     DOH.ArmBasicTouch,
+        //     DOH.LtwBasicTouch,
+        //     DOH.WvrBasicTouch,
+        //     DOH.GsmBasicTouch,
+        //     DOH.AlcBasicTouch,
+        //     DOH.CulBasicTouch,
+        // };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

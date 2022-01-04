@@ -62,8 +62,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.GoringBlade };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == PLD.GoringBlade)
@@ -96,8 +94,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class PaladinRageOfHaloneCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.RageOfHalone, PLD.RoyalAuthority };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -133,8 +129,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinProminenceCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.Prominence };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == PLD.Prominence)
@@ -155,8 +149,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class PaladinConfiteorFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinConfiteorFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.HolySpirit, PLD.HolyCircle };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -187,8 +179,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinRequiescatCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.Requiescat };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == PLD.Requiescat)
@@ -217,8 +207,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class PaladinScornfulSpiritsFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinScornfulSpiritsFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { PLD.SpiritsWithin, PLD.CircleOfScorn };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

@@ -74,8 +74,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistMainCombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.CleanShot, MCH.HeatedCleanShot };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MCH.CleanShot || actionID == MCH.HeatedCleanShot)
@@ -103,8 +101,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistGaussRoundRicochetFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.GaussRound, MCH.Ricochet };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
@@ -122,8 +118,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class MachinistOverheatFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverheatFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.HeatBlast, MCH.AutoCrossbow };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -146,8 +140,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistSpreadShotFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.SpreadShot, MCH.Scattergun };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == MCH.SpreadShot || actionID == MCH.Scattergun)
@@ -165,8 +157,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class MachinistOverdriveFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverdriveFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.RookAutoturret };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -186,8 +176,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class MachinistDrillAirAnchorFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotDrillChainsawFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { MCH.HotShot, MCH.AirAnchor, MCH.Drill, MCH.Chainsaw };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

@@ -34,8 +34,6 @@
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DolEurekaFeature;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { DOL.SolidReason, DOL.AgelessWords };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DOL.SolidReason)

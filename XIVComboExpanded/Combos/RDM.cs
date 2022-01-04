@@ -75,8 +75,6 @@ namespace XIVComboExpandedPlugin.Combos
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageAoECombo;
 
-        protected internal override uint[] ActionIDs { get; } = new[] { RDM.Veraero2, RDM.Verthunder2 };
-
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
@@ -98,8 +96,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class RedMageMeleeCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageMeleeCombo;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { RDM.Redoublement, RDM.Moulinet };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -159,8 +155,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class RedMageVerprocCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageVerprocCombo;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { RDM.Verstone, RDM.Verfire };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -242,8 +236,6 @@ namespace XIVComboExpandedPlugin.Combos
     internal class RedMageContreFlecheFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // RedMageContreFlecheFeature;
-
-        protected internal override uint[] ActionIDs { get; } = new[] { RDM.Fleche, RDM.ContreSixte };
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
