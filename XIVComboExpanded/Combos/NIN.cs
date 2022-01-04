@@ -238,20 +238,6 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class NinjaBunshinKamaitachiFeature : CustomCombo
-    {
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == NIN.Bunshin)
-            {
-                if (level >= NIN.Levels.PhantomKamaitachi && HasEffect(NIN.Buffs.Bunshin))
-                    return NIN.PhantomKamaitachi;
-            }
-
-            return actionID;
-        }
-    }
-
     internal class NinjaHuraijinRaijuFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHuraijinRaijuFeature;

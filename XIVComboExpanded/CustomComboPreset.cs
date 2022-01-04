@@ -354,16 +354,13 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("GCDs to Ninjutsu Feature", "Every GCD combo becomes Ninjutsu while Mudras are being used.", NIN.JobID)]
         NinjaGCDNinjutsuFeature = 3009,
 
-        [CustomComboInfo("Bunshin / Kamaitachi Feature", "Replaces Bunshin with Phantom Kamaitachi after usage.", NIN.JobID)]
-        NinjaBunshinKamaitachiFeature = 3010,
-
-        [CustomComboInfo("Armor Crush / Raiju Feature", "Replaces the Armor Crush combo with Forked and Fleeting Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Armor Crush / Raiju Feature", "Replaces the Armor Crush combo with Forked Raiju when available.", NIN.JobID)]
         NinjaArmorCrushRaijuFeature = 3012,
 
-        [CustomComboInfo("Aeolian Edge / Raiju Feature", "Replaces the Aeolian Edge combo with Forked and Fleeting Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Aeolian Edge / Raiju Feature", "Replaces the Aeolian Edge combo with Fleeting Raiju when available.", NIN.JobID)]
         NinjaAeolianEdgeRaijuFeature = 3013,
 
-        [CustomComboInfo("Huraijin / Raiju Feature", "Replaces Huraijin with Forked and Fleeting Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Huraijin / Raiju Feature", "Replaces Huraijin with Forked Raiju when available.", NIN.JobID)]
         NinjaHuraijinRaijuFeature = 3011,
 
         #endregion
