@@ -284,7 +284,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.SamuraiShintenSeneiFeature))
                 {
-                    if (level >= SAM.Levels.HissatsuSenei && GetCooldown(SAM.HissatsuSenei).CooldownRemaining == 0)
+                    if (level >= SAM.Levels.HissatsuSenei && IsOffCooldown(SAM.HissatsuSenei))
                         return SAM.HissatsuSenei;
                 }
             }
@@ -311,7 +311,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.SamuraiKyutenGurenFeature))
                 {
-                    if (level >= SAM.Levels.HissatsuGuren && GetCooldown(SAM.HissatsuGuren).CooldownRemaining == 0)
+                    if (level >= SAM.Levels.HissatsuGuren && IsOffCooldown(SAM.HissatsuGuren))
                         return SAM.HissatsuGuren;
                 }
             }

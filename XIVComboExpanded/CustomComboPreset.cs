@@ -504,16 +504,19 @@ namespace XIVComboExpandedPlugin
         RedMageVerprocComboPlus = 3505,
 
         [ParentCombo(RedMageVerprocComboPlus)]
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Turns Verstone into Veraero when out of combat.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Replaces Verstone with Veraero when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureStone = 3506,
 
         [ParentCombo(RedMageVerprocComboPlus)]
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Turns Verfire into Verthunder when out of combat.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Replaces Verfire with Verthunder when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureFire = 3507,
 
-        // [SecretCustomCombo]
-        // [CustomComboInfo("Contre Sixte / Fleche Feature", "Turns Contre Sixte and Fleche into whichever is available.", RDM.JobID)]
-        // RedMageContreFlecheFeature = 3508,
+        [CustomComboInfo("Acceleration into Swiftcast", "Replaces Acceleration with Swiftcast when on cooldown or synced.", RDM.JobID)]
+        RedMageAccelerationFeature = 3509,
+
+        [SecretCustomCombo]
+        [CustomComboInfo("Contre Sixte / Fleche Feature", "Replaces Contre Sixte and Fleche with whichever is available.", RDM.JobID)]
+        RedMageContreFlecheFeature = 3508,
 
         #endregion
         // ====================================================================================
