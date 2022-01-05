@@ -208,7 +208,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class BardBloodletterFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // BardBloodletterFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardBloodletterFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -230,7 +230,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class BardRainOfDeathFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // BardRainOfDeathFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardRainOfDeathFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

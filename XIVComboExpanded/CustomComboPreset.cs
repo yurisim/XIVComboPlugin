@@ -149,11 +149,13 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Quick Nock into Shadowbite", "Replaces Quick Nock with Shadowbite when available.", BRD.JobID)]
         BardShadowbiteFeature = 2305,
 
-        // [CustomComboInfo("Bloodletter Feature", "Replaces Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
-        // BardBloodletterFeature = 2306,
+        [SecretCustomCombo]
+        [CustomComboInfo("Bloodletter Feature", "Replaces Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
+        BardBloodletterFeature = 2306,
 
-        // [CustomComboInfo("Rain of Death Feature", "Replaces Rain of Death with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
-        // BardRainOfDeathFeature = 2307,
+        [SecretCustomCombo]
+        [CustomComboInfo("Rain of Death Feature", "Replaces Rain of Death with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
+        BardRainOfDeathFeature = 2307,
 
         #endregion
         // ====================================================================================
