@@ -18,7 +18,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Buffs
         {
             public const ushort
-                Placeholder = 0;
+                Recitation = 1896;
         }
 
         public static class Debuffs
@@ -99,7 +99,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SCHGauge>();
 
-                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0 && !HasEffect(SCH.Buffs.Recitation))
                     return SCH.Aetherflow;
             }
 
