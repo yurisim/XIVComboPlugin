@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Dalamud.Configuration;
 using Dalamud.Utility;
@@ -15,6 +16,27 @@ namespace XIVComboExpandedPlugin
     [Serializable]
     public class PluginConfiguration : IPluginConfiguration
     {
+        private static readonly HashSet<CustomComboPreset> SecretCombos;
+        private static readonly Dictionary<CustomComboPreset, CustomComboPreset[]> ConflictingCombos;
+        private static readonly Dictionary<CustomComboPreset, CustomComboPreset?> ParentCombos;  // child: parent
+
+        static PluginConfiguration()
+        {
+            SecretCombos = Enum.GetValues<CustomComboPreset>()
+                .Where(preset => preset.GetAttribute<SecretCustomComboAttribute>() != default)
+                .ToHashSet();
+
+            ConflictingCombos = Enum.GetValues<CustomComboPreset>()
+                .ToDictionary(
+                    preset => preset,
+                    preset => preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? Array.Empty<CustomComboPreset>());
+
+            ParentCombos = Enum.GetValues<CustomComboPreset>()
+                .ToDictionary(
+                    preset => preset,
+                    preset => preset.GetAttribute<ParentComboAttribute>()?.ParentPreset);
+        }
+
         /// <summary>
         /// Gets or sets the configuration version.
         /// </summary>
@@ -69,7 +91,7 @@ namespace XIVComboExpandedPlugin
         /// <param name="preset">Preset to check.</param>
         /// <returns>The boolean representation.</returns>
         public bool IsSecret(CustomComboPreset preset)
-            => preset.GetAttribute<SecretCustomComboAttribute>() != default;
+            => SecretCombos.Contains(preset);
 
         /// <summary>
         /// Gets an array of conflicting combo presets.
@@ -77,7 +99,7 @@ namespace XIVComboExpandedPlugin
         /// <param name="preset">Preset to check.</param>
         /// <returns>The conflicting presets.</returns>
         public CustomComboPreset[] GetConflicts(CustomComboPreset preset)
-            => preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? Array.Empty<CustomComboPreset>();
+            => ConflictingCombos[preset];
 
         /// <summary>
         /// Gets the parent combo preset if it exists, or null.
@@ -85,6 +107,6 @@ namespace XIVComboExpandedPlugin
         /// <param name="preset">Preset to check.</param>
         /// <returns>The parent preset.</returns>
         public CustomComboPreset? GetParent(CustomComboPreset preset)
-            => preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
+            => ParentCombos[preset];
     }
 }
