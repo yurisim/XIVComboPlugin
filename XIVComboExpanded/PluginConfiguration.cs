@@ -61,6 +61,11 @@ namespace XIVComboExpandedPlugin
         public bool EnableSecretCombos { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide the children of a feature if it is disabled.
+        /// </summary>
+        public bool HideChildren { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets an array of 4 ability IDs to interact with the <see cref="CustomComboPreset.DancerDanceComboCompatibility"/> combo.
         /// </summary>
         public uint[] DancerDanceCompatActionIDs { get; set; } = new uint[]
