@@ -129,7 +129,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DRK.CarveAndSpit || actionID == DRK.AbyssalDrain)
             {
-                if (IsEnabled(CustomComboPreset.DarkCarveAndSpitAbyssalDrainBloodWeaponFeature))
+                if (IsEnabled(CustomComboPreset.DarkBloodWeaponFeature))
                 {
                     if (level >= DRK.Levels.BloodWeapon && IsOffCooldown(DRK.BloodWeapon))
                         return DRK.BloodWeapon;
