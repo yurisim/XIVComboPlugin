@@ -86,7 +86,40 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class NinjaArmorCrushCombo : CustomCombo
+    internal class NinjaAeolianEdge : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == NIN.AeolianEdge)
+            {
+                if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
+                {
+                    if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
+                        return NIN.FleetingRaiju;
+                }
+
+                if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
+                {
+                    if (comboTime > 0)
+                    {
+                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
+                            return NIN.AeolianEdge;
+
+                        if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
+                            return NIN.GustSlash;
+                    }
+
+                    return NIN.SpinningEdge;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class NinjaArmorCrush : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
@@ -119,32 +152,30 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class NinjaAeolianEdgeCombo : CustomCombo
+    internal class NinjaHuraijin : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == NIN.AeolianEdge)
+            if (actionID == NIN.Huraijin)
             {
-                if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
+                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                 {
-                    if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
+                    if (IsEnabled(CustomComboPreset.NinjaHuraijinForkedRaijuFeature))
+                        return NIN.ForkedRaiju;
+
+                    if (IsEnabled(CustomComboPreset.NinjaHuraijinFleetingRaijuFeature))
                         return NIN.FleetingRaiju;
                 }
 
-                if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
+                if (IsEnabled(CustomComboPreset.NinjaHuraijinArmorCrushCombo))
                 {
                     if (comboTime > 0)
                     {
-                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
-                            return NIN.AeolianEdge;
-
-                        if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
-                            return NIN.GustSlash;
+                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
+                            return NIN.ArmorCrush;
                     }
-
-                    return NIN.SpinningEdge;
                 }
             }
 
@@ -232,28 +263,6 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= NIN.Levels.Meisui && HasEffect(NIN.Buffs.Suiton))
                     return NIN.Meisui;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class NinjaHuraijinRaijuFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == NIN.Huraijin)
-            {
-                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
-                {
-                    if (IsEnabled(CustomComboPreset.NinjaHuraijinForkedRaijuFeature))
-                        return NIN.ForkedRaiju;
-
-                    if (IsEnabled(CustomComboPreset.NinjaHuraijinFleetingRaijuFeature))
-                        return NIN.FleetingRaiju;
-                }
             }
 
             return actionID;

@@ -337,11 +337,14 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region NINJA
 
+        [CustomComboInfo("Aeolian Edge Combo", "Replace Aeolian Edge with its combo chain.", NIN.JobID)]
+        NinjaAeolianEdgeCombo = 3002,
+
         [CustomComboInfo("Armor Crush Combo", "Replace Armor Crush with its combo chain.", NIN.JobID)]
         NinjaArmorCrushCombo = 3001,
 
-        [CustomComboInfo("Aeolian Edge Combo", "Replace Aeolian Edge with its combo chain.", NIN.JobID)]
-        NinjaAeolianEdgeCombo = 3002,
+        [CustomComboInfo("Huraijin Armor Crush Combo", "Replace Huraijin with Armor Crush after using Gust Slash.", NIN.JobID)]
+        NinjaHuraijinArmorCrushCombo = 3001,
 
         [CustomComboInfo("Hakke Mujinsatsu Combo", "Replace Hakke Mujinsatsu with its combo chain.", NIN.JobID)]
         NinjaHakkeMujinsatsuCombo = 3003,
