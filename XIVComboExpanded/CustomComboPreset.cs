@@ -366,8 +366,13 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Aeolian Edge / Raiju Feature", "Replaces the Aeolian Edge combo with Fleeting Raiju when available.", NIN.JobID)]
         NinjaAeolianEdgeRaijuFeature = 3013,
 
-        [CustomComboInfo("Huraijin / Raiju Feature", "Replaces Huraijin with Forked Raiju when available.", NIN.JobID)]
-        NinjaHuraijinRaijuFeature = 3011,
+        [ConflictingCombos(NinjaHuraijinFleetingRaijuFeature)]
+        [CustomComboInfo("Huraijin / Forked Raiju Feature", "Replaces Huraijin with Forked Raiju when available.", NIN.JobID)]
+        NinjaHuraijinForkedRaijuFeature = 3011,
+
+        [ConflictingCombos(NinjaHuraijinForkedRaijuFeature)]
+        [CustomComboInfo("Huraijin / Fleeting Raiju Option", "Replaces Huraijin with Fleeting Raiju when available.", NIN.JobID)]
+        NinjaHuraijinFleetingRaijuFeature = 3014,
 
         #endregion
         // ====================================================================================

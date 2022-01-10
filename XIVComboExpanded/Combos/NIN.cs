@@ -240,14 +240,20 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class NinjaHuraijinRaijuFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHuraijinRaijuFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == NIN.Huraijin)
             {
                 if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
-                    return NIN.ForkedRaiju;
+                {
+                    if (IsEnabled(CustomComboPreset.NinjaHuraijinForkedRaijuFeature))
+                        return NIN.ForkedRaiju;
+
+                    if (IsEnabled(CustomComboPreset.NinjaHuraijinFleetingRaijuFeature))
+                        return NIN.FleetingRaiju;
+                }
             }
 
             return actionID;
