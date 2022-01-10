@@ -136,8 +136,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == WAR.NascentFlash)
             {
                 if (level >= WAR.Levels.NascentFlash)
-                    // Bloodwhetting
-                    return OriginalHook(WAR.NascentFlash);
+                    return WAR.NascentFlash;
 
                 return WAR.RawIntuition;
             }
