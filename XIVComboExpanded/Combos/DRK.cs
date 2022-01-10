@@ -9,6 +9,7 @@ namespace XIVComboExpandedPlugin.Combos
             Unleash = 3621,
             SyphonStrike = 3623,
             Souleater = 3632,
+            BloodWeapon = 3625,
             SaltedEarth = 3639,
             AbyssalDrain = 3641,
             CarveAndSpit = 3643,
@@ -42,11 +43,12 @@ namespace XIVComboExpandedPlugin.Combos
                 SyphonStrike = 2,
                 Souleater = 26,
                 FloodOfDarkness = 30,
+                BloodWeapon = 35,
                 EdgeOfDarkness = 40,
                 SaltedEarth = 52,
                 AbyssalDrain = 56,
                 CarveAndSpit = 60,
-                Bloodpiller = 62,
+                Bloodspiller = 62,
                 Quietus = 64,
                 Delirium = 68,
                 StalwartSoul = 72,
@@ -56,7 +58,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DarkSouleaterCombo : CustomCombo
+    internal class DarkSouleater : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
 
@@ -66,7 +68,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.DarkDeliriumFeature))
                 {
-                    if (level >= DRK.Levels.Bloodpiller && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
+                    if (level >= DRK.Levels.Bloodspiller && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
                         return DRK.Bloodspiller;
                 }
 
@@ -89,7 +91,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DarkStalwartSoulCombo : CustomCombo
+    internal class DarkStalwartSoul : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
 
@@ -112,6 +114,25 @@ namespace XIVComboExpandedPlugin.Combos
                     }
 
                     return DRK.Unleash;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DarkCarveAndSpitAbyssalDrain : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRK.CarveAndSpit || actionID == DRK.AbyssalDrain)
+            {
+                if (IsEnabled(CustomComboPreset.DarkCarveAndSpitAbyssalDrainBloodWeaponFeature))
+                {
+                    if (level >= DRK.Levels.BloodWeapon && IsOffCooldown(DRK.BloodWeapon))
+                        return DRK.BloodWeapon;
                 }
             }
 

@@ -209,6 +209,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Delirium Feature", "Replace Souleater and Stalwart Soul with Bloodspiller and Quietus when Delirium is active.", DRK.JobID)]
         DarkDeliriumFeature = 3203,
 
+        [CustomComboInfo("Carve and Spit / Abyssal Drain Blood Weapon Feature", "Replace Carve and Spit, and Abyssal Drain with Blood Weapon when available.", DRK.JobID)]
+        DarkCarveAndSpitAbyssalDrainBloodWeaponFeature = 3204,
+
         // [SecretCustomCombo]
         // [CustomComboInfo("Salted Shadowbringer Stuff", "Replace Cave and Spit and Abyssal Drain with Salted Earth and Shadowbringer depending on cooldown.", DRK.JobID)]
         // DarkShadowbringerFeature = 3204,
