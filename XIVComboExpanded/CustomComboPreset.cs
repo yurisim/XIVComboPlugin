@@ -350,7 +350,7 @@ namespace XIVComboExpandedPlugin
         NinjaArmorCrushCombo = 3001,
 
         [CustomComboInfo("Huraijin Armor Crush Combo", "Replace Huraijin with Armor Crush after using Gust Slash.", NIN.JobID)]
-        NinjaHuraijinArmorCrushCombo = 3001,
+        NinjaHuraijinArmorCrushCombo = 3010,
 
         [CustomComboInfo("Hakke Mujinsatsu Combo", "Replace Hakke Mujinsatsu with its combo chain.", NIN.JobID)]
         NinjaHakkeMujinsatsuCombo = 3003,
