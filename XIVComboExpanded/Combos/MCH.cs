@@ -173,7 +173,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistDrillAirAnchorFeature : CustomCombo
+    internal class MachinistDrillAirAnchorChainsawFeature : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotDrillChainsawFeature;
 
@@ -189,6 +189,27 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= MCH.Levels.Drill)
                     return CalcBestAction(actionID, MCH.Drill, MCH.HotShot);
+
+                return MCH.HotShot;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MachinistAirAnchorChainsawFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotChainsawFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MCH.HotShot || actionID == MCH.AirAnchor || actionID == MCH.Chainsaw)
+            {
+                if (level >= MCH.Levels.Chainsaw)
+                    return CalcBestAction(actionID, MCH.Chainsaw, MCH.AirAnchor);
+
+                if (level >= MCH.Levels.AirAnchor)
+                    return MCH.AirAnchor;
 
                 return MCH.HotShot;
             }

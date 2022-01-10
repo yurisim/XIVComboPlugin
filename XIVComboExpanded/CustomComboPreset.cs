@@ -296,8 +296,14 @@ namespace XIVComboExpandedPlugin
         MachinistGaussRoundRicochetFeature = 3105,
 
         [SecretCustomCombo]
+        [ConflictingCombos(MachinistHotShotChainsawFeature)]
         [CustomComboInfo("Hot Shot (Air Anchor) / Drill / Chainsaw Feature", "Replace Hot Shot (Air Anchor), Drill, and Chainsaw with whichever is available.", MCH.JobID)]
         MachinistHotShotDrillChainsawFeature = 3106,
+
+        [SecretCustomCombo]
+        [ConflictingCombos(MachinistHotShotDrillChainsawFeature)]
+        [CustomComboInfo("Hot Shot (Air Anchor) / Chainsaw Feature", "Replace Hot Shot (Air Anchor) and Chainsaw with whichever is available.", MCH.JobID)]
+        MachinistHotShotChainsawFeature = 3107,
 
         #endregion
         // ====================================================================================
