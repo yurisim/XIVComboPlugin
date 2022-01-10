@@ -212,6 +212,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Blood Weapon Feature", "Replace Carve and Spit, and Abyssal Drain with Blood Weapon when available.", DRK.JobID)]
         DarkBloodWeaponFeature = 3204,
 
+        [CustomComboInfo("Living Shadow Feature", "Replace Quietus and Bloodspiller with Living Shadow when available.", DRK.JobID)]
+        DarkLivingShadowFeature = 3205,
+
         // [SecretCustomCombo]
         // [CustomComboInfo("Salted Shadowbringer Stuff", "Replace Cave and Spit and Abyssal Drain with Salted Earth and Shadowbringer depending on cooldown.", DRK.JobID)]
         // DarkShadowbringerFeature = 3204,

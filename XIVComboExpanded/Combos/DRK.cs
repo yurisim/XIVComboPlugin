@@ -20,6 +20,7 @@ namespace XIVComboExpandedPlugin.Combos
             StalwartSoul = 16468,
             FloodOfShadow = 16469,
             EdgeOfShadow = 16470,
+            LivingShadow = 16472,
             SaltAndDarkness = 25755,
             Shadowbringer = 25757;
 
@@ -53,6 +54,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Delirium = 68,
                 StalwartSoul = 72,
                 Shadow = 74,
+                LivingShadow = 80,
                 SaltAndDarkness = 86,
                 Shadowbringer = 90;
         }
@@ -140,25 +142,19 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DarkShadowbringerFeature : CustomCombo
+    internal class DarkQuietusBloodspiller : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DarkShadowbringerFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == DRK.CarveAndSpit || actionID == DRK.AbyssalDrain)
+            if (actionID == DRK.Quietus || actionID == DRK.Bloodspiller)
             {
-                if (level >= DRK.Levels.Shadowbringer)
-                    return CalcBestAction(actionID, actionID, DRK.Shadowbringer, DRK.SaltedEarth, DRK.SaltAndDarkness);
-
-                if (level >= DRK.Levels.SaltAndDarkness)
-                    return CalcBestAction(actionID, actionID, DRK.SaltedEarth, DRK.SaltAndDarkness);
-
-                if (level >= DRK.Levels.AbyssalDrain) // or CarveAndSpit
-                    return CalcBestAction(actionID, actionID, DRK.SaltedEarth);
-
-                if (level >= DRK.Levels.SaltedEarth)
-                    return DRK.SaltedEarth;
+                if (IsEnabled(CustomComboPreset.DarkLivingShadowFeature))
+                {
+                    if (level >= DRK.Levels.LivingShadow && IsOffCooldown(DRK.LivingShadow))
+                        return DRK.LivingShadow;
+                }
             }
 
             return actionID;
