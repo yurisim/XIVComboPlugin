@@ -714,8 +714,8 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region DOL
 
-        // [CustomComboInfo("Eureka Feature", "Replaces Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
-        // DolEurekaFeature = 51001,
+        [CustomComboInfo("Eureka Feature", "Replaces Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
+        DolEurekaFeature = 51001,
 
         #endregion
         // ====================================================================================

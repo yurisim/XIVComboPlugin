@@ -32,7 +32,7 @@
 
     internal class MinerEurekaFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DolEurekaFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DolEurekaFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
