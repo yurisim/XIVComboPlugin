@@ -152,6 +152,9 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.DarkLivingShadowFeature))
                 {
+                    if (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
+                        return actionID;
+
                     if (level >= DRK.Levels.LivingShadow && IsOffCooldown(DRK.LivingShadow))
                         return DRK.LivingShadow;
                 }
