@@ -687,11 +687,19 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Storms Path Combo", "Replace Storms Path with its combo chain.", WAR.JobID)]
         WarriorStormsPathCombo = 2101,
 
+        [ParentCombo(WarriorStormsPathCombo)]
+        [CustomComboInfo("Storms Path Inner Release Feature", "Replace Storms Path with Fell Cleave when Inner Release is active.", WAR.JobID)]
+        WarriorStormsPathInnerReleaseFeature = 2110,
+
         [CustomComboInfo("Storms Eye Combo", "Replace Storms Eye with its combo chain.", WAR.JobID)]
         WarriorStormsEyeCombo = 2102,
 
         [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", WAR.JobID)]
         WarriorMythrilTempestCombo = 2103,
+
+        [ParentCombo(WarriorMythrilTempestCombo)]
+        [CustomComboInfo("Mythril Tempest Inner Release Feature", "Replace Mythril Tempest with Decimate when Inner Release is active.", WAR.JobID)]
+        WarriorMythrilTempestInnerReleaseFeature = 2111,
 
         [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
         WarriorNascentFlashFeature = 2106,

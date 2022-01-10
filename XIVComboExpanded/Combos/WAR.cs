@@ -30,6 +30,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Buffs
         {
             public const ushort
+                Berserk = 86,
                 InnerRelease = 1177,
                 NascentChaos = 1897,
                 PrimalRendReady = 2624;
@@ -45,12 +46,14 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Maim = 4,
+                Berserk = 6,
                 StormsPath = 26,
                 MythrilTempest = 40,
                 StormsEye = 50,
                 Infuriate = 50,
                 FellCleave = 54,
                 Decimate = 60,
+                InnerRelease = 70,
                 MythrilTempestTrait = 74,
                 NascentFlash = 76,
                 InnerChaos = 80,
@@ -66,6 +69,12 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.StormsPath)
             {
+                if (IsEnabled(CustomComboPreset.WarriorStormsPathInnerReleaseFeature))
+                {
+                    if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
+                        return WAR.FellCleave;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
@@ -114,6 +123,12 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.MythrilTempest)
             {
+                if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
+                {
+                    if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
+                        return WAR.Decimate;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
