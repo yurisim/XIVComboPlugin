@@ -241,7 +241,7 @@ namespace XIVComboExpandedPlugin
                     }
                 }
 
-                parentMaybe = Service.Configuration.GetParent(preset);
+                parentMaybe = Service.Configuration.GetParent(parent);
             }
         }
     }
