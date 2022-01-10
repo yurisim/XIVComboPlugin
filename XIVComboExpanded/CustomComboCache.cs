@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using Dalamud.Game;
-using Dalamud.Game.ClientState.Buddy;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 
@@ -25,18 +22,13 @@ namespace XIVComboExpandedPlugin
         // Do not invalidate these
         private readonly Dictionary<uint, byte> cooldownGroupCache = new();
         private readonly Dictionary<Type, JobGaugeBase> jobGaugeCache = new();
-
-        private readonly GetActionCooldownSlotDelegate getActionCooldownSlot;
-
-        private IntPtr actionManager = IntPtr.Zero;
+        private readonly Dictionary<(uint ActionID, uint ClassJobID, byte Level), (ushort CurrentMax, ushort Max)> chargesCache = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomComboCache"/> class.
         /// </summary>
         public CustomComboCache()
         {
-            this.getActionCooldownSlot = Marshal.GetDelegateForFunctionPointer<GetActionCooldownSlotDelegate>(Service.Address.GetActionCooldown);
-
             Service.Framework.Update += this.Framework_Update;
         }
 
@@ -46,15 +38,6 @@ namespace XIVComboExpandedPlugin
         public void Dispose()
         {
             Service.Framework.Update -= this.Framework_Update;
-        }
-
-        /// <summary>
-        /// Update the address of the action manager.
-        /// </summary>
-        /// <param name="address">Action manager address.</param>
-        internal void UpdateActionManager(IntPtr address)
-        {
-            this.actionManager = address;
         }
 
         /// <summary>
@@ -108,12 +91,41 @@ namespace XIVComboExpandedPlugin
             if (this.cooldownCache.TryGetValue(actionID, out var found))
                 return found;
 
-            var cooldownGroup = this.GetCooldownGroup(actionID);
-            if (this.actionManager == IntPtr.Zero)
-                return this.cooldownCache[actionID] = new CooldownData() { ActionID = actionID };
+            var actionManager = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.Instance();
+            if (actionManager == null)
+                return this.cooldownCache[actionID] = default;
 
-            var cooldownPtr = this.getActionCooldownSlot(this.actionManager, cooldownGroup - 1);
+            var cooldownGroup = this.GetCooldownGroup(actionID);
+
+            var cooldownPtr = actionManager->GetRecastGroupDetail(cooldownGroup - 1);
+            cooldownPtr->ActionID = actionID;
+
             return this.cooldownCache[actionID] = *(CooldownData*)cooldownPtr;
+        }
+
+        /// <summary>
+        /// Get the maximum number of charges for an action.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>Max number of charges at current and max level.</returns>
+        internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
+        {
+            var player = Service.ClientState.LocalPlayer;
+            if (player == null)
+                return (0, 0);
+
+            var job = player.ClassJob.Id;
+            var level = player.Level;
+            if (job == 0 || level == 0)
+                return (0, 0);
+
+            var key = (actionID, job, level);
+            if (this.chargesCache.TryGetValue(key, out var found))
+                return found;
+
+            var cur = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 0);
+            var max = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 90);
+            return this.chargesCache[key] = (cur, max);
         }
 
         private byte GetCooldownGroup(uint actionID)

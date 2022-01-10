@@ -1,13 +1,7 @@
 using System;
 using System.Linq;
 
-using Dalamud.Data;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.JobGauge;
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 
@@ -29,6 +23,8 @@ namespace XIVComboExpandedPlugin
         /// <param name="pluginInterface">Dalamud plugin interface.</param>
         public XIVComboExpandedPlugin(DalamudPluginInterface pluginInterface)
         {
+            FFXIVClientStructs.Resolver.Initialize();
+
             pluginInterface.Create<Service>();
 
             Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();

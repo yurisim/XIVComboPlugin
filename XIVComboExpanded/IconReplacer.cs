@@ -60,7 +60,6 @@ namespace XIVComboExpandedPlugin
         private unsafe uint GetIconDetour(IntPtr actionManager, uint actionID)
         {
             this.actionManager = actionManager;
-            Service.ComboCache.UpdateActionManager(actionManager);
 
             try
             {

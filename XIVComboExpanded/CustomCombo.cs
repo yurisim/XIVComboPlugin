@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 using Dalamud.Game.ClientState.Conditions;
@@ -112,7 +111,40 @@ namespace XIVComboExpandedPlugin.Combos
 
                 // Both, return soonest available
                 if (a1.Data.IsCooldown && a2.Data.IsCooldown)
-                    return a1.Data.CooldownRemaining < a2.Data.CooldownRemaining ? a1 : a2;
+                {
+                    if (a1.Data.HasCharges && a2.Data.HasCharges)
+                    {
+                        if (a1.Data.RemainingCharges == a2.Data.RemainingCharges)
+                        {
+                            return a1.Data.ChargeCooldownRemaining < a2.Data.ChargeCooldownRemaining
+                                ? a1 : a2;
+                        }
+
+                        return a1.Data.RemainingCharges > a2.Data.RemainingCharges
+                            ? a1 : a2;
+                    }
+                    else if (a1.Data.HasCharges)
+                    {
+                        if (a1.Data.RemainingCharges > 0)
+                            return a1;
+
+                        return a1.Data.ChargeCooldownRemaining < a2.Data.CooldownRemaining
+                            ? a1 : a2;
+                    }
+                    else if (a2.Data.HasCharges)
+                    {
+                        if (a2.Data.RemainingCharges > 0)
+                            return a2;
+
+                        return a2.Data.ChargeCooldownRemaining < a1.Data.CooldownRemaining
+                            ? a2 : a1;
+                    }
+                    else
+                    {
+                        return a1.Data.CooldownRemaining < a2.Data.CooldownRemaining
+                            ? a1 : a2;
+                    }
+                }
 
                 // One or the other
                 return a1.Data.IsCooldown ? a2 : a1;
@@ -291,6 +323,14 @@ namespace XIVComboExpandedPlugin.Combos
         /// <returns>True or false.</returns>
         protected static bool IsOffCooldown(uint actionID)
             => !GetCooldown(actionID).IsCooldown;
+
+        /// <summary>
+        /// Get the maximum number of charges for an action at a given level.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>Number of charges.</returns>
+        protected static ushort GetMaxCharges(uint actionID)
+            => GetCooldown(actionID).MaxCharges;
 
         /// <summary>
         /// Get a job gauge.
