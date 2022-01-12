@@ -25,6 +25,8 @@ namespace XIVComboExpandedPlugin.Combos
             CoerthanTorment = 16477,
             DraconianFury = 25770,
             // Combined
+            Geirskogul = 3555,
+            Nastrond = 7400,
             // Jumps
             Jump = 92,
             SpineshatterDive = 95,
@@ -62,8 +64,10 @@ namespace XIVComboExpandedPlugin.Combos
                 ChaoticSpring = 86,
                 FangAndClaw = 56,
                 WheelingThrust = 58,
+                Geirskogul = 60,
                 SonicThrust = 62,
                 MirageDive = 68,
+                LifeOfTheDragon = 70,
                 CoerthanTorment = 72,
                 HighJump = 74,
                 RaidenThrust = 76,
@@ -81,9 +85,6 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= DRG.Levels.MirageDive && HasEffect(DRG.Buffs.DiveReady))
                     return DRG.MirageDive;
-
-                // High Jump
-                return OriginalHook(DRG.Jump);
             }
 
             return actionID;
@@ -92,23 +93,34 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class DragoonCoerthanTormentCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonCoerthanTormentCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DRG.CoerthanTorment)
             {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
-                        return DRG.CoerthanTorment;
+                var gauge = GetJobGauge<DRGGauge>();
 
-                    if ((lastComboMove == DRG.DoomSpike || lastComboMove == DRG.DraconianFury) && level >= DRG.Levels.SonicThrust)
-                        return DRG.SonicThrust;
+                if (IsEnabled(CustomComboPreset.DragoonCoerthanWyrmwindFeature))
+                {
+                    if (gauge.FirstmindsFocusCount == 2)
+                        return DRG.WyrmwindThrust;
                 }
 
-                // Draconian Fury
-                return OriginalHook(DRG.DoomSpike);
+                if (IsEnabled(CustomComboPreset.DragoonCoerthanTormentCombo))
+                {
+                    if (comboTime > 0)
+                    {
+                        if (lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
+                            return DRG.CoerthanTorment;
+
+                        if ((lastComboMove == DRG.DoomSpike || lastComboMove == DRG.DraconianFury) && level >= DRG.Levels.SonicThrust)
+                            return DRG.SonicThrust;
+                    }
+
+                    // Draconian Fury
+                    return OriginalHook(DRG.DoomSpike);
+                }
             }
 
             return actionID;
@@ -146,6 +158,9 @@ namespace XIVComboExpandedPlugin.Combos
                         if ((lastComboMove == DRG.TrueThrust || lastComboMove == DRG.RaidenThrust) && level >= DRG.Levels.Disembowel)
                             return DRG.Disembowel;
                     }
+
+                    if (IsEnabled(CustomComboPreset.DragoonChaosThrustComboOption))
+                        return DRG.Disembowel;
 
                     // Vorpal Thrust
                     return OriginalHook(DRG.TrueThrust);
@@ -188,6 +203,9 @@ namespace XIVComboExpandedPlugin.Combos
                             return DRG.VorpalThrust;
                     }
 
+                    if (IsEnabled(CustomComboPreset.DragoonFullThrustComboOption))
+                        return DRG.VorpalThrust;
+
                     // Vorpal Thrust
                     return OriginalHook(DRG.TrueThrust);
                 }
@@ -197,9 +215,37 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal class DragoonNastrondFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRG.Stardiver)
+            {
+                var gauge = GetJobGauge<DRGGauge>();
+
+                if (IsEnabled(CustomComboPreset.DragoonStardiverNastrondFeature))
+                {
+                    if (level >= DRG.Levels.Geirskogul && (!gauge.IsLOTDActive || IsOffCooldown(DRG.Nastrond) || IsOnCooldown(DRG.Stardiver)))
+                        // Nastrond
+                        return OriginalHook(DRG.Geirskogul);
+                }
+
+                if (IsEnabled(CustomComboPreset.DragoonStardiverDragonfireDiveFeature))
+                {
+                    if (level < DRG.Levels.Stardiver || !gauge.IsLOTDActive || IsOnCooldown(DRG.Stardiver) || (IsOffCooldown(DRG.DragonfireDive) && gauge.LOTDTimer > 7.5))
+                        return DRG.DragonfireDive;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
     internal class DragoonDiveFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.Disabled; // DragoonDiveFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonDiveFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {

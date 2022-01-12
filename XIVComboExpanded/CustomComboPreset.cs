@@ -239,18 +239,38 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Coerthan Torment Combo", "Replace Coerthan Torment with its combo chain.", DRG.JobID)]
         DragoonCoerthanTormentCombo = 2202,
 
+        [CustomComboInfo("Coerthan Torment Wyrmwind Feature", "Replace Coerthan Torment with Wyrmwind Thrust when you have two Firstminds' Focus.", DRG.JobID)]
+        DragoonCoerthanWyrmwindFeature = 2207,
+
         [CustomComboInfo("Chaos Thrust Combo", "Replace Chaos Thrust with its combo chain.", DRG.JobID)]
         DragoonChaosThrustCombo = 2203,
+
+        [ParentCombo(DragoonChaosThrustCombo)]
+        [CustomComboInfo("Chaos Thrust Disembowel Option", "Replace Chaos Thrust with its combo chain starting instead at Disembowel, not True Thrust, while no combo is ongoing.", DRG.JobID)]
+        DragoonChaosThrustComboOption = 2209,
 
         [CustomComboInfo("Full Thrust Combo", "Replace Full Thrust with its combo chain.", DRG.JobID)]
         DragoonFullThrustCombo = 2204,
 
-        [CustomComboInfo("Wheeling Thrust / Fang and Claw Option", "When you have either Enhanced Fang and Claw or Wheeling Thrust, Chaos Thrust becomes Wheeling Thrust and Full Thrust becomes Fang and Claw.", DRG.JobID)]
+        [ParentCombo(DragoonFullThrustCombo)]
+        [CustomComboInfo("Full Thrust Vorpal Thrust Option", "Replace Full Thrust with its combo chain starting instead at Vorpal Thrust, not True Thrust, while no combo is ongoing.", DRG.JobID)]
+        DragoonFullThrustComboOption = 2210,
+
+        [CustomComboInfo("Wheeling Thrust / Fang and Claw Option", "Replace Chaos Thrust with Wheeling Thrust and Full Thrust with Fang and Claw when you have either Enhanced Fang and Claw or Wheeling Thrust.", DRG.JobID)]
         DragoonFangThrustFeature = 2205,
 
-        // [SecretCustomCombo]
-        // [CustomComboInfo("Dive Dive Dive!", "Replace Spineshatter Dive, Dragonfire Dive, and Stardiver with whichever is available.", DRG.JobID)]
-        // DragoonDiveFeature = 2205,
+        [ConflictingCombos(DragoonStardiverDragonfireDiveFeature)]
+        [CustomComboInfo("Stardiver to Nastrond", "Replace Stardiver with Nastrond when Nastrond is off-cooldown, and Geirskogul outside of Life of the Dragon.", DRG.JobID)]
+        DragoonStardiverNastrondFeature = 2206,
+
+        [ConflictingCombos(DragoonStardiverNastrondFeature)]
+        [CustomComboInfo("Stardiver to Dragonfire Dive", "Replace Stardiver with Dragonfire Dive when the latter is off cooldown (and you have more than 7.5s of LotD left), or outside of Life of the Dragon.", DRG.JobID)]
+        DragoonStardiverDragonfireDiveFeature = 2208,
+
+        [SecretCustomCombo]
+        [ConflictingCombos(DragoonStardiverDragonfireDiveFeature, DragoonStardiverNastrondFeature)]
+        [CustomComboInfo("Dive Dive Dive!", "Replace Spineshatter Dive, Dragonfire Dive, and Stardiver with whichever is available.", DRG.JobID)]
+        DragoonDiveFeature = 2211,
 
         #endregion
         // ====================================================================================
