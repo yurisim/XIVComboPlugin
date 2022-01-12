@@ -632,19 +632,19 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region SCHOLAR
 
-        [CustomComboInfo("Seraph Fey Blessing/Consolation", "Change Fey Blessing into Consolation when Seraph is out.", SCH.JobID)]
+        [CustomComboInfo("Seraph Fey Blessing/Consolation", "Replace Fey Blessing with Consolation when Seraph is out.", SCH.JobID)]
         ScholarSeraphConsolationFeature = 2801,
 
-        [CustomComboInfo("ED Aetherflow", "Change Energy Drain into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+        [CustomComboInfo("ED Aetherflow", "Replace Energy Drain with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarEnergyDrainAetherflowFeature = 2802,
 
-        [CustomComboInfo("Lustrous Aetherflow", "Change Lustrate into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+        [CustomComboInfo("Lustrous Aetherflow", "Replace Lustrate with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarLustrateAetherflowFeature = 2803,
 
-        [CustomComboInfo("Indomitable Aetherflow", "Change Indomitability into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+        [CustomComboInfo("Indomitable Aetherflow", "Replace Indomitability with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarIndomAetherflowFeature = 2804,
 
-        [CustomComboInfo("Summon Seraph Feature", "Change Summon Eos and Selene into Summon Seraph when a summon is out.", SCH.JobID)]
+        [CustomComboInfo("Summon Seraph Feature", "Replace Summon Eos and Selene with Summon Seraph when a summon is out.", SCH.JobID)]
         ScholarSeraphFeature = 2805,
 
         #endregion
