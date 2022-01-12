@@ -613,6 +613,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Iaijutsu to Shoha", "Replace Iaijutsu with Shoha when meditation is 3.", SAM.JobID)]
         SamuraiIaijutsuShohaFeature = 3410,
 
+        [CustomComboInfo("Senei to Guren Level Sync", "Replace Hissatsu: Senei with Guren when level synced below 72.", SAM.JobID)]
+        SamuraiSeneiGurenFeature = 3418,
+
         [CustomComboInfo("Shinten to Senei", "Replace Hissatsu: Shinten with Senei when available.", SAM.JobID)]
         SamuraiShintenSeneiFeature = 3414,
 
@@ -722,7 +725,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Mythril Tempest Inner Release Feature", "Replace Mythril Tempest with Decimate when Inner Release is active.", WAR.JobID)]
         WarriorMythrilTempestInnerReleaseFeature = 2111,
 
-        [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
+        [CustomComboInfo("Nascent Flash Level Sync", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
         WarriorNascentFlashFeature = 2106,
 
         [CustomComboInfo("Angry Beast Feature", "Replace Inner Beast and Steel Cyclone with Infuriate when less then 50 Beast Gauge is available.", WAR.JobID)]

@@ -286,6 +286,31 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= SAM.Levels.HissatsuSenei && IsOffCooldown(SAM.HissatsuSenei))
                         return SAM.HissatsuSenei;
+
+                    if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
+                    {
+                        if (level >= SAM.Levels.HissatsuGuren && level < SAM.Levels.HissatsuSenei && IsOffCooldown(SAM.HissatsuGuren))
+                            return SAM.HissatsuGuren;
+                    }
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SamuraiSenei : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SAM.HissatsuSenei)
+            {
+                if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
+                {
+                    if (level >= SAM.Levels.HissatsuGuren && level < SAM.Levels.HissatsuSenei)
+                        return SAM.HissatsuGuren;
                 }
             }
 
