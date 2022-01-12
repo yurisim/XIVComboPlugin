@@ -48,6 +48,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Maim = 4,
                 Berserk = 6,
                 StormsPath = 26,
+                InnerBeast = 35,
                 MythrilTempest = 40,
                 StormsEye = 50,
                 Infuriate = 50,
@@ -69,6 +70,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.StormsPath)
             {
+                var gauge = GetJobGauge<WARGauge>();
+
                 if (IsEnabled(CustomComboPreset.WarriorStormsPathInnerReleaseFeature))
                 {
                     if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
@@ -78,10 +81,28 @@ namespace XIVComboExpandedPlugin.Combos
                 if (comboTime > 0)
                 {
                     if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
+                    {
+                        if (IsEnabled(CustomComboPreset.WarriorStormsPathOvercapFeature))
+                        {
+                            if (level >= WAR.Levels.InnerBeast && gauge.BeastGauge > 80)
+                                // Fell Cleave
+                                return OriginalHook(WAR.InnerBeast);
+                        }
+
                         return WAR.StormsPath;
+                    }
 
                     if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                    {
+                        if (IsEnabled(CustomComboPreset.WarriorStormsPathOvercapFeature))
+                        {
+                            if (level >= WAR.Levels.InnerBeast && gauge.BeastGauge > 90)
+                                // Fell Cleave
+                                return OriginalHook(WAR.InnerBeast);
+                        }
+
                         return WAR.Maim;
+                    }
                 }
 
                 return WAR.HeavySwing;
@@ -123,6 +144,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == WAR.MythrilTempest)
             {
+                var gauge = GetJobGauge<WARGauge>();
+
                 if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
                 {
                     if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
@@ -132,7 +155,15 @@ namespace XIVComboExpandedPlugin.Combos
                 if (comboTime > 0)
                 {
                     if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
+                    {
+                        if (IsEnabled(CustomComboPreset.WarriorMythrilTempestOvercapFeature))
+                        {
+                            if (level >= WAR.Levels.MythrilTempestTrait && gauge.BeastGauge > 80)
+                                return WAR.Decimate;
+                        }
+
                         return WAR.MythrilTempest;
+                    }
                 }
 
                 return WAR.Overpower;

@@ -697,6 +697,10 @@ namespace XIVComboExpandedPlugin
         WarriorStormsPathCombo = 2101,
 
         [ParentCombo(WarriorStormsPathCombo)]
+        [CustomComboInfo("Storms Path Overcap Feature", "Replace Storms Path with Fell Cleave when the next combo action would cause the Beast Gauge to overcap.", WAR.JobID)]
+        WarriorStormsPathOvercapFeature = 2104,
+
+        [ParentCombo(WarriorStormsPathCombo)]
         [CustomComboInfo("Storms Path Inner Release Feature", "Replace Storms Path with Fell Cleave when Inner Release is active.", WAR.JobID)]
         WarriorStormsPathInnerReleaseFeature = 2110,
 
@@ -705,6 +709,10 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", WAR.JobID)]
         WarriorMythrilTempestCombo = 2103,
+
+        [ParentCombo(WarriorMythrilTempestCombo)]
+        [CustomComboInfo("Mythril Tempest Overcap Feature", "Replace Mythril Tempest with Decimate the next combo action would cause the Beast Gauge to overcap.", WAR.JobID)]
+        WarriorMythrilTempestOvercapFeature = 2105,
 
         [ParentCombo(WarriorMythrilTempestCombo)]
         [CustomComboInfo("Mythril Tempest Inner Release Feature", "Replace Mythril Tempest with Decimate when Inner Release is active.", WAR.JobID)]
