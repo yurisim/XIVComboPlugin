@@ -174,14 +174,20 @@ namespace XIVComboExpandedPlugin
 
             if (conflicts.Length > 0)
             {
-                var conflictText = conflicts.Select(preset =>
+                var conflictText = conflicts.Select(conflict =>
                 {
-                    var info = preset.GetAttribute<CustomComboInfoAttribute>();
-                    return $"\n - {info.FancyName}";
+                    if (!showSecrets && Service.Configuration.IsSecret(conflict))
+                        return string.Empty;
+
+                    var conflictInfo = conflict.GetAttribute<CustomComboInfoAttribute>();
+                    return $"\n - {conflictInfo.FancyName}";
                 }).Aggregate((t1, t2) => $"{t1}{t2}");
 
-                ImGui.TextColored(this.shadedColor, $"Conflicts with: {conflictText}");
-                ImGui.Spacing();
+                if (conflictText.Length > 0)
+                {
+                    ImGui.TextColored(this.shadedColor, $"Conflicts with: {conflictText}");
+                    ImGui.Spacing();
+                }
             }
 
             if (preset == CustomComboPreset.DancerDanceComboCompatibility && enabled)
