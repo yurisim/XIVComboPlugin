@@ -640,6 +640,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Indomitable Aetherflow", "Change Indomitability into Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarIndomAetherflowFeature = 2804,
 
+        [CustomComboInfo("Summon Seraph Feature", "Change Summon Eos and Selene into Summon Seraph when a summon is out.", SCH.JobID)]
+        ScholarSeraphFeature = 2805,
+
         #endregion
         // ====================================================================================
         #region SUMMONER

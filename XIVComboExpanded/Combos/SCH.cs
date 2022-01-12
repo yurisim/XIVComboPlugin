@@ -8,12 +8,15 @@ namespace XIVComboExpandedPlugin.Combos
         public const byte JobID = 28;
 
         public const uint
-            FeyBless = 16543,
-            Consolation = 16546,
             EnergyDrain = 167,
             Aetherflow = 166,
             Lustrate = 189,
-            Indomitability = 3583;
+            Indomitability = 3583,
+            FeyBless = 16543,
+            SummonSeraph = 16545,
+            Consolation = 16546,
+            SummonEos = 17215,
+            SummonSelene = 17216;
 
         public static class Buffs
         {
@@ -31,7 +34,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Aetherflow = 45,
-                Consolation = 80;
+                Consolation = 80,
+                SummonSeraph = 80;
         }
     }
 
@@ -101,6 +105,25 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0 && !HasEffect(SCH.Buffs.Recitation))
                     return SCH.Aetherflow;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ScholarSummon : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSeraphFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SCH.SummonEos || actionID == SCH.SummonSelene)
+            {
+                var gauge = GetJobGauge<SCHGauge>();
+
+                if (gauge.SeraphTimer != 0 || HasPetPresent())
+                    // Consolation
+                    return OriginalHook(SCH.SummonSeraph);
             }
 
             return actionID;
