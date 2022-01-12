@@ -368,10 +368,14 @@ namespace XIVComboExpandedPlugin
         NinjaHideMugFeature = 3007,
 
         [ConflictingCombos(NinjaGCDNinjutsuFeature)]
-        [CustomComboInfo("Aeolian to Ninjutsu Feature", "Replaces Aeolian Edge (combo) with Ninjutsu if any Mudra are used.", NIN.JobID)]
-        NinjaNinjutsuFeature = 3008,
+        [CustomComboInfo("Aeolian to Ninjutsu Feature", "Replaces Aeolian Edge with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        NinjaAeolianNinjutsuFeature = 3008,
 
-        [ConflictingCombos(NinjaNinjutsuFeature)]
+        [ConflictingCombos(NinjaGCDNinjutsuFeature)]
+        [CustomComboInfo("Armor Crush to Ninjutsu Feature", "Replaces Armor Crush with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        NinjaArmorCrushNinjutsuFeature = 3015,
+
+        [ConflictingCombos(NinjaAeolianNinjutsuFeature, NinjaArmorCrushNinjutsuFeature)]
         [CustomComboInfo("GCDs to Ninjutsu Feature", "Every GCD combo becomes Ninjutsu while Mudras are being used.", NIN.JobID)]
         NinjaGCDNinjutsuFeature = 3009,
 

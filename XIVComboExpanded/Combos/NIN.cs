@@ -70,22 +70,6 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class NinjaGCDNinjutsuFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaGCDNinjutsuFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush || actionID == NIN.HakkeMujinsatsu)
-            {
-                if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
-                    return OriginalHook(NIN.Ninjutsu);
-            }
-
-            return actionID;
-        }
-    }
-
     internal class NinjaAeolianEdge : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
@@ -98,6 +82,12 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                         return NIN.FleetingRaiju;
+                }
+
+                if (IsEnabled(CustomComboPreset.NinjaGCDNinjutsuFeature) || IsEnabled(CustomComboPreset.NinjaAeolianNinjutsuFeature))
+                {
+                    if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                        return OriginalHook(NIN.Ninjutsu);
                 }
 
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
@@ -131,6 +121,12 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                         return NIN.ForkedRaiju;
+                }
+
+                if (IsEnabled(CustomComboPreset.NinjaGCDNinjutsuFeature) || IsEnabled(CustomComboPreset.NinjaArmorCrushNinjutsuFeature))
+                {
+                    if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                        return OriginalHook(NIN.Ninjutsu);
                 }
 
                 if (IsEnabled(CustomComboPreset.NinjaArmorCrushCombo))
@@ -169,6 +165,12 @@ namespace XIVComboExpandedPlugin.Combos
                         return NIN.FleetingRaiju;
                 }
 
+                if (IsEnabled(CustomComboPreset.NinjaGCDNinjutsuFeature))
+                {
+                    if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                        return OriginalHook(NIN.Ninjutsu);
+                }
+
                 if (IsEnabled(CustomComboPreset.NinjaHuraijinArmorCrushCombo))
                 {
                     if (comboTime > 0)
@@ -191,6 +193,12 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == NIN.HakkeMujinsatsu)
             {
+                if (IsEnabled(CustomComboPreset.NinjaGCDNinjutsuFeature))
+                {
+                    if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                        return OriginalHook(NIN.Ninjutsu);
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == NIN.DeathBlossom && level >= NIN.Levels.HakkeMujinsatsu)
