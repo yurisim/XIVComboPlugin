@@ -35,8 +35,9 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const ushort
                 Thundercloud = 164,
+                Firestarter = 165,
                 LeyLines = 737,
-                Firestarter = 165;
+                EnhancedFlare = 2960;
         }
 
         public static class Debuffs
@@ -202,7 +203,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
-                if (level >= BLM.Levels.Flare && gauge.InAstralFire && gauge.UmbralHearts <= 1)
+                if (level >= BLM.Levels.Flare && gauge.InAstralFire && (gauge.UmbralHearts == 1 || LocalPlayer?.CurrentMp < 3800 || HasEffect(BLM.Buffs.EnhancedFlare)))
                     return BLM.Flare;
             }
 
