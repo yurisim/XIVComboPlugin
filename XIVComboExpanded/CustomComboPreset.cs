@@ -87,17 +87,27 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region ASTROLOGIAN
 
-        [CustomComboInfo("Draw on Play", "Play turns into Draw when no card is drawn, as well as the usual Play behavior.", AST.JobID)]
+        [CustomComboInfo("Draw on Play", "Replace Play with Draw when no card is drawn.", AST.JobID)]
         AstrologianDrawPlayFeature = 3301,
 
-        [CustomComboInfo("Astrodyne on Play", "Play turns into Astrodyne when seals are full.", AST.JobID)]
+        [ParentCombo(AstrologianDrawPlayFeature)]
+        [CustomComboInfo("Astrodyne on Draw on Play", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
+        AstrologianAstrodyneDrawPlayFeature = 3307,
+
+        [CustomComboInfo("Astrodyne on Play", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
         AstrologianAstrodynePlayFeature = 3304,
 
-        [CustomComboInfo("Minor Arcana Play Feature", "Changes Minor Arcana to Crown Play when a card drawn.", AST.JobID)]
+        [CustomComboInfo("Draw Lockout", "Replace Draw (not Draw on Play) with Malefic when a card is drawn.", AST.JobID)]
+        AstrologianDrawLockoutFeature = 3306,
+
+        [CustomComboInfo("Minor Arcana Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
         AstrologianMinorArcanaPlayFeature = 3302,
 
         [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID)]
         AstrologianBeneficFeature = 3303,
+
+        [CustomComboInfo("Lucid Dreaming Reminder", "Replace all non-role action cooldowns (that do not have charges) with Lucid Dreaming when they are on cooldown, Lucid Dreaming is not, and mana is less-than-or-equal-to 9000.", AST.JobID)]
+        AstrologianLucidReminderFeature = 3305,
 
         #endregion
         // ====================================================================================

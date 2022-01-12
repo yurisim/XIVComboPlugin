@@ -197,6 +197,14 @@ namespace XIVComboExpandedPlugin.Combos
             => Service.IconReplacer.OriginalHook(actionID);
 
         /// <summary>
+        /// Compare the original hook to the given action ID.
+        /// </summary>
+        /// <param name="actionID">Action ID.</param>
+        /// <returns>A value indicating whether the action would be modified.</returns>
+        protected static bool IsOriginal(uint actionID)
+            => Service.IconReplacer.OriginalHook(actionID) == actionID;
+
+        /// <summary>
         /// Determine if the given preset is enabled.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
