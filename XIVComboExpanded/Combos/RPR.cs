@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -15,12 +16,14 @@ namespace XIVComboExpandedPlugin.Combos
             SpinningScythe = 24376,
             NightmareScythe = 24377,
             // Soul Reaver
-            BloodStalk = 24389,
             Gibbet = 24382,
             Gallows = 24383,
             Guillotine = 24384,
+            BloodStalk = 24389,
             UnveiledGibbet = 24390,
             UnveiledGallows = 24391,
+            GrimSwathe = 24392,
+            Gluttony = 24393,
             VoidReaping = 24395,
             CrossReaping = 24396,
             // Generators
@@ -36,6 +39,8 @@ namespace XIVComboExpandedPlugin.Combos
             LemuresScythe = 24400,
             // Misc
             ShadowOfDeath = 24378,
+            Soulsow = 24387,
+            HarvestMoon = 24388,
             HellsIngress = 24401,
             HellsEgress = 24402,
             Regress = 24403;
@@ -44,12 +49,13 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const ushort
                 SoulReaver = 2587,
-                ImmortalSacrifice = 2592,
                 EnhancedGibbet = 2588,
                 EnhancedGallows = 2589,
                 EnhancedVoidReaping = 2590,
                 EnhancedCrossReaping = 2591,
+                ImmortalSacrifice = 2592,
                 Enshrouded = 2593,
+                Soulsow = 2594,
                 Threshold = 2595;
         }
 
@@ -70,7 +76,9 @@ namespace XIVComboExpandedPlugin.Combos
                 NightmareScythe = 45,
                 SoulReaver = 70,
                 Regress = 74,
+                Gluttony = 76,
                 Enshroud = 80,
+                Soulsow = 82,
                 EnhancedShroud = 86,
                 LemuresScythe = 86,
                 PlentifulHarvest = 88,
@@ -87,6 +95,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == RPR.InfernalSlice)
             {
                 var gauge = GetJobGauge<RPRGauge>();
+
+                if (IsEnabled(CustomComboPreset.ReaperSliceSoulsowFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
+                        return RPR.Soulsow;
+                }
 
                 if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
@@ -164,6 +178,18 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
+                if (IsEnabled(CustomComboPreset.ReaperScytheHarvestMoonFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && CurrentTarget is not null)
+                        return RPR.HarvestMoon;
+                }
+
+                if (IsEnabled(CustomComboPreset.ReaperScytheSoulsowFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
+                        return RPR.Soulsow;
+                }
+
                 if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperScytheCommunioFeature))
@@ -212,6 +238,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == RPR.ShadowOfDeath)
             {
                 var gauge = GetJobGauge<RPRGauge>();
+
+                if (IsEnabled(CustomComboPreset.ReaperShadowSoulsowFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && CurrentTarget is null && !HasEffect(RPR.Buffs.Soulsow))
+                        return RPR.Soulsow;
+                }
 
                 if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
@@ -280,6 +312,48 @@ namespace XIVComboExpandedPlugin.Combos
                     if (IsEnabled(CustomComboPreset.ReaperSoulGibbetFeature))
                         // Void Reaping
                         return OriginalHook(RPR.Gibbet);
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ReaperBloodStalk : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.BloodStalk || actionID == RPR.GrimSwathe)
+            {
+                var gauge = GetJobGauge<RPRGauge>();
+
+                if (IsEnabled(CustomComboPreset.ReaperBloodStalkGluttonyFeature))
+                {
+                    if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsOffCooldown(RPR.Gluttony))
+                        return RPR.Gluttony;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ReaperBloodStalkGrimSwathe : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.GrimSwathe)
+            {
+                var gauge = GetJobGauge<RPRGauge>();
+
+                if (IsEnabled(CustomComboPreset.ReaperGrimSwatheGluttonyFeature))
+                {
+                    if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsOffCooldown(RPR.Gluttony))
+                        return RPR.Gluttony;
                 }
             }
 

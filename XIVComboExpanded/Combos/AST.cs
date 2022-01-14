@@ -59,7 +59,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class AstrologianCardsOnDrawFeature : CustomCombo
+    internal class AstrologianPlay : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
@@ -94,7 +94,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class AstrologianDrawLockoutFeature : CustomCombo
+    internal class AstrologianDraw : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianDrawLockoutFeature;
 
@@ -113,7 +113,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class AstrologianMinorArcanaPlayFeature : CustomCombo
+    internal class AstrologianMinorArcana : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaPlayFeature;
 
@@ -132,7 +132,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class AstrologianBeneficFeature : CustomCombo
+    internal class AstrologianBenefic2 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficFeature;
 

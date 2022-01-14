@@ -256,10 +256,6 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Living Shadow Feature", "Replace Quietus and Bloodspiller with Living Shadow when available.", DRK.JobID)]
         DarkLivingShadowFeature = 3205,
 
-        // [SecretCustomCombo]
-        // [CustomComboInfo("Salted Shadowbringer Stuff", "Replace Cave and Spit and Abyssal Drain with Salted Earth and Shadowbringer depending on cooldown.", DRK.JobID)]
-        // DarkShadowbringerFeature = 3204,
-
         #endregion
         // ====================================================================================
         #region DRAGOON
@@ -514,6 +510,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Slice Communio Feature", "Replace Infernal Slice with Communio when one stack of Shroud is left.", RPR.JobID)]
         ReaperSliceCommunioFeature = 3920,
 
+        [CustomComboInfo("Slice Soulsow Feature", "Replace Infernal Slice with Soulsow when out of combat and not active.", RPR.JobID)]
+        ReaperSliceSoulsowFeature = 3930,
+
         [ConflictingCombos(ReaperShadowGibbetFeature)]
         [CustomComboInfo("Shadow Gallows Feature", "Replace Shadow of Death with Gallows while Reaving or Enshrouded.", RPR.JobID)]
         ReaperShadowGallowsFeature = 3905,
@@ -527,6 +526,9 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Shadow Communio Feature", "Replace Shadow of Death with Communio when one stack of Shroud is left.", RPR.JobID)]
         ReaperShadowCommunioFeature = 3924,
+
+        [CustomComboInfo("Shadow Soulsow Feature", "Replace Shadow of Death with Soulsow when out of combat, not active, and you have no target.", RPR.JobID)]
+        ReaperShadowSoulsowFeature = 3929,
 
         [ConflictingCombos(ReaperSoulGibbetFeature)]
         [CustomComboInfo("Soul Gallows Feature", "Replace Soul Slice with Gallows while Reaving or Enshrouded.", RPR.JobID)]
@@ -554,6 +556,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Scythe Communio Feature", "Replace Nightmare Scythe with Communio when one stack is left of Shroud.", RPR.JobID)]
         ReaperScytheCommunioFeature = 3922,
 
+        [CustomComboInfo("Scythe Soulsow Feature", "Replace Nightmare Scythe with Soulsow when out of combat and not active.", RPR.JobID)]
+        ReaperScytheSoulsowFeature = 3931,
+
+        [CustomComboInfo("Scythe Harvest Moon Feature", "Replace Nightmare Scythe with Harvest Moon when Soulsow is active and you have a target.", RPR.JobID)]
+        ReaperScytheHarvestMoonFeature = 3932,
+
         [CustomComboInfo("Enhanced Soul Reaver Feature", "Replace Gibbet and Gallows with whichever is currently enhanced while Reaving.", RPR.JobID)]
         ReaperEnhancedSoulReaverFeature = 3917,
 
@@ -568,6 +576,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Enshroud Communio Feature", "Replace Enshroud with Communio when Enshrouded.", RPR.JobID)]
         ReaperEnshroudCommunioFeature = 3909,
+
+        [CustomComboInfo("Blood Stalk Gluttony Feature", "Replace Blood Stalk with Gluttony when available and greater-than-or-equal-to 50 Soul Gauge is present.", RPR.JobID)]
+        ReaperBloodStalkGluttonyFeature = 3913,
+
+        [CustomComboInfo("Grim Swathe Gluttony Feature", "Replace Grim Swathe with Gluttony when available and greater-than-or-equal-to 50 Soul Gauge is present.", RPR.JobID)]
+        ReaperGrimSwatheGluttonyFeature = 3914,
 
         [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
         ReaperHarvestFeature = 3908,
