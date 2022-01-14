@@ -1,3 +1,5 @@
+using Dalamud.Game.ClientState.JobGauge.Types;
+
 namespace XIVComboExpandedPlugin.Combos
 {
     internal static class DRK
@@ -68,6 +70,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DRK.Souleater)
             {
+                var gauge = GetJobGauge<DRKGauge>();
+
                 if (IsEnabled(CustomComboPreset.DarkDeliriumFeature))
                 {
                     if (level >= DRK.Levels.Bloodspiller && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
@@ -76,10 +80,24 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.DarkSouleaterCombo))
                 {
+                    if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapFeature))
+                    {
+                        if (level >= DRK.Levels.Bloodspiller && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
+                            return DRK.Bloodspiller;
+                    }
+
                     if (comboTime > 0)
                     {
                         if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
+                        {
+                            if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapFeature))
+                            {
+                                if (level >= DRK.Levels.Bloodspiller && (gauge.Blood > 80 || (gauge.Blood > 70 && HasEffect(DRK.Buffs.BloodWeapon))))
+                                    return DRK.Bloodspiller;
+                            }
+
                             return DRK.Souleater;
+                        }
 
                         if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
                             return DRK.SyphonStrike;
@@ -101,6 +119,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DRK.StalwartSoul)
             {
+                var gauge = GetJobGauge<DRKGauge>();
+
                 if (IsEnabled(CustomComboPreset.DarkDeliriumFeature))
                 {
                     if (level >= DRK.Levels.Quietus && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
@@ -109,10 +129,24 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.DarkStalwartSoulCombo))
                 {
+                    if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapFeature))
+                    {
+                        if (level >= DRK.Levels.Quietus && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
+                            return DRK.Quietus;
+                    }
+
                     if (comboTime > 0)
                     {
                         if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
+                        {
+                            if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapFeature))
+                            {
+                                if (level >= DRK.Levels.Quietus && (gauge.Blood > 80 || (gauge.Blood > 70 && HasEffect(DRK.Buffs.BloodWeapon))))
+                                    return DRK.Quietus;
+                            }
+
                             return DRK.StalwartSoul;
+                        }
                     }
 
                     return DRK.Unleash;
@@ -150,12 +184,11 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DRK.Quietus || actionID == DRK.Bloodspiller)
             {
+                var gauge = GetJobGauge<DRKGauge>();
+
                 if (IsEnabled(CustomComboPreset.DarkLivingShadowFeature))
                 {
-                    if (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
-                        return actionID;
-
-                    if (level >= DRK.Levels.LivingShadow && IsOffCooldown(DRK.LivingShadow))
+                    if (level >= DRK.Levels.LivingShadow && gauge.Blood >= 50 && IsOffCooldown(DRK.LivingShadow))
                         return DRK.LivingShadow;
                 }
             }

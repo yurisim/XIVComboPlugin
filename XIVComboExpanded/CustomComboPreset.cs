@@ -236,8 +236,16 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Souleater Combo", "Replace Souleater with its combo chain.", DRK.JobID)]
         DarkSouleaterCombo = 3201,
 
+        [ParentCombo(DarkSouleaterCombo)]
+        [CustomComboInfo("Souleater Overcap Feature", "Replace Souleater with Bloodspiller when the next combo action would cause the Blood Gauge to overcap.", WAR.JobID)]
+        DarkSouleaterOvercapFeature = 3206,
+
         [CustomComboInfo("Stalwart Soul Combo", "Replace Stalwart Soul with its combo chain.", DRK.JobID)]
         DarkStalwartSoulCombo = 3202,
+
+        [ParentCombo(DarkStalwartSoulCombo)]
+        [CustomComboInfo("Stalwart Soul Overcap Feature", "Replace Stalwart Soul with Quietus when the next combo action would cause the Blood Gauge to overcap.", WAR.JobID)]
+        DarkStalwartSoulOvercapFeature = 3207,
 
         [CustomComboInfo("Delirium Feature", "Replace Souleater and Stalwart Soul with Bloodspiller and Quietus when Delirium is active.", DRK.JobID)]
         DarkDeliriumFeature = 3203,
