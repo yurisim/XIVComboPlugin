@@ -61,7 +61,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerSolidBarrelCombo : CustomCombo
+    internal class GunbreakerSolidBarrel : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerSolidBarrelCombo;
 
@@ -102,7 +102,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerGnashingFangContinuation : CustomCombo
+    internal class GunbreakerGnashingFang : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerGnashingFangCont;
 
@@ -151,11 +151,8 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.GunbreakerDoubleDownFeature))
                 {
-                    if (level >= GNB.Levels.DoubleDown && gauge.Ammo >= 2)
-                    {
-                        if (!IsOnCooldown(GNB.DoubleDown))
-                            return GNB.DoubleDown;
-                    }
+                    if (level >= GNB.Levels.DoubleDown && gauge.Ammo >= 2 && IsOffCooldown(GNB.DoubleDown))
+                        return GNB.DoubleDown;
                 }
 
                 if (IsEnabled(CustomComboPreset.GunbreakerEmptyBloodfestFeature))
@@ -169,7 +166,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerBowShockSonicBreakFeature : CustomCombo
+    internal class GunbreakerBowShockSonicBreak : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerBowShockSonicBreakFeature;
 
@@ -177,6 +174,9 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == GNB.BowShock || actionID == GNB.SonicBreak)
             {
+                if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak) && GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5)
+                    return GNB.SonicBreak;
+
                 if (level >= GNB.Levels.BowShock)
                     return CalcBestAction(actionID, GNB.BowShock, GNB.SonicBreak);
             }
@@ -185,7 +185,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerDemonSlaughterCombo : CustomCombo
+    internal class GunbreakerDemonSlaughter : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerDemonSlaughterCombo;
 
@@ -199,6 +199,7 @@ namespace XIVComboExpandedPlugin.Combos
                     {
                         var gauge = GetJobGauge<GNBGauge>();
                         var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
+
                         if (level >= GNB.Levels.FatedCircle && gauge.Ammo == maxAmmo)
                             return GNB.FatedCircle;
                     }
@@ -213,21 +214,38 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class GunbreakerNoMercyFeature : CustomCombo
+    internal class GunbreakerNoMercy : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GunbreakerNoMercyFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GnbAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == GNB.NoMercy)
             {
-                if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
-                {
-                    if (level >= GNB.Levels.BowShock)
-                        return CalcBestAction(GNB.SonicBreak, GNB.SonicBreak, GNB.BowShock);
+                var gauge = GetJobGauge<GNBGauge>();
 
-                    if (level >= GNB.Levels.SonicBreak)
-                        return GNB.SonicBreak;
+                if (IsEnabled(CustomComboPreset.GunbreakerNoMercyDoubleDownFeature))
+                {
+                    if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
+                    {
+                        if (level >= GNB.Levels.DoubleDown && gauge.Ammo >= 2 && IsOffCooldown(GNB.DoubleDown))
+                            return GNB.DoubleDown;
+                    }
+                }
+
+                if (IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
+                {
+                    if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
+                    {
+                        if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak) && GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5)
+                            return GNB.SonicBreak;
+
+                        if (level >= GNB.Levels.BowShock)
+                            return CalcBestAction(GNB.SonicBreak, GNB.SonicBreak, GNB.BowShock);
+
+                        if (level >= GNB.Levels.SonicBreak)
+                            return GNB.SonicBreak;
+                    }
                 }
             }
 

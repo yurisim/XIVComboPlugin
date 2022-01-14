@@ -303,7 +303,7 @@ namespace XIVComboExpandedPlugin
         GunbreakerSolidBarrelCombo = 3701,
 
         [ParentCombo(GunbreakerSolidBarrelCombo)]
-        [CustomComboInfo("Burst Strike Feature", "In addition to the Solid Barrel Combo, add Burst Strike when charges are full.", GNB.JobID)]
+        [CustomComboInfo("Burst Strike Feature", "Replace Solid Barrel with Burst Strike when charges are full.", GNB.JobID)]
         GunbreakerBurstStrikeFeature = 3710,
 
         [CustomComboInfo("Gnashing Fang Continuation", "Replace Gnashing Fang with Continuation moves when appropriate.", GNB.JobID)]
@@ -313,7 +313,7 @@ namespace XIVComboExpandedPlugin
         GunbreakerBurstStrikeCont = 3703,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Sonic Shock Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.", GNB.JobID)]
+        [CustomComboInfo("Sonic Shock Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.\nBow Shock can only be used if the GCD has more than 0.5s left.", GNB.JobID)]
         GunbreakerBowShockSonicBreakFeature = 3704,
 
         [CustomComboInfo("Demon Slaughter Combo", "Replace Demon Slaughter with its combo chain.", GNB.JobID)]
@@ -327,8 +327,11 @@ namespace XIVComboExpandedPlugin
         GunbreakerEmptyBloodfestFeature = 3707,
 
         [SecretCustomCombo]
-        [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
+        [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active\nBow Shock can only be used if the GCD has more than 0.5s left.", GNB.JobID)]
         GunbreakerNoMercyFeature = 3708,
+
+        [CustomComboInfo("No Mercy Double Down Feature", "Replace No Mercy with Double Down while No Mercy is active and is off cooldown.\nThis takes priority over Bow Shock/Sonic Break if the No Mercy feature is enabled.", GNB.JobID)]
+        GunbreakerNoMercyDoubleDownFeature = 3712,
 
         [SecretCustomCombo]
         [CustomComboInfo("Double Down Feature", "Replace Burst Strike and Fated Circle with Double Down when available.", GNB.JobID)]
