@@ -154,8 +154,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Heavy Shot into Straight Shot", "Replaces Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
         BardStraightShotUpgradeFeature = 2302,
 
-        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.", BRD.JobID)]
-        BardIronJawsFeature = 2303,
+        [CustomComboInfo("Iron Jaws Feature", "Replaces Iron Jaws with Caustic Bite/Stormbite depending on which is not present on the target.", BRD.JobID)]
+        BardIronJawsFeature = 2308,
+
+        [SecretCustomCombo]
+        [CustomComboInfo("Pre Iron Jaws Feature", "Replaces Iron Jaws with Caustic Bite/Stormbite depending on the duration when Iron Jaws is not available.", BRD.JobID)]
+        BardPreIronJawsFeature = 2303,
 
         [CustomComboInfo("Burst Shot/Quick Nock into Apex Arrow", "Replaces Burst Shot and Quick Nock with Apex Arrow when gauge is full.", BRD.JobID)]
         BardApexFeature = 2304,
@@ -164,12 +168,31 @@ namespace XIVComboExpandedPlugin
         BardShadowbiteFeature = 2305,
 
         [SecretCustomCombo]
+        [ConflictingCombos(BardBloodRainFeature)]
         [CustomComboInfo("Bloodletter Feature", "Replaces Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
         BardBloodletterFeature = 2306,
 
         [SecretCustomCombo]
         [CustomComboInfo("Rain of Death Feature", "Replaces Rain of Death with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
         BardRainOfDeathFeature = 2307,
+
+        [SecretCustomCombo]
+        [CustomComboInfo("Sidewinder Feature", "Replaces Sidewinder with Empyreal Arrow depending on which is available.", BRD.JobID)]
+        BardSidewinderFeature = 2309,
+
+        [CustomComboInfo("Radiant Voice Feature", "Replaces Radiant Finale with Battle Voice if Battle Voice is available.", BRD.JobID)]
+        BardRadiantVoiceFeature = 2310,
+
+        [CustomComboInfo("Radiant Strikes Feature", "Replaces Radiant Finale with Raging Strikes if Raging Strikes is available.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID)]
+        BardRadiantStrikesFeature = 2311,
+
+        [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot if you have Straight Shot Ready (unless Shadowbite is ready).", BRD.JobID)]
+        BardBarrageFeature = 2312,
+
+        [SecretCustomCombo]
+        [ConflictingCombos(BardBloodletterFeature)]
+        [CustomComboInfo("Bloodletter to Rain of Death", "Replaces Bloodletter with Rain of Death if there are no self-applied DoTs on your target.", BRD.JobID)]
+        BardBloodRainFeature = 2313,
 
         #endregion
         // ====================================================================================
