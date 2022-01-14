@@ -797,14 +797,20 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used.", WHM.JobID)]
         WhiteMageSolaceMiseryFeature = 2401,
 
-        [CustomComboInfo("Rapture into Misery", "Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used.", WHM.JobID)]
+        [CustomComboInfo("Rapture into Misery", "Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
         WhiteMageRaptureMiseryFeature = 2402,
+
+        [CustomComboInfo("Holy into Misery", "Replaces Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
+        WhiteMageHolyMiseryFeature = 2405,
 
         [CustomComboInfo("Cure 2 to Cure Level Sync", "Changes Cure 2 to Cure when below level 30 in synced content.", WHM.JobID)]
         WhiteMageCureFeature = 2403,
 
         [CustomComboInfo("Afflatus Feature", "Changes Cure 2 into Afflatus Solace, and Medica into Afflatus Rapture, when lilies are up.", WHM.JobID)]
         WhiteMageAfflatusFeature = 2404,
+
+        [CustomComboInfo("Lucid Dreaming Reminder", "Replace all non-role action cooldowns (that do not have charges) with Lucid Dreaming when they are on cooldown, Lucid Dreaming is not, and mana is less-than-or-equal-to 9000.", WHM.JobID)]
+        WhiteMageLucidReminderFeature = 2406,
 
         #endregion
         // ====================================================================================

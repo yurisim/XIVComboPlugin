@@ -75,7 +75,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonJumpFeature : CustomCombo
+    internal class DragoonJump : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonJumpFeature;
 
@@ -91,7 +91,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonCoerthanTormentCombo : CustomCombo
+    internal class DragoonCoerthanTorment : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
@@ -127,7 +127,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonChaosThrustCombo : CustomCombo
+    internal class DragoonChaosThrust : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
@@ -171,7 +171,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonFullThrustCombo : CustomCombo
+    internal class DragoonFullThrust : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
@@ -215,7 +215,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonNastrondFeature : CustomCombo
+    internal class DragoonStardiver : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
@@ -243,7 +243,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DragoonDiveFeature : CustomCombo
+    internal class DragoonDives : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonDiveFeature;
 

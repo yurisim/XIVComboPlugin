@@ -33,7 +33,8 @@ namespace XIVComboExpandedPlugin.Combos
                 Berserk = 86,
                 InnerRelease = 1177,
                 NascentChaos = 1897,
-                PrimalRendReady = 2624;
+                PrimalRendReady = 2624,
+                SurgingTempest = 2677;
         }
 
         public static class Debuffs

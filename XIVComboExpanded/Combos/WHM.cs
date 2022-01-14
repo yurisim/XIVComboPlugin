@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -11,9 +12,20 @@ namespace XIVComboExpandedPlugin.Combos
             Cure = 120,
             Medica = 124,
             Cure2 = 135,
+            PresenceOfMind = 136,
+            Holy = 139,
+            Benediction = 140,
+            Asylum = 3569,
+            Tetragrammaton = 3570,
+            Assize = 3571,
+            PlenaryIndulgence = 7433,
             AfflatusSolace = 16531,
             AfflatusRapture = 16534,
-            AfflatusMisery = 16535;
+            AfflatusMisery = 16535,
+            Temperance = 16536,
+            Holy3 = 25860,
+            Aquaveil = 25861,
+            LiturgyOfTheBell = 25862;
 
         public static class Buffs
         {
@@ -37,7 +49,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class WhiteMageSolaceMiseryFeature : CustomCombo
+    internal class WhiteMageAfflatusSolace : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageSolaceMiseryFeature;
 
@@ -55,7 +67,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class WhiteMageRaptureMiseryFeature : CustomCombo
+    internal class WhiteMageAfflatusRapture : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageRaptureMiseryFeature;
 
@@ -65,7 +77,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && CurrentTarget is not null)
                     return WHM.AfflatusMisery;
             }
 
@@ -73,23 +85,25 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class WhiteMageCureFeature : CustomCombo
+    internal class WhiteMageHoly : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageCureFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageHolyMiseryFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == WHM.Cure2)
+            if (actionID == WHM.Holy || actionID == WHM.Holy3)
             {
-                if (level < WHM.Levels.Cure2)
-                    return WHM.Cure;
+                var gauge = GetJobGauge<WHMGauge>();
+
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && CurrentTarget is not null)
+                    return WHM.AfflatusMisery;
             }
 
             return actionID;
         }
     }
 
-    internal class WhiteMageAfflatusFeature : CustomCombo
+    internal class WhiteMageCure2 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
@@ -98,6 +112,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == WHM.Cure2)
             {
                 var gauge = GetJobGauge<WHMGauge>();
+
+                if (IsEnabled(CustomComboPreset.WhiteMageCureFeature))
+                {
+                    if (level < WHM.Levels.Cure2)
+                        return WHM.Cure;
+                }
 
                 if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature))
                 {
@@ -112,13 +132,23 @@ namespace XIVComboExpandedPlugin.Combos
                 }
             }
 
+            return actionID;
+        }
+    }
+
+    internal class WhiteMageMedica : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
             if (actionID == WHM.Medica)
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
                 if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature))
                 {
-                    if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+                    if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && CurrentTarget is not null)
                         return WHM.AfflatusMisery;
                 }
 
@@ -126,6 +156,36 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                         return WHM.AfflatusRapture;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class WhiteMageLucidReminderFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageLucidReminderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == WHM.PresenceOfMind
+                || actionID == WHM.Assize
+                || actionID == WHM.Temperance
+                || actionID == WHM.PlenaryIndulgence
+                || actionID == WHM.Tetragrammaton
+                || actionID == WHM.Asylum
+                || actionID == WHM.Aquaveil
+                || actionID == WHM.LiturgyOfTheBell
+                || actionID == WHM.Benediction)
+            {
+                if (IsOriginal(actionID)
+                    && HasCondition(ConditionFlag.InCombat)
+                    && IsOffCooldown(ADV.LucidDreaming)
+                    && IsOnCooldown(actionID)
+                    && LocalPlayer?.CurrentMp <= 9000)
+                {
+                    return ADV.LucidDreaming;
                 }
             }
 
