@@ -58,7 +58,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinGoringBladeCombo : CustomCombo
+    internal class PaladinGoringBlade : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
 
@@ -91,7 +91,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinRageOfHaloneCombo : CustomCombo
+    internal class PaladinRoyalAuthority : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
 
@@ -125,7 +125,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinProminenceCombo : CustomCombo
+    internal class PaladinProminence : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinProminenceCombo;
 
@@ -146,7 +146,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinConfiteorFeature : CustomCombo
+    internal class PaladinHolySpiritHolyCircle : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinConfiteorFeature;
 
@@ -175,7 +175,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinRequiescatCombo : CustomCombo
+    internal class PaladinRequiescat : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinRequiescatCombo;
 
@@ -204,13 +204,13 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class PaladinScornfulSpiritsFeature : CustomCombo
+    internal class PaladinSpiritsWithinCircleOfScorn : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinScornfulSpiritsFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == PLD.SpiritsWithin || actionID == PLD.CircleOfScorn)
+            if (actionID == PLD.SpiritsWithin || actionID == PLD.Expiacion || actionID == PLD.CircleOfScorn)
             {
                 if (level >= PLD.Levels.Expiacion)
                     return CalcBestAction(actionID, PLD.Expiacion, PLD.CircleOfScorn);
