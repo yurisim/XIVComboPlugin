@@ -183,7 +183,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
 
-                if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                if (!gauge.BeastChakra.Contains(BeastChakra.NONE) && level >= MNK.Levels.MasterfulBlitz)
                     return OriginalHook(MNK.MasterfulBlitz);
             }
 
