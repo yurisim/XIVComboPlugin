@@ -189,6 +189,13 @@ namespace XIVComboExpandedPlugin.Combos
             => Service.TargetManager.Target;
 
         /// <summary>
+        /// Find if the player has a target.
+        /// </summary>
+        /// <returns>A value indicating whether the player has a target.</returns>
+        protected static bool HasTarget()
+            => CurrentTarget is not null;
+
+        /// <summary>
         /// Calls the original hook.
         /// </summary>
         /// <param name="actionID">Action ID.</param>
@@ -223,7 +230,7 @@ namespace XIVComboExpandedPlugin.Combos
         /// <summary>
         /// Find if the player has a pet present.
         /// </summary>
-        /// <returns>A value indicating whether the play has a pet present.</returns>
+        /// <returns>A value indicating whether the player has a pet present.</returns>
         protected static bool HasPetPresent()
             => Service.BuddyList.PetBuddyPresent;
 

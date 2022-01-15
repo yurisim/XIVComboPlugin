@@ -74,7 +74,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiYukikazeCombo : CustomCombo
+    internal class SamuraiYukikaze : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiYukikazeCombo;
 
@@ -98,7 +98,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiGekkoCombo : CustomCombo
+    internal class SamuraiGekko : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiGekkoCombo;
 
@@ -128,7 +128,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiKashaCombo : CustomCombo
+    internal class SamuraiKasha : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiKashaCombo;
 
@@ -158,7 +158,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiMangetsuCombo : CustomCombo
+    internal class SamuraiMangetsu : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiMangetsuCombo;
 
@@ -183,7 +183,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiOkaCombo : CustomCombo
+    internal class SamuraiOka : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiOkaCombo;
 
@@ -208,7 +208,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiTsubameFeature : CustomCombo
+    internal class SamuraiTsubame : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
@@ -237,7 +237,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiIaijutsuFeature : CustomCombo
+    internal class SamuraiIaijutsu : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
@@ -345,7 +345,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SamuraiIkishotenNamikiriFeature : CustomCombo
+    internal class SamuraiIkishoten : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiIkishotenNamikiriFeature;
 

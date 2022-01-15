@@ -180,7 +180,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperScytheHarvestMoonFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && CurrentTarget is not null)
+                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && HasTarget())
                         return RPR.HarvestMoon;
                 }
 
@@ -241,7 +241,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperShadowSoulsowFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && CurrentTarget is null && !HasEffect(RPR.Buffs.Soulsow))
+                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasTarget() && !HasEffect(RPR.Buffs.Soulsow))
                         return RPR.Soulsow;
                 }
 

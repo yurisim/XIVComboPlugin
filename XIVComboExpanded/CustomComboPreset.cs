@@ -348,11 +348,18 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("(Heated) Shot Combo", "Replace Clean Shot with its combo chain.", MCH.JobID)]
         MachinistMainCombo = 3101,
 
+        [ParentCombo(MachinistMainCombo)]
+        [CustomComboInfo("Hypercharge Combo", "Replace Clean Shot combo with Heat Blast while overheated.", MCH.JobID)]
+        MachinistHypercomboFeature = 3108,
+
         [CustomComboInfo("Spread Shot Heat", "Replace Spread Shot with Auto Crossbow when overheated.", MCH.JobID)]
         MachinistSpreadShotFeature = 3102,
 
         [CustomComboInfo("Hypercharge Feature", "Replace Heat Blast and Auto Crossbow with Hypercharge when not overheated.", MCH.JobID)]
         MachinistOverheatFeature = 3103,
+
+        [CustomComboInfo("Hyperfire Feature", "Replace Hypercharge with Wildfire if available and you have a target.", MCH.JobID)]
+        MachinistHyperfireFeature = 3109,
 
         [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret with Overdrive while active.", MCH.JobID)]
         MachinistOverdriveFeature = 3104,
@@ -360,6 +367,11 @@ namespace XIVComboExpandedPlugin
         [SecretCustomCombo]
         [CustomComboInfo("Gauss Round / Ricochet Feature", "Replace Gauss Round and Ricochet with one or the other depending on which has more charges.", MCH.JobID)]
         MachinistGaussRoundRicochetFeature = 3105,
+
+        [SecretCustomCombo]
+        [ParentCombo(MachinistGaussRoundRicochetFeature)]
+        [CustomComboInfo("Gauss Round / Ricochet Overheat Option", "Replace Gauss Round and Ricochet with one or the other only while overheated.", MCH.JobID)]
+        MachinistGaussRoundRicochetFeatureOption = 3110,
 
         [SecretCustomCombo]
         [ConflictingCombos(MachinistHotShotChainsawFeature)]
@@ -460,12 +472,14 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Goring Blade Combo", "Replace Goring Blade with its combo chain.", PLD.JobID)]
         PaladinGoringBladeCombo = 1901,
 
+        [ConflictingCombos(PaladinRoyalAuthorityAtonementFeature)]
         [CustomComboInfo("Goring Blade Atonement Feature", "Replace Goring Blade with Atonement when under the effect of Sword Oath.", PLD.JobID)]
         PaladinGoringBladeAtonementFeature = 1909,
 
         [CustomComboInfo("Royal Authority Combo", "Replace Royal Authority with its combo chain.", PLD.JobID)]
         PaladinRoyalAuthorityCombo = 1902,
 
+        [ConflictingCombos(PaladinGoringBladeAtonementFeature)]
         [CustomComboInfo("Royal Authority Atonement Feature", "Replace Royal Authority with Atonement when under the effect of Sword Oath.", PLD.JobID)]
         PaladinRoyalAuthorityAtonementFeature = 1903,
 
@@ -578,10 +592,10 @@ namespace XIVComboExpandedPlugin
         ReaperEnshroudCommunioFeature = 3909,
 
         [CustomComboInfo("Blood Stalk Gluttony Feature", "Replace Blood Stalk with Gluttony when available and greater-than-or-equal-to 50 Soul Gauge is present.", RPR.JobID)]
-        ReaperBloodStalkGluttonyFeature = 3913,
+        ReaperBloodStalkGluttonyFeature = 3915,
 
         [CustomComboInfo("Grim Swathe Gluttony Feature", "Replace Grim Swathe with Gluttony when available and greater-than-or-equal-to 50 Soul Gauge is present.", RPR.JobID)]
-        ReaperGrimSwatheGluttonyFeature = 3914,
+        ReaperGrimSwatheGluttonyFeature = 3916,
 
         [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
         ReaperHarvestFeature = 3908,
