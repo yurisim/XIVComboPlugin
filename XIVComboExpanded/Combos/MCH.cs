@@ -29,6 +29,8 @@ namespace XIVComboExpandedPlugin.Combos
             AutomatonQueen = 16501,
             QueenOverdrive = 16502,
             // Other
+            Wildfire = 2878,
+            Detonator = 16766,
             Hypercharge = 17209,
             HeatBlast = 7410,
             HotShot = 2872,
@@ -57,6 +59,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Hypercharge = 30,
                 HeatBlast = 35,
                 RookOverdrive = 40,
+                Wildfire = 45,
                 Ricochet = 50,
                 AutoCrossbow = 52,
                 HeatedSplitShot = 54,
@@ -78,6 +81,14 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MCH.CleanShot || actionID == MCH.HeatedCleanShot)
             {
+                var gauge = GetJobGauge<MCHGauge>();
+
+                if (IsEnabled(CustomComboPreset.MachinistHypercomboFeature))
+                {
+                    if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
+                        return MCH.HeatBlast;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
@@ -97,7 +108,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistGaussRoundRicochetFeature : CustomCombo
+    internal class MachinistGaussRoundRicochet : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistGaussRoundRicochetFeature;
 
@@ -105,6 +116,14 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
             {
+                var gauge = GetJobGauge<MCHGauge>();
+
+                if (IsEnabled(CustomComboPreset.MachinistGaussRoundRicochetFeatureOption))
+                {
+                    if (!gauge.IsOverheated)
+                        return actionID;
+                }
+
                 if (level >= MCH.Levels.Ricochet)
                     return CalcBestAction(actionID, MCH.GaussRound, MCH.Ricochet);
 
@@ -115,7 +134,26 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistOverheatFeature : CustomCombo
+    internal class MachinistWildfire : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHyperfireFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MCH.Hypercharge)
+            {
+                if (level >= MCH.Levels.Wildfire && IsOffCooldown(MCH.Wildfire) && HasTarget())
+                    return MCH.Wildfire;
+
+                if (level >= MCH.Levels.Wildfire && IsOnCooldown(MCH.Hypercharge) && !IsOriginal(MCH.Wildfire))
+                    return MCH.Detonator;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MachinistHeatBlastAutoCrossbow : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverheatFeature;
 
@@ -124,6 +162,12 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == MCH.HeatBlast || actionID == MCH.AutoCrossbow)
             {
                 var gauge = GetJobGauge<MCHGauge>();
+
+                if (IsEnabled(CustomComboPreset.MachinistHyperfireFeature))
+                {
+                    if (level >= MCH.Levels.Wildfire && IsOffCooldown(MCH.Wildfire) && HasTarget())
+                        return MCH.Wildfire;
+                }
 
                 if (level >= MCH.Levels.Hypercharge && !gauge.IsOverheated)
                     return MCH.Hypercharge;
@@ -136,7 +180,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistSpreadShotFeature : CustomCombo
+    internal class MachinistSpreadShot : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistSpreadShotFeature;
 
@@ -154,7 +198,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistOverdriveFeature : CustomCombo
+    internal class MachinistRookAutoturret : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistOverdriveFeature;
 
@@ -173,7 +217,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistDrillAirAnchorChainsawFeature : CustomCombo
+    internal class MachinistDrillAirAnchorChainsaw : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotDrillChainsawFeature;
 
@@ -197,7 +241,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistAirAnchorChainsawFeature : CustomCombo
+    internal class MachinistAirAnchorChainsaw : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistHotShotChainsawFeature;
 
