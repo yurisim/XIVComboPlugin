@@ -87,6 +87,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionIDs.Contains(actionID))
             {
                 var gauge = GetJobGauge<DNCGauge>();
+
                 if (level >= DNC.Levels.StandardStep && gauge.IsDancing)
                 {
                     if (actionID == actionIDs[0] || (actionIDs[0] == 0 && actionID == DNC.Cascade))
@@ -107,7 +108,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerFanDanceCombo : CustomCombo
+    internal class DancerFanDance12 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerFanDanceCombo;
 
@@ -126,7 +127,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerDanceStepCombo : CustomCombo
+    internal class DancerStandardStepTechnicalStep : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDanceStepCombo;
 
@@ -135,6 +136,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.StandardStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
+
                 if (level >= DNC.Levels.StandardStep && gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
                 {
                     if (gauge.CompletedSteps < 2)
@@ -149,6 +151,7 @@ namespace XIVComboExpandedPlugin.Combos
             if (actionID == DNC.TechnicalStep)
             {
                 var gauge = GetJobGauge<DNCGauge>();
+
                 if (level >= DNC.Levels.TechnicalStep && gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
                 {
                     if (gauge.CompletedSteps < 4)
@@ -163,7 +166,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerFlourishFeature : CustomCombo
+    internal class DancerFlourish : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerFlourishFeature;
 
@@ -188,7 +191,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerSingleTargetMultibutton : CustomCombo
+    internal class DancerCascade : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerSingleTargetMultibutton;
 
@@ -210,7 +213,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerAoeMultibutton : CustomCombo
+    internal class DancerWindmill : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerAoeMultibutton;
 
@@ -232,7 +235,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class DancerDevilmentFeature : CustomCombo
+    internal class DancerDevilment : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDevilmentFeature;
 
