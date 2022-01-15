@@ -174,9 +174,6 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == GNB.BowShock || actionID == GNB.SonicBreak)
             {
-                if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak) && GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5)
-                    return GNB.SonicBreak;
-
                 if (level >= GNB.Levels.BowShock)
                     return CalcBestAction(actionID, GNB.BowShock, GNB.SonicBreak);
             }
@@ -237,9 +234,6 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
                     {
-                        if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak) && GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5)
-                            return GNB.SonicBreak;
-
                         if (level >= GNB.Levels.BowShock)
                             return CalcBestAction(GNB.SonicBreak, GNB.SonicBreak, GNB.BowShock);
 

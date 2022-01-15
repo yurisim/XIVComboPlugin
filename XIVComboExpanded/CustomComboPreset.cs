@@ -317,7 +317,7 @@ namespace XIVComboExpandedPlugin
         GunbreakerBurstStrikeCont = 3703,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Sonic Shock Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.\nBow Shock can only be used if the GCD has more than 0.5s left.", GNB.JobID)]
+        [CustomComboInfo("Sonic Shock Feature", "Replace Bow Shock and Sonic Break with one or the other depending on which is on cooldown.", GNB.JobID)]
         GunbreakerBowShockSonicBreakFeature = 3704,
 
         [CustomComboInfo("Demon Slaughter Combo", "Replace Demon Slaughter with its combo chain.", GNB.JobID)]
