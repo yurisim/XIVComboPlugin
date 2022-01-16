@@ -134,7 +134,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Fire 1/3 Option (2)", "Fire 1 does not become Fire 3 outside of Astral Fire.", BLM.JobID)]
         BlackFireOption2 = 2516,
 
-        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice.", BLM.JobID)]
+        [CustomComboInfo("Blizzard 1/3 Feature", "Replace Blizzard 1 with Blizzard 3 when unlocked and becomes Paradox when available.", BLM.JobID)]
         BlackBlizzardFeature = 2505,
 
         [CustomComboInfo("Freeze/Flare Feature", "Freeze and Flare become whichever action you can currently use.", BLM.JobID)]
@@ -398,7 +398,7 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region MONK
 
-        [CustomComboInfo("Monk AoE Combo", "Replaces Masterful Blitz with the AoE combo chain. This was changed from Rockbreaker due to an action queueing bug.", MNK.JobID)]
+        [CustomComboInfo("Monk AoE Combo", "Replace Masterful Blitz with the AoE combo chain. This was changed from Rockbreaker due to an action queueing bug.", MNK.JobID)]
         MonkAoECombo = 2001,
 
         [CustomComboInfo("Dragon Bootshine Feature", "Replace Dragon Kick with Bootshine if Leaden Fist is up.", MNK.JobID)]
@@ -438,42 +438,42 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Hakke Mujinsatsu Combo", "Replace Hakke Mujinsatsu with its combo chain.", NIN.JobID)]
         NinjaHakkeMujinsatsuCombo = 3003,
 
-        [CustomComboInfo("Kassatsu to Trick", "Replaces Kassatsu with Trick Attack while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
+        [CustomComboInfo("Kassatsu to Trick", "Replace Kassatsu with Trick Attack while Suiton or Hidden is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
         NinjaKassatsuTrickFeature = 3004,
 
-        [CustomComboInfo("Ten Chi Jin to Meisui", "Replaces Ten Chi Jin (the move) with Meisui while Suiton is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
+        [CustomComboInfo("Ten Chi Jin to Meisui", "Replace Ten Chi Jin (the move) with Meisui while Suiton is up.\nCooldown tracking plugin recommended.", NIN.JobID)]
         NinjaTCJMeisuiFeature = 3005,
 
-        [CustomComboInfo("Kassatsu Chi/Jin Feature", "Replaces Chi with Jin while Kassatsu is up if you have Enhanced Kassatsu.", NIN.JobID)]
+        [CustomComboInfo("Kassatsu Chi/Jin Feature", "Replace Chi with Jin while Kassatsu is up if you have Enhanced Kassatsu.", NIN.JobID)]
         NinjaKassatsuChiJinFeature = 3006,
 
-        [CustomComboInfo("Hide to Mug", "Replaces Hide with Mug while in combat.", NIN.JobID)]
+        [CustomComboInfo("Hide to Mug", "Replace Hide with Mug while in combat.", NIN.JobID)]
         NinjaHideMugFeature = 3007,
 
-        [CustomComboInfo("Aeolian to Ninjutsu Feature", "Replaces Aeolian Edge with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        [CustomComboInfo("Aeolian to Ninjutsu Feature", "Replace Aeolian Edge with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaAeolianNinjutsuFeature = 3008,
 
-        [CustomComboInfo("Armor Crush to Ninjutsu Feature", "Replaces Armor Crush with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        [CustomComboInfo("Armor Crush to Ninjutsu Feature", "Replace Armor Crush with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaArmorCrushNinjutsuFeature = 3015,
 
-        [CustomComboInfo("Huraijin to Ninjutsu Feature", "Replaces Huraijin with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        [CustomComboInfo("Huraijin to Ninjutsu Feature", "Replace Huraijin with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaHuraijinNinjutsuFeature = 3009,
 
-        [CustomComboInfo("Hakke Mujinsatsu to Ninjutsu Feature", "Replaces Hakke Mujinsatsu with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        [CustomComboInfo("Hakke Mujinsatsu to Ninjutsu Feature", "Replace Hakke Mujinsatsu with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaHakkeMujinsatsuNinjutsuFeature = 3016,
 
-        [CustomComboInfo("Armor Crush / Raiju Feature", "Replaces the Armor Crush combo with Forked Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Armor Crush / Raiju Feature", "Replace the Armor Crush combo with Forked Raiju when available.", NIN.JobID)]
         NinjaArmorCrushRaijuFeature = 3012,
 
-        [CustomComboInfo("Aeolian Edge / Raiju Feature", "Replaces the Aeolian Edge combo with Fleeting Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Aeolian Edge / Raiju Feature", "Replace the Aeolian Edge combo with Fleeting Raiju when available.", NIN.JobID)]
         NinjaAeolianEdgeRaijuFeature = 3013,
 
         [ConflictingCombos(NinjaHuraijinFleetingRaijuFeature)]
-        [CustomComboInfo("Huraijin / Forked Raiju Feature", "Replaces Huraijin with Forked Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Huraijin / Forked Raiju Feature", "Replace Huraijin with Forked Raiju when available.", NIN.JobID)]
         NinjaHuraijinForkedRaijuFeature = 3011,
 
         [ConflictingCombos(NinjaHuraijinForkedRaijuFeature)]
-        [CustomComboInfo("Huraijin / Fleeting Raiju Option", "Replaces Huraijin with Fleeting Raiju when available.", NIN.JobID)]
+        [CustomComboInfo("Huraijin / Fleeting Raiju Option", "Replace Huraijin with Fleeting Raiju when available.", NIN.JobID)]
         NinjaHuraijinFleetingRaijuFeature = 3014,
 
         #endregion
@@ -618,44 +618,44 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region RED MAGE
 
-        [CustomComboInfo("Red Mage AoE Combo", "Replaces Veraero/Verthunder 2 with Impact when Dualcast or Swiftcast are active.", RDM.JobID)]
+        [CustomComboInfo("Red Mage AoE Combo", "Replace Veraero/Verthunder 2 with Impact when Dualcast or Swiftcast are active.", RDM.JobID)]
         RedMageAoECombo = 3501,
 
-        [CustomComboInfo("Redoublement combo", "Replaces Redoublement with its combo chain, following enchantment rules.", RDM.JobID)]
+        [CustomComboInfo("Redoublement combo", "Replace Redoublement with its combo chain, following enchantment rules.", RDM.JobID)]
         RedMageMeleeCombo = 3502,
 
         [SecretCustomCombo]
         [ParentCombo(RedMageMeleeCombo)]
-        [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement (and Moulinet) with Verflare/Verholy (and then Scorch and Resolution) after 3 mana stacks, whichever is more appropriate.", RDM.JobID)]
+        [CustomComboInfo("Redoublement Combo Plus", "Replace Redoublement (and Moulinet) with Verflare/Verholy (and then Scorch and Resolution) after 3 mana stacks, whichever is more appropriate.", RDM.JobID)]
         RedMageMeleeComboPlus = 3503,
 
-        [CustomComboInfo("Verproc into Jolt", "Replaces Verstone/Verfire with Jolt/Scorch when no proc is available.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt", "Replace Verstone/Verfire with Jolt/Scorch when no proc is available.", RDM.JobID)]
         RedMageVerprocCombo = 3504,
 
         [ParentCombo(RedMageVerprocCombo)]
-        [CustomComboInfo("Verproc into Jolt Plus", "Additionally replaces Verstone/Verfire with Veraero/Verthunder if Dualcast, Swiftcast, or Lost Chainspell are up.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt Plus", "Additionally Replace Verstone/Verfire with Veraero/Verthunder if Dualcast, Swiftcast, or Lost Chainspell are up.", RDM.JobID)]
         RedMageVerprocComboPlus = 3505,
 
         [ParentCombo(RedMageVerprocComboPlus)]
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Replaces Verstone with Veraero when out of combat.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Stone)", "Replace Verstone with Veraero when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureStone = 3506,
 
         [ParentCombo(RedMageVerprocComboPlus)]
-        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Replaces Verfire with Verthunder when out of combat.", RDM.JobID)]
+        [CustomComboInfo("Verproc into Jolt Plus Opener Feature (Fire)", "Replace Verfire with Verthunder when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFeatureFire = 3507,
 
-        [CustomComboInfo("Acceleration into Swiftcast", "Replaces Acceleration with Swiftcast when on cooldown or synced.", RDM.JobID)]
+        [CustomComboInfo("Acceleration into Swiftcast", "Replace Acceleration with Swiftcast when on cooldown or synced.", RDM.JobID)]
         RedMageAccelerationSwiftcastFeature = 3509,
 
         [ParentCombo(RedMageAccelerationSwiftcastFeature)]
         [CustomComboInfo("Acceleration with Swiftcast first", "Replace Acceleration with Swiftcast when neither are on cooldown.", RDM.JobID)]
         RedMageAccelerationSwiftcastOption = 3511,
 
-        [CustomComboInfo("Embolden to Manaification", "Replaces Embolden with Manafication if the former is on cooldown and the latter is not.", RDM.JobID)]
+        [CustomComboInfo("Embolden to Manaification", "Replace Embolden with Manafication if the former is on cooldown and the latter is not.", RDM.JobID)]
         RedMageEmboldenFeature = 3510,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Contre Sixte / Fleche Feature", "Replaces Contre Sixte and Fleche with whichever is available.", RDM.JobID)]
+        [CustomComboInfo("Contre Sixte / Fleche Feature", "Replace Contre Sixte and Fleche with whichever is available.", RDM.JobID)]
         RedMageContreFlecheFeature = 3508,
 
         #endregion
@@ -863,13 +863,13 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region WHITE MAGE
 
-        [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used.", WHM.JobID)]
+        [CustomComboInfo("Solace into Misery", "Replace Afflatus Solace with Afflatus Misery when Misery is ready to be used.", WHM.JobID)]
         WhiteMageSolaceMiseryFeature = 2401,
 
-        [CustomComboInfo("Rapture into Misery", "Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
+        [CustomComboInfo("Rapture into Misery", "Replace Afflatus Rapture with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
         WhiteMageRaptureMiseryFeature = 2402,
 
-        [CustomComboInfo("Holy into Misery", "Replaces Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
+        [CustomComboInfo("Holy into Misery", "Replace Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
         WhiteMageHolyMiseryFeature = 2405,
 
         [CustomComboInfo("Cure 2 to Cure Level Sync", "Changes Cure 2 to Cure when below level 30 in synced content.", WHM.JobID)]
@@ -889,7 +889,7 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region DOL
 
-        [CustomComboInfo("Eureka Feature", "Replaces Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
+        [CustomComboInfo("Eureka Feature", "Replace Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
         DolEurekaFeature = 51001,
 
         #endregion

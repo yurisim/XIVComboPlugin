@@ -67,7 +67,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class BlackEnochianFeature : CustomCombo
+    internal class BlackFireBlizzard4 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
 
