@@ -220,6 +220,14 @@ namespace XIVComboExpandedPlugin.Combos
             => (int)preset < 100 || Service.Configuration.IsEnabled(preset);
 
         /// <summary>
+        /// Determine if the given preset is not enabled.
+        /// </summary>
+        /// <param name="preset">Preset to check.</param>
+        /// <returns>A value indicating whether the preset is not enabled.</returns>
+        protected static bool IsNotEnabled(CustomComboPreset preset)
+            => !IsEnabled(preset);
+
+        /// <summary>
         /// Find if the player is in condition.
         /// </summary>
         /// <param name="flag">Condition flag.</param>

@@ -73,7 +73,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
+            if (actionID == BLM.Blizzard4)
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
@@ -82,6 +82,11 @@ namespace XIVComboExpandedPlugin.Combos
                     if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                         return BLM.UmbralSoul;
                 }
+            }
+
+            if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
+            {
+                var gauge = GetJobGauge<BLMGauge>();
 
                 if (IsEnabled(CustomComboPreset.BlackEnochianFeature))
                 {
@@ -160,17 +165,24 @@ namespace XIVComboExpandedPlugin.Combos
                 if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && gauge.InUmbralIce)
                     return BLM.Paradox;
 
-                if (IsEnabled(CustomComboPreset.BlackFireOption))
+                if (level >= BLM.Levels.Fire3)
                 {
-                    if (gauge.AstralFireStacks < 3 && level >= BLM.Levels.Fire3)
+                    if (IsEnabled(CustomComboPreset.BlackFireOption))
+                    {
+                        if (gauge.AstralFireStacks < 3)
+                            return BLM.Fire3;
+                    }
+
+                    if (IsNotEnabled(CustomComboPreset.BlackFireOption2))
+                    {
+                        if (!gauge.InAstralFire)
+                            return BLM.Fire3;
+                    }
+
+                    if (HasEffect(BLM.Buffs.Firestarter))
                         return BLM.Fire3;
                 }
 
-                if (!IsEnabled(CustomComboPreset.BlackFireOption2))
-                {
-                    if (level >= BLM.Levels.Fire3 && (!gauge.InAstralFire || HasEffect(BLM.Buffs.Firestarter)))
-                        return BLM.Fire3;
-                }
             }
 
             return actionID;
@@ -215,7 +227,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Freeze || actionID == BLM.Flare)
+            if (actionID == BLM.Freeze)
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
@@ -224,6 +236,11 @@ namespace XIVComboExpandedPlugin.Combos
                     if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                         return BLM.UmbralSoul;
                 }
+            }
+
+            if (actionID == BLM.Freeze || actionID == BLM.Flare)
+            {
+                var gauge = GetJobGauge<BLMGauge>();
 
                 if (IsEnabled(CustomComboPreset.BlackFreezeFlareFeature))
                 {
