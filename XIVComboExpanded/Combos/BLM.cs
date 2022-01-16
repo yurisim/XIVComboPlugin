@@ -73,24 +73,19 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Blizzard4)
-            {
-                var gauge = GetJobGauge<BLMGauge>();
-
-                if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
-                    return BLM.UmbralSoul;
-            }
-
             if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
+                if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+                {
+                    if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
+                        return BLM.UmbralSoul;
+                }
+
                 if (IsEnabled(CustomComboPreset.BlackEnochianFeature))
                 {
-                    if (level >= BLM.Levels.Blizzard4 && gauge.InUmbralIce)
-                        return BLM.Blizzard4;
-
-                    if (level >= BLM.Levels.Fire4 && gauge.InAstralFire)
+                    if (gauge.InAstralFire)
                     {
                         if (IsEnabled(CustomComboPreset.BlackEnochianDespairFeature))
                         {
@@ -98,7 +93,18 @@ namespace XIVComboExpandedPlugin.Combos
                                 return BLM.Despair;
                         }
 
-                        return BLM.Fire4;
+                        if (level >= BLM.Levels.Fire4)
+                            return BLM.Fire4;
+
+                        return BLM.Fire;
+                    }
+
+                    if (gauge.InUmbralIce)
+                    {
+                        if (level >= BLM.Levels.Blizzard4)
+                            return BLM.Blizzard4;
+
+                        return BLM.Blizzard;
                     }
                 }
             }
@@ -151,7 +157,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
-                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600))
                     return BLM.Paradox;
 
                 if (IsEnabled(CustomComboPreset.BlackFireOption))
@@ -186,22 +192,16 @@ namespace XIVComboExpandedPlugin.Combos
                     if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                         return BLM.UmbralSoul;
                 }
-            }
-
-            if (actionID == BLM.Blizzard)
-            {
-                var gauge = GetJobGauge<BLMGauge>();
 
                 if (IsEnabled(CustomComboPreset.BlackBlizzardFeature))
                 {
-                    if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                    if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600))
                         return BLM.Paradox;
-
-                    if (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600)
-                        return BLM.Blizzard;
 
                     if (level >= BLM.Levels.Blizzard3)
                         return BLM.Blizzard3;
+
+                    return BLM.Blizzard;
                 }
             }
 
@@ -215,7 +215,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Freeze)
+            if (actionID == BLM.Freeze || actionID == BLM.Flare)
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
@@ -224,11 +224,6 @@ namespace XIVComboExpandedPlugin.Combos
                     if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                         return BLM.UmbralSoul;
                 }
-            }
-
-            if (actionID == BLM.Freeze || actionID == BLM.Flare)
-            {
-                var gauge = GetJobGauge<BLMGauge>();
 
                 if (IsEnabled(CustomComboPreset.BlackFreezeFlareFeature))
                 {
