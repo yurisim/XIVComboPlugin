@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -20,10 +22,13 @@ namespace XIVComboExpandedPlugin.Combos
             PerfectBalance = 69,
             Rockbreaker = 70,
             Meditation = 3546,
+            RiddleOfFire = 7395,
+            Brotherhood = 7396,
             FourPointFury = 16473,
             Enlightenment = 16474,
             HowlingFist = 25763,
             MasterfulBlitz = 25764,
+            RiddleOfWind = 25766,
             ShadowOfTheDestroyer = 25767;
 
         public static class Buffs
@@ -58,38 +63,40 @@ namespace XIVComboExpandedPlugin.Combos
                 PerfectBalance = 50,
                 FormShift = 52,
                 MasterfulBlitz = 60,
+                RiddleOfFire = 68,
+                Brotherhood = 70,
                 Enlightenment = 70,
+                RiddleOfWind = 72,
                 ShadowOfTheDestroyer = 82;
         }
     }
 
     internal class MonkAoECombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkAoECombo;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MNK.Rockbreaker)
+            if (actionID == MNK.MasterfulBlitz)
             {
-                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
+                var gauge = GetJobGauge<MNKGauge>();
 
-                if (IsEnabled(CustomComboPreset.MonkAoEBalanceFeature))
-                {
-                    if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
-                        return OriginalHook(MNK.MasterfulBlitz);
-                }
+                // Blitz
+                if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                    return OriginalHook(MNK.MasterfulBlitz);
 
-                if (IsEnabled(CustomComboPreset.MonkAoESolarFeature))
+                if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                 {
-                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi == (Nadi.LUNAR | Nadi.SOLAR)))
+                    // Solar or Both
+                    if (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi.HasFlag(Nadi.LUNAR))
                     {
-                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO)) // This should be Raptor. Dalamud 6.2.0.19
                             return MNK.FourPointFury;
 
                         if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
                             return MNK.Rockbreaker;
 
-                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
+                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)) // This should be OpoOpo. Dalamud 6.2.0.19
                             // Shadow of the Destroyer
                             return OriginalHook(MNK.ArmOfTheDestroyer);
 
@@ -97,11 +104,9 @@ namespace XIVComboExpandedPlugin.Combos
                             ? MNK.ShadowOfTheDestroyer
                             : MNK.Rockbreaker;
                     }
-                }
 
-                if (IsEnabled(CustomComboPreset.MonkAoELunarFeature))
-                {
-                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance) && !gauge.Nadi.HasFlag(Nadi.LUNAR))
+                    // Lunar
+                    if (!gauge.Nadi.HasFlag(Nadi.LUNAR))
                     {
                         return level >= MNK.Levels.ShadowOfTheDestroyer
                             ? MNK.ShadowOfTheDestroyer
@@ -109,50 +114,33 @@ namespace XIVComboExpandedPlugin.Combos
                     }
                 }
 
-                if (IsEnabled(CustomComboPreset.MonkAoEDisciplinedFeature))
+                // FPF with FormShift
+                if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
                 {
-                    if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
-                    {
-                        if (level >= MNK.Levels.FourPointFury)
-                            return MNK.FourPointFury;
-                    }
+                    if (level >= MNK.Levels.FourPointFury)
+                        return MNK.FourPointFury;
                 }
 
-                if (IsEnabled(CustomComboPreset.MonkAoECombo))
-                {
-                    if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
-                        return MNK.FourPointFury;
+                // 1-2-3 combo
+                if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
+                    return MNK.FourPointFury;
 
-                    if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
-                        // Shadow of the Destroyer
-                        return OriginalHook(MNK.ArmOfTheDestroyer);
-
-                    if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
-                        return MNK.Rockbreaker;
-
+                if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
                     // Shadow of the Destroyer
                     return OriginalHook(MNK.ArmOfTheDestroyer);
-                }
-            }
 
-            if (actionID == MNK.FourPointFury)
-            {
-                if (IsEnabled(CustomComboPreset.MonkAoEFpfFeature))
-                {
-                    if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
-                    {
-                        return level >= MNK.Levels.ShadowOfTheDestroyer
-                            ? MNK.ShadowOfTheDestroyer
-                            : MNK.Rockbreaker;
-                    }
-                }
+                if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
+                    return MNK.Rockbreaker;
+
+                // Shadow of the Destroyer
+                return OriginalHook(MNK.ArmOfTheDestroyer);
             }
 
             return actionID;
         }
     }
 
-    internal class MonkHowlingFistMeditationFeature : CustomCombo
+    internal class MonkHowlingFistEnlightenment : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkHowlingFistMeditationFeature;
 
@@ -160,20 +148,53 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.HowlingFist || actionID == MNK.Enlightenment)
             {
-                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
                     return MNK.Meditation;
-
-                // Enlightenment
-                return OriginalHook(MNK.HowlingFist);
             }
 
             return actionID;
         }
     }
 
-    internal class MonkPerfectBalanceFeature : CustomCombo
+    internal class MonkDragonKick : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MNK.DragonKick)
+            {
+                var gauge = GetJobGauge<MNKGauge>();
+
+                if (IsEnabled(CustomComboPreset.MonkDragonKickMeditationFeature))
+                {
+                    if (level >= MNK.Levels.Meditation && gauge.Chakra < 5 && !HasCondition(ConditionFlag.InCombat))
+                        return MNK.Meditation;
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkDragonKickBalanceFeature))
+                {
+                    if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                        return OriginalHook(MNK.MasterfulBlitz);
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkBootshineFeature))
+                {
+                    if (HasEffect(MNK.Buffs.LeadenFist))
+                        return MNK.Bootshine;
+
+                    if (level < MNK.Levels.DragonKick)
+                        return MNK.Bootshine;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MonkPerfectBalance : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkPerfectBalanceFeature;
 
@@ -181,9 +202,10 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.PerfectBalance)
             {
-                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
+                var gauge = GetJobGauge<MNKGauge>();
 
                 if (!gauge.BeastChakra.Contains(BeastChakra.NONE) && level >= MNK.Levels.MasterfulBlitz)
+                    // Chakra actions
                     return OriginalHook(MNK.MasterfulBlitz);
             }
 
@@ -191,45 +213,28 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal unsafe class MyMNKGauge
+    internal class MonkRiddleOfFire : CustomCombo
     {
-        private readonly IntPtr address;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
 
-        internal MyMNKGauge(MNKGauge gauge)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            this.address = gauge.Address;
+            if (actionID == MNK.RiddleOfFire)
+            {
+                if (IsEnabled(CustomComboPreset.MonkRiddleOfFireBrotherhood))
+                {
+                    if (level >= MNK.Levels.Brotherhood && IsOffCooldown(MNK.Brotherhood) && IsOnCooldown(MNK.RiddleOfFire))
+                        return MNK.Brotherhood;
+                }
+
+                if (IsEnabled(CustomComboPreset.MonkRiddleOfFireWind))
+                {
+                    if (level >= MNK.Levels.RiddleOfWind && IsOffCooldown(MNK.RiddleOfWind) && IsOnCooldown(MNK.RiddleOfFire))
+                        return MNK.RiddleOfWind;
+                }
+            }
+
+            return actionID;
         }
-
-        public byte Chakra => *(byte*)(this.address + 0x8);
-
-        public BeastChakra[] BeastChakra => new[]
-        {
-            *(BeastChakra*)(this.address + 0x9),
-            *(BeastChakra*)(this.address + 0xA),
-            *(BeastChakra*)(this.address + 0xB),
-        };
-
-        public Nadi Nadi => *(Nadi*)(this.address + 0xC);
-
-        public ushort BlitzTimeRemaining => *(ushort*)(this.address + 0xE);
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Pending PR")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum BeastChakra : byte
-    {
-        NONE = 0,
-        COEURL = 1,
-        OPOOPO = 2,
-        RAPTOR = 3,
-    }
-
-    [Flags]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum Nadi : byte
-    {
-        NONE = 0,
-        LUNAR = 2,
-        SOLAR = 4,
     }
 }

@@ -147,36 +147,4 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
-
-    internal class AstrologianLucidReminderFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianLucidReminderFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == AST.Lightspeed
-                || actionID == AST.MinorArcana
-                || actionID == AST.CelestialOpposition
-                || actionID == AST.CollectiveUnconscious
-                || actionID == AST.Divination
-                || actionID == AST.EarthlyStar
-                || actionID == AST.Exaltation
-                || actionID == AST.Macrocosmos
-                || actionID == AST.NeutralSect
-                || actionID == AST.Synastry
-                || actionID == AST.Horoscope)
-            {
-                if (IsOriginal(actionID)
-                    && HasCondition(ConditionFlag.InCombat)
-                    && IsOffCooldown(ADV.LucidDreaming)
-                    && IsOnCooldown(actionID)
-                    && LocalPlayer?.CurrentMp <= 9000)
-                {
-                    return ADV.LucidDreaming;
-                }
-            }
-
-            return actionID;
-        }
-    }
 }

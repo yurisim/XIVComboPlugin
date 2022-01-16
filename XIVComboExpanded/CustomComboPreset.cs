@@ -106,9 +106,6 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID)]
         AstrologianBeneficFeature = 3303,
 
-        [CustomComboInfo("Lucid Dreaming Reminder", "Replace all non-role action cooldowns (that do not have charges) with Lucid Dreaming when they are on cooldown, Lucid Dreaming is not, and mana is less-than-or-equal-to 9000.", AST.JobID)]
-        AstrologianLucidReminderFeature = 3305,
-
         #endregion
         // ====================================================================================
         #region BLACK MAGE
@@ -126,8 +123,16 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("(Between the) Ley Lines", "Change Ley Lines into BTL when Ley Lines is active.", BLM.JobID)]
         BlackLeyLinesFeature = 2503,
 
-        [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up.", BLM.JobID)]
+        [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter is up.", BLM.JobID)]
         BlackFireFeature = 2504,
+
+        [ParentCombo(BlackFireFeature)]
+        [CustomComboInfo("Fire 1/3 Option", "Fire will stay Fire 3 when not at max Astral Fire.", BLM.JobID)]
+        BlackFireOption = 2515,
+
+        [ParentCombo(BlackFireFeature)]
+        [CustomComboInfo("Fire 1/3 Option (2)", "Fire 1 becomes Fire 3 only outside of Astral Fire and does not change when Firestarter is up.", BLM.JobID)]
+        BlackFireOption2 = 2516,
 
         [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice.", BLM.JobID)]
         BlackBlizzardFeature = 2505,
@@ -141,6 +146,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Ice 2 Feature", "(High) Blizzard 2 becomes Freeze in Umbral Ice.", BLM.JobID)]
         BlackBlizzard2Feature = 2509,
 
+        [CustomComboInfo("Fire 2/Ice 2 Option", "Fire 2 and Blizzard 2 will not change unless you're at max Astral Fire or Umbral Ice.", BLM.JobID)]
+        BlackFireBlizzard2Option = 2514,
+
+        [CustomComboInfo("Umbral Soul Feature", "Replace your ice spells with Umbral Soul, while in Umbral Ice and having no target.", BLM.JobID)]
+        BlackUmbralSoulFeature = 2517,
+
         [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
         BlackScatheFeature = 2507,
 
@@ -148,50 +159,50 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region BARD
 
-        [CustomComboInfo("Wanderer's into Pitch Perfect", "Replaces Wanderer's Minuet with Pitch Perfect while in WM.", BRD.JobID)]
+        [CustomComboInfo("Wanderer's into Pitch Perfect", "Replace Wanderer's Minuet with Pitch Perfect while in WM.", BRD.JobID)]
         BardWanderersPitchPerfectFeature = 2301,
 
-        [CustomComboInfo("Heavy Shot into Straight Shot", "Replaces Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
+        [CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
         BardStraightShotUpgradeFeature = 2302,
 
-        [CustomComboInfo("Iron Jaws Feature", "Replaces Iron Jaws with Caustic Bite/Stormbite depending on which is not present on the target.", BRD.JobID)]
+        [CustomComboInfo("Iron Jaws Feature", "Replace Iron Jaws with Caustic Bite/Stormbite depending on which is not present on the target.", BRD.JobID)]
         BardIronJawsFeature = 2308,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Pre Iron Jaws Feature", "Replaces Iron Jaws with Caustic Bite/Stormbite depending on the duration when Iron Jaws is not available.", BRD.JobID)]
+        [CustomComboInfo("Pre Iron Jaws Feature", "Replace Iron Jaws with Caustic Bite/Stormbite depending on the duration when Iron Jaws is not available.", BRD.JobID)]
         BardPreIronJawsFeature = 2303,
 
-        [CustomComboInfo("Burst Shot/Quick Nock into Apex Arrow", "Replaces Burst Shot and Quick Nock with Apex Arrow when gauge is full.", BRD.JobID)]
+        [CustomComboInfo("Burst Shot/Quick Nock into Apex Arrow", "Replace Burst Shot and Quick Nock with Apex Arrow when gauge is full.", BRD.JobID)]
         BardApexFeature = 2304,
 
-        [CustomComboInfo("Quick Nock into Shadowbite", "Replaces Quick Nock with Shadowbite when available.", BRD.JobID)]
+        [CustomComboInfo("Quick Nock into Shadowbite", "Replace Quick Nock with Shadowbite when available.", BRD.JobID)]
         BardShadowbiteFeature = 2305,
 
         [SecretCustomCombo]
         [ConflictingCombos(BardBloodRainFeature)]
-        [CustomComboInfo("Bloodletter Feature", "Replaces Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
+        [CustomComboInfo("Bloodletter Feature", "Replace Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
         BardBloodletterFeature = 2306,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Rain of Death Feature", "Replaces Rain of Death with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
+        [CustomComboInfo("Rain of Death Feature", "Replace Rain of Death with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
         BardRainOfDeathFeature = 2307,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Sidewinder Feature", "Replaces Sidewinder with Empyreal Arrow depending on which is available.", BRD.JobID)]
+        [CustomComboInfo("Sidewinder Feature", "Replace Sidewinder with Empyreal Arrow depending on which is available.", BRD.JobID)]
         BardSidewinderFeature = 2309,
 
-        [CustomComboInfo("Radiant Voice Feature", "Replaces Radiant Finale with Battle Voice if Battle Voice is available.", BRD.JobID)]
+        [CustomComboInfo("Radiant Voice Feature", "Replace Radiant Finale with Battle Voice if Battle Voice is available.", BRD.JobID)]
         BardRadiantVoiceFeature = 2310,
 
-        [CustomComboInfo("Radiant Strikes Feature", "Replaces Radiant Finale with Raging Strikes if Raging Strikes is available.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID)]
+        [CustomComboInfo("Radiant Strikes Feature", "Replace Radiant Finale with Raging Strikes if Raging Strikes is available.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID)]
         BardRadiantStrikesFeature = 2311,
 
-        [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot if you have Straight Shot Ready (unless Shadowbite is ready).", BRD.JobID)]
+        [CustomComboInfo("Barrage Feature", "Replace Barrage with Straight Shot if you have Straight Shot Ready (unless Shadowbite is ready).", BRD.JobID)]
         BardBarrageFeature = 2312,
 
         [SecretCustomCombo]
         [ConflictingCombos(BardBloodletterFeature)]
-        [CustomComboInfo("Bloodletter to Rain of Death", "Replaces Bloodletter with Rain of Death if there are no self-applied DoTs on your target.", BRD.JobID)]
+        [CustomComboInfo("Bloodletter to Rain of Death", "Replace Bloodletter with Rain of Death if there are no self-applied DoTs on your target.", BRD.JobID)]
         BardBloodRainFeature = 2313,
 
         #endregion
@@ -387,29 +398,29 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region MONK
 
-        [CustomComboInfo("Monk AoE Combo", "Replaces Rockbreaker with the AoE combo chain.", MNK.JobID)]
+        [CustomComboInfo("Monk AoE Combo", "Replaces Masterful Blitz with the AoE combo chain. This was changed from Rockbreaker due to an action queueing bug.", MNK.JobID)]
         MonkAoECombo = 2001,
 
-        [CustomComboInfo("Monk Disciplined AoE Feature", "Replace Rockbreaker with Four Point Fury while Formless Fist is active.", MNK.JobID)]
-        MonkAoEDisciplinedFeature = 2007,
+        [CustomComboInfo("Dragon Bootshine Feature", "Replace Dragon Kick with Bootshine if Leaden Fist is up.", MNK.JobID)]
+        MonkBootshineFeature = 2011,
 
-        [CustomComboInfo("Monk Lunar AoE Feature", "Replace Rockbreaker with Shadow of the Destroyer (or Rockbreaker depending on level) when Perfect Balance is active and the Lunar Nadi is missing.", MNK.JobID)]
-        MonkAoELunarFeature = 2006,
+        [CustomComboInfo("Dragon Balance Feature", "Replace Dragon Kick with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
+        MonkDragonKickBalanceFeature = 2005,
 
-        [CustomComboInfo("Monk Solar AoE Feature", "Replace Rockbreaker with whatever is necessary to acquire missing Beast Chakra when Perfect Balance is active and the Solar Nadi is missing.", MNK.JobID)]
-        MonkAoESolarFeature = 2005,
-
-        [CustomComboInfo("Monk AoE Balance Feature", "Replaces Rockbreaker with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
-        MonkAoEBalanceFeature = 2002,
-
-        [CustomComboInfo("Monk Four Point Fury AoE Feature", "Replace Four Point Fury with Shadow of the Destroyer (or Rockbreaker depending on level) when Perfect Balance is active.", MNK.JobID)]
-        MonkAoEFpfFeature = 2008,
+        [CustomComboInfo("Dragon Meditation Feature", "Replace Dragon Kick with Meditation when out of combat and the Fifth Chakra is not open.", MNK.JobID)]
+        MonkDragonKickMeditationFeature = 2012,
 
         [CustomComboInfo("Howling Fist / Meditation Feature", "Replace Howling Fist with Meditation when the Fifth Chakra is not open.", MNK.JobID)]
         MonkHowlingFistMeditationFeature = 2003,
 
         [CustomComboInfo("Perfect Balance Feature", "Replace Perfect Balance with Masterful Blitz when you have 3 Beast Chakra.", MNK.JobID)]
         MonkPerfectBalanceFeature = 2004,
+
+        [CustomComboInfo("Riddle of Brotherly Fire", "Replace Riddle of Fire with Brotherhood if the former is on cooldown and the latter is not.", MNK.JobID)]
+        MonkRiddleOfFireBrotherhood = 2009,
+
+        [CustomComboInfo("Riddle of Fire and Wind", "Replace Riddle of Fire with Riddle of Wind if the former is on cooldown and the latter is not.", MNK.JobID)]
+        MonkRiddleOfFireWind = 2010,
 
         #endregion
         // ====================================================================================
@@ -439,17 +450,17 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Hide to Mug", "Replaces Hide with Mug while in combat.", NIN.JobID)]
         NinjaHideMugFeature = 3007,
 
-        [ConflictingCombos(NinjaGCDNinjutsuFeature)]
         [CustomComboInfo("Aeolian to Ninjutsu Feature", "Replaces Aeolian Edge with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaAeolianNinjutsuFeature = 3008,
 
-        [ConflictingCombos(NinjaGCDNinjutsuFeature)]
         [CustomComboInfo("Armor Crush to Ninjutsu Feature", "Replaces Armor Crush with Ninjutsu if any Mudra are used.", NIN.JobID)]
         NinjaArmorCrushNinjutsuFeature = 3015,
 
-        [ConflictingCombos(NinjaAeolianNinjutsuFeature, NinjaArmorCrushNinjutsuFeature)]
-        [CustomComboInfo("GCDs to Ninjutsu Feature", "Every GCD combo becomes Ninjutsu while Mudras are being used.", NIN.JobID)]
-        NinjaGCDNinjutsuFeature = 3009,
+        [CustomComboInfo("Huraijin to Ninjutsu Feature", "Replaces Huraijin with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        NinjaHuraijinNinjutsuFeature = 3009,
+
+        [CustomComboInfo("Hakke Mujinsatsu to Ninjutsu Feature", "Replaces Hakke Mujinsatsu with Ninjutsu if any Mudra are used.", NIN.JobID)]
+        NinjaHakkeMujinsatsuNinjutsuFeature = 3016,
 
         [CustomComboInfo("Armor Crush / Raiju Feature", "Replaces the Armor Crush combo with Forked Raiju when available.", NIN.JobID)]
         NinjaArmorCrushRaijuFeature = 3012,
@@ -634,7 +645,14 @@ namespace XIVComboExpandedPlugin
         RedMageVerprocOpenerFeatureFire = 3507,
 
         [CustomComboInfo("Acceleration into Swiftcast", "Replaces Acceleration with Swiftcast when on cooldown or synced.", RDM.JobID)]
-        RedMageAccelerationFeature = 3509,
+        RedMageAccelerationSwiftcastFeature = 3509,
+
+        [ParentCombo(RedMageAccelerationSwiftcastFeature)]
+        [CustomComboInfo("Acceleration with Swiftcast first", "Replace Acceleration with Swiftcast when neither are on cooldown.", RDM.JobID)]
+        RedMageAccelerationSwiftcastOption = 3511,
+
+        [CustomComboInfo("Embolden to Manaification", "Replaces Embolden with Manafication if the former is on cooldown and the latter is not.", RDM.JobID)]
+        RedMageEmboldenFeature = 3510,
 
         [SecretCustomCombo]
         [CustomComboInfo("Contre Sixte / Fleche Feature", "Replaces Contre Sixte and Fleche with whichever is available.", RDM.JobID)]
@@ -661,6 +679,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Soteria Kardia Feature", "Replace Soteria with Kardia when off cooldown and missing Kardion.", SGE.JobID)]
         SageSoteriaKardionFeature = 4006,
+
+        [CustomComboInfo("Phlegma into Toxikon", "Replace Phlegma with Toxikon when no charges rmemain and have Addersting.\nThis takes priority over Phlegma into Dyskrasia.", SGE.JobID)]
+        SagePhlegmaToxicon = 4007,
+
+        [CustomComboInfo("Phlegma into Dyskrasia", "Replace Phlegma with Dyskrasia when no charges remain or have no target.", SGE.JobID)]
+        SagePhlegmaDyskrasia = 4008,
 
         #endregion
         // ====================================================================================
@@ -729,6 +753,12 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Seraph Fey Blessing/Consolation", "Replace Fey Blessing with Consolation when Seraph is out.", SCH.JobID)]
         ScholarSeraphConsolationFeature = 2801,
+
+        [CustomComboInfo("Lustrate to Recitation", "Replace Lustrate with Recitation when the latter is off cooldown.", SCH.JobID)]
+        ScholarLustrateRecitationFeature = 2807,
+
+        [CustomComboInfo("Excogitation to Recitation", "Replace Excogitation with Recitation when the latter is off cooldown.", SCH.JobID)]
+        ScholarExcogitationRecitationFeature = 2806,
 
         [CustomComboInfo("ED Aetherflow", "Replace Energy Drain with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarEnergyDrainAetherflowFeature = 2802,
@@ -847,9 +877,6 @@ namespace XIVComboExpandedPlugin
 
         [CustomComboInfo("Afflatus Feature", "Changes Cure 2 into Afflatus Solace, and Medica into Afflatus Rapture, when lilies are up.", WHM.JobID)]
         WhiteMageAfflatusFeature = 2404,
-
-        [CustomComboInfo("Lucid Dreaming Reminder", "Replace all non-role action cooldowns (that do not have charges) with Lucid Dreaming when they are on cooldown, Lucid Dreaming is not, and mana is less-than-or-equal-to 9000.", WHM.JobID)]
-        WhiteMageLucidReminderFeature = 2406,
 
         #endregion
         // ====================================================================================

@@ -162,34 +162,4 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
-
-    internal class WhiteMageLucidReminderFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageLucidReminderFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == WHM.PresenceOfMind
-                || actionID == WHM.Assize
-                || actionID == WHM.Temperance
-                || actionID == WHM.PlenaryIndulgence
-                || actionID == WHM.Tetragrammaton
-                || actionID == WHM.Asylum
-                || actionID == WHM.Aquaveil
-                || actionID == WHM.LiturgyOfTheBell
-                || actionID == WHM.Benediction)
-            {
-                if (IsOriginal(actionID)
-                    && HasCondition(ConditionFlag.InCombat)
-                    && IsOffCooldown(ADV.LucidDreaming)
-                    && IsOnCooldown(actionID)
-                    && LocalPlayer?.CurrentMp <= 9000)
-                {
-                    return ADV.LucidDreaming;
-                }
-            }
-
-            return actionID;
-        }
-    }
 }

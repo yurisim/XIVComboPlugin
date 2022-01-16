@@ -14,6 +14,8 @@ namespace XIVComboExpandedPlugin.Combos
             Veraero2 = 16525,
             Verthunder2 = 16524,
             Impact = 16526,
+            Embolden = 7520,
+            Manafication = 7521,
             Redoublement = 7516,
             EnchantedRedoublement = 7529,
             Zwerchhau = 7512,
@@ -65,6 +67,8 @@ namespace XIVComboExpandedPlugin.Combos
                 Acceleration = 50,
                 Vercure = 54,
                 ContreSixte = 56,
+                Embolden = 58,
+                Manafication = 60,
                 Jolt2 = 62,
                 Verraise = 64,
                 Impact = 66,
@@ -75,7 +79,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class RedMageAoECombo : CustomCombo
+    internal class RedMageVeraero2Verthunder2 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageAoECombo;
 
@@ -97,7 +101,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class RedMageMeleeCombo : CustomCombo
+    internal class RedMageRedoublementMoulinet : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageMeleeCombo;
 
@@ -156,7 +160,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class RedMageVerprocCombo : CustomCombo
+    internal class RedMageVerstoneVerfire : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageVerprocCombo;
 
@@ -237,9 +241,9 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class RedMageAccelerationFeature : CustomCombo
+    internal class RedMageAcceleration : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageAccelerationFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageAccelerationSwiftcastFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -247,6 +251,9 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= RDM.Levels.Acceleration)
                 {
+                    if (IsOffCooldown(RDM.Acceleration) && IsOffCooldown(RDM.Swiftcast))
+                        return RDM.Swiftcast;
+
                     if (IsOffCooldown(RDM.Acceleration))
                         return RDM.Acceleration;
 
@@ -264,7 +271,23 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class RedMageContreFlecheFeature : CustomCombo
+    internal class RedMageEmbolden : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageEmboldenFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RDM.Embolden)
+            {
+                if (level >= RDM.Levels.Manafication && IsOffCooldown(RDM.Manafication) && !IsOffCooldown(RDM.Embolden))
+                    return RDM.Manafication;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class RedMageContreSixteFleche : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RedMageContreFlecheFeature;
 

@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -8,19 +9,31 @@ namespace XIVComboExpandedPlugin.Combos
         public const byte JobID = 28;
 
         public const uint
-            EnergyDrain = 167,
             Aetherflow = 166,
+            EnergyDrain = 167,
+            SacredSoil = 188,
             Lustrate = 189,
             Indomitability = 3583,
+            DeploymentTactics = 3585,
+            EmergencyTactics = 3586,
+            Dissipation = 3587,
+            Excogitation = 7434,
+            ChainStratagem = 7436,
+            Aetherpact = 7437,
+            WhisperingDawn = 16537,
+            FeyIllumination = 16538,
+            Recitation = 16542,
             FeyBless = 16543,
             SummonSeraph = 16545,
             Consolation = 16546,
             SummonEos = 17215,
-            SummonSelene = 17216;
+            SummonSelene = 17216,
+            Ruin2 = 17870;
 
         public static class Buffs
         {
             public const ushort
+                Dissipation = 791,
                 Recitation = 1896;
         }
 
@@ -34,12 +47,14 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Aetherflow = 45,
+                ChainStratagem = 66,
+                Recitation = 74,
                 Consolation = 80,
                 SummonSeraph = 80;
         }
     }
 
-    internal class ScholarSeraphConsolationFeature : CustomCombo
+    internal class ScholarFeyBless : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSeraphConsolationFeature;
 
@@ -51,6 +66,22 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= SCH.Levels.Consolation && gauge.SeraphTimer > 0)
                     return SCH.Consolation;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ScholarExcogitation : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarExcogitationRecitationFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SCH.Excogitation)
+            {
+                if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
+                    return SCH.Recitation;
             }
 
             return actionID;
@@ -77,7 +108,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class ScholarLustrate : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarLustrateAetherflowFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -85,8 +116,17 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SCHGauge>();
 
-                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
-                    return SCH.Aetherflow;
+                if (IsEnabled(CustomComboPreset.ScholarLustrateRecitationFeature))
+                {
+                    if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
+                        return SCH.Recitation;
+                }
+
+                if (IsEnabled(CustomComboPreset.ScholarLustrateAetherflowFeature))
+                {
+                    if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+                        return SCH.Aetherflow;
+                }
             }
 
             return actionID;

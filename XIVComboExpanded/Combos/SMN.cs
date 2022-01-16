@@ -68,7 +68,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerEDFesterCombo : CustomCombo
+    internal class SummonerFester : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerEDFesterFeature;
 
@@ -86,7 +86,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerESPainflareCombo : CustomCombo
+    internal class SummonerPainflare : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerESPainflareFeature;
 
@@ -98,13 +98,16 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= SMN.Levels.EnergySyphon && !gauge.HasAetherflowStacks)
                     return SMN.EnergySyphon;
+
+                if (level < SMN.Levels.Painflare)
+                    return SMN.EnergyDrain;
             }
 
             return actionID;
         }
     }
 
-    internal class SummonerRuinFeature : CustomCombo
+    internal class SummonerRuin : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
@@ -140,7 +143,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerOutburstFeature : CustomCombo
+    internal class SummonerOutburstTriDisaster : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
@@ -176,7 +179,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class SummonerShinyFeature : CustomCombo
+    internal class SummonerGemshinePreciousBrilliance : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SmnAny;
 
