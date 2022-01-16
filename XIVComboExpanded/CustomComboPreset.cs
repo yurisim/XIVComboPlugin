@@ -127,11 +127,11 @@ namespace XIVComboExpandedPlugin
         BlackFireFeature = 2504,
 
         [ParentCombo(BlackFireFeature)]
-        [CustomComboInfo("Fire 1/3 Option", "Fire will stay Fire 3 when not at max Astral Fire.", BLM.JobID)]
+        [CustomComboInfo("Fire 1/3 Option", "Fire 1 will stay Fire 3 when not at max Astral Fire.", BLM.JobID)]
         BlackFireOption = 2515,
 
         [ParentCombo(BlackFireFeature)]
-        [CustomComboInfo("Fire 1/3 Option (2)", "Fire 1 becomes Fire 3 only outside of Astral Fire and does not change when Firestarter is up.", BLM.JobID)]
+        [CustomComboInfo("Fire 1/3 Option (2)", "Fire 1 does not become Fire 3 when Firestarter is up.", BLM.JobID)]
         BlackFireOption2 = 2516,
 
         [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice.", BLM.JobID)]
