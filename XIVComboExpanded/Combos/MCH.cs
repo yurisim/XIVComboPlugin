@@ -204,7 +204,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.RookAutoturret)
+            if (actionID == MCH.RookAutoturret || actionID == MCH.AutomatonQueen)
             {
                 var gauge = GetJobGauge<MCHGauge>();
 

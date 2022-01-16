@@ -372,7 +372,7 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Hyperfire Feature", "Replace Hypercharge with Wildfire if available and you have a target.", MCH.JobID)]
         MachinistHyperfireFeature = 3109,
 
-        [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret with Overdrive while active.", MCH.JobID)]
+        [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.", MCH.JobID)]
         MachinistOverdriveFeature = 3104,
 
         [SecretCustomCombo]
