@@ -47,6 +47,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Aetherflow = 45,
+                Excogitation = 62,
                 ChainStratagem = 66,
                 Recitation = 74,
                 Consolation = 80,
@@ -120,6 +121,12 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
                         return SCH.Recitation;
+                }
+
+                if (IsEnabled(CustomComboPreset.ScholarLustrateExcogitationFeature))
+                {
+                    if (level >= SCH.Levels.Excogitation && IsOffCooldown(SCH.Excogitation))
+                        return SCH.Excogitation;
                 }
 
                 if (IsEnabled(CustomComboPreset.ScholarLustrateAetherflowFeature))

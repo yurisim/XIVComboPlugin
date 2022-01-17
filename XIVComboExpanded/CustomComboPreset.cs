@@ -762,6 +762,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Lustrate to Recitation", "Replace Lustrate with Recitation when the latter is off cooldown.", SCH.JobID)]
         ScholarLustrateRecitationFeature = 2807,
 
+        [CustomComboInfo("Lustrate to Excogitation", "Replace Lustrate with Excogitation when the latter is off cooldown.", SCH.JobID)]
+        ScholarLustrateExcogitationFeature = 2808,
+
         [CustomComboInfo("Excogitation to Recitation", "Replace Excogitation with Recitation when the latter is off cooldown.", SCH.JobID)]
         ScholarExcogitationRecitationFeature = 2806,
 
