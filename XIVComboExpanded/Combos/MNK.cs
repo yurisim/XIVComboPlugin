@@ -79,10 +79,10 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.MasterfulBlitz)
             {
-                var gauge = GetJobGauge<MNKGauge>();
+                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
 
                 // Blitz
-                if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                if (!gauge.BeastChakra.Contains(BeastChakra2.NONE))
                     return OriginalHook(MNK.MasterfulBlitz);
 
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
@@ -90,13 +90,13 @@ namespace XIVComboExpandedPlugin.Combos
                     // Solar or Both
                     if (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi.HasFlag(Nadi.LUNAR))
                     {
-                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO)) // This should be Raptor. Dalamud 6.2.0.19
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra2.RAPTOR))
                             return MNK.FourPointFury;
 
-                        if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
+                        if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra2.COEURL))
                             return MNK.Rockbreaker;
 
-                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)) // This should be OpoOpo. Dalamud 6.2.0.19
+                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra2.OPOOPO))
                             // Shadow of the Destroyer
                             return OriginalHook(MNK.ArmOfTheDestroyer);
 
@@ -236,5 +236,47 @@ namespace XIVComboExpandedPlugin.Combos
 
             return actionID;
         }
+    }
+
+    internal unsafe class MyMNKGauge
+    {
+        private readonly IntPtr address;
+
+        internal MyMNKGauge(MNKGauge gauge)
+        {
+            this.address = gauge.Address;
+        }
+
+        public byte Chakra => *(byte*)(this.address + 0x8);
+
+        public BeastChakra2[] BeastChakra => new[]
+        {
+            *(BeastChakra2*)(this.address + 0x9),
+            *(BeastChakra2*)(this.address + 0xA),
+            *(BeastChakra2*)(this.address + 0xB),
+        };
+
+        public Nadi Nadi => *(Nadi*)(this.address + 0xC);
+
+        public ushort BlitzTimeRemaining => *(ushort*)(this.address + 0xE);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Pending PR")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
+    internal enum BeastChakra2 : byte
+    {
+        NONE = 0,
+        COEURL = 1,
+        OPOOPO = 2,
+        RAPTOR = 3,
+    }
+
+    [Flags]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
+    internal enum Nadi : byte
+    {
+        NONE = 0,
+        LUNAR = 2,
+        SOLAR = 4,
     }
 }
