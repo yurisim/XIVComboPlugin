@@ -114,8 +114,13 @@ namespace XIVComboExpandedPlugin
         BlackEnochianFeature = 2501,
 
         [SecretCustomCombo]
+        [ParentCombo(BlackEnochianFeature)]
         [CustomComboInfo("Enochian Despair Feature", "Change Fire 4 or Blizzard 4 to Despair when in Astral Fire with less than 2400 mana.", BLM.JobID)]
         BlackEnochianDespairFeature = 2510,
+
+        [ParentCombo(BlackEnochianFeature)]
+        [CustomComboInfo("Enochian No Sync Feature", "Fire 4 and Blizzard 4 will not sync to Fire 1 and Blizzard 1.", BLM.JobID)]
+        BlackEnochianNoSyncFeature = 2518,
 
         [CustomComboInfo("Umbral Soul/Transpose Switcher", "Change Transpose into Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
         BlackManaFeature = 2502,

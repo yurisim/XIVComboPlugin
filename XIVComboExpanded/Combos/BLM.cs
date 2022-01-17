@@ -98,7 +98,7 @@ namespace XIVComboExpandedPlugin.Combos
                                 return BLM.Despair;
                         }
 
-                        if (level >= BLM.Levels.Fire4)
+                        if (IsEnabled(CustomComboPreset.BlackEnochianNoSyncFeature) || level >= BLM.Levels.Fire4)
                             return BLM.Fire4;
 
                         return BLM.Fire;
@@ -106,7 +106,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if (gauge.InUmbralIce)
                     {
-                        if (level >= BLM.Levels.Blizzard4)
+                        if (IsEnabled(CustomComboPreset.BlackEnochianNoSyncFeature) || level >= BLM.Levels.Blizzard4)
                             return BLM.Blizzard4;
 
                         return BLM.Blizzard;
