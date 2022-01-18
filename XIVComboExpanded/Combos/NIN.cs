@@ -279,4 +279,26 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
+
+    internal class NinjaNinjitsu : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
+        {
+            if (actionID == NIN.Ninjutsu)
+            {
+                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady) && !HasEffect(NIN.Buffs.Mudra))
+                {
+                    if (IsEnabled(CustomComboPreset.NinjaNinjitsuForkedRaijuFeature))
+                        return NIN.ForkedRaiju;
+
+                    if (IsEnabled(CustomComboPreset.NinjaNinjitsuFleetingRaijuFeature))
+                        return NIN.FleetingRaiju;
+                }
+            }
+            
+            return actionID;
+        }
+    }
 }
