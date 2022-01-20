@@ -100,7 +100,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if (comboTime > 0)
                     {
-                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush && gauge.HutonTimer <= 40_000)
+                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush && gauge.HutonTimer <= 30_000)
                             return NIN.ArmorCrush;
                     }
                 }
