@@ -632,7 +632,7 @@ namespace XIVComboExpandedPlugin
         ReaperRegressFeature = 3910,
 
         [ParentCombo(ReaperRegressFeature)]
-        [CustomComboInfo("Delayed Regress Option", "Replace the action used with Regress only until 8.5 seconds remain on Threshold.", RPR.JobID)]
+        [CustomComboInfo("Delayed Regress Option", "Replace the action used with Regress only after 1.5 seconds have elapsed on Threshold.", RPR.JobID)]
         ReaperRegressOption = 3933,
 
         #endregion
