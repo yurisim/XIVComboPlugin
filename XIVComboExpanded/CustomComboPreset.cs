@@ -489,6 +489,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Huraijin / Fleeting Raiju Option", "Replace Huraijin with Fleeting Raiju when available.", NIN.JobID)]
         NinjaHuraijinFleetingRaijuFeature = 3014,
 
+        [CustomComboInfo("Aeolian Edge / Huton Feature", "Replaces the Aeolian Edge combo with Armor Crush and Huraijin where appropriate.", NIN.JobID)]
+        NinjaAeolianEdgeHutonFeature = 3017,
+
         #endregion
         // ====================================================================================
         #region PALADIN
