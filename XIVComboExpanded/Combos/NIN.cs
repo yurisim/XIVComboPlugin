@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
 {
@@ -88,6 +89,20 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
                         return OriginalHook(NIN.Ninjutsu);
+                }
+
+                if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeHutonFeature))
+                {
+                    var gauge = GetJobGauge<NINGauge>();
+
+                    if (gauge.HutonTimer <= 0 && level >= NIN.Levels.Huraijin)
+                        return NIN.Huraijin;
+
+                    if (gauge.HutonTimer <= 40 * 1000)
+                    {
+                        if (comboTime > 0 && lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
+                            return NIN.ArmorCrush;
+                    }
                 }
 
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
