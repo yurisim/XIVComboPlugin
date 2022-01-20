@@ -877,9 +877,6 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Nascent Flash Level Sync", "Replace Nascent Flash with Raw intuition when Synced.", WAR.JobID)]
         WarriorNascentFlashSyncFeature = 2106,
 
-        [CustomComboInfo("Bloodwhetting Level Sync", "Replace Bloodwhetting with Nascent Flash when Synced.", WAR.JobID)]
-        WarriorBloodwhettingSyncFeature = 2113,
-
         [CustomComboInfo("Healthy Balanaced Diet Feature", "Replace Bloodwhetting with Thrill of Battle, and then Equilibrium when the preceding is on cooldown.", WAR.JobID)]
         WarriorHealthyBalancedDietFeature = 2112,
 

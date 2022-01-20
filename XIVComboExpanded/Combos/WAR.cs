@@ -249,7 +249,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == WAR.Bloodwhetting)
+            if (actionID == WAR.Bloodwhetting || actionID == WAR.RawIntuition)
             {
                 if (IsEnabled(CustomComboPreset.WarriorHealthyBalancedDietFeature))
                 {
@@ -258,40 +258,12 @@ namespace XIVComboExpandedPlugin.Combos
                         if (IsOffCooldown(WAR.Bloodwhetting))
                             return WAR.Bloodwhetting;
                     }
-                    else if (IsEnabled(CustomComboPreset.WarriorBloodwhettingSyncFeature))
-                    {
-                        if (level >= WAR.Levels.NascentFlash)
-                        {
-                            if (IsOffCooldown(WAR.NascentFlash))
-                                return WAR.NascentFlash;
-                        }
-                        else if (IsEnabled(CustomComboPreset.WarriorNascentFlashSyncFeature))
-                        {
-                            if (level >= WAR.Levels.RawIntuition && IsOffCooldown(WAR.RawIntuition))
-                                return WAR.RawIntuition;
-                        }
-                    }
 
                     if (level >= WAR.Levels.ThrillOfBattle && IsOffCooldown(WAR.ThrillOfBattle))
                         return WAR.ThrillOfBattle;
 
                     if (level >= WAR.Levels.Equilibrium && IsOffCooldown(WAR.Equilibrium))
                         return WAR.Equilibrium;
-                }
-
-                if (IsEnabled(CustomComboPreset.WarriorBloodwhettingSyncFeature))
-                {
-                    if (level >= WAR.Levels.Bloodwhetting)
-                        return WAR.Bloodwhetting;
-
-                    if (level >= WAR.Levels.NascentFlash)
-                        return WAR.NascentFlash;
-
-                    if (IsEnabled(CustomComboPreset.WarriorNascentFlashSyncFeature))
-                    {
-                        if (level >= WAR.Levels.RawIntuition)
-                            return WAR.RawIntuition;
-                    }
                 }
             }
 
