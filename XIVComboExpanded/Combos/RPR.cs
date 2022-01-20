@@ -482,8 +482,21 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.ReaperRegressFeature))
                 {
-                    if (level >= RPR.Levels.Regress && HasEffect(RPR.Buffs.Threshold))
-                        return RPR.Regress;
+                    if (level >= RPR.Levels.Regress)
+                    {
+                        if (IsEnabled(CustomComboPreset.ReaperRegressOption))
+                        {
+                            var threshold = FindEffect(RPR.Buffs.Threshold);
+
+                            if (threshold != null && threshold.RemainingTime <= 8.5)
+                                return RPR.Regress;
+                        }
+                        else
+                        {
+                            if (HasEffect(RPR.Buffs.Threshold))
+                                return RPR.Regress;
+                        }
+                    }
                 }
             }
 

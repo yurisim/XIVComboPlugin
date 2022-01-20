@@ -628,8 +628,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Arcane Harvest Feature", "Replace Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
         ReaperHarvestFeature = 3908,
 
-        [CustomComboInfo("Regress Feature", "Both Hell's Ingress and Egress turn into Regress when Threshold is active, instead of just the opposite of the one used.", RPR.JobID)]
+        [CustomComboInfo("Regress Feature", "Replace Hell's Ingress and Egress turn with Regress when Threshold is active, instead of just the opposite of the one used.", RPR.JobID)]
         ReaperRegressFeature = 3910,
+
+        [ParentCombo(ReaperRegressFeature)]
+        [CustomComboInfo("Delayed Regress Option", "Replace the action used with Regress only until 8.5 seconds remain on Threshold.", RPR.JobID)]
+        ReaperRegressOption = 3933,
 
         #endregion
         // ====================================================================================
