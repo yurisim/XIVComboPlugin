@@ -867,11 +867,17 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Mythril Tempest Inner Release Feature", "Replace Mythril Tempest with Decimate when Inner Release is active.", WAR.JobID)]
         WarriorMythrilTempestInnerReleaseFeature = 2111,
 
-        [CustomComboInfo("Nascent Flash Level Sync", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
-        WarriorNascentFlashFeature = 2106,
-
         [CustomComboInfo("Angry Beast Feature", "Replace Inner Beast and Steel Cyclone with Infuriate when less then 50 Beast Gauge is available.", WAR.JobID)]
         WarriorInfuriateBeastFeature = 2109,
+
+        [CustomComboInfo("Nascent Flash Level Sync", "Replace Nascent Flash with Raw intuition when Synced.", WAR.JobID)]
+        WarriorNascentFlashSyncFeature = 2106,
+
+        [CustomComboInfo("Bloodwhetting Level Sync", "Replace Bloodwhetting with Nascent Flash when Synced.", WAR.JobID)]
+        WarriorBloodwhettingSyncFeature = 2113,
+
+        [CustomComboInfo("Healthy Balanaced Diet Feature", "Replace Bloodwhetting with Thrill of Battle, and then Equilibrium when the preceding is on cooldown.", WAR.JobID)]
+        WarriorHealthyBalancedDietFeature = 2112,
 
         [CustomComboInfo("Primal Beast Feature", "Replace Inner Beast and Steel Cyclone with Primal Rend when available", WAR.JobID)]
         WarriorPrimalBeastFeature = 2107,
