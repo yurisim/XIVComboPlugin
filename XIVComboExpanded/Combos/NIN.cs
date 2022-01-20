@@ -79,6 +79,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == NIN.AeolianEdge)
             {
+                var gauge = GetJobGauge<NINGauge>();
+
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
                 {
                     if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
@@ -93,14 +95,12 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeHutonFeature))
                 {
-                    var gauge = GetJobGauge<NINGauge>();
-
-                    if (gauge.HutonTimer <= 0 && level >= NIN.Levels.Huraijin)
+                    if (level >= NIN.Levels.Huraijin && gauge.HutonTimer == 0)
                         return NIN.Huraijin;
 
-                    if (gauge.HutonTimer <= 40 * 1000)
+                    if (comboTime > 0)
                     {
-                        if (comboTime > 0 && lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
+                        if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush && gauge.HutonTimer <= 40_000)
                             return NIN.ArmorCrush;
                     }
                 }
@@ -312,7 +312,7 @@ namespace XIVComboExpandedPlugin.Combos
                         return NIN.FleetingRaiju;
                 }
             }
-            
+
             return actionID;
         }
     }

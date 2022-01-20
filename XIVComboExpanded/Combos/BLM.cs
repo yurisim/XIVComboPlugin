@@ -182,7 +182,6 @@ namespace XIVComboExpandedPlugin.Combos
                     if (HasEffect(BLM.Buffs.Firestarter))
                         return BLM.Fire3;
                 }
-
             }
 
             return actionID;
