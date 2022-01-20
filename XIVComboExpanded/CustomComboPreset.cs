@@ -919,6 +919,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Eureka Feature", "Replace Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
         DolEurekaFeature = 51001,
 
+        [CustomComboInfo("Cast and Hook Feature", "Replace Cast with Hook when fishing.", DOL.JobID)]
+        DolCastHookFeature = 51002,
+
         #endregion
         // ====================================================================================
     }
