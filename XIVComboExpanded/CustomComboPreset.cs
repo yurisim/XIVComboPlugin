@@ -435,7 +435,7 @@ namespace XIVComboExpandedPlugin
         NinjaAeolianEdgeCombo = 3002,
 
         [SecretCustomCombo]
-        [CustomComboInfo("Aeolian Edge / Huton Feature", "Replaces Aeolian Edge with Armor Crush when Huton has less than 40 seconds remaining and Huraijin when missing.", NIN.JobID)]
+        [CustomComboInfo("Aeolian Edge / Huton Feature", "Replaces Aeolian Edge with Armor Crush when Huton has less than 30 seconds remaining and Huraijin when missing.", NIN.JobID)]
         NinjaAeolianEdgeHutonFeature = 3019,
 
         [CustomComboInfo("Aeolian Edge / Ninjutsu Feature", "Replace Aeolian Edge with Ninjutsu if any Mudra are used.", NIN.JobID)]
