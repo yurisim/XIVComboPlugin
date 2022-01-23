@@ -178,18 +178,6 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
-                if (IsEnabled(CustomComboPreset.ReaperScytheHarvestMoonFeature))
-                {
-                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && HasTarget())
-                        return RPR.HarvestMoon;
-                }
-
-                if (IsEnabled(CustomComboPreset.ReaperScytheSoulsowFeature))
-                {
-                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
-                        return RPR.Soulsow;
-                }
-
                 if (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0)
                 {
                     if (IsEnabled(CustomComboPreset.ReaperScytheCommunioFeature))
@@ -211,6 +199,18 @@ namespace XIVComboExpandedPlugin.Combos
                         (level >= RPR.Levels.Enshroud && gauge.EnshroudedTimeRemaining > 0))
                         // Grim Reaping
                         return OriginalHook(RPR.Guillotine);
+                }
+
+                if (IsEnabled(CustomComboPreset.ReaperScytheHarvestMoonFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && HasTarget())
+                        return RPR.HarvestMoon;
+                }
+
+                if (IsEnabled(CustomComboPreset.ReaperScytheSoulsowFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
+                        return RPR.Soulsow;
                 }
 
                 if (IsEnabled(CustomComboPreset.ReaperScytheCombo))
