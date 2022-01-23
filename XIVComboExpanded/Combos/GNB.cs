@@ -230,6 +230,15 @@ namespace XIVComboExpandedPlugin.Combos
                     }
                 }
 
+                if (IsEnabled(CustomComboPreset.GunbreakerNoMercyAlwaysDoubleDownFeature))
+                {
+                    if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
+                    {
+                        if (level >= GNB.Levels.DoubleDown)
+                            return GNB.DoubleDown;
+                    }
+                }
+
                 if (IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
                 {
                     if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))

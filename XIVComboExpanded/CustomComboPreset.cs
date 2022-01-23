@@ -353,6 +353,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("No Mercy Double Down Feature", "Replace No Mercy with Double Down while No Mercy is active and is off cooldown.\nThis takes priority over Bow Shock/Sonic Break if the No Mercy feature is enabled.", GNB.JobID)]
         GunbreakerNoMercyDoubleDownFeature = 3712,
 
+        [ConflictingCombos(GunbreakerNoMercyFeature)]
+        [CustomComboInfo("No Mercy Always Double Down Feature", "Replace No Mercy with Double Down while No Mercy is active.", GNB.JobID)]
+        GunbreakerNoMercyAlwaysDoubleDownFeature = 3713,
+
         [SecretCustomCombo]
         [CustomComboInfo("Double Down Feature", "Replace Burst Strike and Fated Circle with Double Down when available.", GNB.JobID)]
         GunbreakerDoubleDownFeature = 3709,
