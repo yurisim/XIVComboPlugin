@@ -347,10 +347,10 @@ namespace XIVComboExpandedPlugin
         GunbreakerEmptyBloodfestFeature = 3707,
 
         [SecretCustomCombo]
-        [CustomComboInfo("No Mercy Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active\nBow Shock can only be used if the GCD has more than 0.5s left.", GNB.JobID)]
+        [CustomComboInfo("No Mercy Bow Shock/Sonic Break Feature", "Replace No Mercy with Bow Shock, and then Sonic Break, while No Mercy is active.", GNB.JobID)]
         GunbreakerNoMercyFeature = 3708,
 
-        [CustomComboInfo("No Mercy Double Down Feature", "Replace No Mercy with Double Down while No Mercy is active and is off cooldown.\nThis takes priority over Bow Shock/Sonic Break if the No Mercy feature is enabled.", GNB.JobID)]
+        [CustomComboInfo("No Mercy Double Down Feature", "Replace No Mercy with Double Down while No Mercy is active, 2 cartridges are available, and Double Down is off cooldown.\nThis takes priority over the No Mercy Bow Shock/Sonic Break Feature.", GNB.JobID)]
         GunbreakerNoMercyDoubleDownFeature = 3712,
 
         [ConflictingCombos(GunbreakerNoMercyFeature)]
