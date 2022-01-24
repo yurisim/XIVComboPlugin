@@ -175,6 +175,12 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == DNC.Flourish)
             {
+                if (IsEnabled(CustomComboPreset.DancerFlourishFan4Feature))
+                {
+                    if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                        return DNC.FanDance4;
+                }
+
                 if (IsEnabled(CustomComboPreset.DancerFlourishFeature))
                 {
                     if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish))

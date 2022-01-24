@@ -222,7 +222,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Dance Step Combo", "Change Standard Step and Technical Step into each dance step while dancing.", DNC.JobID)]
         DancerDanceStepCombo = 3802,
 
-        [CustomComboInfo("Flourish Proc Saver", "Change Flourish into any available procs before using.", DNC.JobID)]
+        [CustomComboInfo("Flourishing Fan Dance 4", "Replace Flourish with Fan Dance 4 when active.", DNC.JobID)]
+        DancerFlourishFan4Feature = 3808,
+
+        [CustomComboInfo("Flourish Proc Saver", "Replace Flourish with any available procs while off cooldown.", DNC.JobID)]
         DancerFlourishFeature = 3803,
 
         [CustomComboInfo("Single Target Multibutton", "Change Cascade into procs and combos as available.", DNC.JobID)]
