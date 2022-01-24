@@ -70,6 +70,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Bloodshower = 45,
                 FanDance3 = 66,
                 TechnicalStep = 70,
+                Flourish = 72,
                 Tillana = 82,
                 FanDance4 = 86,
                 StarfallDance = 90;
@@ -168,23 +169,29 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class DancerFlourish : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerFlourishFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DncAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DNC.Flourish)
             {
-                if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
-                    return DNC.Fountainfall;
+                if (IsEnabled(CustomComboPreset.DancerFlourishFeature))
+                {
+                    if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish))
+                    {
+                        if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
+                            return DNC.Fountainfall;
 
-                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
-                    return DNC.FanDance4;
+                        if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                            return DNC.FanDance4;
 
-                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
-                    return DNC.ReverseCascade;
+                        if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                            return DNC.ReverseCascade;
 
-                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
-                    return DNC.FanDance3;
+                        if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                            return DNC.FanDance3;
+                    }
+                }
             }
 
             return actionID;
