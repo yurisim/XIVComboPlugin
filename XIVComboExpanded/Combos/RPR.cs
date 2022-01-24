@@ -74,6 +74,10 @@ namespace XIVComboExpandedPlugin.Combos
                 SpinningScythe = 25,
                 InfernalSlice = 30,
                 NightmareScythe = 45,
+                BloodStalk = 50,
+                GrimSwathe = 55,
+                SoulSlice = 60,
+                SoulScythe = 65,
                 SoulReaver = 70,
                 Regress = 74,
                 Gluttony = 76,
@@ -312,6 +316,33 @@ namespace XIVComboExpandedPlugin.Combos
                     if (IsEnabled(CustomComboPreset.ReaperSoulGibbetFeature))
                         // Void Reaping
                         return OriginalHook(RPR.Gibbet);
+                }
+
+                if (IsEnabled(CustomComboPreset.ReaperSoulOvercapFeature))
+                {
+                    if (level >= RPR.Levels.BloodStalk && gauge.Soul > 50)
+                        return RPR.BloodStalk;
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class ReaperSoulScythe : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.SoulScythe)
+            {
+                var gauge = GetJobGauge<RPRGauge>();
+
+                if (IsEnabled(CustomComboPreset.ReaperSoulScytheOvercapFeature))
+                {
+                    if (level >= RPR.Levels.GrimSwathe && gauge.Soul > 50)
+                        return RPR.GrimSwathe;
                 }
             }
 

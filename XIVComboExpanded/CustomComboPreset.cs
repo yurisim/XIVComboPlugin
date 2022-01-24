@@ -593,6 +593,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Soul Communio Feature", "Replace Soul Slice with Communio when one stack of Shroud is left.", RPR.JobID)]
         ReaperSoulCommunioFeature = 3928,
 
+        [CustomComboInfo("Soul Overcap Feature", "Replace Soul Slice with Blood Stalk greater-than 50 Soul Gauge is present.", RPR.JobID)]
+        ReaperSoulOvercapFeature = 3934,
+
+        [CustomComboInfo("Soul (Scythe) Overcap Feature", "Replace Soul Scythe with Grim Swathe when greater-than 50 Soul Gauge is present.", RPR.JobID)]
+        ReaperSoulScytheOvercapFeature = 3935,
+
         [CustomComboInfo("Scythe Combo", "Replace Nightmare Scythe with its combo chain.", RPR.JobID)]
         ReaperScytheCombo = 3902,
 
