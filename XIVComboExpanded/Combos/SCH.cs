@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos
@@ -47,6 +46,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 Aetherflow = 45,
+                Lustrate = 45,
                 Excogitation = 62,
                 ChainStratagem = 66,
                 Recitation = 74,
@@ -75,14 +75,23 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class ScholarExcogitation : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarExcogitationRecitationFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == SCH.Excogitation)
             {
-                if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
-                    return SCH.Recitation;
+                if (IsEnabled(CustomComboPreset.ScholarExcogitationRecitationFeature))
+                {
+                    if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
+                        return SCH.Recitation;
+                }
+
+                if (IsEnabled(CustomComboPreset.ScholarExcogitationLustrateFeature))
+                {
+                    if (level < SCH.Levels.Excogitation || IsOnCooldown(SCH.Excogitation))
+                        return SCH.Lustrate;
+                }
             }
 
             return actionID;

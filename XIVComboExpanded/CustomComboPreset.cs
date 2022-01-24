@@ -779,14 +779,17 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Seraph Fey Blessing/Consolation", "Replace Fey Blessing with Consolation when Seraph is out.", SCH.JobID)]
         ScholarSeraphConsolationFeature = 2801,
 
-        [CustomComboInfo("Lustrate to Recitation", "Replace Lustrate with Recitation when the latter is off cooldown.", SCH.JobID)]
+        [CustomComboInfo("Lustrate to Recitation", "Replace Lustrate with Recitation when Recitation is off cooldown.", SCH.JobID)]
         ScholarLustrateRecitationFeature = 2807,
 
-        [CustomComboInfo("Lustrate to Excogitation", "Replace Lustrate with Excogitation when the latter is off cooldown.", SCH.JobID)]
+        [CustomComboInfo("Lustrate to Excogitation", "Replace Lustrate with Excogitation when Excogitation is off cooldown.", SCH.JobID)]
         ScholarLustrateExcogitationFeature = 2808,
 
-        [CustomComboInfo("Excogitation to Recitation", "Replace Excogitation with Recitation when the latter is off cooldown.", SCH.JobID)]
+        [CustomComboInfo("Excogitation to Recitation", "Replace Excogitation with Recitation when Recitation is off cooldown.", SCH.JobID)]
         ScholarExcogitationRecitationFeature = 2806,
+
+        [CustomComboInfo("Excogitation to Lustrate", "Replace Excogitation with Lustrate when Excogitation is on cooldown.", SCH.JobID)]
+        ScholarExcogitationLustrateFeature = 2809,
 
         [CustomComboInfo("ED Aetherflow", "Replace Energy Drain with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
         ScholarEnergyDrainAetherflowFeature = 2802,
