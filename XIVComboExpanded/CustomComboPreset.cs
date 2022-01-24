@@ -214,12 +214,12 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region DANCER
 
-        [CustomComboInfo("Fan Dance Combos", "Change Fan Dance and Fan Dance 2 into Fan Dance 3 while flourishing.", DNC.JobID)]
+        [CustomComboInfo("Fan Dance Combos", "Replace Fan Dance and Fan Dance 2 with Fan Dance 3 while flourishing.", DNC.JobID)]
         DancerFanDanceCombo = 3801,
 
         [SecretCustomCombo]
         [ConflictingCombos(DancerDanceComboCompatibility)]
-        [CustomComboInfo("Dance Step Combo", "Change Standard Step and Technical Step into each dance step while dancing.", DNC.JobID)]
+        [CustomComboInfo("Dance Step Combo", "Replace Standard Step and Technical Step with each dance step while dancing.", DNC.JobID)]
         DancerDanceStepCombo = 3802,
 
         [CustomComboInfo("Flourishing Fan Dance 4", "Replace Flourish with Fan Dance 4 when active.", DNC.JobID)]
@@ -228,16 +228,16 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Flourish Proc Saver", "Replace Flourish with any available procs while off cooldown.", DNC.JobID)]
         DancerFlourishFeature = 3803,
 
-        [CustomComboInfo("Single Target Multibutton", "Change Cascade into procs and combos as available.", DNC.JobID)]
+        [CustomComboInfo("Single Target Multibutton", "Replace Cascade with its procs and combos as they activate.", DNC.JobID)]
         DancerSingleTargetMultibutton = 3804,
 
-        [CustomComboInfo("AoE Multibutton", "Change Windmill into procs and combos as available.", DNC.JobID)]
+        [CustomComboInfo("AoE Multibutton", "Replace Windmill with its procs and combos as they activate.", DNC.JobID)]
         DancerAoeMultibutton = 3805,
 
         [ConflictingCombos(DancerDanceStepCombo)]
         [CustomComboInfo(
             "Dance Step Feature",
-            "Change actions into dance steps while dancing." +
+            "Replace arbitrary actions with dance steps while dancing." +
             "\nThis helps ensure you can still dance with combos on, without using auto dance." +
             "\nYou can change the respective actions by inputting action IDs below for each dance step." +
             "\nThe defaults are Cascade, Flourish, Fan Dance and Fan Dance II. If set to 0, they will reset to these actions." +
@@ -245,7 +245,7 @@ namespace XIVComboExpandedPlugin
             DNC.JobID)]
         DancerDanceComboCompatibility = 3806,
 
-        [CustomComboInfo("Devilment Feature", "Change Devilment into Starfall Dance after use.", DNC.JobID)]
+        [CustomComboInfo("Devilment Feature", "Replace Devilment with Starfall Dance when active.", DNC.JobID)]
         DancerDevilmentFeature = 3807,
 
         #endregion
