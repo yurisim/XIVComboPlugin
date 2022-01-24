@@ -929,8 +929,20 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Eureka Feature", "Replace Ageless Words and Solid Reason with Wise to the World when available.", DOL.JobID)]
         DolEurekaFeature = 51001,
 
-        [CustomComboInfo("Cast and Hook Feature", "Replace Cast with Hook when fishing.", DOL.JobID)]
+        [CustomComboInfo("Cast / Hook Feature", "Replace Cast with Hook when fishing.", DOL.JobID)]
         DolCastHookFeature = 51002,
+
+        [CustomComboInfo("Cast / Gig Feature", "Replace Cast with Gig when swimming.", DOL.JobID)]
+        DolCastGigFeature = 51003,
+
+        [CustomComboInfo("Surface Slap / Veteran Trade Feature", "Replace Surface Slap with Veteran Trade when swimming.", DOL.JobID)]
+        DolSurfaceTradeFeature = 51004,
+
+        [CustomComboInfo("Prize Catch / Nature's Bounty Feature", "Replace Prize Catch with Nature's Bounty when swimming.", DOL.JobID)]
+        DolPrizeBountyFeature = 51005,
+
+        [CustomComboInfo("Snagging / Salvage Feature", "Replace Snagging with Salvage when swimming.", DOL.JobID)]
+        DolSnaggingSalvageFeature = 51006,
 
         #endregion
         // ====================================================================================
