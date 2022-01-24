@@ -325,7 +325,7 @@ namespace XIVComboExpandedPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == RPR.BloodStalk || actionID == RPR.GrimSwathe)
+            if (actionID == RPR.BloodStalk)
             {
                 var gauge = GetJobGauge<RPRGauge>();
 
@@ -340,7 +340,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class ReaperBloodStalkGrimSwathe : CustomCombo
+    internal class ReaperGrimSwathe : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
 
