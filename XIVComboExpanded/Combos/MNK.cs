@@ -224,7 +224,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.MonkDemolishFeature))
                 {
-                    if (level < MNK.Levels.Demolish && FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime > 6.0)
+                    if (level < MNK.Levels.Demolish || FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime > 6.0)
                         return MNK.SnapPunch;
                 }
             }
