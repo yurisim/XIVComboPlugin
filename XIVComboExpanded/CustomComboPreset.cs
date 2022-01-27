@@ -969,6 +969,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Snagging / Salvage Feature", "Replace Snagging with Salvage when swimming.", DOL.JobID)]
         DolSnaggingSalvageFeature = 51006,
 
+        [CustomComboInfo("Cast Light / Electric Current Feature", "Replace Cast Light with Electric Current when underwater.", DOL.JobID)]
+        DolCastLightElectricCurrentFeature = 51007,
+
         #endregion
         // ====================================================================================
     }

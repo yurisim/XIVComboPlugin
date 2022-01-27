@@ -12,6 +12,7 @@ namespace XIVComboExpandedPlugin.Combos
             SolidReason = 232,
             Cast = 289,
             Hook = 296,
+            CastLight = 2135,
             Snagging = 4100,
             SurfaceSlap = 4595,
             Gig = 7632,
@@ -20,6 +21,7 @@ namespace XIVComboExpandedPlugin.Combos
             Salvage = 7910,
             MinWiseToTheWorld = 26521,
             BtnWiseToTheWorld = 26522,
+            ElectricCurrent = 26872,
             PrizeCatch = 26806;
 
         public static class Buffs
@@ -117,6 +119,15 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (HasCondition(ConditionFlag.Diving))
                         return DOL.Salvage;
+                }
+            }
+
+            if (actionID == DOL.CastLight)
+            {
+                if (IsEnabled(CustomComboPreset.DolCastLightElectricCurrentFeature))
+                {
+                    if (HasCondition(ConditionFlag.Diving))
+                        return DOL.ElectricCurrent;
                 }
             }
 
