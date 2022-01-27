@@ -87,8 +87,8 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region ASTROLOGIAN
 
-        [CustomComboInfo("Play to Draw", "Replace Play with Draw when no card is drawn.", AST.JobID)]
-        AstrologianDrawPlayFeature = 3301,
+        [CustomComboInfo("Malefic to Draw", "Replace Malefic with Draw when no card is drawn and a card is available.", AST.JobID)]
+        AstrologianMaleficDrawFeature = 3309,
 
         [ParentCombo(AstrologianDrawPlayFeature)]
         [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]

@@ -349,7 +349,23 @@ namespace XIVComboExpandedPlugin.Combos
             => !GetCooldown(actionID).IsCooldown;
 
         /// <summary>
-        /// Get the maximum number of charges for an action at a given level.
+        /// Gets a value indicating whether an action has any available charges.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>True or false.</returns>
+        protected static bool HasCharges(uint actionID)
+            => GetCooldown(actionID).RemainingCharges > 0;
+
+        /// <summary>
+        /// Get the current number of charges remaining for an action.
+        /// </summary>
+        /// <param name="actionID">Action ID to check.</param>
+        /// <returns>Number of charges.</returns>
+        protected static ushort GetRemainingCharges(uint actionID)
+            => GetCooldown(actionID).RemainingCharges;
+
+        /// <summary>
+        /// Get the maximum number of charges for an action.
         /// </summary>
         /// <param name="actionID">Action ID to check.</param>
         /// <returns>Number of charges.</returns>

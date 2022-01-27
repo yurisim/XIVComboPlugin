@@ -12,6 +12,7 @@ namespace XIVComboExpandedPlugin.Combos
             Draw = 3590,
             Benefic = 3594,
             Malefic = 3596,
+            Malefic2 = 3598,
             Lightspeed = 3606,
             Benefic2 = 3610,
             Synastry = 3612,
@@ -23,15 +24,18 @@ namespace XIVComboExpandedPlugin.Combos
             Ewer = 4405,
             Spire = 4406,
             EarthlyStar = 7439,
+            Malefic3 = 7442,
             MinorArcana = 7443,
             SleeveDraw = 7448,
             Divination = 16552,
             CelestialOpposition = 16553,
+            Malefic4 = 16555,
             Horoscope = 16557,
             NeutralSect = 16559,
             Play = 17055,
             CrownPlay = 25869,
             Astrodyne = 25870,
+            FallMalefic = 25871,
             Exaltation = 25873,
             Macrocosmos = 25874;
 
@@ -56,6 +60,24 @@ namespace XIVComboExpandedPlugin.Combos
                 Astrodyne = 50,
                 MinorArcana = 70,
                 CrownPlay = 70;
+        }
+    }
+
+    internal class AstrologianMalefic : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMaleficDrawFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
+            {
+                var gauge = GetJobGauge<ASTGauge>();
+
+                if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE && HasCharges(AST.Draw))
+                    return AST.Draw;
+            }
+
+            return actionID;
         }
     }
 
