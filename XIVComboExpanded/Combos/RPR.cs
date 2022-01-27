@@ -320,6 +320,12 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperSoulOvercapFeature))
                 {
+                    if (IsEnabled(CustomComboPreset.ReaperBloodStalkGluttonyFeature))
+                    {
+                        if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && gauge.EnshroudedTimeRemaining == 0 && IsOffCooldown(RPR.Gluttony))
+                            return RPR.Gluttony;
+                    }
+
                     if (level >= RPR.Levels.BloodStalk && gauge.Soul > 50 && gauge.EnshroudedTimeRemaining == 0)
                         // Unveiled Gibbet and Gallows
                         return OriginalHook(RPR.BloodStalk);
@@ -342,6 +348,12 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperSoulScytheOvercapFeature))
                 {
+                    if (IsEnabled(CustomComboPreset.ReaperGrimSwatheGluttonyFeature))
+                    {
+                        if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && gauge.EnshroudedTimeRemaining == 0 && IsOffCooldown(RPR.Gluttony))
+                            return RPR.Gluttony;
+                    }
+
                     if (level >= RPR.Levels.GrimSwathe && gauge.Soul > 50 && gauge.EnshroudedTimeRemaining == 0)
                         return RPR.GrimSwathe;
                 }
