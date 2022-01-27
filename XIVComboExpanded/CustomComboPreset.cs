@@ -90,6 +90,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Malefic to Draw", "Replace Malefic with Draw when no card is drawn and a card is available.", AST.JobID)]
         AstrologianMaleficDrawFeature = 3309,
 
+        [CustomComboInfo("Gravity to Draw", "Replace Gravity with Draw when no card is drawn and a card is available.", AST.JobID)]
+        AstrologianGravityDrawFeature = 3310,
+
         [CustomComboInfo("Play to Draw", "Replace Play with Draw when no card is drawn and a card is available.", AST.JobID)]
         AstrologianPlayDrawFeature = 3301,
 

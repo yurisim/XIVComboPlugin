@@ -17,6 +17,7 @@ namespace XIVComboExpandedPlugin.Combos
             Benefic2 = 3610,
             Synastry = 3612,
             CollectiveUnconscious = 3613,
+            Gravity = 3615,
             Balance = 4401,
             Bole = 4404,
             Arrow = 4402,
@@ -36,6 +37,7 @@ namespace XIVComboExpandedPlugin.Combos
             CrownPlay = 25869,
             Astrodyne = 25870,
             FallMalefic = 25871,
+            Gravity2 = 25872,
             Exaltation = 25873,
             Macrocosmos = 25874;
 
@@ -70,6 +72,24 @@ namespace XIVComboExpandedPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
+            {
+                var gauge = GetJobGauge<ASTGauge>();
+
+                if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE && HasCharges(AST.Draw))
+                    return AST.Draw;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class AstrologianGravity : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianGravityDrawFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == AST.Gravity || actionID == AST.Gravity2)
             {
                 var gauge = GetJobGauge<ASTGauge>();
 
