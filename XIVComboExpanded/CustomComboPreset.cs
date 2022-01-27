@@ -787,8 +787,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Kyuten to Shoha II", "Replace Hissatsu: Kyuten with Shoha II when Meditation is full.", SAM.JobID)]
         SamuraiKyutenShoha2Feature = 3412,
 
-        [CustomComboInfo("Ikishoten Namikiri Feature", "Replace Ikishoten with Ogi Namikiri, Shoha, and then Kaeshi Namikiri when available.", SAM.JobID)]
+        [CustomComboInfo("Ikishoten Namikiri Feature", "Replace Ikishoten with Ogi Namikiri and then Kaeshi Namikiri when available.", SAM.JobID)]
         SamuraiIkishotenNamikiriFeature = 3411,
+
+        [ParentCombo(SamuraiIkishotenNamikiriFeature)]
+        [CustomComboInfo("Ikishoten Shoha Feature", "Replace Ikishoten with Shoha when Meditation is full.", SAM.JobID)]
+        SamuraiIkishotenShohaFeature = 3419,
 
         #endregion
         // ====================================================================================

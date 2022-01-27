@@ -357,8 +357,11 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     var gauge = GetJobGauge<SAMGauge>();
 
-                    if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
-                        return SAM.Shoha;
+                    if (IsEnabled(CustomComboPreset.SamuraiIkishotenShohaFeature))
+                    {
+                        if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                            return SAM.Shoha;
+                    }
 
                     if (gauge.Kaeshi == Kaeshi.NAMIKIRI)
                         return SAM.KaeshiNamikiri;
