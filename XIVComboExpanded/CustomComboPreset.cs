@@ -103,6 +103,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Minor Arcana Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
         AstrologianMinorArcanaPlayFeature = 3302,
 
+        [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
+        AstrologianCrownPlayMinorArcanaFeature = 3308,
+
         [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID)]
         AstrologianBeneficFeature = 3303,
 

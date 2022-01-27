@@ -132,6 +132,24 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
+    internal class AstrologianCrownPlay : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianCrownPlayMinorArcanaFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == AST.CrownPlay)
+            {
+                var gauge = GetJobGauge<ASTGauge>();
+
+                if (level >= AST.Levels.MinorArcana && gauge.DrawnCrownCard == CardType.NONE)
+                    return AST.MinorArcana;
+            }
+
+            return actionID;
+        }
+    }
+
     internal class AstrologianBenefic2 : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficFeature;
