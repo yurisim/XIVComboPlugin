@@ -90,14 +90,17 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Malefic to Draw", "Replace Malefic with Draw when no card is drawn and a card is available.", AST.JobID)]
         AstrologianMaleficDrawFeature = 3309,
 
-        [ParentCombo(AstrologianDrawPlayFeature)]
+        [CustomComboInfo("Play to Draw", "Replace Play with Draw when no card is drawn and a card is available.", AST.JobID)]
+        AstrologianPlayDrawFeature = 3301,
+
+        [ParentCombo(AstrologianPlayDrawFeature)]
         [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
-        AstrologianAstrodyneDrawPlayFeature = 3307,
+        AstrologianPlayDrawAstrodyneFeature = 3307,
 
         [CustomComboInfo("Play to Astrodyne", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
-        AstrologianAstrodynePlayFeature = 3304,
+        AstrologianPlayAstrodyneFeature = 3304,
 
-        [CustomComboInfo("Draw Lockout", "Replace Draw (not Draw on Play) with Malefic when a card is drawn.", AST.JobID)]
+        [CustomComboInfo("Draw Lockout", "Replace Draw (not Play to Draw) with Malefic when a card is drawn.", AST.JobID)]
         AstrologianDrawLockoutFeature = 3306,
 
         [CustomComboInfo("Minor Arcana to Crown Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
@@ -107,7 +110,7 @@ namespace XIVComboExpandedPlugin
         AstrologianCrownPlayMinorArcanaFeature = 3308,
 
         [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID)]
-        AstrologianBeneficFeature = 3303,
+        AstrologianBeneficSyncFeature = 3303,
 
         #endregion
         // ====================================================================================

@@ -91,15 +91,15 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<ASTGauge>();
 
-                if (IsEnabled(CustomComboPreset.AstrologianAstrodynePlayFeature))
+                if (IsEnabled(CustomComboPreset.AstrologianPlayAstrodyneFeature))
                 {
                     if (level >= AST.Levels.Astrodyne && !gauge.ContainsSeal(SealType.NONE))
                         return AST.Astrodyne;
                 }
 
-                if (IsEnabled(CustomComboPreset.AstrologianDrawPlayFeature))
+                if (IsEnabled(CustomComboPreset.AstrologianPlayDrawFeature))
                 {
-                    if (IsEnabled(CustomComboPreset.AstrologianAstrodyneDrawPlayFeature))
+                    if (IsEnabled(CustomComboPreset.AstrologianPlayDrawAstrodyneFeature))
                     {
                         var draw = GetCooldown(AST.Draw);
 
@@ -174,7 +174,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class AstrologianBenefic2 : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficSyncFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
