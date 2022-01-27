@@ -87,21 +87,21 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region ASTROLOGIAN
 
-        [CustomComboInfo("Draw on Play", "Replace Play with Draw when no card is drawn.", AST.JobID)]
+        [CustomComboInfo("Play to Draw", "Replace Play with Draw when no card is drawn.", AST.JobID)]
         AstrologianDrawPlayFeature = 3301,
 
         [ParentCombo(AstrologianDrawPlayFeature)]
-        [CustomComboInfo("Astrodyne on Draw on Play", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
+        [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
         AstrologianAstrodyneDrawPlayFeature = 3307,
 
-        [CustomComboInfo("Astrodyne on Play", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
+        [CustomComboInfo("Play to Astrodyne", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
         AstrologianAstrodynePlayFeature = 3304,
 
         [CustomComboInfo("Draw Lockout", "Replace Draw (not Draw on Play) with Malefic when a card is drawn.", AST.JobID)]
         AstrologianDrawLockoutFeature = 3306,
 
-        [CustomComboInfo("Minor Arcana Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
-        AstrologianMinorArcanaPlayFeature = 3302,
+        [CustomComboInfo("Minor Arcana to Crown Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
+        AstrologianMinorArcanaCrownPlayFeature = 3302,
 
         [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
         AstrologianCrownPlayMinorArcanaFeature = 3308,
