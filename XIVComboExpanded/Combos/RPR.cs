@@ -210,7 +210,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperScytheHarvestMoonFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && HasEffect(RPR.Buffs.Soulsow) && HasTarget())
+                    if (level >= RPR.Levels.HarvestMoon && HasEffect(RPR.Buffs.Soulsow) && HasTarget())
                         return RPR.HarvestMoon;
                 }
 
