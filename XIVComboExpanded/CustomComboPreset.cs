@@ -663,6 +663,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Delayed Regress Option", "Replace the action used with Regress only after 1.5 seconds have elapsed on Threshold.", RPR.JobID)]
         ReaperRegressOption = 3933,
 
+        [CustomComboInfo("Harpe Soulsow Feature", "Replace Harpe with Soulsow when not active and out of combat or you have no target.", RPR.JobID)]
+        ReaperHarpeHarvestSoulsowFeature = 3936,
+
+        [CustomComboInfo("Harpe Harvest Moon Feature", "Replace Harpe with Harvest Moon when Soulsow is active and Enhanced Harpe is not.", RPR.JobID)]
+        ReaperHarpeHarvestMoonFeature = 3937,
+
         #endregion
         // ====================================================================================
         #region RED MAGE

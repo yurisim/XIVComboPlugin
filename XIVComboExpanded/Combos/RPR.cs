@@ -550,4 +550,29 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
+
+    internal class ReaperHarpe : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == RPR.Harpe)
+            {
+                if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestSoulsowFeature))
+                {
+                    if (level >= RPR.Levels.Soulsow && !HasEffect(RPR.Buffs.Soulsow) && (!InCombat() || !HasTarget()))
+                        return RPR.Soulsow;
+                }
+
+                if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonFeature))
+                {
+                    if (level >= RPR.Levels.HarvestMoon && HasEffect(RPR.Buffs.Soulsow) && !HasEffect(RPR.Buffs.EnhancedHarpe))
+                        return RPR.HarvestMoon;
+                }
+            }
+
+            return actionID;
+        }
+    }
 }
