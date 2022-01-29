@@ -91,8 +91,8 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                 {
-                    // Solar or Both
-                    if (!gauge.Nadi.HasFlag(Nadi.SOLAR) || gauge.Nadi.HasFlag(Nadi.LUNAR))
+                    // Solar
+                    if (!gauge.Nadi.HasFlag(Nadi.SOLAR))
                     {
                         if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra2.RAPTOR))
                             return MNK.FourPointFury;
@@ -109,13 +109,10 @@ namespace XIVComboExpandedPlugin.Combos
                             : MNK.Rockbreaker;
                     }
 
-                    // Lunar
-                    if (!gauge.Nadi.HasFlag(Nadi.LUNAR))
-                    {
-                        return level >= MNK.Levels.ShadowOfTheDestroyer
-                            ? MNK.ShadowOfTheDestroyer
-                            : MNK.Rockbreaker;
-                    }
+                    // Lunar.  Also used if we have both Nadi, as Tornado Kick/Phantom Rush isn't picky.
+                    return level >= MNK.Levels.ShadowOfTheDestroyer
+                        ? MNK.ShadowOfTheDestroyer
+                        : MNK.Rockbreaker;
                 }
 
                 // FPF with FormShift
