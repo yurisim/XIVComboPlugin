@@ -156,7 +156,7 @@ namespace XIVComboExpandedPlugin.Combos
                     }
                 }
 
-                if (IsEnabled(CustomComboPreset.BardPreIronJawsFeature))
+                if (IsEnabled(CustomComboPreset.BardIronJawsFeature))
                 {
                     if (level < BRD.Levels.BiteUpgrade)
                     {
