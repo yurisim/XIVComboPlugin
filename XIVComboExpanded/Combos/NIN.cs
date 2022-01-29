@@ -255,7 +255,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == NIN.Hide)
             {
-                if (level >= NIN.Levels.Mug && HasCondition(ConditionFlag.InCombat))
+                if (level >= NIN.Levels.Mug && InCombat())
                     return NIN.Mug;
             }
 

@@ -39,6 +39,7 @@ namespace XIVComboExpandedPlugin.Combos
             LemuresScythe = 24400,
             // Misc
             ShadowOfDeath = 24378,
+            Harpe = 24386,
             Soulsow = 24387,
             HarvestMoon = 24388,
             HellsIngress = 24401,
@@ -48,6 +49,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Buffs
         {
             public const ushort
+                EnhancedHarpe = 2845,
                 SoulReaver = 2587,
                 EnhancedGibbet = 2588,
                 EnhancedGallows = 2589,
@@ -83,6 +85,7 @@ namespace XIVComboExpandedPlugin.Combos
                 Gluttony = 76,
                 Enshroud = 80,
                 Soulsow = 82,
+                HarvestMoon = 82,
                 EnhancedShroud = 86,
                 LemuresScythe = 86,
                 PlentifulHarvest = 88,
@@ -102,7 +105,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperSliceSoulsowFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
+                    if (level >= RPR.Levels.Soulsow && !InCombat() && !HasEffect(RPR.Buffs.Soulsow))
                         return RPR.Soulsow;
                 }
 
@@ -213,7 +216,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperScytheSoulsowFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasEffect(RPR.Buffs.Soulsow))
+                    if (level >= RPR.Levels.Soulsow && !InCombat() && !HasEffect(RPR.Buffs.Soulsow))
                         return RPR.Soulsow;
                 }
 
@@ -245,7 +248,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperShadowSoulsowFeature))
                 {
-                    if (level >= RPR.Levels.Soulsow && !HasCondition(ConditionFlag.InCombat) && !HasTarget() && !HasEffect(RPR.Buffs.Soulsow))
+                    if (level >= RPR.Levels.Soulsow && !InCombat() && !HasTarget() && !HasEffect(RPR.Buffs.Soulsow))
                         return RPR.Soulsow;
                 }
 

@@ -228,12 +228,19 @@ namespace XIVComboExpandedPlugin.Combos
             => !IsEnabled(preset);
 
         /// <summary>
-        /// Find if the player is in condition.
+        /// Find if the player has a certain condition.
         /// </summary>
         /// <param name="flag">Condition flag.</param>
         /// <returns>A value indicating whether the player is in the condition.</returns>
         protected static bool HasCondition(ConditionFlag flag)
             => Service.Condition[flag];
+
+        /// <summary>
+        /// Find if the player is in combat.
+        /// </summary>
+        /// <returns>A value indicating whether the player is in combat.</returns>
+        protected static bool InCombat()
+            => Service.Condition[ConditionFlag.InCombat];
 
         /// <summary>
         /// Find if the player has a pet present.

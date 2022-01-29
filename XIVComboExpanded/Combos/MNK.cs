@@ -171,7 +171,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.MonkDragonKickMeditationFeature))
                 {
-                    if (level >= MNK.Levels.Meditation && gauge.Chakra < 5 && !HasCondition(ConditionFlag.InCombat))
+                    if (level >= MNK.Levels.Meditation && gauge.Chakra < 5 && !InCombat())
                         return MNK.Meditation;
                 }
 
