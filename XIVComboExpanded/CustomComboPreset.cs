@@ -666,8 +666,16 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Harpe Soulsow Feature", "Replace Harpe with Soulsow when not active and out of combat or you have no target.", RPR.JobID)]
         ReaperHarpeHarvestSoulsowFeature = 3936,
 
-        [CustomComboInfo("Harpe Harvest Moon Feature", "Replace Harpe with Harvest Moon when Soulsow is active and Enhanced Harpe is not.", RPR.JobID)]
+        [CustomComboInfo("Harpe Harvest Moon Feature", "Replace Harpe with Harvest Moon when Soulsow is active and you are in combat.", RPR.JobID)]
         ReaperHarpeHarvestMoonFeature = 3937,
+
+        [ParentCombo(ReaperHarpeHarvestMoonFeature)]
+        [CustomComboInfo("Combat Option", "Replace Harpe with Harvest Moon also when you are not in combat.", RPR.JobID)]
+        ReaperHarpeHarvestMoonCombatFeature = 3938,
+
+        [ParentCombo(ReaperHarpeHarvestMoonFeature)]
+        [CustomComboInfo("Enhanced Harpe Option", "Replace Harpe with Harvest Moon only while Enhanced Harpe is not active.", RPR.JobID)]
+        ReaperHarpeHarvestMoonEnhancedFeature = 3939,
 
         #endregion
         // ====================================================================================

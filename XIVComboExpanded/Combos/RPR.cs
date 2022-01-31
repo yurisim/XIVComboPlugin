@@ -567,8 +567,23 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonFeature))
                 {
-                    if (level >= RPR.Levels.HarvestMoon && HasEffect(RPR.Buffs.Soulsow) && !HasEffect(RPR.Buffs.EnhancedHarpe))
-                        return RPR.HarvestMoon;
+                    if (level >= RPR.Levels.HarvestMoon && HasEffect(RPR.Buffs.Soulsow))
+                    {
+                        if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonEnhancedFeature))
+                        {
+                            if (!HasEffect(RPR.Buffs.EnhancedHarpe))
+                                return RPR.HarvestMoon;
+                        }
+
+                        if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonCombatFeature))
+                        {
+                            if (!InCombat())
+                                return RPR.HarvestMoon;
+                        }
+
+                        if (InCombat())
+                            return RPR.HarvestMoon;
+                    }
                 }
             }
 
