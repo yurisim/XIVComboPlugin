@@ -236,6 +236,13 @@ namespace XIVComboExpandedPlugin.Combos
             => Service.Condition[ConditionFlag.InCombat];
 
         /// <summary>
+        /// Find if the player has a target.
+        /// </summary>
+        /// <returns>A value indicating whether the player has a target.</returns>
+        protected static bool HasTarget()
+            => CurrentTarget is not null;
+
+        /// <summary>
         /// Find if the player has a pet present.
         /// </summary>
         /// <returns>A value indicating whether the player has a pet present.</returns>
