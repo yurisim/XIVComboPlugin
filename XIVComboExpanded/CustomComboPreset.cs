@@ -244,11 +244,19 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Flourish Proc Saver", "Replace Flourish with any available procs while off cooldown.", DNC.JobID)]
         DancerFlourishFeature = 3803,
 
+        [ConflictingCombos(DancerSingleTargetProcs)]
         [CustomComboInfo("Single Target Multibutton", "Replace Cascade with its procs and combos as they activate.", DNC.JobID)]
         DancerSingleTargetMultibutton = 3804,
 
+        [ConflictingCombos(DancerSingleTargetMultibutton)]
+        [CustomComboInfo("Single Target to Procs", "Replace Cascade and Fountain with Reverse Cascade and Fountainfall respectively when available.", DNC.JobID)]
+        DancerSingleTargetProcs = 3811,
+
         [CustomComboInfo("AoE Multibutton", "Replace Windmill with its procs and combos as they activate.", DNC.JobID)]
         DancerAoeMultibutton = 3805,
+
+        [CustomComboInfo("AoE to Procs", "Replace Windmill and Bladeshower with Rising Wiindmill and Bloodshower respectively when available.", DNC.JobID)]
+        DancerAoeProcs = 3812,
 
         [ConflictingCombos(DancerDanceStepCombo)]
         [CustomComboInfo(
