@@ -111,17 +111,33 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class DancerFanDance12 : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerFanDanceCombo;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DncAny;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             if (actionID == DNC.FanDance1 || actionID == DNC.FanDance2)
             {
-                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
-                    return DNC.FanDance4;
+                var gauge = GetJobGauge<DNCGauge>();
 
-                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
-                    return DNC.FanDance3;
+                if (IsEnabled(CustomComboPreset.DancerFanDance3Feature))
+                {
+                    if (IsEnabled(CustomComboPreset.DancerFanDance4Feature))
+                    {
+                        if (gauge.Feathers == 4)
+                        {
+                            if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                                return DNC.FanDance3;
+
+                            return actionID;
+                        }
+
+                        if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                            return DNC.FanDance4;
+                    }
+
+                    if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                        return DNC.FanDance3;
+                }
             }
 
             return actionID;

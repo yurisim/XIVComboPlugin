@@ -223,8 +223,12 @@ namespace XIVComboExpandedPlugin
         // ====================================================================================
         #region DANCER
 
-        [CustomComboInfo("Fan Dance Combos", "Replace Fan Dance and Fan Dance 2 with Fan Dance 3 while flourishing.", DNC.JobID)]
-        DancerFanDanceCombo = 3801,
+        [CustomComboInfo("Fan Dance 3 Feature", "Replace Fan Dance and Fan Dance 2 with Fan Dance 3 when available.", DNC.JobID)]
+        DancerFanDance3Feature = 3801,
+
+        [ParentCombo(DancerFanDance3Feature)]
+        [CustomComboInfo("Fan Dance 4 Feature", "Replace Fan Dance and Fan Dance 2 with Fan Dance 4 when available.", DNC.JobID)]
+        DancerFanDance4Feature = 3809,
 
         [SecretCustomCombo]
         [ConflictingCombos(DancerDanceComboCompatibility)]
