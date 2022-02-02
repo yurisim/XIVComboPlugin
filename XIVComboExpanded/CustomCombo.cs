@@ -236,6 +236,13 @@ namespace XIVComboExpandedPlugin.Combos
             => Service.Condition[ConditionFlag.InCombat];
 
         /// <summary>
+        /// Find if the player is not in combat.
+        /// </summary>
+        /// <returns>A value indicating whether the player is not in combat.</returns>
+        protected static bool OutOfCombat()
+            => !InCombat();
+
+        /// <summary>
         /// Find if the player has a target.
         /// </summary>
         /// <returns>A value indicating whether the player has a target.</returns>

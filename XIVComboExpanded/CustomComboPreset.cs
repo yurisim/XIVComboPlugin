@@ -689,12 +689,12 @@ namespace XIVComboExpandedPlugin
         ReaperHarpeHarvestMoonFeature = 3937,
 
         [ParentCombo(ReaperHarpeHarvestMoonFeature)]
-        [CustomComboInfo("Combat Option", "Replace Harpe with Harvest Moon also when you are not in combat.", RPR.JobID)]
-        ReaperHarpeHarvestMoonCombatFeature = 3938,
+        [CustomComboInfo("Enhanced Harpe Option", "Prevent replacing Harpe with Harvest Moon when Enhanced Harpe is active.", RPR.JobID)]
+        ReaperHarpeHarvestMoonEnhancedFeature = 3939,
 
         [ParentCombo(ReaperHarpeHarvestMoonFeature)]
-        [CustomComboInfo("Enhanced Harpe Option", "Replace Harpe with Harvest Moon only while Enhanced Harpe is not active.", RPR.JobID)]
-        ReaperHarpeHarvestMoonEnhancedFeature = 3939,
+        [CustomComboInfo("Combat Option", "Prevent replacing Harpe with Harvest Moon when not in combat.", RPR.JobID)]
+        ReaperHarpeHarvestMoonCombatFeature = 3938,
 
         #endregion
         // ====================================================================================

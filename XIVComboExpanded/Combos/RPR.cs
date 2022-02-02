@@ -571,18 +571,17 @@ namespace XIVComboExpandedPlugin.Combos
                     {
                         if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonEnhancedFeature))
                         {
-                            if (!HasEffect(RPR.Buffs.EnhancedHarpe))
-                                return RPR.HarvestMoon;
+                            if (HasEffect(RPR.Buffs.EnhancedHarpe))
+                                return RPR.Harpe;
                         }
 
                         if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonCombatFeature))
                         {
-                            if (!InCombat())
-                                return RPR.HarvestMoon;
+                            if (OutOfCombat())
+                                return RPR.Harpe;
                         }
 
-                        if (InCombat())
-                            return RPR.HarvestMoon;
+                        return RPR.HarvestMoon;
                     }
                 }
             }
