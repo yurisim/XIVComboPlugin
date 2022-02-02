@@ -430,6 +430,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Hot Shot (Air Anchor) / Chainsaw Feature", "Replace Hot Shot (Air Anchor) and Chainsaw with whichever is available.", MCH.JobID)]
         MachinistHotShotChainsawFeature = 3107,
 
+        [SecretCustomCombo]
+        [CustomComboInfo("Bioblaster / Chainsaw Feature", "Replace Bioblaster with whichever of Bioblaster or Chainsaw is available.", MCH.JobID)]
+        MachinistBioblasterChainsawFeature = 3111,
+
         #endregion
         // ====================================================================================
         #region MONK

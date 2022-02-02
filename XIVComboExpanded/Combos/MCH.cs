@@ -35,6 +35,7 @@ namespace XIVComboExpandedPlugin.Combos
             HeatBlast = 7410,
             HotShot = 2872,
             Drill = 16498,
+            Bioblaster = 16499,
             AirAnchor = 16500,
             Chainsaw = 25788;
 
@@ -256,6 +257,22 @@ namespace XIVComboExpandedPlugin.Combos
                     return MCH.AirAnchor;
 
                 return MCH.HotShot;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MachinistBioblaster : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistBioblasterChainsawFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MCH.Bioblaster)
+            {
+                if (level >= MCH.Levels.Chainsaw)
+                    return CalcBestAction(actionID, MCH.Chainsaw, MCH.Bioblaster);
             }
 
             return actionID;
