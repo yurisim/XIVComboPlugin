@@ -74,7 +74,7 @@ namespace XIVComboExpandedPlugin.Combos
         }
     }
 
-    internal class MachinistMainCombo : CustomCombo
+    internal class MachinistCleanShot : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistMainCombo;
 

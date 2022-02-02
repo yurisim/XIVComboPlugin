@@ -189,13 +189,6 @@ namespace XIVComboExpandedPlugin.Combos
             => Service.TargetManager.Target;
 
         /// <summary>
-        /// Find if the player has a target.
-        /// </summary>
-        /// <returns>A value indicating whether the player has a target.</returns>
-        protected static bool HasTarget()
-            => CurrentTarget is not null;
-
-        /// <summary>
         /// Calls the original hook.
         /// </summary>
         /// <param name="actionID">Action ID.</param>
