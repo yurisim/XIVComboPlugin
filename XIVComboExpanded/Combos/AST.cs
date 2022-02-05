@@ -157,7 +157,7 @@ namespace XIVComboExpandedPlugin.Combos
 
     internal class AstrologianMinorArcana : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianCrownPlayMinorArcanaFeature;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaCrownPlayFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
