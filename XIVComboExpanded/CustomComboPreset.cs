@@ -299,6 +299,12 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Living Shadow Feature", "Replace Quietus and Bloodspiller with Living Shadow when available.", DRK.JobID)]
         DarkLivingShadowFeature = 3205,
 
+        [CustomComboInfo("Living Shadowbringer Feature", "Replace Living Shadow with Shadowbringer when charges are available and your Shadow is present.", DRK.JobID)]
+        DarkLivingShadowbringerFeature = 3208,
+
+        [CustomComboInfo("Missing Shadowbringer Feature", "Replace Living Shadow with Shadowbringer when charges are available and Living Shadow is on cooldown.", DRK.JobID)]
+        DarkLivingShadowbringerHpFeature = 3209,
+
         #endregion
         // ====================================================================================
         #region DRAGOON

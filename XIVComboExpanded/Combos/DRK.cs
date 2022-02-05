@@ -196,4 +196,31 @@ namespace XIVComboExpandedPlugin.Combos
             return actionID;
         }
     }
+
+    internal class DarkLivingShadow : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrkAny;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRK.LivingShadow)
+            {
+                var gauge = GetJobGauge<DRKGauge>();
+
+                if (IsEnabled(CustomComboPreset.DarkLivingShadowbringerFeature))
+                {
+                    if (level >= DRK.Levels.Shadowbringer && gauge.ShadowTimeRemaining >= 0 && HasCharges(DRK.Shadowbringer))
+                        return DRK.Shadowbringer;
+                }
+
+                if (IsEnabled(CustomComboPreset.DarkLivingShadowbringerHpFeature))
+                {
+                    if (level >= DRK.Levels.Shadowbringer && HasCharges(DRK.Shadowbringer) && IsOnCooldown(DRK.LivingShadow))
+                        return DRK.Shadowbringer;
+                }
+            }
+
+            return actionID;
+        }
+    }
 }
