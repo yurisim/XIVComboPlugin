@@ -66,6 +66,7 @@ namespace XIVComboExpandedPlugin.Combos
                 DragonKick = 50,
                 PerfectBalance = 50,
                 FormShift = 52,
+                EnhancedPerfectBalance = 60,
                 MasterfulBlitz = 60,
                 RiddleOfFire = 68,
                 Brotherhood = 70,
@@ -83,24 +84,24 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == MNK.MasterfulBlitz)
             {
-                var gauge = new MyMNKGauge(GetJobGauge<MNKGauge>());
+                var gauge = GetJobGauge<MNKGauge>();
 
                 // Blitz
-                if (!gauge.BeastChakra.Contains(BeastChakra2.NONE))
+                if (level >= MNK.Levels.MasterfulBlitz && !gauge.BeastChakra.Contains(BeastChakra.NONE))
                     return OriginalHook(MNK.MasterfulBlitz);
 
                 if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
                 {
                     // Solar
-                    if (!gauge.Nadi.HasFlag(Nadi.SOLAR))
+                    if (level >= MNK.Levels.EnhancedPerfectBalance && !gauge.Nadi.HasFlag(Nadi.SOLAR))
                     {
-                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra2.RAPTOR))
+                        if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
                             return MNK.FourPointFury;
 
-                        if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra2.COEURL))
+                        if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
                             return MNK.Rockbreaker;
 
-                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra2.OPOOPO))
+                        if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
                             // Shadow of the Destroyer
                             return OriginalHook(MNK.ArmOfTheDestroyer);
 
@@ -109,7 +110,7 @@ namespace XIVComboExpandedPlugin.Combos
                             : MNK.Rockbreaker;
                     }
 
-                    // Lunar.  Also used if we have both Nadi, as Tornado Kick/Phantom Rush isn't picky.
+                    // Lunar.  Also used if we have both Nadi as Tornado Kick/Phantom Rush isn't picky, or under 60.
                     return level >= MNK.Levels.ShadowOfTheDestroyer
                         ? MNK.ShadowOfTheDestroyer
                         : MNK.Rockbreaker;
@@ -177,7 +178,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.MonkDragonKickBalanceFeature))
                 {
-                    if (!gauge.BeastChakra.Contains(BeastChakra.NONE))
+                    if (level >= MNK.Levels.MasterfulBlitz && !gauge.BeastChakra.Contains(BeastChakra.NONE))
                         return OriginalHook(MNK.MasterfulBlitz);
                 }
 
@@ -272,47 +273,5 @@ namespace XIVComboExpandedPlugin.Combos
 
             return actionID;
         }
-    }
-
-    internal unsafe class MyMNKGauge
-    {
-        private readonly IntPtr address;
-
-        internal MyMNKGauge(MNKGauge gauge)
-        {
-            this.address = gauge.Address;
-        }
-
-        public byte Chakra => *(byte*)(this.address + 0x8);
-
-        public BeastChakra2[] BeastChakra => new[]
-        {
-            *(BeastChakra2*)(this.address + 0x9),
-            *(BeastChakra2*)(this.address + 0xA),
-            *(BeastChakra2*)(this.address + 0xB),
-        };
-
-        public Nadi Nadi => *(Nadi*)(this.address + 0xC);
-
-        public ushort BlitzTimeRemaining => *(ushort*)(this.address + 0xE);
-    }
-
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Pending PR")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum BeastChakra2 : byte
-    {
-        NONE = 0,
-        COEURL = 1,
-        OPOOPO = 2,
-        RAPTOR = 3,
-    }
-
-    [Flags]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1602:Enumeration items should be documented", Justification = "Pending PR")]
-    internal enum Nadi : byte
-    {
-        NONE = 0,
-        LUNAR = 2,
-        SOLAR = 4,
     }
 }
