@@ -973,10 +973,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Holy into Misery", "Replace Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
         WhiteMageHolyMiseryFeature = 2405,
 
-        [CustomComboInfo("Cure 2 to Cure Level Sync", "Changes Cure 2 to Cure when below level 30 in synced content.", WHM.JobID)]
+        [CustomComboInfo("Cure 2 to Cure Level Sync", "Replace Cure 2 with Cure when below level 30 in synced content.", WHM.JobID)]
         WhiteMageCureFeature = 2403,
 
-        [CustomComboInfo("Afflatus Feature", "Changes Cure 2 into Afflatus Solace, and Medica into Afflatus Rapture, when lilies are up.", WHM.JobID)]
+        [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace, and Medica with Afflatus Rapture, when lilies are up.", WHM.JobID)]
         WhiteMageAfflatusFeature = 2404,
 
         #endregion
