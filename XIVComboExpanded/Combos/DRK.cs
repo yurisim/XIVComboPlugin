@@ -209,7 +209,7 @@ namespace XIVComboExpandedPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.DarkLivingShadowbringerFeature))
                 {
-                    if (level >= DRK.Levels.Shadowbringer && gauge.ShadowTimeRemaining >= 0 && HasCharges(DRK.Shadowbringer))
+                    if (level >= DRK.Levels.Shadowbringer && gauge.ShadowTimeRemaining > 0 && HasCharges(DRK.Shadowbringer))
                         return DRK.Shadowbringer;
                 }
 
