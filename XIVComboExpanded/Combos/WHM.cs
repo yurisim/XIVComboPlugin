@@ -59,7 +59,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily > 0)
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
             }
 
@@ -77,7 +77,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily > 0 && HasTarget())
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
                     return WHM.AfflatusMisery;
             }
 
@@ -95,7 +95,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WHMGauge>();
 
-                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily > 0 && HasTarget())
+                if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
                     return WHM.AfflatusMisery;
             }
 
@@ -123,7 +123,7 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature))
                     {
-                        if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily > 0)
+                        if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
                             return WHM.AfflatusMisery;
                     }
 
@@ -150,7 +150,7 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature))
                     {
-                        if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily > 0 && HasTarget())
+                        if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
                             return WHM.AfflatusMisery;
                     }
 
