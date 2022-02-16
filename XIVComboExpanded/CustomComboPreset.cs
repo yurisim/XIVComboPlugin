@@ -913,6 +913,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Demi Enkindle Feature", "Change Summon Bahamut and Summon Phoenix into Enkindle when Bahamut or Phoenix are summoned.", SMN.JobID)]
         SummonerDemiEnkindleFeature = 2710,
 
+        [CustomComboInfo("Searing Demi Feature", "Change Summon Bahamut and Summon Phoenix into Searing Light when Bahamut is ready to be summoned, Searing Light is off cooldown, and you are in combat.", SMN.JobID)]
+        SummonerDemiSearingLightFeature = 2715,
+
         [CustomComboInfo("Radiant Carbuncle Feature", "Change Radiant Aegis into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
         SummonerRadiantCarbuncleFeature = 2711,
 

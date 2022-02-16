@@ -223,6 +223,12 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<SMNGauge>();
 
+                if (IsEnabled(CustomComboPreset.SummonerDemiSearingLightFeature))
+                {
+                    if (level >= SMN.Levels.SearingLight && gauge.IsBahamutReady && InCombat() && IsOffCooldown(SMN.SearingLight))
+                        return SMN.SearingLight;
+                }
+
                 if (IsEnabled(CustomComboPreset.SummonerDemiEnkindleFeature))
                 {
                     if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
