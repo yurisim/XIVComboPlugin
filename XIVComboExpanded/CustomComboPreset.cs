@@ -572,6 +572,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
         PaladinScornfulSpiritsFeature = 1908,
 
+        [CustomComboInfo("Shields on your Feet Feature", "Replace Shield Bash with Low Blow when available.", PLD.JobID)]
+        PaladinShieldBashFeature = 1910,
+
         #endregion
         // ====================================================================================
         #region REAPER

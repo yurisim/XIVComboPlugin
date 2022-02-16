@@ -8,6 +8,7 @@ namespace XIVComboExpandedPlugin.Combos
         public const uint
             FastBlade = 9,
             RiotBlade = 15,
+            ShieldBash = 16,
             RageOfHalone = 21,
             CircleOfScorn = 23,
             SpiritsWithin = 29,
@@ -16,6 +17,7 @@ namespace XIVComboExpandedPlugin.Combos
             TotalEclipse = 7381,
             Requiescat = 7383,
             HolySpirit = 7384,
+            LowBlow = 7540,
             Prominence = 16457,
             HolyCircle = 16458,
             Confiteor = 16459,
@@ -42,6 +44,7 @@ namespace XIVComboExpandedPlugin.Combos
         {
             public const byte
                 RiotBlade = 4,
+                LowBlow = 12,
                 SpiritsWithin = 30,
                 CircleOfScorn = 50,
                 RageOfHalone = 26,
@@ -219,6 +222,22 @@ namespace XIVComboExpandedPlugin.Combos
                     return CalcBestAction(actionID, PLD.SpiritsWithin, PLD.CircleOfScorn);
 
                 return PLD.SpiritsWithin;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class PaladinShieldBash : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinShieldBashFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == PLD.ShieldBash)
+            {
+                if (level >= PLD.Levels.LowBlow && IsOffCooldown(PLD.LowBlow))
+                    return PLD.LowBlow;
             }
 
             return actionID;
