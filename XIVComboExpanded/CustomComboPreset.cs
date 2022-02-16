@@ -943,6 +943,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", WAR.JobID)]
         WarriorMythrilTempestCombo = 2103,
 
+        [CustomComboInfo("Mythril Tempest Target Option", "Replace Mythril Tempest only when you have a target.", WAR.JobID)]
+        WarriorMythrilTempestTargetOption = 2113,
+
         [ParentCombo(WarriorMythrilTempestCombo)]
         [CustomComboInfo("Mythril Tempest Overcap Feature", "Replace Mythril Tempest with Decimate the next combo action would cause the Beast Gauge to overcap.", WAR.JobID)]
         WarriorMythrilTempestOvercapFeature = 2105,

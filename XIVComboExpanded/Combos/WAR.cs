@@ -154,6 +154,12 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 var gauge = GetJobGauge<WARGauge>();
 
+                if (IsEnabled(CustomComboPreset.WarriorMythrilTempestTargetOption))
+                {
+                    if (level >= WAR.Levels.MythrilTempest && !HasTarget())
+                        return WAR.MythrilTempest;
+                }
+
                 if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
                 {
                     if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
