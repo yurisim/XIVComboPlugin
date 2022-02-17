@@ -721,7 +721,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Verstone/Verfire Plus Opener Feature (Fire)", "Replace Verfire with Verthunder when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFireFeature = 3507,
 
-        [CustomComboInfo("Verstone/Verfire Capstone Combo", "Replace Verstone/Verfire with the Verflare/Verholy combo after 3 mana stacks.", RDM.JobID)]
+        [CustomComboInfo("Verstone/Verfire Mana Stacks Feature", "Replace Verstone/Verfire with the Verflare/Verholy at 3 mana stacks.", RDM.JobID)]
+        RedMageVerprocManaStacksFeature = 3515,
+
+        [CustomComboInfo("Verstone/Verfire Capstone Combo", "Replace Verstone/Verfire with Scorch and Resolution when available.", RDM.JobID)]
         RedMageVerprocCapstoneCombo = 3513,
 
         [CustomComboInfo("Veraero/Verthunder Capstone Combo", "Replace Veraero/Verthunder with Scorch and Resolution when available.", RDM.JobID)]
@@ -736,7 +739,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Melee combo", "Replace Redoublement with its combo chain, following enchantment rules.", RDM.JobID)]
         RedMageMeleeCombo = 3502,
 
-        [CustomComboInfo("Melee Capstone Combo", "Replace Redoublement and Moulinet with the Verflare/Verholy combo after 3 mana stacks, using whichever mana color is lower.", RDM.JobID)]
+        [CustomComboInfo("Melee Mana Stacks Feature", "Replace Redoublement and Moulinet with the Verflare/Verholy at 3 mana stacks, using whichever mana color is lower.", RDM.JobID)]
+        RedMageMeleeManaStacksFeature = 3516,
+
+        [CustomComboInfo("Melee Capstone Combo", "Replace Redoublement and Moulinet with Scorch and Resolution when available.", RDM.JobID)]
         RedMageMeleeCapstoneCombo = 3503,
 
         [CustomComboInfo("Acceleration into Swiftcast", "Replace Acceleration with Swiftcast when on cooldown or synced.", RDM.JobID)]

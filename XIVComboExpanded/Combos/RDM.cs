@@ -154,7 +154,10 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                         return RDM.Scorch;
+                }
 
+                if (IsEnabled(CustomComboPreset.RedMageMeleeManaStacksFeature))
+                {
                     if (gauge.ManaStacks == 3 && level >= RDM.Levels.Verflare)
                     {
                         if (level < RDM.Levels.Verholy)
@@ -216,7 +219,10 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                         return RDM.Scorch;
+                }
 
+                if (IsEnabled(CustomComboPreset.RedMageVerprocManaStacksFeature))
+                {
                     if (gauge.ManaStacks == 3)
                     {
                         if (level >= RDM.Levels.Verholy)
@@ -263,7 +269,10 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                         return RDM.Scorch;
+                }
 
+                if (IsEnabled(CustomComboPreset.RedMageVerprocManaStacksFeature))
+                {
                     if (gauge.ManaStacks == 3)
                     {
                         if (level >= RDM.Levels.Verflare)
