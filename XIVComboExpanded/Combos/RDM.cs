@@ -91,8 +91,6 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero || actionID == RDM.Veraero3 || actionID == RDM.Verthunder || actionID == RDM.Verthunder3)
             {
-                var gauge = GetJobGauge<RDMGauge>();
-
                 if (IsEnabled(CustomComboPreset.RedMageVeraeroVerthunderCapstoneCombo))
                 {
                     if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
@@ -117,8 +115,6 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
             {
-                var gauge = GetJobGauge<RDMGauge>();
-
                 if (IsEnabled(CustomComboPreset.RedMageAoECapstoneCombo))
                 {
                     if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
