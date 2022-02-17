@@ -309,8 +309,11 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (level >= RDM.Levels.Acceleration)
                 {
-                    if (IsOffCooldown(RDM.Acceleration) && IsOffCooldown(RDM.Swiftcast))
-                        return RDM.Swiftcast;
+                    if (IsEnabled(CustomComboPreset.RedMageAccelerationSwiftcastOption))
+                    {
+                        if (IsOffCooldown(RDM.Acceleration) && IsOffCooldown(RDM.Swiftcast))
+                            return RDM.Swiftcast;
+                    }
 
                     if (IsOffCooldown(RDM.Acceleration))
                         return RDM.Acceleration;
