@@ -1,4 +1,7 @@
 # XIVComboPlugin
+
+[![Build](https://github.com/daemitus/XIVComboPlugin/actions/workflows/build.yml/badge.svg)](https://github.com/daemitus/XIVComboPlugin/actions/workflows/build.yml)
+
 This plugin condenses combos and mutually exclusive abilities onto a single button. Thanks to Meli for the initial start, and obviously goat for making any of this possible.
 
 ## About
