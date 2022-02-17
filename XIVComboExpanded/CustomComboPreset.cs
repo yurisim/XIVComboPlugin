@@ -715,11 +715,9 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Verstone/Verfire Plus Feature", "Replace Verstone/Verfire with Veraero/Verthunder when various instant-cast effects are active.", RDM.JobID)]
         RedMageVerprocPlusFeature = 3505,
 
-        [ConflictingCombos(RedMageVerprocOpenerFireFeature)]
         [CustomComboInfo("Verstone/Verfire Plus Opener Feature (Stone)", "Replace Verstone with Veraero when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerStoneFeature = 3506,
 
-        [ConflictingCombos(RedMageVerprocOpenerStoneFeature)]
         [CustomComboInfo("Verstone/Verfire Plus Opener Feature (Fire)", "Replace Verfire with Verthunder when out of combat.", RDM.JobID)]
         RedMageVerprocOpenerFireFeature = 3507,
 
