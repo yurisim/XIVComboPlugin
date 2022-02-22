@@ -281,7 +281,7 @@ namespace XIVComboExpandedPlugin
         #region DARK KNIGHT
 
         [CustomComboInfo("Souleater Combo", "Replace Souleater with its combo chain.", DRK.JobID)]
-        DarkSouleaterCombo = 3201,
+        DarkSouleaterCombo = 3206,
 
         [ParentCombo(DarkSouleaterCombo)]
         [CustomComboInfo("Souleater Overcap Feature", "Replace Souleater with Bloodspiller when the next combo action would cause the Blood Gauge to overcap.", WAR.JobID)]
