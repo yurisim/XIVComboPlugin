@@ -71,7 +71,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
                 {
-                    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath))
+                    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
                         return PLD.Atonement;
                 }
 
@@ -104,7 +104,7 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
                 {
-                    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath))
+                    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
                         return PLD.Atonement;
                 }
 
