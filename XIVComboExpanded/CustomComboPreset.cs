@@ -459,7 +459,7 @@ namespace XIVComboExpandedPlugin
 
         [ParentCombo(MonkTwinSnakesFeature)]
         [CustomComboInfo("Formless Snakes Option", "While Formless Fist is active, do not replace Twin Snakes.", MNK.JobID)]
-        MonkFormlessSnakesOption = 2014,
+        MonkFormlessSnakesOption = 2015,
 
         [CustomComboInfo("Demolish / Snap Punch Feature", "Replace Demolish with Snap Punch if Demolish has more than 6s remaining on your current target.", MNK.JobID)]
         MonkDemolishFeature = 2014,
