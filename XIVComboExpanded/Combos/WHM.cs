@@ -11,6 +11,7 @@ namespace XIVComboExpandedPlugin.Combos
         public const uint
             Cure = 120,
             Medica = 124,
+            Raise = 125,
             Cure2 = 135,
             PresenceOfMind = 136,
             Holy = 139,
@@ -42,6 +43,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                Raise = 12,
                 Cure2 = 30,
                 AfflatusSolace = 52,
                 AfflatusMisery = 74,

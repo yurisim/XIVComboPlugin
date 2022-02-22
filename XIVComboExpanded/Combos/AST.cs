@@ -13,6 +13,7 @@ namespace XIVComboExpandedPlugin.Combos
             Benefic = 3594,
             Malefic = 3596,
             Malefic2 = 3598,
+            Ascend = 3603,
             Lightspeed = 3606,
             Benefic2 = 3610,
             Synastry = 3612,
@@ -57,6 +58,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                Ascend = 12,
                 Benefic2 = 26,
                 Draw = 30,
                 Astrodyne = 50,

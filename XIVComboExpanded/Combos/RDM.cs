@@ -23,6 +23,7 @@ namespace XIVComboExpandedPlugin.Combos
             ContreSixte = 7519,
             Embolden = 7520,
             Manafication = 7521,
+            Verraise = 7523,
             Jolt2 = 7524,
             Verflare = 7525,
             Verholy = 7526,

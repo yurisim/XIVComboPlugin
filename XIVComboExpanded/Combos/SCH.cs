@@ -10,6 +10,7 @@ namespace XIVComboExpandedPlugin.Combos
         public const uint
             Aetherflow = 166,
             EnergyDrain = 167,
+            Ressurection = 173,
             SacredSoil = 188,
             Lustrate = 189,
             Indomitability = 3583,
@@ -45,6 +46,7 @@ namespace XIVComboExpandedPlugin.Combos
         public static class Levels
         {
             public const byte
+                Ressurection = 12,
                 Aetherflow = 45,
                 Lustrate = 45,
                 Excogitation = 62,

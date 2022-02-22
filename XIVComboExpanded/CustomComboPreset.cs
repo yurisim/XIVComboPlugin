@@ -83,6 +83,10 @@ namespace XIVComboExpandedPlugin
         #endregion
         // ====================================================================================
         #region ADV
+
+        [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, and Verraise with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
+        AllSwiftcastFeature = 1000,
+
         #endregion
         // ====================================================================================
         #region ASTROLOGIAN

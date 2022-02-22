@@ -51,6 +51,7 @@ namespace XIVComboExpandedPlugin.Combos
             public const ushort
                 Dosis = 1,
                 Prognosis = 10,
+                Egeiro = 12,
                 Phlegma = 26,
                 Soteria = 35,
                 Druochole = 45,
