@@ -30,7 +30,6 @@ namespace XIVComboExpandedPlugin.Combos
             EnchantedRiposte = 7527,
             EnchantedZwerchhau = 7528,
             EnchantedRedoublement = 7529,
-            Swiftcast = 7561,
             Verthunder2 = 16524,
             Veraero2 = 16525,
             Impact = 16526,
@@ -63,7 +62,6 @@ namespace XIVComboExpandedPlugin.Combos
                 Verthunder = 4,
                 Veraero = 10,
                 Scatter = 15,
-                Swiftcast = 18,
                 Zwerchhau = 35,
                 Fleche = 45,
                 Redoublement = 50,
@@ -321,21 +319,21 @@ namespace XIVComboExpandedPlugin.Combos
                 {
                     if (IsEnabled(CustomComboPreset.RedMageAccelerationSwiftcastOption))
                     {
-                        if (IsOffCooldown(RDM.Acceleration) && IsOffCooldown(RDM.Swiftcast))
-                            return RDM.Swiftcast;
+                        if (IsOffCooldown(RDM.Acceleration) && IsOffCooldown(ADV.Swiftcast))
+                            return ADV.Swiftcast;
                     }
 
                     if (IsOffCooldown(RDM.Acceleration))
                         return RDM.Acceleration;
 
-                    if (IsOffCooldown(RDM.Swiftcast))
-                        return RDM.Swiftcast;
+                    if (IsOffCooldown(ADV.Swiftcast))
+                        return ADV.Swiftcast;
 
                     return RDM.Acceleration;
                 }
 
-                if (level >= RDM.Levels.Swiftcast)
-                    return RDM.Swiftcast;
+                if (level >= ADV.Levels.Swiftcast)
+                    return ADV.Swiftcast;
             }
 
             return actionID;
