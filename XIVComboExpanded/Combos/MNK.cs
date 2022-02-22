@@ -203,7 +203,16 @@ namespace XIVComboExpandedPlugin.Combos
             {
                 if (IsEnabled(CustomComboPreset.MonkTwinSnakesFeature))
                 {
-                    if (level < MNK.Levels.TwinSnakes || FindEffect(MNK.Buffs.DisciplinedFist)?.RemainingTime > 6.0)
+                    if (level < MNK.Levels.TwinSnakes)
+                        return MNK.TrueStrike;
+
+                    if (IsEnabled(CustomComboPreset.MonkFormlessSnakesOption))
+                    {
+                        if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+                            return MNK.TwinSnakes;
+                    }
+
+                    if (FindEffect(MNK.Buffs.DisciplinedFist)?.RemainingTime > 6.0)
                         return MNK.TrueStrike;
                 }
             }

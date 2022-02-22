@@ -457,6 +457,10 @@ namespace XIVComboExpandedPlugin
         [CustomComboInfo("Twin Snakes / True Strike Feature", "Replace Twin Snakes with True Strike if Twin Snakes has more than 6s remaining.", MNK.JobID)]
         MonkTwinSnakesFeature = 2013,
 
+        [ParentCombo(MonkTwinSnakesFeature)]
+        [CustomComboInfo("Formless Snakes Option", "While Formless Fist is active, do not replace Twin Snakes.", MNK.JobID)]
+        MonkFormlessSnakesOption = 2014,
+
         [CustomComboInfo("Demolish / Snap Punch Feature", "Replace Demolish with Snap Punch if Demolish has more than 6s remaining on your current target.", MNK.JobID)]
         MonkDemolishFeature = 2014,
 
