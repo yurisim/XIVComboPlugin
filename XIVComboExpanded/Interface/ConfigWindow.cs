@@ -10,7 +10,7 @@ using Dalamud.Utility;
 using ImGuiNET;
 using XIVComboExpandedPlugin.Attributes;
 
-namespace XIVComboExpandedPlugin
+namespace XIVComboExpandedPlugin.Interface
 {
     /// <summary>
     /// Plugin configuration window.

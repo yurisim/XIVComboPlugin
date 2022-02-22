@@ -4,6 +4,7 @@ using System.Linq;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
+using XIVComboExpandedPlugin.Interface;
 
 namespace XIVComboExpandedPlugin
 {
