@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFXIVClientStructs", "lib\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FFXIVClientStructs.Generators", "lib\FFXIVClientStructs\FFXIVClientStructs.Generators\FFXIVClientStructs.Generators.csproj", "{CE02218E-D78C-460A-A914-902FCAC725E4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,14 @@ Global
 		{CE02218E-D78C-460A-A914-902FCAC725E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE02218E-D78C-460A-A914-902FCAC725E4}.Release|x64.ActiveCfg = Release|Any CPU
 		{CE02218E-D78C-460A-A914-902FCAC725E4}.Release|x64.Build.0 = Release|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Debug|Any CPU.Build.0 = Debug|x64
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{3FDCC6BD-3AF0-4DC2-B353-EACEE8AC2F6D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

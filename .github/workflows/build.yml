@@ -15,6 +15,7 @@ env:
   RELEASE_DIR: XIVComboExpanded\bin\Release\XIVComboExpanded
   PERSONAL_PLUGIN_REPO: daemitus/MyDalamudPlugins
   PR_PLUGIN_REPO: daemitus/DalamudPlugins
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
   build:
@@ -34,8 +35,9 @@ jobs:
       run: |
         dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
         dotnet build --configuration Release
-      env: 
-        DOTNET_CLI_TELEMETRY_OPTOUT: true
+    - name: Test
+      run: |
+        dotnet test --no-restore --verbosity normal
     - uses: actions/upload-artifact@v2
       with:
         name: PluginRepoZip
