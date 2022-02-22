@@ -90,6 +90,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero || actionID == RDM.Veraero3 || actionID == RDM.Verthunder || actionID == RDM.Verthunder3)
             {
+                var gauge = GetJobGauge<RDMGauge>();
+
                 if (IsEnabled(CustomComboPreset.RedMageVeraeroVerthunderCapstoneCombo))
                 {
                     if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
@@ -98,7 +100,24 @@ namespace XIVComboExpandedPlugin.Combos
                     if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                         return RDM.Scorch;
 
-                    // Transforms into Verflare/Verholy natively
+                    if (gauge.ManaStacks == 3)
+                    {
+                        if (actionID == RDM.Veraero || actionID == RDM.Veraero3)
+                        {
+                            if (level >= RDM.Levels.Verflare)
+                                return RDM.Verflare;
+                        }
+
+                        if (actionID == RDM.Verthunder || actionID == RDM.Verthunder3)
+                        {
+                            if (level >= RDM.Levels.Verholy)
+                                return RDM.Verholy;
+
+                            // From 68-70
+                            if (level >= RDM.Levels.Verflare)
+                                return RDM.Verflare;
+                        }
+                    }
                 }
             }
 
@@ -114,6 +133,8 @@ namespace XIVComboExpandedPlugin.Combos
         {
             if (actionID == RDM.Veraero2 || actionID == RDM.Verthunder2)
             {
+                var gauge = GetJobGauge<RDMGauge>();
+
                 if (IsEnabled(CustomComboPreset.RedMageAoECapstoneCombo))
                 {
                     if (lastComboMove == RDM.Scorch && level >= RDM.Levels.Resolution)
@@ -122,7 +143,25 @@ namespace XIVComboExpandedPlugin.Combos
                     if ((lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy) && level >= RDM.Levels.Scorch)
                         return RDM.Scorch;
 
-                    // Transforms into Verflare/Verholy natively
+                    // While it transforms natively, we need to include this due to the RedMageAoeFeature below.
+                    if (gauge.ManaStacks == 3)
+                    {
+                        if (actionID == RDM.Veraero2)
+                        {
+                            if (level >= RDM.Levels.Verflare)
+                                return RDM.Verflare;
+                        }
+
+                        if (actionID == RDM.Verthunder2)
+                        {
+                            if (level >= RDM.Levels.Verholy)
+                                return RDM.Verholy;
+
+                            // From 68-70
+                            if (level >= RDM.Levels.Verflare)
+                                return RDM.Verflare;
+                        }
+                    }
                 }
 
                 if (IsEnabled(CustomComboPreset.RedMageAoEFeature))
