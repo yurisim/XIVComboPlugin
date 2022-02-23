@@ -1,29 +1,28 @@
-﻿namespace XIVComboExpandedPlugin.Combos
+﻿namespace XIVComboExpandedPlugin.Combos;
+
+internal static class DOH
 {
-    internal static class DOH
+    public const byte ClassID = 0;
+    public const byte JobID = 50;
+
+    public const uint
+        Placeholder = 0;
+
+    public static class Buffs
     {
-        public const byte ClassID = 0;
-        public const byte JobID = 50;
-
-        public const uint
+        public const ushort
             Placeholder = 0;
+    }
 
-        public static class Buffs
-        {
-            public const ushort
-                Placeholder = 0;
-        }
+    public static class Debuffs
+    {
+        public const ushort
+            Placeholder = 0;
+    }
 
-        public static class Debuffs
-        {
-            public const ushort
-                Placeholder = 0;
-        }
-
-        public static class Levels
-        {
-            public const byte
-                Placeholder = 0;
-        }
+    public static class Levels
+    {
+        public const byte
+            Placeholder = 0;
     }
 }
