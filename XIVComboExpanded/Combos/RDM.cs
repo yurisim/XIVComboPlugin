@@ -102,13 +102,13 @@ namespace XIVComboExpandedPlugin.Combos
 
                     if (gauge.ManaStacks == 3)
                     {
-                        if (actionID == RDM.Veraero || actionID == RDM.Veraero3)
+                        if (actionID == RDM.Verthunder || actionID == RDM.Verthunder3)
                         {
                             if (level >= RDM.Levels.Verflare)
                                 return RDM.Verflare;
                         }
 
-                        if (actionID == RDM.Verthunder || actionID == RDM.Verthunder3)
+                        if (actionID == RDM.Veraero || actionID == RDM.Veraero3)
                         {
                             if (level >= RDM.Levels.Verholy)
                                 return RDM.Verholy;
@@ -146,13 +146,13 @@ namespace XIVComboExpandedPlugin.Combos
                     // While it transforms natively, we need to include this due to the RedMageAoeFeature below.
                     if (gauge.ManaStacks == 3)
                     {
-                        if (actionID == RDM.Veraero2)
+                        if (actionID == RDM.Verthunder2)
                         {
                             if (level >= RDM.Levels.Verflare)
                                 return RDM.Verflare;
                         }
 
-                        if (actionID == RDM.Verthunder2)
+                        if (actionID == RDM.Veraero2)
                         {
                             if (level >= RDM.Levels.Verholy)
                                 return RDM.Verholy;
