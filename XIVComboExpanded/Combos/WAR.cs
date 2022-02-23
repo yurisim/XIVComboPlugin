@@ -133,8 +133,9 @@ internal class WarriorStormsEyeCombo : CustomCombo
             if (comboTime > 0)
             {
                 if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
-#if DEBUG
+                {
                     return WAR.StormsPath;
+                }
 
                 if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsEye)
                     return WAR.StormsEye;
