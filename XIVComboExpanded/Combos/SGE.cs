@@ -137,6 +137,12 @@ internal class SageDruochole : CustomCombo
                 if (level >= SGE.Levels.Rhizomata && gauge.Addersgall == 0)
                     return SGE.Rhizomata;
             }
+
+            if (IsEnabled(CustomComboPreset.SageDruocholeTaurocholeFeature))
+            {
+                if (level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole))
+                    return SGE.Taurochole;
+            }
         }
 
         return actionID;

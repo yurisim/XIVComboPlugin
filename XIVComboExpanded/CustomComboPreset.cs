@@ -780,6 +780,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Druochole into Rhizomata Feature", "Replace Druochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageDruocholeRhizomataFeature = 4003,
 
+    [CustomComboInfo("Druochole into Taurochole Feature", "Replace Druochole with Taurochole when off cooldown.\nWarning: This will limit your abiility to use Druochole.", SGE.JobID)]
+    SageDruocholeTaurocholeFeature = 4009,
+
     [CustomComboInfo("Ixochole into Rhizomata Feature", "Replace Ixochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageIxocholeRhizomataFeature = 4004,
 
