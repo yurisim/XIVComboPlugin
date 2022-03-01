@@ -116,29 +116,29 @@ public enum CustomComboPreset
     [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
     AstrologianCrownPlayMinorArcanaFeature = 3308,
 
-    [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID)]
+    [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Replace Benefic 2 with Benefic when below level 26 in synced content.", AST.JobID)]
     AstrologianBeneficSyncFeature = 3303,
 
     #endregion
     // ====================================================================================
     #region BLACK MAGE
 
-    [CustomComboInfo("Enochian Feature", "Change Fire 4 or Blizzard 4 to whichever action you can currently use.", BLM.JobID)]
+    [CustomComboInfo("Enochian Feature", "Replace Fire 4 and Blizzard 4 with whichever action you can currently use.", BLM.JobID)]
     BlackEnochianFeature = 2501,
 
     [SecretCustomCombo]
     [ParentCombo(BlackEnochianFeature)]
-    [CustomComboInfo("Enochian Despair Feature", "Change Fire 4 or Blizzard 4 to Despair when in Astral Fire with less than 2400 mana.", BLM.JobID)]
+    [CustomComboInfo("Enochian Despair Feature", "Replace Fire 4 and Blizzard 4 with Despair when in Astral Fire with less than 2400 mana.", BLM.JobID)]
     BlackEnochianDespairFeature = 2510,
 
     [ParentCombo(BlackEnochianFeature)]
     [CustomComboInfo("Enochian No Sync Feature", "Fire 4 and Blizzard 4 will not sync to Fire 1 and Blizzard 1.", BLM.JobID)]
     BlackEnochianNoSyncFeature = 2518,
 
-    [CustomComboInfo("Umbral Soul/Transpose Switcher", "Change Transpose into Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
+    [CustomComboInfo("Umbral Soul/Transpose Switcher", "Replace Transpose with Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
     BlackManaFeature = 2502,
 
-    [CustomComboInfo("(Between the) Ley Lines", "Change Ley Lines into BTL when Ley Lines is active.", BLM.JobID)]
+    [CustomComboInfo("(Between the) Ley Lines", "Replace Ley Lines with BTL when Ley Lines is active.", BLM.JobID)]
     BlackLeyLinesFeature = 2503,
 
     [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter is up.", BLM.JobID)]
