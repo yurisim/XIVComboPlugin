@@ -27,11 +27,13 @@ public class PluginConfiguration : IPluginConfiguration
             .ToHashSet();
 
         ConflictingCombos = Enum.GetValues<CustomComboPreset>()
+            .Distinct() // Prevent ArgumentExceptions from adding the same int twice, should not be seen anymore
             .ToDictionary(
                 preset => preset,
                 preset => preset.GetAttribute<ConflictingCombosAttribute>()?.ConflictingPresets ?? Array.Empty<CustomComboPreset>());
 
         ParentCombos = Enum.GetValues<CustomComboPreset>()
+            .Distinct() // Prevent ArgumentExceptions from adding the same int twice, should not be seen anymore
             .ToDictionary(
                 preset => preset,
                 preset => preset.GetAttribute<ParentComboAttribute>()?.ParentPreset);
