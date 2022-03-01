@@ -1003,7 +1003,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Solace into Misery", "Replace Afflatus Solace with Afflatus Misery when ready.", WHM.JobID)]
     WhiteMageSolaceMiseryFeature = 2401,
 
-    [CustomComboInfo("Targeted Misery", "Only swap to Afflatus Misery when targeting an enemy.", WAR.JobID)]
+    [CustomComboInfo("Targeted Misery", "Only swap to Afflatus Misery when targeting an enemy.", WHM.JobID)]
     WhiteMageSolaceMiseryTargetFeature = 2406,
 
     [CustomComboInfo("Rapture into Misery", "Replace Afflatus Rapture with Afflatus Misery when ready and you have an enemy target.", WHM.JobID)]
