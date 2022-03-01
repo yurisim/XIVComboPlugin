@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -84,6 +84,30 @@ internal class SageDosis : CustomCombo
             {
                 if (!HasEffect(SGE.Buffs.Kardion))
                     return SGE.Kardia;
+            }
+        }
+
+        return actionID;
+    }
+}
+
+internal class SageToxikon : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SGE.Toxikon)
+        {
+            if (IsEnabled(CustomComboPreset.SageToxikonPhlegma))
+            {
+                var phlegma =
+                    level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
+                    level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
+                    level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
+
+                if (phlegma != 0 && HasCharges(phlegma))
+                    return OriginalHook(SGE.Phlegma);
             }
         }
 

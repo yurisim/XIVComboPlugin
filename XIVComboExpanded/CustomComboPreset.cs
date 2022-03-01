@@ -801,6 +801,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Taurochole into Rhizomata Feature", "Replace Taurochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageTaurocholeRhizomataFeature = 4002,
 
+    [CustomComboInfo("Toxikon into Phlegma Feature", "Replace Toxikon with Phlegma when charges are available.", SGE.JobID)]
+    SageToxikonPhlegma = 4011,
+
     #endregion
     // ====================================================================================
     #region SAMURAI
