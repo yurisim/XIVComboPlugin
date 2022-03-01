@@ -789,6 +789,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Kerachole into Rhizomata Feature", "Replace Kerachole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageKeracholaRhizomataFeature = 4005,
 
+    [CustomComboInfo("Dosis Kardia Feature", "Replace Dosis with Kardia when missing Kardion.", SGE.JobID)]
+    SageDosisKardiaFeature = 4010,
+
     [CustomComboInfo("Soteria Kardia Feature", "Replace Soteria with Kardia when off cooldown and missing Kardion.", SGE.JobID)]
     SageSoteriaKardionFeature = 4006,
 

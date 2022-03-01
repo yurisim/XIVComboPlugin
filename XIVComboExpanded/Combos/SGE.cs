@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -69,6 +69,25 @@ internal static class SGE
             Dosis3 = 82,
             Krasis = 86,
             Pneuma = 90;
+    }
+}
+
+internal class SageDosis : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SGE.Dosis)
+        {
+            if (IsEnabled(CustomComboPreset.SageDosisKardiaFeature))
+            {
+                if (!HasEffect(SGE.Buffs.Kardion))
+                    return SGE.Kardia;
+            }
+        }
+
+        return actionID;
     }
 }
 
