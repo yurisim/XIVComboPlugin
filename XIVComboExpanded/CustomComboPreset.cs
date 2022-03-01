@@ -771,11 +771,8 @@ public enum CustomComboPreset
     // ====================================================================================
     #region SAGE
 
-    [CustomComboInfo("Taurochole into Druochole Feature", "Replace Taurochole with Druochole when on cooldown", SGE.JobID)]
-    SageTaurocholeDruocholeFeature = 4001,
-
-    [CustomComboInfo("Taurochole into Rhizomata Feature", "Replace Taurochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
-    SageTaurocholeRhizomataFeature = 4002,
+    [CustomComboInfo("Dosis Kardia Feature", "Replace Dosis with Kardia when missing Kardion.", SGE.JobID)]
+    SageDosisKardiaFeature = 4010,
 
     [CustomComboInfo("Druochole into Rhizomata Feature", "Replace Druochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageDruocholeRhizomataFeature = 4003,
@@ -789,17 +786,20 @@ public enum CustomComboPreset
     [CustomComboInfo("Kerachole into Rhizomata Feature", "Replace Kerachole with Rhizomata when Addersgall is empty.", SGE.JobID)]
     SageKeracholaRhizomataFeature = 4005,
 
-    [CustomComboInfo("Dosis Kardia Feature", "Replace Dosis with Kardia when missing Kardion.", SGE.JobID)]
-    SageDosisKardiaFeature = 4010,
-
-    [CustomComboInfo("Soteria Kardia Feature", "Replace Soteria with Kardia when off cooldown and missing Kardion.", SGE.JobID)]
-    SageSoteriaKardionFeature = 4006,
+    [CustomComboInfo("Phlegma into Dyskrasia", "Replace Phlegma with Dyskrasia when no charges remain or have no target.", SGE.JobID)]
+    SagePhlegmaDyskrasia = 4008,
 
     [CustomComboInfo("Phlegma into Toxikon", "Replace Phlegma with Toxikon when no charges rmemain and have Addersting.\nThis takes priority over Phlegma into Dyskrasia.", SGE.JobID)]
     SagePhlegmaToxicon = 4007,
 
-    [CustomComboInfo("Phlegma into Dyskrasia", "Replace Phlegma with Dyskrasia when no charges remain or have no target.", SGE.JobID)]
-    SagePhlegmaDyskrasia = 4008,
+    [CustomComboInfo("Soteria Kardia Feature", "Replace Soteria with Kardia when off cooldown and missing Kardion.", SGE.JobID)]
+    SageSoteriaKardionFeature = 4006,
+
+    [CustomComboInfo("Taurochole into Druochole Feature", "Replace Taurochole with Druochole when on cooldown", SGE.JobID)]
+    SageTaurocholeDruocholeFeature = 4001,
+
+    [CustomComboInfo("Taurochole into Rhizomata Feature", "Replace Taurochole with Rhizomata when Addersgall is empty.", SGE.JobID)]
+    SageTaurocholeRhizomataFeature = 4002,
 
     #endregion
     // ====================================================================================

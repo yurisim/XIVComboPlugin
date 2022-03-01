@@ -251,6 +251,13 @@ internal abstract partial class CustomCombo
         => CurrentTarget is not null;
 
     /// <summary>
+    /// Find if the player has no target.
+    /// </summary>
+    /// <returns>A value indicating whether the player has a target.</returns>
+    protected static bool HasNoTarget()
+        => CurrentTarget is null;
+
+    /// <summary>
     /// Find if the current target is an enemy.
     /// </summary>
     /// <returns>A value indicating whether the target is an enemy.</returns>
@@ -377,6 +384,14 @@ internal abstract partial class CustomCombo
     /// <returns>True or false.</returns>
     protected static bool HasCharges(uint actionID)
         => GetCooldown(actionID).RemainingCharges > 0;
+
+    /// <summary>
+    /// Gets a value indicating whether an action has no available charges.
+    /// </summary>
+    /// <param name="actionID">Action ID to check.</param>
+    /// <returns>True or false.</returns>
+    protected static bool HasNoCharges(uint actionID)
+        => GetCooldown(actionID).RemainingCharges == 0;
 
     /// <summary>
     /// Get the current number of charges remaining for an action.

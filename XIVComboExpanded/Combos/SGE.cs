@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -220,7 +220,7 @@ internal class SagePhlegma : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SagePhlegmaDyskrasia))
             {
-                if (!HasTarget())
+                if (HasNoTarget())
                     return OriginalHook(SGE.Dyskrasia);
             }
 
@@ -231,7 +231,7 @@ internal class SagePhlegma : CustomCombo
                     level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
                     level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
-                if (phlegma != 0 && GetCooldown(phlegma).CooldownRemaining > 45 && gauge.Addersting > 0)
+                if (phlegma != 0 && HasNoCharges(phlegma) && gauge.Addersting > 0)
                     return OriginalHook(SGE.Toxikon);
             }
 
@@ -242,7 +242,7 @@ internal class SagePhlegma : CustomCombo
                     level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
                     level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
-                if (phlegma != 0 && GetCooldown(phlegma).CooldownRemaining > 45)
+                if (phlegma != 0 && HasNoCharges(phlegma))
                     return OriginalHook(SGE.Dyskrasia);
             }
         }
