@@ -61,7 +61,17 @@ internal class WhiteMageAfflatusSolace : CustomCombo
             var gauge = GetJobGauge<WHMGauge>();
 
             if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
-                return WHM.AfflatusMisery;
+            {
+                if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryTargetFeature))
+                {
+                    if (TargetIsEnemy())
+                        return WHM.AfflatusMisery;
+                }
+                else
+                {
+                    return WHM.AfflatusMisery;
+                }
+            }
         }
 
         return actionID;
@@ -78,7 +88,7 @@ internal class WhiteMageAfflatusRapture : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && TargetIsEnemy())
                 return WHM.AfflatusMisery;
         }
 
@@ -96,7 +106,7 @@ internal class WhiteMageHoly : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && TargetIsEnemy())
                 return WHM.AfflatusMisery;
         }
 
@@ -125,7 +135,17 @@ internal class WhiteMageCure2 : CustomCombo
                 if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature))
                 {
                     if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
-                        return WHM.AfflatusMisery;
+                    {
+                        if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryTargetFeature))
+                        {
+                            if (TargetIsEnemy())
+                                return WHM.AfflatusMisery;
+                        }
+                        else
+                        {
+                            return WHM.AfflatusMisery;
+                        }
+                    }
                 }
 
                 if (level >= WHM.Levels.AfflatusSolace && gauge.Lily > 0)
@@ -151,7 +171,7 @@ internal class WhiteMageMedica : CustomCombo
             {
                 if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature))
                 {
-                    if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && HasTarget())
+                    if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && TargetIsEnemy())
                         return WHM.AfflatusMisery;
                 }
 

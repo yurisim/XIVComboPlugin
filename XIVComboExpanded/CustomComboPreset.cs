@@ -997,19 +997,22 @@ public enum CustomComboPreset
     // ====================================================================================
     #region WHITE MAGE
 
-    [CustomComboInfo("Solace into Misery", "Replace Afflatus Solace with Afflatus Misery when Misery is ready to be used.", WHM.JobID)]
+    [CustomComboInfo("Solace into Misery", "Replace Afflatus Solace with Afflatus Misery when ready.", WHM.JobID)]
     WhiteMageSolaceMiseryFeature = 2401,
 
-    [CustomComboInfo("Rapture into Misery", "Replace Afflatus Rapture with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
+    [CustomComboInfo("Targeted Misery", "Only swap to Afflatus Misery when targeting an enemy.", WAR.JobID)]
+    WhiteMageSolaceMiseryTargetFeature = 2406,
+
+    [CustomComboInfo("Rapture into Misery", "Replace Afflatus Rapture with Afflatus Misery when ready and you have an enemy target.", WHM.JobID)]
     WhiteMageRaptureMiseryFeature = 2402,
 
-    [CustomComboInfo("Holy into Misery", "Replace Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID)]
+    [CustomComboInfo("Holy into Misery", "Replace Holy/Holy 3 with Afflatus Misery when ready and you have an enemy target.", WHM.JobID)]
     WhiteMageHolyMiseryFeature = 2405,
 
     [CustomComboInfo("Cure 2 Level Sync", "Replace Cure 2 with Cure when below level 30 in synced content.", WHM.JobID)]
     WhiteMageCureFeature = 2403,
 
-    [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace and Medica with Afflatus Rapture, when lilies are up.", WHM.JobID)]
+    [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace and Medica with Afflatus Rapture when a Lily is available.", WHM.JobID)]
     WhiteMageAfflatusFeature = 2404,
 
     #endregion

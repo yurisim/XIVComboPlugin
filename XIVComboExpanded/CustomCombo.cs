@@ -3,6 +3,7 @@ using System.Linq;
 
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -248,6 +249,13 @@ internal abstract partial class CustomCombo
     /// <returns>A value indicating whether the player has a target.</returns>
     protected static bool HasTarget()
         => CurrentTarget is not null;
+
+    /// <summary>
+    /// Find if the current target is an enemy.
+    /// </summary>
+    /// <returns>A value indicating whether the target is an enemy.</returns>
+    protected static bool TargetIsEnemy()
+        => HasTarget() && CurrentTarget?.ObjectKind == ObjectKind.BattleNpc && CurrentTarget?.SubKind == 5;
 
     /// <summary>
     /// Find if the player has a pet present.
