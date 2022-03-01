@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -82,10 +82,8 @@ internal class SageSoteria : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.SageSoteriaKardionFeature))
             {
-                if (HasEffect(SGE.Buffs.Kardion) && IsOffCooldown(SGE.Soteria))
-                    return SGE.Soteria;
-
-                return SGE.Kardia;
+                if (!HasEffect(SGE.Buffs.Kardion) && IsOffCooldown(SGE.Soteria))
+                    return SGE.Kardia;
             }
         }
 
