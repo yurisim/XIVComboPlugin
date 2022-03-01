@@ -12,7 +12,7 @@ internal static class ADV
     public static class Buffs
     {
         public const ushort
-            Placeholder = 0;
+            Medicated = 49;
     }
 
     public static class Debuffs

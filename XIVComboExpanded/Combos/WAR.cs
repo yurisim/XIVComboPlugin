@@ -97,6 +97,19 @@ internal class WarriorStormsPathCombo : CustomCombo
                             return OriginalHook(WAR.InnerBeast);
                     }
 
+#if DEBUG
+                    var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
+                    if (surgingTempest is null)
+                        return WAR.StormsEye;
+
+                    // Medicated + Opener
+                    if (HasEffect(ADV.Buffs.Medicated) && surgingTempest.RemainingTime > 10)
+                        return WAR.StormsPath;
+
+                    if (surgingTempest.RemainingTime < 30)
+                        return WAR.StormsEye;
+#endif
+
                     return WAR.StormsPath;
                 }
 
