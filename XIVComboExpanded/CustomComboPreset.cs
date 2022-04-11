@@ -177,9 +177,6 @@ public enum CustomComboPreset
     // ====================================================================================
     #region BARD
 
-    [CustomComboInfo("Wanderer's into Pitch Perfect", "Replace Wanderer's Minuet with Pitch Perfect while in WM.", BRD.JobID)]
-    BardWanderersPitchPerfectFeature = 2301,
-
     [CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
     BardStraightShotUpgradeFeature = 2302,
 

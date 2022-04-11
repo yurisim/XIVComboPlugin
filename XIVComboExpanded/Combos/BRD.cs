@@ -76,24 +76,6 @@ internal static class BRD
     }
 }
 
-internal class BardWanderersMinuet : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardWanderersPitchPerfectFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BRD.WanderersMinuet)
-        {
-            var gauge = GetJobGauge<BRDGauge>();
-
-            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER)
-                return BRD.PitchPerfect;
-        }
-
-        return actionID;
-    }
-}
-
 internal class BardHeavyShot : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BrdAny;
