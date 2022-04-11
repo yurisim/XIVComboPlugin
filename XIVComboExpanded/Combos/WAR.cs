@@ -141,8 +141,6 @@ internal class WarriorStormsEyeCombo : CustomCombo
     {
         if (actionID == WAR.StormsEye)
         {
-            var gauge = GetJobGauge<WARGauge>();
-
             if (comboTime > 0)
             {
                 if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsEye)
@@ -278,6 +276,11 @@ internal class WarriorBloodwhetting : CustomCombo
                 {
                     if (IsOffCooldown(WAR.Bloodwhetting))
                         return WAR.Bloodwhetting;
+                }
+                else if (level >= WAR.Levels.RawIntuition)
+                {
+                    if (IsOffCooldown(WAR.RawIntuition))
+                        return WAR.RawIntuition;
                 }
 
                 if (level >= WAR.Levels.ThrillOfBattle && IsOffCooldown(WAR.ThrillOfBattle))
