@@ -258,21 +258,3 @@ internal class SummonerRadiantCarbundleFeature : CustomCombo
         return actionID;
     }
 }
-
-internal class SummonerSearingCarbuncleFeature : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SummonerSearingCarbuncleFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == SMN.SearingLight)
-        {
-            var gauge = GetJobGauge<SMNGauge>();
-
-            if (level >= SMN.Levels.SummonCarbuncle && !HasPetPresent() && gauge.Attunement == 0)
-                return SMN.SummonCarbuncle;
-        }
-
-        return actionID;
-    }
-}
