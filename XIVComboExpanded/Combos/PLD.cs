@@ -31,7 +31,8 @@ internal static class PLD
     {
         public const ushort
             Requiescat = 1368,
-            SwordOath = 1902;
+            SwordOath = 1902,
+            BladeOfFaithReady = 3019;
     }
 
     public static class Debuffs
@@ -163,7 +164,7 @@ internal class PaladinHolySpiritHolyCircle : CustomCombo
             if (lastComboMove == PLD.BladeOfFaith && level >= PLD.Levels.BladeOfTruth)
                 return PLD.BladeOfTruth;
 
-            if (lastComboMove == PLD.Confiteor && level >= PLD.Levels.BladeOfFaith)
+            if (level >= PLD.Levels.BladeOfFaith && HasEffect(PLD.Buffs.BladeOfFaithReady))
                 return PLD.BladeOfFaith;
 
             if (level >= PLD.Levels.Confiteor)
@@ -192,7 +193,7 @@ internal class PaladinRequiescat : CustomCombo
             if (lastComboMove == PLD.BladeOfFaith && level >= PLD.Levels.BladeOfTruth)
                 return PLD.BladeOfTruth;
 
-            if (lastComboMove == PLD.Confiteor && level >= PLD.Levels.BladeOfFaith)
+            if (level >= PLD.Levels.BladeOfFaith && HasEffect(PLD.Buffs.BladeOfFaithReady))
                 return PLD.BladeOfFaith;
 
             if (level >= PLD.Levels.Confiteor)
