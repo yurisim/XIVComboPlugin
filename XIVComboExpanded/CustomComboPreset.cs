@@ -242,9 +242,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Flourishing Fan Dance 4", "Replace Flourish with Fan Dance 4 when available.", DNC.JobID)]
     DancerFlourishFan4Feature = 3808,
 
-    [CustomComboInfo("Flourish Proc Saver", "Replace Flourish with any available procs while off cooldown.", DNC.JobID)]
-    DancerFlourishFeature = 3803,
-
     [ConflictingCombos(DancerSingleTargetProcs)]
     [CustomComboInfo("Single Target Multibutton", "Replace Cascade with its procs and combos as they activate.", DNC.JobID)]
     DancerSingleTargetMultibutton = 3804,
