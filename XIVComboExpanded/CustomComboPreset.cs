@@ -220,6 +220,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Bloodletter to Rain of Death", "Replace Bloodletter with Rain of Death if there are no self-applied DoTs on your target.", BRD.JobID)]
     BardBloodRainFeature = 2313,
 
+    [CustomComboInfo("Wanderer's Minuet Semi-Fix", "Turns Peloton into Wanderer's Minuet to Pitch Perfect while you have a target, letting you use it regardless of whatever other bards are doing.", BRD.JobID)]
+    BardWanderersPitchPerfectFeature = 2314,
+
     #endregion
     // ====================================================================================
     #region DANCER
