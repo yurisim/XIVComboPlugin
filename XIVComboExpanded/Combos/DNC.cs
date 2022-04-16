@@ -232,7 +232,7 @@ internal class DancerCascadeFountain : CustomCombo
 
             if (IsEnabled(CustomComboPreset.DancerSingleTargetProcs))
             {
-                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                if (level >= DNC.Levels.ReverseCascade && (HasEffect(DNC.Buffs.FlourishingSymmetry) || HasEffect(DNC.Buffs.SilkenSymmetry)))
                     return DNC.ReverseCascade;
             }
         }
