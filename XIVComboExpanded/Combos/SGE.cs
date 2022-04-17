@@ -55,10 +55,12 @@ internal static class SGE
             Phlegma = 26,
             Soteria = 35,
             Druochole = 45,
+            Dyskrasia = 46,
             Kerachole = 50,
             Ixochole = 52,
             Physis2 = 60,
             Taurochole = 62,
+            Toxicon = 66,
             Haima = 70,
             Phlegma2 = 72,
             Dosis2 = 72,
@@ -244,7 +246,7 @@ internal class SagePhlegma : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SagePhlegmaDyskrasia))
             {
-                if (HasNoTarget())
+                if (level >= SGE.Levels.Dyskrasia && HasNoTarget())
                     return OriginalHook(SGE.Dyskrasia);
             }
 
@@ -255,7 +257,7 @@ internal class SagePhlegma : CustomCombo
                     level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
                     level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
-                if (phlegma != 0 && HasNoCharges(phlegma) && gauge.Addersting > 0)
+                if (level >= SGE.Levels.Toxicon && phlegma != 0 && HasNoCharges(phlegma) && gauge.Addersting > 0)
                     return OriginalHook(SGE.Toxikon);
             }
 
@@ -266,7 +268,7 @@ internal class SagePhlegma : CustomCombo
                     level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
                     level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
-                if (phlegma != 0 && HasNoCharges(phlegma))
+                if (level >= SGE.Levels.Dyskrasia && phlegma != 0 && HasNoCharges(phlegma))
                     return OriginalHook(SGE.Dyskrasia);
             }
         }
