@@ -113,6 +113,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Minor Arcana to Crown Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
     AstrologianMinorArcanaCrownPlayFeature = 3302,
 
+    [ParentCombo(AstrologianMinorArcanaCrownPlayFeature)]
+    [CustomComboInfo("Crown Play Delay Feature", "Delay Crown Play by 1s after using Minor Arcnaa.", AST.JobID)]
+    AstrologianCrownPlayDelayFeature = 3311,
+
     [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
     AstrologianCrownPlayMinorArcanaFeature = 3308,
 

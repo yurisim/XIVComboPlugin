@@ -167,8 +167,22 @@ internal class AstrologianMinorArcana : CustomCombo
             var gauge = GetJobGauge<ASTGauge>();
 
             if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
-                // Card action
-                return OriginalHook(AST.CrownPlay);
+            {
+                if (IsEnabled(CustomComboPreset.AstrologianCrownPlayDelayFeature))
+                {
+                    var cd = GetCooldown(AST.MinorArcana);
+                    if (cd.IsCooldown && cd.CooldownElapsed > 1)
+                    {
+                        // Card action
+                        return OriginalHook(AST.CrownPlay);
+                    }
+                }
+                else
+                {
+                    // Card action
+                    return OriginalHook(AST.CrownPlay);
+                }
+            }
         }
 
         return actionID;
