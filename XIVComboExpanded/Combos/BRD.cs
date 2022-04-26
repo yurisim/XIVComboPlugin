@@ -266,20 +266,42 @@ internal class BardBloodletter : CustomCombo
 
 internal class BardRainOfDeath : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardRainOfDeathFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BrdAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == BRD.RainOfDeath)
         {
-            if (level >= BRD.Levels.Sidewinder)
-                return CalcBestAction(actionID, BRD.RainOfDeath, BRD.EmpyrealArrow, BRD.Sidewinder);
+            var gauge = GetJobGauge<BRDGauge>();
 
-            if (level >= BRD.Levels.EmpyrealArrow)
-                return CalcBestAction(actionID, BRD.RainOfDeath, BRD.EmpyrealArrow);
+            if (IsEnabled(CustomComboPreset.BardExpiringPerfectRainOfDeathFeature))
+            {
+                if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1)
+                {
+                    var effect = FindEffect(BRD.Buffs.WanderersMinuet);
 
-            if (level >= BRD.Levels.RainOfDeath)
-                return BRD.RainOfDeath;
+                    if (effect?.RemainingTime <= 2.5f)
+                        return BRD.PitchPerfect;
+                }
+            }
+
+            if (IsEnabled(CustomComboPreset.BardPerfectRainOfDeathFeature))
+            {
+                if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
+                    return BRD.PitchPerfect;
+            }
+
+            if (IsEnabled(CustomComboPreset.BardRainOfDeathFeature))
+            {
+                if (level >= BRD.Levels.Sidewinder)
+                    return CalcBestAction(actionID, BRD.RainOfDeath, BRD.EmpyrealArrow, BRD.Sidewinder);
+
+                if (level >= BRD.Levels.EmpyrealArrow)
+                    return CalcBestAction(actionID, BRD.RainOfDeath, BRD.EmpyrealArrow);
+
+                if (level >= BRD.Levels.RainOfDeath)
+                    return BRD.RainOfDeath;
+            }
         }
 
         return actionID;

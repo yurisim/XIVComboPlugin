@@ -215,6 +215,14 @@ public enum CustomComboPreset
     BardRainOfDeathFeature = 2307,
 
     [SecretCustomCombo]
+    [CustomComboInfo("Perfect Rain of Death Feature", "Replace Rain of Death with Pitch Perfect when Repertoire charges are full.", BRD.JobID)]
+    BardPerfectRainOfDeathFeature = 2318,
+
+    [SecretCustomCombo]
+    [CustomComboInfo("Expiring Perfect Rain of Death Feature", "Replace Rain of Death with Pitch Perfect when Wanderers Minuet has less than 2.5 seconds remaining and atleast one Repertoire charge.", BRD.JobID)]
+    BardExpiringPerfectRainOfDeathFeature = 2319,
+
+    [SecretCustomCombo]
     [CustomComboInfo("Sidewinder Feature", "Replace Sidewinder with Empyreal Arrow depending on which is available.", BRD.JobID)]
     BardSidewinderFeature = 2309,
 
