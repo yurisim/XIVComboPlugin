@@ -162,7 +162,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Freeze/Flare Feature", "Freeze and Flare become whichever action you can currently use.", BLM.JobID)]
     BlackFreezeFlareFeature = 2506,
 
-    [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire with 1 or fewer Umbral Hearts.", BLM.JobID)]
+    [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire when only 1 Umbral Heart is active, less than 3000 mp, or during Enhanced Flare.", BLM.JobID)]
     BlackFire2Feature = 2508,
 
     [CustomComboInfo("Ice 2 Feature", "(High) Blizzard 2 becomes Freeze in Umbral Ice.", BLM.JobID)]
