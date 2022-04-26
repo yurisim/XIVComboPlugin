@@ -406,19 +406,35 @@ internal class BardMagesBallad : CustomCombo
     {
         if (actionID == BRD.MagesBallad)
         {
+            const ushort remaining = 40000;
             var gauge = GetJobGauge<BRDGauge>();
 
-            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER)
-                return BRD.PitchPerfect;
+            if (level >= BRD.Levels.WanderersMinuet)
+            {
+                if (gauge.Song == Song.WANDERER && gauge.SongTimer >= remaining)
+                    return BRD.WanderersMinuet;
 
-            if (level >= BRD.Levels.WanderersMinuet && IsOffCooldown(BRD.WanderersMinuet))
-                return BRD.WanderersMinuet;
+                if (IsOffCooldown(BRD.WanderersMinuet))
+                    return BRD.WanderersMinuet;
+            }
 
-            if (level >= BRD.Levels.ArmysPaeon && IsOffCooldown(BRD.ArmysPaeon))
-                return BRD.ArmysPaeon;
+            if (level >= BRD.Levels.ArmysPaeon)
+            {
+                if (gauge.Song == Song.ARMY && gauge.SongTimer >= remaining)
+                    return BRD.ArmysPaeon;
 
-            if (level >= BRD.Levels.MagesBallad && IsOffCooldown(BRD.MagesBallad))
-                return BRD.MagesBallad;
+                if (IsOffCooldown(BRD.ArmysPaeon))
+                    return BRD.ArmysPaeon;
+            }
+
+            if (level >= BRD.Levels.MagesBallad)
+            {
+                if (gauge.Song == Song.MAGE && gauge.SongTimer >= remaining)
+                    return BRD.MagesBallad;
+
+                if (IsOffCooldown(BRD.MagesBallad))
+                    return BRD.MagesBallad;
+            }
         }
 
         return actionID;

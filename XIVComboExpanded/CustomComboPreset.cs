@@ -243,7 +243,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Wanderer's Minuet Semi-Fix", "Turns Peloton into Wanderer's Minuet to Pitch Perfect while you have a target, letting you use it regardless of whatever other bards are doing.", BRD.JobID)]
     BardWanderersPitchPerfectFeature = 2314,
 
-    [CustomComboInfo("Cycling Song Feature", "Replace Mage's Ballad with Wanderer's Minuet (and Pitch Perfect), Mage's Ballad, and Army's Paeon, while the previous is on cooldown.", BRD.JobID)]
+    [CustomComboInfo("Cycling Song Feature", "Replace Mage's Ballad with Wanderer's Minuet, Mage's Ballad, and Army's Paeon, while the previous is on cooldown.", BRD.JobID)]
     BardCyclingSongFeature = 2317,
 
     #endregion
