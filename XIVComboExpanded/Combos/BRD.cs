@@ -17,6 +17,8 @@ internal static class BRD
         Barrage = 107,
         Bloodletter = 110,
         Windbite = 113,
+        MagesBallad = 114,
+        ArmysPaeon = 116,
         RainOfDeath = 117,
         BattleVoice = 118,
         EmpyrealArrow = 3558,
@@ -39,6 +41,7 @@ internal static class BRD
     {
         public const ushort
             StraightShotReady = 122,
+            WanderersMinuet = 2009,
             BlastShotReady = 2692,
             ShadowbiteReady = 3002;
     }
@@ -59,9 +62,12 @@ internal static class BRD
             RagingStrikes = 4,
             VenomousBite = 6,
             Bloodletter = 12,
+            MagesBallad = 30,
             Windbite = 30,
+            ArmysPaeon = 40,
             RainOfDeath = 45,
             BattleVoice = 50,
+            WanderersMinuet = 52,
             PitchPerfect = 52,
             EmpyrealArrow = 54,
             IronJaws = 56,
@@ -345,6 +351,33 @@ internal class BardPeloton : CustomCombo
                 return BRD.PitchPerfect;
 
             return BRD.WanderersMinuet;
+        }
+
+        return actionID;
+    }
+}
+
+internal class BardMagesBallad : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardCyclingSongFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BRD.MagesBallad)
+        {
+            var gauge = GetJobGauge<BRDGauge>();
+
+            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER)
+                return BRD.PitchPerfect;
+
+            if (level >= BRD.Levels.WanderersMinuet && IsOffCooldown(BRD.WanderersMinuet))
+                return BRD.WanderersMinuet;
+
+            if (level >= BRD.Levels.ArmysPaeon && IsOffCooldown(BRD.ArmysPaeon))
+                return BRD.ArmysPaeon;
+
+            if (level >= BRD.Levels.MagesBallad && IsOffCooldown(BRD.MagesBallad))
+                return BRD.MagesBallad;
         }
 
         return actionID;
