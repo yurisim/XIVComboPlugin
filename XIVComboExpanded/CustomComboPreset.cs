@@ -198,6 +198,14 @@ public enum CustomComboPreset
     BardShadowbiteFeature = 2305,
 
     [SecretCustomCombo]
+    [CustomComboInfo("Perfect Bloodletter Feature", "Replace Bloodletter with Pitch Perfect when Repertoire charges are full.", BRD.JobID)]
+    BardPerfectBloodletterFeature = 2315,
+
+    [SecretCustomCombo]
+    [CustomComboInfo("Expiring Perfect Bloodletter Feature", "Replace Bloodletter with Pitch Perfect when Wanderers Minuet has less than 2.5 seconds remaining and atleast one Repertoire charge.", BRD.JobID)]
+    BardExpiringPerfectBloodletterFeature = 2316,
+
+    [SecretCustomCombo]
     [ConflictingCombos(BardBloodRainFeature)]
     [CustomComboInfo("Bloodletter Feature", "Replace Bloodletter with Empyreal Arrow and Sidewinder depending on which is available.", BRD.JobID)]
     BardBloodletterFeature = 2306,

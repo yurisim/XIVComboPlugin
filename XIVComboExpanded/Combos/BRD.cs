@@ -216,6 +216,25 @@ internal class BardBloodletter : CustomCombo
     {
         if (actionID == BRD.Bloodletter)
         {
+            var gauge = GetJobGauge<BRDGauge>();
+
+            if (IsEnabled(CustomComboPreset.BardExpiringPerfectBloodletterFeature))
+            {
+                if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1)
+                {
+                    var effect = FindEffect(BRD.Buffs.WanderersMinuet);
+
+                    if (effect?.RemainingTime <= 2.5f)
+                        return BRD.PitchPerfect;
+                }
+            }
+
+            if (IsEnabled(CustomComboPreset.BardPerfectBloodletterFeature))
+            {
+                if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire == 3)
+                    return BRD.PitchPerfect;
+            }
+
             if (IsEnabled(CustomComboPreset.BardBloodletterFeature))
             {
                 if (level >= BRD.Levels.Sidewinder)
