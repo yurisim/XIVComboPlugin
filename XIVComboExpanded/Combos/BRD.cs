@@ -418,6 +418,15 @@ internal class BardMagesBallad : CustomCombo
                     return BRD.WanderersMinuet;
             }
 
+            if (level >= BRD.Levels.MagesBallad)
+            {
+                if (gauge.Song == Song.MAGE && gauge.SongTimer >= remaining)
+                    return BRD.MagesBallad;
+
+                if (IsOffCooldown(BRD.MagesBallad))
+                    return BRD.MagesBallad;
+            }
+
             if (level >= BRD.Levels.ArmysPaeon)
             {
                 if (gauge.Song == Song.ARMY && gauge.SongTimer >= remaining)
@@ -427,14 +436,15 @@ internal class BardMagesBallad : CustomCombo
                     return BRD.ArmysPaeon;
             }
 
-            if (level >= BRD.Levels.MagesBallad)
-            {
-                if (gauge.Song == Song.MAGE && gauge.SongTimer >= remaining)
-                    return BRD.MagesBallad;
+            // Show the next expected song while on cooldown
+            if (level >= BRD.Levels.WanderersMinuet)
+                return BRD.WanderersMinuet;
 
-                if (IsOffCooldown(BRD.MagesBallad))
-                    return BRD.MagesBallad;
-            }
+            if (level >= BRD.Levels.MagesBallad)
+                return BRD.MagesBallad;
+
+            if (level >= BRD.Levels.ArmysPaeon)
+                return BRD.ArmysPaeon;
         }
 
         return actionID;
