@@ -183,7 +183,10 @@ internal class MonkDragonKick : CustomCombo
 
             if (IsEnabled(CustomComboPreset.MonkBootshineFeature))
             {
-                if (level < MNK.Levels.DragonKick || (HasEffect(MNK.Buffs.LeadenFist) && HasEffect(MNK.Buffs.OpoOpoForm)))
+                if (level < MNK.Levels.DragonKick)
+                    return MNK.Bootshine;
+
+                if (HasEffect(MNK.Buffs.LeadenFist) && (HasEffect(MNK.Buffs.OpoOpoForm) || HasEffect(MNK.Buffs.PerfectBalance) || HasEffect(MNK.Buffs.FormlessFist)))
                     return MNK.Bootshine;
             }
         }
