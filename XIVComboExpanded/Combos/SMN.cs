@@ -99,6 +99,9 @@ internal class SummonerPainflare : CustomCombo
             if (level >= SMN.Levels.EnergySyphon && !gauge.HasAetherflowStacks)
                 return SMN.EnergySyphon;
 
+            if (level >= SMN.Levels.EnergyDrain && !gauge.HasAetherflowStacks)
+                return SMN.EnergyDrain;
+
             if (level < SMN.Levels.Painflare)
                 return SMN.EnergyDrain;
         }
