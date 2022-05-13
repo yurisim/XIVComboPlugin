@@ -55,6 +55,7 @@ internal static class SMN
             RadiantAegis = 2,
             Gemshine = 6,
             EnergyDrain = 10,
+            Fester = 10,
             PreciousBrilliance = 26,
             Painflare = 40,
             EnergySyphon = 52,
@@ -103,7 +104,7 @@ internal class SummonerPainflare : CustomCombo
                 return SMN.EnergyDrain;
 
             if (level < SMN.Levels.Painflare)
-                return SMN.EnergyDrain;
+                return SMN.Fester;
         }
 
         return actionID;
