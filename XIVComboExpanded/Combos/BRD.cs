@@ -222,9 +222,7 @@ internal class BardBloodletter : CustomCombo
             {
                 if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1)
                 {
-                    var effect = FindEffect(BRD.Buffs.WanderersMinuet);
-
-                    if (effect?.RemainingTime <= 2.5f)
+                    if (gauge.SongTimer <= 2500)
                         return BRD.PitchPerfect;
                 }
             }
@@ -278,9 +276,7 @@ internal class BardRainOfDeath : CustomCombo
             {
                 if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1)
                 {
-                    var effect = FindEffect(BRD.Buffs.WanderersMinuet);
-
-                    if (effect?.RemainingTime <= 2.5f)
+                    if (gauge.SongTimer <= 2500)
                         return BRD.PitchPerfect;
                 }
             }
