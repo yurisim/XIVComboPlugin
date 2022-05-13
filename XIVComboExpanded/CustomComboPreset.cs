@@ -223,6 +223,10 @@ public enum CustomComboPreset
     BardExpiringPerfectRainOfDeathFeature = 2319,
 
     [SecretCustomCombo]
+    [CustomComboInfo("Empyreal Arrow Feature", "Replace Empyreal Arrow with Sidewinder depending on which is available.", BRD.JobID)]
+    BardEmpyrealArrowFeature = 2320,
+
+    [SecretCustomCombo]
     [CustomComboInfo("Sidewinder Feature", "Replace Sidewinder with Empyreal Arrow depending on which is available.", BRD.JobID)]
     BardSidewinderFeature = 2309,
 

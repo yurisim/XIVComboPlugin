@@ -324,6 +324,22 @@ internal class BardSidewinder : CustomCombo
     }
 }
 
+internal class BardEmpyrealArrow : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardEmpyrealArrowFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BRD.EmpyrealArrow)
+        {
+            if (level >= BRD.Levels.Sidewinder)
+                return CalcBestAction(actionID, BRD.EmpyrealArrow, BRD.Sidewinder);
+        }
+
+        return actionID;
+    }
+}
+
 internal class BardBarrage : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BardBarrageFeature;
