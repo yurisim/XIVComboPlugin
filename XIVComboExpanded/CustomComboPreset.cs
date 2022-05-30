@@ -197,6 +197,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Quick Nock into Shadowbite", "Replace Quick Nock with Shadowbite when available.", BRD.JobID)]
     BardShadowbiteFeature = 2305,
 
+    [ParentCombo(BardShadowbiteFeature)]
+    [CustomComboInfo("A Barrage of Shadowbites", "Replace Quick Nock with Barrage when off cooldown and Shadowbite is available.", BRD.JobID)]
+    BardShadowbiteBarrageFeature = 2321,
+
     [SecretCustomCombo]
     [CustomComboInfo("Perfect Bloodletter Feature", "Replace Bloodletter with Pitch Perfect when Repertoire charges are full.", BRD.JobID)]
     BardPerfectBloodletterFeature = 2315,

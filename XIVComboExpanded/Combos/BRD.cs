@@ -64,6 +64,7 @@ internal static class BRD
             Bloodletter = 12,
             MagesBallad = 30,
             Windbite = 30,
+            Barrage = 38,
             ArmysPaeon = 40,
             RainOfDeath = 45,
             BattleVoice = 50,
@@ -200,7 +201,15 @@ internal class BardQuickNock : CustomCombo
             if (IsEnabled(CustomComboPreset.BardShadowbiteFeature))
             {
                 if (level >= BRD.Levels.Shadowbite && HasEffect(BRD.Buffs.ShadowbiteReady))
+                {
+                    if (IsEnabled(CustomComboPreset.BardShadowbiteBarrageFeature))
+                    {
+                        if (level >= BRD.Levels.Barrage && IsOffCooldown(BRD.Barrage))
+                            return BRD.Barrage;
+                    }
+
                     return BRD.Shadowbite;
+                }
             }
         }
 
