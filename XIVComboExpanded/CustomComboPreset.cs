@@ -497,10 +497,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Perfect Balance Feature", "Replace Perfect Balance with Masterful Blitz when you have 3 Beast Chakra.", MNK.JobID)]
     MonkPerfectBalanceFeature = 2004,
 
-    [CustomComboInfo("Riddle of Brotherly Fire", "Replace Riddle of Fire with Brotherhood if the former is on cooldown and the latter is not.", MNK.JobID)]
+    [CustomComboInfo("Riddle of Brotherly Fire", "Replace Riddle of Fire with Brotherhood when on cooldown.", MNK.JobID)]
     MonkRiddleOfFireBrotherhood = 2009,
 
-    [CustomComboInfo("Riddle of Fire and Wind", "Replace Riddle of Fire with Riddle of Wind if the former is on cooldown and the latter is not.", MNK.JobID)]
+    [CustomComboInfo("Riddle of Fire and Wind", "Replace Riddle of Fire with Riddle of Wind when on cooldown.", MNK.JobID)]
     MonkRiddleOfFireWind = 2010,
 
     #endregion
