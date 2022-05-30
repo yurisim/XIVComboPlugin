@@ -109,7 +109,11 @@ internal abstract partial class CustomCombo
         {
             // Neither, return the first parameter
             if (!a1.Data.IsCooldown && !a2.Data.IsCooldown)
-                return original == a1.ActionID ? a1 : a2;
+            {
+                return original == a1.ActionID ? a1 :
+                       original == a2.ActionID ? a2 :
+                       a1;
+            }
 
             // Both, return soonest available
             if (a1.Data.IsCooldown && a2.Data.IsCooldown)
