@@ -377,6 +377,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Dive Dive Dive!", "Replace Spineshatter Dive, Dragonfire Dive, and Stardiver with whichever is available.", DRG.JobID)]
     DragoonDiveFeature = 2211,
 
+    [CustomComboInfo("Geirskogul to Wyrmwind Thrust", "Replace Geirskogul with Wyrmwind Thrust when available and Geirskogul or Nastrond are on cooldown.", DRG.JobID)]
+    DragoonGeirskogulWyrmwindFeature = 2212,
+
     #endregion
     // ====================================================================================
     #region GUNBREAKER

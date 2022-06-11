@@ -71,7 +71,8 @@ internal static class DRG
             CoerthanTorment = 72,
             HighJump = 74,
             RaidenThrust = 76,
-            Stardiver = 80;
+            Stardiver = 80,
+            WyrmwindThrust = 90;
     }
 }
 
@@ -250,6 +251,34 @@ internal class DragoonDives : CustomCombo
 
             if (level >= DRG.Levels.SpineshatterDive)
                 return DRG.SpineshatterDive;
+        }
+
+        return actionID;
+    }
+}
+
+internal class DragoonGierskogul : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonGeirskogulWyrmwindFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == DRG.Geirskogul)
+        {
+            if (level >= DRG.Levels.WyrmwindThrust)
+            {
+                var gauge = GetJobGauge<DRGGauge>();
+
+                if (gauge.FirstmindsFocusCount == 2)
+                {
+                    var action = gauge.IsLOTDActive
+                        ? DRG.Nastrond
+                        : DRG.Geirskogul;
+
+                    if (IsOnCooldown(action))
+                        return DRG.WyrmwindThrust;
+                }
+            }
         }
 
         return actionID;
