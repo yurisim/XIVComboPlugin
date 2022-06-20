@@ -187,7 +187,9 @@ internal class NinjaHuraijin : CustomCombo
 
             if (IsEnabled(CustomComboPreset.NinjaHuraijinArmorCrushCombo))
             {
-                if (comboTime > 0)
+                var gauge = GetJobGauge<NINGauge>();
+
+                if (comboTime > 0 && gauge.HutonTimer > 0)
                 {
                     if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
                         return NIN.ArmorCrush;
