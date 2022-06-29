@@ -80,18 +80,18 @@ internal class NinjaAeolianEdge : CustomCombo
         {
             var gauge = GetJobGauge<NINGauge>();
 
-            if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
-            {
-                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
-                    return NIN.FleetingRaiju;
-            }
-
             if (IsEnabled(CustomComboPreset.NinjaAeolianNinjutsuFeature))
             {
                 if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
                     return OriginalHook(NIN.Ninjutsu);
             }
-
+            
+            if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
+            {
+                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
+                    return NIN.FleetingRaiju;
+            }
+            
             if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeHutonFeature))
             {
                 if (level >= NIN.Levels.Huraijin && gauge.HutonTimer == 0)
