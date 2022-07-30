@@ -6,7 +6,7 @@ internal static class ADV
     public const byte JobID = 0;
 
     public const uint
-        LucidDreaming = 1204,
+        LucidDreaming = 7562,
         Swiftcast = 7561;
 
     public static class Buffs

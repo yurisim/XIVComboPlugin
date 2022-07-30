@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -220,5 +221,23 @@ internal class AstrologianBenefic2 : CustomCombo
         }
 
         return actionID;
+    }
+}
+
+internal class AstrologianLucidFeature : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianLucidFeature;
+    
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        var action = actionID;
+        
+        if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
+        {
+            if (HasCondition(ConditionFlag.InCombat) && IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000 && CanUseAction(ADV.LucidDreaming))
+                action = ADV.LucidDreaming;
+        }
+
+        return action;
     }
 }

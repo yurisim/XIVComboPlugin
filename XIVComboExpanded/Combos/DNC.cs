@@ -73,6 +73,7 @@ internal static class DNC
             FanDance3 = 66,
             TechnicalStep = 70,
             Flourish = 72,
+            SaberDance = 76,
             Tillana = 82,
             FanDance4 = 86,
             StarfallDance = 90;
@@ -220,6 +221,14 @@ internal class DancerCascadeFountain : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.DancerSingleTargetMultibutton))
             {
+                if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
+                    return DNC.FanDance4;
+                if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
+                    return DNC.FanDance3;
+                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish))
+                    return DNC.Flourish;
+                if (level >= DNC.Levels.SaberDance && GetJobGauge<DNCGauge>().Esprit >= 90)
+                    return DNC.SaberDance;
                 if (level >= DNC.Levels.Fountainfall && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
                     return DNC.Fountainfall;
 
@@ -260,12 +269,18 @@ internal class DancerWindmillBladeshower : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.DancerAoeMultibutton))
             {
+                if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
+                    return DNC.FanDance4;
+                if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
+                    return DNC.FanDance3;
+                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish))
+                    return DNC.Flourish;
+                if (level >= DNC.Levels.SaberDance && GetJobGauge<DNCGauge>().Esprit >= 90)
+                    return DNC.SaberDance;
                 if (level >= DNC.Levels.Bloodshower && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
                     return DNC.Bloodshower;
-
                 if (level >= DNC.Levels.RisingWindmill && (HasEffect(DNC.Buffs.FlourishingSymmetry) || HasEffect(DNC.Buffs.SilkenSymmetry)))
                     return DNC.RisingWindmill;
-
                 if (lastComboMove == DNC.Windmill && level >= DNC.Levels.Bladeshower)
                     return DNC.Bladeshower;
             }

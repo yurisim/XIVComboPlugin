@@ -92,9 +92,77 @@ internal class BardHeavyShot : CustomCombo
     {
         if (actionID == BRD.HeavyShot || actionID == BRD.BurstShot)
         {
+            var gauge = GetJobGauge<BRDGauge>();
+
+            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire == 3 && GCDClipCheck(actionID))
+                return BRD.PitchPerfect;
+
+            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1 && GCDClipCheck(actionID))
+            {
+                if (gauge.SongTimer <= 2500)
+                    return BRD.PitchPerfect;
+            }
+
+            if ((gauge.Song != Song.WANDERER && gauge.SongTimer <= 15000) && gauge.Song != Song.MAGE)
+            {
+                if (level >= BRD.Levels.WanderersMinuet && IsOffCooldown(BRD.WanderersMinuet) && GCDClipCheck(actionID))
+                    return BRD.WanderersMinuet;
+
+                if (level >= BRD.Levels.MagesBallad && IsOffCooldown(BRD.MagesBallad) && GCDClipCheck(actionID))
+                    return BRD.MagesBallad;
+
+                if (level >= BRD.Levels.ArmysPaeon && IsOffCooldown(BRD.ArmysPaeon) && GCDClipCheck(actionID))
+                    return BRD.ArmysPaeon;
+            }
+
+            if (level >= BRD.Levels.Sidewinder && IsOffCooldown(BRD.Sidewinder) && GCDClipCheck(actionID))
+            {
+                return BRD.Sidewinder;
+            }
+
+            if (level >= BRD.Levels.EmpyrealArrow && IsOffCooldown(BRD.EmpyrealArrow) && GCDClipCheck(actionID))
+            {
+                return BRD.EmpyrealArrow;
+            }
+
+            if ((IsOffCooldown(BRD.Bloodletter) || HasCharges(BRD.Bloodletter)) && GCDClipCheck(actionID))
+            {
+                return BRD.Bloodletter;
+            }
+
+            if (level >= BRD.Levels.IronJaws)
+            {
+                if (level < BRD.Levels.BiteUpgrade)
+                {
+                    var venomous = FindTargetEffect(BRD.Debuffs.VenomousBite);
+                    var windbite = FindTargetEffect(BRD.Debuffs.Windbite);
+
+                    if ((venomous?.RemainingTime <= 5 || windbite?.RemainingTime <= 5))
+                        return BRD.IronJaws;
+                }
+
+                var caustic = FindTargetEffect(BRD.Debuffs.CausticBite);
+                var stormbite = FindTargetEffect(BRD.Debuffs.Stormbite);
+
+
+                if ((caustic?.RemainingTime <= 5 || stormbite?.RemainingTime <= 5))
+                    return BRD.IronJaws;
+            }
+            else
+            {
+                var venomous = FindTargetEffect(BRD.Debuffs.VenomousBite);
+                var windbite = FindTargetEffect(BRD.Debuffs.Windbite);
+
+                if (venomous is null)
+                    return BRD.VenomousBite;
+
+                if (windbite is null)
+                    return BRD.Windbite;
+            }
+
+
             if (IsEnabled(CustomComboPreset.BardApexFeature))
             {
-                var gauge = GetJobGauge<BRDGauge>();
 
                 if (level >= BRD.Levels.BlastShot && HasEffect(BRD.Buffs.BlastShotReady))
                     return BRD.BlastArrow;
@@ -187,10 +255,46 @@ internal class BardQuickNock : CustomCombo
     {
         if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
         {
+            var gauge = GetJobGauge<BRDGauge>();
+
+            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire == 3 && GCDClipCheck(actionID))
+                return BRD.PitchPerfect;
+
+            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1 && GCDClipCheck(actionID))
+            {
+                if (gauge.SongTimer <= 2500)
+                    return BRD.PitchPerfect;
+            }
+
+            if ((gauge.Song != Song.WANDERER && gauge.SongTimer <= 15000) && gauge.Song != Song.MAGE)
+            {
+                if (level >= BRD.Levels.WanderersMinuet && IsOffCooldown(BRD.WanderersMinuet) && GCDClipCheck(actionID))
+                    return BRD.WanderersMinuet;
+
+                if (level >= BRD.Levels.MagesBallad && IsOffCooldown(BRD.MagesBallad) && GCDClipCheck(actionID))
+                    return BRD.MagesBallad;
+
+                if (level >= BRD.Levels.ArmysPaeon && IsOffCooldown(BRD.ArmysPaeon) && GCDClipCheck(actionID))
+                    return BRD.ArmysPaeon;
+            }
+
+            if ((IsOffCooldown(BRD.RainOfDeath) || HasCharges(BRD.RainOfDeath)) && GCDClipCheck(actionID))
+            {
+                return BRD.RainOfDeath;
+            }
+
+            if (level >= BRD.Levels.Sidewinder && IsOffCooldown(BRD.Sidewinder) && GCDClipCheck(actionID))
+            {
+                return BRD.Sidewinder;
+            }
+
+            if (level >= BRD.Levels.EmpyrealArrow && IsOffCooldown(BRD.EmpyrealArrow) && GCDClipCheck(actionID))
+            {
+                return BRD.EmpyrealArrow;
+            }
+
             if (IsEnabled(CustomComboPreset.BardApexFeature))
             {
-                var gauge = GetJobGauge<BRDGauge>();
-
                 if (level >= BRD.Levels.ApexArrow && gauge.SoulVoice == 100)
                     return BRD.ApexArrow;
 

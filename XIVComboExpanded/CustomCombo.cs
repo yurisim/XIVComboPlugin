@@ -202,6 +202,13 @@ internal abstract partial class CustomCombo
         => Service.IconReplacer.OriginalHook(actionID);
 
     /// <summary>
+    /// Gets bool determining if action is greyed out or not.
+    /// </summary>
+    /// <param name="actionID">Action ID.</param>
+    /// <returns>A bool value of whether the action can be used or not.</returns>
+    protected static bool CanUseAction(uint actionID) => Service.IconReplacer.CanUseAction(actionID);
+
+    /// <summary>
     /// Compare the original hook to the given action ID.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
@@ -438,6 +445,12 @@ internal abstract partial class CustomCombo
 
         return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
+
+    /// <summary>
+    /// Checks to see if the GCD would not currently clip if you used a cooldown.
+    /// </summary>
+    /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
+    protected static bool GCDClipCheck(uint actionID) => GetCooldown(actionID).CooldownRemaining >= 0.7;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.

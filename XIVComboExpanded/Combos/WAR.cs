@@ -22,6 +22,7 @@ internal static class WAR
         Decimate = 3550,
         RawIntuition = 3551,
         Equilibrium = 3552,
+        Upheaval = 7387,
         InnerRelease = 7389,
         MythrilTempest = 16462,
         ChaoticCyclone = 16463,
@@ -62,6 +63,7 @@ internal static class WAR
             Equilibrium = 58,
             Decimate = 60,
             InnerRelease = 70,
+            ChaoticCyclone = 72,
             MythrilTempestTrait = 74,
             NascentFlash = 76,
             InnerChaos = 80,
@@ -88,8 +90,17 @@ internal class WarriorStormsPathCombo : CustomCombo
 
             if (comboTime > 0)
             {
+                if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && GetRemainingCharges(WAR.Infuriate) > 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
+                    return WAR.Infuriate;
+
+                if (IsOffCooldown(WAR.Upheaval) && CanUseAction(WAR.Upheaval) && GCDClipCheck(actionID))
+                {
+                    return WAR.Upheaval;
+                }
+
                 if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
                 {
+
                     if (IsEnabled(CustomComboPreset.WarriorStormsPathOvercapFeature))
                     {
                         if (level >= WAR.Levels.InnerBeast && gauge.BeastGauge > 80)
@@ -167,6 +178,14 @@ internal class WarriorMythrilTempestCombo : CustomCombo
         {
             var gauge = GetJobGauge<WARGauge>();
 
+            if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && GetRemainingCharges(WAR.Infuriate) > 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
+                return WAR.Infuriate;
+
+            if (level >= WAR.Levels.ChaoticCyclone && CanUseAction(WAR.ChaoticCyclone))
+            {
+                return WAR.ChaoticCyclone;
+            }
+
             if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
             {
                 if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
@@ -186,6 +205,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                     return WAR.MythrilTempest;
                 }
             }
+
 
             return WAR.Overpower;
         }

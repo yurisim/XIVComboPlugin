@@ -17,14 +17,19 @@ internal static class NIN
         AeolianEdge = 2255,
         TrickAttack = 2258,
         Ninjutsu = 2260,
-        Chi = 2261,
+        TenNormal = 2259,
+        ChiNormal = 2261,
         JinNormal = 2263,
         Kassatsu = 2264,
+        Fuma = 2265,
+        Raiton = 2267,
         ArmorCrush = 3563,
         DreamWithinADream = 3566,
+        Bhavacakra = 7402,
         TenChiJin = 7403,
         HakkeMujinsatsu = 16488,
         Meisui = 16489,
+        Chi = 18806,
         Jin = 18807,
         Bunshin = 16493,
         Huraijin = 25876,
@@ -55,12 +60,15 @@ internal static class NIN
             GustSlash = 4,
             Hide = 10,
             Mug = 15,
+            TrickAttack = 18,
             AeolianEdge = 26,
             Ninjitsu = 30,
             Suiton = 45,
             HakkeMujinsatsu = 52,
             ArmorCrush = 54,
+            DreamWithinADream = 56,
             Huraijin = 60,
+            Bhavacakra = 68,
             TenChiJin = 70,
             Meisui = 72,
             EnhancedKassatsu = 76,
@@ -82,6 +90,15 @@ internal class NinjaAeolianEdge : CustomCombo
 
             if (IsEnabled(CustomComboPreset.NinjaAeolianNinjutsuFeature))
             {
+                //if (GetRemainingCharges(NIN.ChiNormal) >= 2)
+                //    return NIN.TenNormal;
+
+                //if (CanUseAction(NIN.Fuma) && !CanUseAction(NIN.Raiton))
+                //    return NIN.Chi;
+
+                //if (CanUseAction(NIN.Raiton))
+                //    return NIN.Raiton;
+
                 if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
                     return OriginalHook(NIN.Ninjutsu);
             }
@@ -106,6 +123,15 @@ internal class NinjaAeolianEdge : CustomCombo
 
             if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeCombo))
             {
+                if (level >= NIN.Levels.TrickAttack && CanUseAction(NIN.TrickAttack) && GCDClipCheck(actionID))
+                    return NIN.TrickAttack;
+
+                if (level >= NIN.Levels.Bhavacakra && gauge.Ninki >= 100 && GCDClipCheck(actionID))
+                    return NIN.Bhavacakra;
+
+                if (level >= NIN.Levels.DreamWithinADream && IsOffCooldown(NIN.DreamWithinADream) && GCDClipCheck(actionID))
+                    return NIN.DreamWithinADream;
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
@@ -270,7 +296,7 @@ internal class NinjaChi : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == NIN.Chi)
+        if (actionID == NIN.ChiNormal)
         {
             if (level >= NIN.Levels.EnhancedKassatsu && HasEffect(NIN.Buffs.Kassatsu))
                 return NIN.Jin;

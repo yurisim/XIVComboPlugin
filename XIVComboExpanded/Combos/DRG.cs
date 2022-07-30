@@ -11,8 +11,10 @@ internal static class DRG
         // Single Target
         TrueThrust = 75,
         VorpalThrust = 78,
+        LifeSurge = 83,
         Disembowel = 87,
         FullThrust = 84,
+        LanceCharge = 85,
         ChaosThrust = 88,
         HeavensThrust = 25771,
         ChaoticSpring = 25772,
@@ -133,12 +135,12 @@ internal class DragoonChaosThrust : CustomCombo
 
                 if (level >= DRG.Levels.WheelingThrust && HasEffect(DRG.Buffs.EnhancedWheelingThrust))
                     return DRG.WheelingThrust;
-
+                
                 if (comboTime > 0)
                 {
                     if (lastComboMove == DRG.Disembowel && level >= DRG.Levels.ChaosThrust)
                         // ChaoticSpring
-                        return OriginalHook(DRG.ChaosThrust);
+                        return IsOffCooldown(DRG.LanceCharge) ? DRG.LanceCharge : OriginalHook(DRG.ChaosThrust);
 
                     if ((lastComboMove == DRG.TrueThrust || lastComboMove == DRG.RaidenThrust) && level >= DRG.Levels.Disembowel)
                         return DRG.Disembowel;
@@ -182,7 +184,7 @@ internal class DragoonFullThrust : CustomCombo
                 {
                     if (lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
                         // Heavens' Thrust
-                        return OriginalHook(DRG.FullThrust);
+                        return IsOffCooldown(DRG.LifeSurge) ? DRG.LifeSurge : OriginalHook(DRG.FullThrust);
 
                     if ((lastComboMove == DRG.TrueThrust || lastComboMove == DRG.RaidenThrust) && level >= DRG.Levels.VorpalThrust)
                         return DRG.VorpalThrust;
