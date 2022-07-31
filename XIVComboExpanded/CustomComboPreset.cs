@@ -84,7 +84,7 @@ public enum CustomComboPreset
     // ====================================================================================
     #region ADV
 
-    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, and Verraise with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
+    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, Verraise, and Angel Whisper with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
     AllSwiftcastFeature = 1000,
 
     #endregion
