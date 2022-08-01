@@ -110,14 +110,14 @@ internal class WarriorStormsPathCombo : CustomCombo
 
 #if DEBUG
                     var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
-                    if (surgingTempest is null)
+                    if (surgingTempest is null && level >= WAR.Levels.StormsEye)
                         return WAR.StormsEye;
 
                     // Medicated + Opener
-                    if (HasEffect(ADV.Buffs.Medicated) && surgingTempest.RemainingTime > 10)
+                    if (HasEffect(ADV.Buffs.Medicated) && surgingTempest?.RemainingTime > 10)
                         return WAR.StormsPath;
 
-                    if (surgingTempest.RemainingTime < 30)
+                    if (surgingTempest?.RemainingTime < 30 && level >= WAR.Levels.StormsEye)
                         return WAR.StormsEye;
 #endif
 
@@ -178,7 +178,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
         {
             var gauge = GetJobGauge<WARGauge>();
 
-            if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && GetRemainingCharges(WAR.Infuriate) > 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
+            if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge <= 50 && GetRemainingCharges(WAR.Infuriate) >= 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
                 return WAR.Infuriate;
 
             if (level >= WAR.Levels.ChaoticCyclone && CanUseAction(WAR.ChaoticCyclone))

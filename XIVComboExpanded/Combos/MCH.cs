@@ -11,6 +11,7 @@ internal static class MCH
     public const uint
         // Single target
         CleanShot = 2873,
+        Reassemble = 2876,
         HeatedCleanShot = 7413,
         SplitShot = 2866,
         HeatedSplitShot = 7411,
@@ -67,6 +68,7 @@ internal static class MCH
             Drill = 58,
             HeatedSlugshot = 60,
             HeatedCleanShot = 64,
+            Bioblaster = 72,
             ChargedActionMastery = 74,
             AirAnchor = 76,
             QueenOverdrive = 80,
@@ -84,17 +86,56 @@ internal class MachinistCleanShot : CustomCombo
         {
             var gauge = GetJobGauge<MCHGauge>();
 
+            if (gauge.Battery >= 100 && GCDClipCheck(actionID))
+            {
+                return MCH.RookAutoturret;
+            }
+
+            var gaussRoundCharges = GetRemainingCharges(MCH.GaussRound);
+            var ricochetCharges = GetRemainingCharges(MCH.Ricochet);
+
+            if (level >= MCH.Levels.Ricochet && ricochetCharges > gaussRoundCharges && GCDClipCheck(actionID))
+            {
+                return MCH.Ricochet;
+            }
+            else if (gaussRoundCharges >= 1 && GCDClipCheck(actionID))
+            {
+                return MCH.GaussRound;
+            }
+
+            // Casts hypercharge if heat is over 50
+            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat >= 50) return MCH.Hypercharge;
+
             if (IsEnabled(CustomComboPreset.MachinistHypercomboFeature))
             {
                 if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
                     return MCH.HeatBlast;
             }
+            
+            // Hot shot only fires if battery is less than 80
+            if (level <= MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot) && gauge.Battery <= 80)
+            {
+                return MCH.HotShot;
+            }
+
+            // Block for Drill
+            if (level >= MCH.Levels.Drill && IsOffCooldown(MCH.Drill))
+            {
+                // Try to use Reassemble before drill if possible
+                if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
+
+                return MCH.Drill;
+            }
 
             if (comboTime > 0)
             {
                 if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
+                {
+                    if (level < MCH.Levels.Drill && IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
+
                     // Heated
                     return OriginalHook(MCH.CleanShot);
+                }
 
                 if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
                     // Heated
@@ -191,8 +232,47 @@ internal class MachinistSpreadShot : CustomCombo
         {
             var gauge = GetJobGauge<MCHGauge>();
 
+            if (gauge.Battery >= 100 && GCDClipCheck(actionID))
+            {
+                return MCH.RookAutoturret;
+            }
+
+
+            var gaussRoundCharges = GetRemainingCharges(MCH.GaussRound);
+            var ricochetCharges = GetRemainingCharges(MCH.Ricochet);
+
+            if (level >= MCH.Levels.Ricochet && ricochetCharges > gaussRoundCharges && GCDClipCheck(actionID))
+            {
+                return MCH.Ricochet;
+            }
+            else if (gaussRoundCharges >= 1 && GCDClipCheck(actionID))
+            {
+                return MCH.GaussRound;
+            }
+
+            if (level >= MCH.Levels.Bioblaster && IsOffCooldown(MCH.Bioblaster))
+                return MCH.Bioblaster;
+
+            // Casts hypercharge if heat is over 50
+            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat >= 50) return MCH.Hypercharge;
+
             if (level >= MCH.Levels.AutoCrossbow && gauge.IsOverheated)
                 return MCH.AutoCrossbow;
+
+            // Block for Drill
+            if (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
+            {
+                // Try to use Reassemble before drill if possible
+                if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
+
+                return MCH.Chainsaw;
+            }
+
+            if (IsEnabled(CustomComboPreset.MachinistHypercomboFeature))
+            {
+                if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast && level <= MCH.Levels.AutoCrossbow)
+                    return MCH.HeatBlast;
+            }
         }
 
         return actionID;

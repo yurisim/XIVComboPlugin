@@ -450,7 +450,7 @@ internal abstract partial class CustomCombo
     /// Checks to see if the GCD would not currently clip if you used a cooldown.
     /// </summary>
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
-    protected static bool GCDClipCheck(uint actionID) => GetCooldown(actionID).CooldownRemaining >= 0.7;
+    protected static bool GCDClipCheck(uint actionID) => GetCooldown(actionID).CooldownRemaining >= 0.6;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.

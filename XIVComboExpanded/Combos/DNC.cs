@@ -49,6 +49,7 @@ internal static class DNC
             StandardStep = 1818,
             TechnicalStep = 1819,
             ThreefoldFanDance = 1820,
+            Devilment = 1825,
             FourfoldFanDance = 2699;
     }
 
@@ -219,15 +220,20 @@ internal class DancerCascadeFountain : CustomCombo
     {
         if (actionID == DNC.Cascade)
         {
+            var gauge = GetJobGauge<DNCGauge>();
             if (IsEnabled(CustomComboPreset.DancerSingleTargetMultibutton))
             {
+
+                if (level >= DNC.Levels.StarfallDance && CanUseAction(DNC.StarfallDance))
+                    return DNC.StarfallDance;
                 if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
                     return DNC.FanDance4;
                 if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
                     return DNC.FanDance3;
-                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish))
+                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish) && GCDClipCheck(actionID))
                     return DNC.Flourish;
-                if (level >= DNC.Levels.SaberDance && GetJobGauge<DNCGauge>().Esprit >= 90)
+                if (gauge.Feathers == 4 || HasEffect(DNC.Buffs.Devilment) && GCDClipCheck(actionID)) return DNC.FanDance1;
+                if (level >= DNC.Levels.SaberDance && gauge.Esprit >= 90)
                     return DNC.SaberDance;
                 if (level >= DNC.Levels.Fountainfall && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
                     return DNC.Fountainfall;
@@ -269,13 +275,15 @@ internal class DancerWindmillBladeshower : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.DancerAoeMultibutton))
             {
+                var gauge = GetJobGauge<DNCGauge>();
                 if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
                     return DNC.FanDance4;
                 if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
                     return DNC.FanDance3;
-                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish))
+                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish) && GCDClipCheck(actionID))
                     return DNC.Flourish;
-                if (level >= DNC.Levels.SaberDance && GetJobGauge<DNCGauge>().Esprit >= 90)
+                if (gauge.Feathers == 4 && GCDClipCheck(actionID)) return DNC.FanDance2;
+                if (level >= DNC.Levels.SaberDance && gauge.Esprit >= 90)
                     return DNC.SaberDance;
                 if (level >= DNC.Levels.Bloodshower && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
                     return DNC.Bloodshower;

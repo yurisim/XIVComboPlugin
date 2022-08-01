@@ -7,12 +7,16 @@ internal static class GNB
     public const byte JobID = 37;
 
     public const uint
+
+        DangerZone = 16144,
         KeenEdge = 16137,
         NoMercy = 16138,
         BrutalShell = 16139,
         DemonSlice = 16141,
         SolidBarrel = 16145,
         GnashingFang = 16146,
+        SavageClaw = 16147,
+        WickedTalon = 16150,
         DemonSlaughter = 16149,
         SonicBreak = 16153,
         Continuation = 16155,
@@ -47,10 +51,12 @@ internal static class GNB
         public const byte
             NoMercy = 2,
             BrutalShell = 4,
+            DangerZone = 18,
             SolidBarrel = 26,
             BurstStrike = 30,
             DemonSlaughter = 40,
             SonicBreak = 54,
+            GnashingFang = 60,
             BowShock = 62,
             Continuation = 70,
             FatedCircle = 72,
@@ -69,6 +75,15 @@ internal class GunbreakerSolidBarrel : CustomCombo
     {
         if (actionID == GNB.SolidBarrel)
         {
+            if (level >= GNB.Levels.DangerZone && IsOnCooldown(GNB.NoMercy) && GCDClipCheck(actionID) && IsOffCooldown(GNB.DangerZone))
+            {
+                return GNB.DangerZone;
+            }
+
+            if (CanUseAction(GNB.SavageClaw)) return GNB.SavageClaw;
+
+            if (CanUseAction(GNB.WickedTalon)) return GNB.WickedTalon;
+
             if (comboTime > 0)
             {
                 if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
@@ -84,8 +99,25 @@ internal class GunbreakerSolidBarrel : CustomCombo
                                 return GNB.Hypervelocity;
                         }
 
-                        if (level >= GNB.Levels.BurstStrike && gauge.Ammo == maxAmmo)
-                            return GNB.BurstStrike;
+                        if (gauge.Ammo == maxAmmo || IsOffCooldown(GNB.NoMercy) || HasEffect(GNB.Buffs.NoMercy))
+                        {
+                            if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak))
+                            {
+                                if (IsOffCooldown(GNB.NoMercy) & GCDClipCheck(actionID)) return GNB.NoMercy;
+
+                                return GNB.SonicBreak;
+                            }
+
+                            if (level >= GNB.Levels.GnashingFang && IsOffCooldown(GNB.GnashingFang) && gauge.Ammo >= 1)
+                            {
+                                if (IsOffCooldown(GNB.NoMercy) & GCDClipCheck(actionID)) return GNB.NoMercy;
+
+                                return GNB.GnashingFang;
+                            }
+
+                            if (level >= GNB.Levels.BurstStrike && gauge.Ammo >= 1)
+                                return GNB.BurstStrike;
+                        }
                     }
 
                     return GNB.SolidBarrel;
@@ -190,6 +222,11 @@ internal class GunbreakerDemonSlaughter : CustomCombo
     {
         if (actionID == GNB.DemonSlaughter)
         {
+            if (level >= GNB.Levels.DangerZone && IsOnCooldown(GNB.NoMercy) && GCDClipCheck(actionID) && IsOffCooldown(GNB.DangerZone))
+            {
+                return GNB.DangerZone;
+            }
+
             if (comboTime > 0 && lastComboMove == GNB.DemonSlice && level >= GNB.Levels.DemonSlaughter)
             {
                 if (IsEnabled(CustomComboPreset.GunbreakerFatedCircleFeature))

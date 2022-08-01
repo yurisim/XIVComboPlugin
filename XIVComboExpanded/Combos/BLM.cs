@@ -17,12 +17,18 @@ internal static class BLM
         Thunder3 = 153,
         Blizzard3 = 154,
         Scathe = 156,
+        Manafont = 158,
         Freeze = 159,
         Flare = 162,
         LeyLines = 3573,
+        Sharpcast = 3574,
         Blizzard4 = 3576,
         Fire4 = 3577,
         BetweenTheLines = 7419,
+        Thunder4 = 7420,
+        Triplecast = 7421,
+        Foul = 7422,
+        Thunder2 = 7447,
         Despair = 16505,
         UmbralSoul = 16506,
         Xenoglossy = 16507,
@@ -37,6 +43,8 @@ internal static class BLM
             Thundercloud = 164,
             Firestarter = 165,
             LeyLines = 737,
+            Sharpcast = 867,
+            Triplecast = 1211,
             EnhancedFlare = 2960;
     }
 
@@ -44,20 +52,29 @@ internal static class BLM
     {
         public const ushort
             Thunder = 161,
-            Thunder3 = 163;
+            Thunder2 = 162,
+            Thunder3 = 163,
+            Thunder4 = 1210;
     }
 
     public static class Levels
     {
         public const byte
+            Fire2 = 18,
+            Thunder2 = 26,
+            Manafont = 30,
             Fire3 = 35,
             Blizzard3 = 35,
             Freeze = 40,
             Thunder3 = 45,
             Flare = 50,
+            Sharpcast = 54,
             Blizzard4 = 58,
             Fire4 = 60,
             BetweenTheLines = 62,
+            Thunder4 = 64,
+            Triplecast = 66,
+            Foul = 70,
             Despair = 72,
             UmbralSoul = 76,
             Xenoglossy = 80,
@@ -98,6 +115,15 @@ internal class BlackFireBlizzard4 : CustomCombo
                             return BLM.Despair;
                     }
 
+                    if (level >= BLM.Levels.Manafont && (LocalPlayer?.CurrentMp <= 6000 && gauge.ElementTimeRemaining >= 5000) && IsOffCooldown(BLM.Manafont))
+                        return BLM.Manafont;
+
+                    if ((LocalPlayer?.CurrentMp >= 3200 && gauge.ElementTimeRemaining <= 5000))
+                        return BLM.Fire;
+
+                    if (level >= BLM.Levels.Blizzard3 && (LocalPlayer?.CurrentMp <= 1600 || gauge.ElementTimeRemaining <= 5000))
+                        return BLM.Blizzard3;
+
                     if (IsEnabled(CustomComboPreset.BlackEnochianNoSyncFeature) || level >= BLM.Levels.Fire4)
                         return BLM.Fire4;
 
@@ -106,10 +132,128 @@ internal class BlackFireBlizzard4 : CustomCombo
 
                 if (gauge.InUmbralIce)
                 {
+
+
+                    if (gauge.ElementTimeRemaining >= 13500)
+                    {
+                        if (level >= BLM.Levels.Sharpcast
+                            && !HasEffect(BLM.Buffs.Thundercloud)
+                            && !HasEffect(BLM.Buffs.Sharpcast)
+                            && IsOffCooldown(BLM.Sharpcast))
+                        {
+                            return BLM.Sharpcast;
+                        }
+
+                        var thunder3 = FindTargetEffect(BLM.Debuffs.Thunder3);
+
+                        if (level >= BLM.Levels.Thunder3 && (thunder3 == null || thunder3.RemainingTime <= 5)) return BLM.Thunder3;
+                    }
+
+                    if (level >= BLM.Levels.Fire3 && (gauge.UmbralHearts >= 3 || gauge.ElementTimeRemaining <= 5000))
+                        return BLM.Fire3;
+
+                    if (level < BLM.Levels.Blizzard4 && LocalPlayer?.CurrentMp >= 9500) return BLM.Fire3;
+
+                    if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul && level < BLM.Levels.Xenoglossy) return BLM.Foul;
+
                     if (IsEnabled(CustomComboPreset.BlackEnochianNoSyncFeature) || level >= BLM.Levels.Blizzard4)
                         return BLM.Blizzard4;
 
                     return BLM.Blizzard;
+                }
+
+                if (!gauge.InAstralFire && !gauge.InAstralFire)
+                {
+                    return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire3 : BLM.Blizzard3;
+                }
+            }
+        }
+
+        return actionID;
+    }
+}
+
+internal class BlackFireBlizzard2 : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BLM.Blizzard2)
+        {
+            var gauge = GetJobGauge<BLMGauge>();
+
+            if (IsEnabled(CustomComboPreset.BlackEnochianFeature))
+            {
+                if (gauge.InAstralFire)
+                {
+                    if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul) return BLM.Foul;
+
+                    if (IsEnabled(CustomComboPreset.BlackEnochianDespairFeature))
+                    {
+                        if (level >= BLM.Levels.Despair && LocalPlayer?.CurrentMp <= 2500)
+                            return BLM.Despair;
+                    }
+
+                    if (level >= BLM.Levels.Manafont && (LocalPlayer?.CurrentMp <= 6000) && IsOffCooldown(BLM.Manafont))
+                        return BLM.Manafont;
+
+                    // Switch out of Fire Phase into Ice phase if less MP than 2500
+                    if (LocalPlayer?.CurrentMp <= 2500)
+                    {
+                        //if (IsOffCooldown(ADV.Swiftcast) || (HasCharges(BLM.Triplecast) && level >= BLM.Levels.Triplecast)) 
+
+                        if(!HasEffect(ADV.Buffs.Swiftcast) && !HasEffect(BLM.Buffs.Triplecast) && LocalPlayer.CurrentMp > 0)
+                        {
+                            if (IsOffCooldown(ADV.Swiftcast)) return ADV.Swiftcast;
+
+                            if (HasCharges(BLM.Triplecast) && level >= BLM.Levels.Triplecast && !HasEffect(ADV.Buffs.Swiftcast)) return BLM.Triplecast;
+                            
+                        }
+                        else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast) && LocalPlayer.CurrentMp > 0)
+                        {
+                            return BLM.Flare;
+                        }
+                        
+                        return BLM.Blizzard2;
+                    };
+
+
+                    return BLM.Fire2;
+
+                }
+                
+                if (gauge.InUmbralIce)
+                {
+                    if (gauge.ElementTimeRemaining >= 13000 && level >= BLM.Levels.Thunder2)
+                    {
+                        if (level >= BLM.Levels.Sharpcast
+                            && !HasEffect(BLM.Buffs.Thundercloud)
+                            && !HasEffect(BLM.Buffs.Sharpcast)
+                            && IsOffCooldown(BLM.Sharpcast))
+                        {
+                            return BLM.Sharpcast;
+                        }
+                        
+                        var isThunder4 = level >= BLM.Levels.Thunder4;
+                        
+                        var thunder = isThunder4 ? FindTargetEffect(BLM.Debuffs.Thunder4) : FindTargetEffect(BLM.Debuffs.Thunder2);
+
+                        if ((thunder == null || thunder.RemainingTime <= 6)) return isThunder4 ? BLM.Thunder4 : BLM.Thunder2;
+                    }
+
+
+                    if (level >= BLM.Levels.Freeze && gauge.UmbralHearts == 0) return BLM.Freeze;
+                    
+                    if (level >= BLM.Levels.Fire2 && (gauge.UmbralHearts >= 3 || gauge.ElementTimeRemaining <= 5000))
+                        return BLM.Fire2;
+
+                    return BLM.Blizzard2;
+                }
+
+                if (!gauge.InAstralFire && !gauge.InAstralFire)
+                {
+                    return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire2 : BLM.Blizzard2;
                 }
             }
         }

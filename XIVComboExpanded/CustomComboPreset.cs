@@ -181,7 +181,7 @@ public enum CustomComboPreset
     BlackScatheFeature = 2507,
 
     [CustomComboInfo("One Button Black Mage", "Automates your Black Mage", BLM.JobID)]
-    OneButtonBlackMageFeature = 2518,
+    OneButtonAOEBlackMageFeature = 2525,
 
     #endregion
 // ====================================================================================

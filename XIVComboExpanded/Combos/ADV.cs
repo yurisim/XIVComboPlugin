@@ -12,7 +12,8 @@ internal static class ADV
     public static class Buffs
     {
         public const ushort
-            Medicated = 49;
+            Medicated = 49,
+            Swiftcast = 167;
     }
 
     public static class Debuffs
