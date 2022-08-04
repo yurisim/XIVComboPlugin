@@ -21,7 +21,15 @@ internal static class MNK
         PerfectBalance = 69,
         Rockbreaker = 70,
         DragonKick = 74,
+
+        ElixirField = 3545,
+        FlintStrike = 25882,
+        TornadoKick = 3543,
+
+
         Meditation = 3546,
+        TheForbiddenChakra = 3547,
+        FormShift = 4262,
         RiddleOfFire = 7395,
         Brotherhood = 7396,
         FourPointFury = 16473,
@@ -29,6 +37,7 @@ internal static class MNK
         HowlingFist = 25763,
         MasterfulBlitz = 25764,
         RiddleOfWind = 25766,
+        SteelPeak = 25761,
         ShadowOfTheDestroyer = 25767;
 
     public static class Buffs
@@ -65,6 +74,7 @@ internal static class MNK
             DragonKick = 50,
             PerfectBalance = 50,
             FormShift = 52,
+            TheForbiddenChakra = 54,
             EnhancedPerfectBalance = 60,
             MasterfulBlitz = 60,
             RiddleOfFire = 68,
@@ -81,78 +91,85 @@ internal class MonkAoECombo : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == MNK.MasterfulBlitz)
+        if (actionID == MNK.ArmOfTheDestroyer)
         {
             var gauge = GetJobGauge<MNKGauge>();
 
-            // Blitz
-            if (level >= MNK.Levels.MasterfulBlitz && !gauge.BeastChakra.Contains(BeastChakra.NONE))
-                return OriginalHook(MNK.MasterfulBlitz);
-
-            if (level >= MNK.Levels.PerfectBalance && HasEffect(MNK.Buffs.PerfectBalance))
+            if (HasEffect(MNK.Buffs.DisciplinedFist))
             {
-                // Solar
-                if (level >= MNK.Levels.EnhancedPerfectBalance && !gauge.Nadi.HasFlag(Nadi.SOLAR))
+                if (gauge.Chakra >= 5 && GCDClipCheck(actionID))
                 {
-                    if (level >= MNK.Levels.FourPointFury && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
-                        return MNK.FourPointFury;
+                    if (level >= MNK.Levels.RiddleOfFire
+                        && GCDClipCheck(actionID)
+                        && IsOffCooldown(MNK.RiddleOfFire))
+                    {
+                        return MNK.RiddleOfFire;
+                    }
+                    
 
-                    if (level >= MNK.Levels.Rockbreaker && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
-                        return MNK.Rockbreaker;
 
-                    if (level >= MNK.Levels.ArmOfTheDestroyer && !gauge.BeastChakra.Contains(BeastChakra.OPOOPO))
-                        // Shadow of the Destroyer
-                        return OriginalHook(MNK.ArmOfTheDestroyer);
+                    return level >= MNK.Levels.HowlingFist ? OriginalHook(MNK.HowlingFist) : OriginalHook(MNK.SteelPeak);
+                }
+            }
 
-                    return level >= MNK.Levels.ShadowOfTheDestroyer
-                        ? MNK.ShadowOfTheDestroyer
-                        : MNK.Rockbreaker;
+            var perfectBalance = FindEffect(MNK.Buffs.PerfectBalance);
+
+            if (HasEffect(MNK.Buffs.CoerlForm)
+                || (!gauge.Nadi.HasFlag(Nadi.SOLAR) && perfectBalance?.StackCount >= 3)
+                || (gauge.Nadi.HasFlag(Nadi.SOLAR)
+                    && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                    && HasEffect(MNK.Buffs.PerfectBalance)))
+            {
+                if (level >= MNK.Levels.Rockbreaker)
+                {
+                    return MNK.Rockbreaker;
+                }
+            }
+
+            if (HasEffect(MNK.Buffs.RaptorForm)
+                || (!gauge.Nadi.HasFlag(Nadi.SOLAR) && perfectBalance?.StackCount >= 2))
+            {
+
+                if (level >= MNK.Levels.FourPointFury)
+                {
+                    return MNK.FourPointFury;
+                }
+            }
+
+            if (HasEffect(MNK.Buffs.DisciplinedFist))
+            {
+                if (level >= MNK.Levels.MasterfulBlitz
+                    && (CanUseAction(MNK.FlintStrike)
+                        || CanUseAction(MNK.ElixirField)
+                        || CanUseAction(MNK.TornadoKick)
+                        ))
+                {
+                    if (level >= MNK.Levels.RiddleOfFire
+                        && GCDClipCheck(actionID)
+                        && IsOffCooldown(MNK.RiddleOfFire))
+                        return MNK.RiddleOfFire;
+
+                    return OriginalHook(MNK.MasterfulBlitz);
                 }
 
-                // Lunar.  Also used if we have both Nadi as Tornado Kick/Phantom Rush isn't picky, or under 60.
-                return level >= MNK.Levels.ShadowOfTheDestroyer
-                    ? MNK.ShadowOfTheDestroyer
-                    : MNK.Rockbreaker;
+
+                if (level >= MNK.Levels.PerfectBalance
+                    && GCDClipCheck(actionID)
+                    && GetRemainingCharges(MNK.PerfectBalance) > 0
+                    && !HasEffect(MNK.Buffs.PerfectBalance))
+                {
+                    return MNK.PerfectBalance;
+
+                }
             }
 
-            // FPF with FormShift
-            if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+            if (HasEffect(MNK.Buffs.OpoOpoForm)
+                || (!gauge.Nadi.HasFlag(Nadi.SOLAR) || perfectBalance?.StackCount >= 1)
+                )
             {
-                if (level >= MNK.Levels.FourPointFury)
-                    return MNK.FourPointFury;
+                return MNK.ArmOfTheDestroyer;
             }
 
-            // 1-2-3 combo
-            if (level >= MNK.Levels.FourPointFury && HasEffect(MNK.Buffs.RaptorForm))
-                return MNK.FourPointFury;
-
-            if (level >= MNK.Levels.ArmOfTheDestroyer && HasEffect(MNK.Buffs.OpoOpoForm))
-                // Shadow of the Destroyer
-                return OriginalHook(MNK.ArmOfTheDestroyer);
-
-            if (level >= MNK.Levels.Rockbreaker && HasEffect(MNK.Buffs.CoerlForm))
-                return MNK.Rockbreaker;
-
-            // Shadow of the Destroyer
-            return OriginalHook(MNK.ArmOfTheDestroyer);
-        }
-
-        return actionID;
-    }
-}
-
-internal class MonkHowlingFistEnlightenment : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkHowlingFistMeditationFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == MNK.HowlingFist || actionID == MNK.Enlightenment)
-        {
-            var gauge = GetJobGauge<MNKGauge>();
-
-            if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
-                return MNK.Meditation;
         }
 
         return actionID;
@@ -165,77 +182,122 @@ internal class MonkDragonKick : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == MNK.DragonKick)
+        if (actionID == MNK.Bootshine)
         {
             var gauge = GetJobGauge<MNKGauge>();
 
-            if (IsEnabled(CustomComboPreset.MonkDragonKickMeditationFeature))
+            if (level >= MNK.Levels.Meditation
+                && gauge.Chakra < 5
+                && (!InMeleeRange()
+                    || !InCombat()))
+                return MNK.Meditation;
+
+            if (level >= MNK.Levels.FormShift
+                && !HasEffect(MNK.Buffs.FormlessFist)
+                && !HasEffect(MNK.Buffs.PerfectBalance)
+                && (!InMeleeRange()
+                    || !InCombat()))
             {
-                if (level >= MNK.Levels.Meditation && gauge.Chakra < 5 && !InCombat())
-                    return MNK.Meditation;
+                return MNK.FormShift;
             }
 
-            if (IsEnabled(CustomComboPreset.MonkDragonKickBalanceFeature))
+            if (HasEffect(MNK.Buffs.DisciplinedFist))
             {
-                if (level >= MNK.Levels.MasterfulBlitz && !gauge.BeastChakra.Contains(BeastChakra.NONE))
-                    return OriginalHook(MNK.MasterfulBlitz);
-            }
-
-            if (IsEnabled(CustomComboPreset.MonkBootshineFeature))
-            {
-                if (level < MNK.Levels.DragonKick)
-                    return MNK.Bootshine;
-
-                if (HasEffect(MNK.Buffs.LeadenFist) && (HasEffect(MNK.Buffs.OpoOpoForm) || HasEffect(MNK.Buffs.PerfectBalance) || HasEffect(MNK.Buffs.FormlessFist)))
-                    return MNK.Bootshine;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class MonkTwinSnakes : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == MNK.TwinSnakes)
-        {
-            if (IsEnabled(CustomComboPreset.MonkTwinSnakesFeature))
-            {
-                if (level < MNK.Levels.TwinSnakes)
-                    return MNK.TrueStrike;
-
-                if (IsEnabled(CustomComboPreset.MonkFormlessSnakesOption))
+                if (gauge.Chakra >= 5 && GCDClipCheck(actionID))
                 {
-                    if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
-                        return MNK.TwinSnakes;
+                    if (level >= MNK.Levels.RiddleOfFire
+                        && GCDClipCheck(actionID)
+                        && IsOffCooldown(MNK.RiddleOfFire))
+                        return MNK.RiddleOfFire;
+
+                    return OriginalHook(MNK.SteelPeak);
+                }
+            }
+
+
+            //if (level >= MNK.Levels.MasterfulBlitz && !gauge.BeastChakra.Contains(BeastChakra.NONE))
+            //    return OriginalHook(MNK.MasterfulBlitz);
+
+            var perfectBalance = FindEffect(MNK.Buffs.PerfectBalance);
+            
+            var demolish = FindTargetEffect(MNK.Debuffs.Demolish);
+            if (HasEffect(MNK.Buffs.CoerlForm)
+                || (!gauge.Nadi.HasFlag(Nadi.SOLAR) && perfectBalance?.StackCount >= 3)
+                || (demolish == null && HasEffect(MNK.Buffs.FormlessFist)))
+            {
+                if ((demolish == null
+                        || demolish?.RemainingTime <= 6)
+                    && level >= MNK.Levels.Demolish)
+                {
+                    return MNK.Demolish;
+                }
+                else
+                {
+                    return MNK.SnapPunch;
+                }
+            }
+            
+            var disciplinedFist = FindEffect(MNK.Buffs.DisciplinedFist);
+
+            if (HasEffect(MNK.Buffs.RaptorForm)
+                || (!gauge.Nadi.HasFlag(Nadi.SOLAR) && perfectBalance?.StackCount >= 2)
+                || (disciplinedFist == null && HasEffect(MNK.Buffs.FormlessFist))
+                )
+            {
+                if ((disciplinedFist == null
+                        || disciplinedFist?.RemainingTime <= 6)
+                    && level >= MNK.Levels.TwinSnakes)
+                {
+                    return MNK.TwinSnakes;
+                }
+                else
+                {
+                    return MNK.TrueStrike;
+                }
+            }
+
+            if (HasEffect(MNK.Buffs.DisciplinedFist))
+            {
+                if (level >= MNK.Levels.MasterfulBlitz
+                    && (CanUseAction(MNK.FlintStrike)
+                        || CanUseAction(MNK.ElixirField)
+                        || CanUseAction(MNK.TornadoKick)
+                        ))
+                {
+                    if (level >= MNK.Levels.RiddleOfFire
+                        && GCDClipCheck(actionID)
+                        && IsOffCooldown(MNK.RiddleOfFire))
+                        return MNK.RiddleOfFire;
+
+                    return OriginalHook(MNK.MasterfulBlitz);
                 }
 
-                if (FindEffect(MNK.Buffs.DisciplinedFist)?.RemainingTime > 6.0)
-                    return MNK.TrueStrike;
+
+                if (level >= MNK.Levels.PerfectBalance
+                    && GetRemainingCharges(MNK.PerfectBalance) > 0
+                    && !HasEffect(MNK.Buffs.PerfectBalance)
+                    && TargetHasEffect(MNK.Debuffs.Demolish))
+                {
+                    return MNK.PerfectBalance;
+
+                }
             }
-        }
 
-        return actionID;
-    }
-}
-
-internal class MonkDemolish : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == MNK.Demolish)
-        {
-            if (IsEnabled(CustomComboPreset.MonkDemolishFeature))
+            if (HasEffect(MNK.Buffs.OpoOpoForm)
+                || (!gauge.Nadi.HasFlag(Nadi.LUNAR) || perfectBalance?.StackCount >= 1)
+                || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR))
+                )
             {
-                if (level < MNK.Levels.Demolish || FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime > 6.0)
-                    return MNK.SnapPunch;
+                if (!HasEffect(MNK.Buffs.LeadenFist) && level >= MNK.Levels.DragonKick)
+                {
+                    return MNK.DragonKick;
+                }
+                else
+                {
+                    return MNK.Bootshine;
+                }
             }
+
         }
 
         return actionID;

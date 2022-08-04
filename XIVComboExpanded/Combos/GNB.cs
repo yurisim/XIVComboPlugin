@@ -18,6 +18,7 @@ internal static class GNB
         SavageClaw = 16147,
         WickedTalon = 16150,
         DemonSlaughter = 16149,
+        Aurora = 16151,
         SonicBreak = 16153,
         Continuation = 16155,
         JugularRip = 16156,
@@ -55,6 +56,7 @@ internal static class GNB
             SolidBarrel = 26,
             BurstStrike = 30,
             DemonSlaughter = 40,
+            Aurora = 45,
             SonicBreak = 54,
             GnashingFang = 60,
             BowShock = 62,
@@ -78,6 +80,13 @@ internal class GunbreakerSolidBarrel : CustomCombo
             if (level >= GNB.Levels.DangerZone && IsOnCooldown(GNB.NoMercy) && GCDClipCheck(actionID) && IsOffCooldown(GNB.DangerZone))
             {
                 return GNB.DangerZone;
+            }
+
+            if (level >= GNB.Levels.Aurora && GCDClipCheck(actionID)
+                && IsOffCooldown(GNB.Aurora)
+                && LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.8)
+            {
+                return GNB.Aurora;
             }
 
             if (CanUseAction(GNB.SavageClaw)) return GNB.SavageClaw;
@@ -108,6 +117,13 @@ internal class GunbreakerSolidBarrel : CustomCombo
                                 return GNB.SonicBreak;
                             }
 
+                            if (level >= GNB.Levels.BowShock && IsOffCooldown(GNB.BowShock))
+                            {
+                                if (IsOffCooldown(GNB.NoMercy) & GCDClipCheck(actionID)) return GNB.NoMercy;
+
+                                return GNB.BowShock;
+                            }
+
                             if (level >= GNB.Levels.GnashingFang && IsOffCooldown(GNB.GnashingFang) && gauge.Ammo >= 1)
                             {
                                 if (IsOffCooldown(GNB.NoMercy) & GCDClipCheck(actionID)) return GNB.NoMercy;
@@ -116,7 +132,12 @@ internal class GunbreakerSolidBarrel : CustomCombo
                             }
 
                             if (level >= GNB.Levels.BurstStrike && gauge.Ammo >= 1)
+                            {
+
+                                if (IsOffCooldown(GNB.NoMercy) && GCDClipCheck(actionID) && level < GNB.Levels.SonicBreak) return GNB.NoMercy;
+
                                 return GNB.BurstStrike;
+                            }
                         }
                     }
 
@@ -222,9 +243,23 @@ internal class GunbreakerDemonSlaughter : CustomCombo
     {
         if (actionID == GNB.DemonSlaughter)
         {
+            if (level >= GNB.Levels.Aurora && GCDClipCheck(actionID)
+                && IsOffCooldown(GNB.Aurora)
+                && LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.8)
+            {
+                return GNB.Aurora;
+            }
+
             if (level >= GNB.Levels.DangerZone && IsOnCooldown(GNB.NoMercy) && GCDClipCheck(actionID) && IsOffCooldown(GNB.DangerZone))
             {
                 return GNB.DangerZone;
+            }
+
+            if (level >= GNB.Levels.BowShock && IsOffCooldown(GNB.BowShock))
+            {
+                if (IsOffCooldown(GNB.NoMercy) & GCDClipCheck(actionID)) return GNB.NoMercy;
+
+                return GNB.BowShock;
             }
 
             if (comboTime > 0 && lastComboMove == GNB.DemonSlice && level >= GNB.Levels.DemonSlaughter)

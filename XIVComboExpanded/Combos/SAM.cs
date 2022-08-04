@@ -1,5 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using System;
+using System.Linq;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -15,10 +17,14 @@ internal static class SAM
         Yukikaze = 7480,
         Gekko = 7481,
         Kasha = 7482,
+        Enpi = 7486,
+        MidareSetsugekka = 7487,
+        Higanbana = 7489,
         // AoE
         Fuga = 7483,
         Mangetsu = 7484,
         Oka = 7485,
+        TenkaGoken = 7488,
         Fuko = 25780,
         // Iaijutsu and Tsubame
         Iaijutsu = 7867,
@@ -26,6 +32,7 @@ internal static class SAM
         KaeshiHiganbana = 16484,
         Shoha = 16487,
         // Misc
+        MeikyoShisui = 7499,
         HissatsuShinten = 7490,
         HissatsuKyuten = 7491,
         HissatsuSenei = 16481,
@@ -48,7 +55,7 @@ internal static class SAM
     public static class Debuffs
     {
         public const ushort
-            Placeholder = 0;
+            Higanabana = 1228;
     }
 
     public static class Levels
@@ -57,12 +64,17 @@ internal static class SAM
             Jinpu = 4,
             Shifu = 18,
             Gekko = 30,
+            Higanbana = 30,
             Mangetsu = 35,
             Kasha = 40,
+            TenkaGoken = 40,
             Oka = 45,
             Yukikaze = 50,
+            MidareSetsugekka = 50,
             MeikyoShisui = 50,
+            HissatsuShinten = 52,
             HissatsuKyuten = 64,
+            Ikishoten = 68,
             HissatsuGuren = 70,
             HissatsuSenei = 72,
             TsubameGaeshi = 76,
@@ -80,18 +92,100 @@ internal class SamuraiYukikaze : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SAM.Yukikaze)
+        if (actionID == SAM.Hakaze)
         {
-            if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
-                return SAM.Yukikaze;
+            var gauge = GetJobGauge<SAMGauge>();
 
-            if (comboTime > 0)
+            var gaugeSen = new int[] {
+                gauge.HasSetsu ? 1 : 0,
+                gauge.HasKa ? 1 : 0,
+                gauge.HasGetsu ? 1 : 0
+            };
+
+            if (!InMeleeRange())
             {
-                if (lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze)
-                    return SAM.Yukikaze;
+                return SAM.Enpi;
             }
 
-            return SAM.Hakaze;
+            var canUseIkishoten = level >= SAM.Levels.Ikishoten
+                && IsOffCooldown(SAM.Ikishoten)
+                && InCombat();
+
+            if (canUseIkishoten && gauge.Kenki <= 40)
+            {
+                return SAM.Ikishoten;
+            }
+
+            if (level >= SAM.Levels.HissatsuShinten 
+                && GCDClipCheck(actionID)
+                && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki > 40))
+                && HasEffect(SAM.Buffs.Jinpu))
+            {
+                return SAM.HissatsuShinten;
+            }
+
+            if (level >= SAM.Levels.HissatsuGuren
+                && IsOffCooldown(SAM.HissatsuGuren)
+                && GCDClipCheck(actionID)
+                && gauge.Kenki >= 25
+                && HasEffect(SAM.Buffs.Jinpu))
+            {
+                return (level >= SAM.Levels.HissatsuSenei) ? SAM.HissatsuSenei : SAM.HissatsuGuren;
+            }
+
+            if (level >= SAM.Levels.MeikyoShisui && GCDClipCheck(actionID) && IsOffCooldown(SAM.MeikyoShisui))
+            {
+                return SAM.MeikyoShisui;
+            }
+
+            var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
+            if (level >= SAM.Levels.Higanbana
+                && gaugeSen.Sum() == 1
+                && !IsMoving
+                && higanabana?.RemainingTime <= 10)
+            {
+                return SAM.Higanbana;
+            }
+
+            if (level >= SAM.Levels.MidareSetsugekka
+                && gaugeSen.Sum() == 3
+                && !IsMoving)
+            {
+                return SAM.MidareSetsugekka;
+            }
+
+            if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
+            {
+                if (!gauge.HasGetsu) return SAM.Gekko;
+                if (!gauge.HasKa) return SAM.Kasha;
+                if (!gauge.HasSetsu) return SAM.Yukikaze;
+            }
+
+            // Does not matter
+            if (!gauge.HasSetsu)
+            {
+                return lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze ? SAM.Yukikaze : SAM.Hakaze;
+            };
+
+            // Rear
+            if ((!gauge.HasGetsu || !HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Jinpu)
+            {
+                if (lastComboMove == SAM.Jinpu && level >= SAM.Levels.Gekko)
+                    return SAM.Gekko;
+
+                if (lastComboMove == SAM.Hakaze)
+                    return SAM.Jinpu;
+            };
+
+            // Flank
+            if ((!gauge.HasKa || !HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Shifu)
+            {
+                if (lastComboMove == SAM.Shifu && level >= SAM.Levels.Kasha)
+                    return SAM.Kasha;
+
+                if (lastComboMove == SAM.Hakaze)
+                    return SAM.Shifu;
+            };
         }
 
         return actionID;
@@ -164,19 +258,71 @@ internal class SamuraiMangetsu : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SAM.Mangetsu)
+        if (actionID == SAM.Fuga)
         {
-            if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
-                return SAM.Mangetsu;
+            var gauge = GetJobGauge<SAMGauge>();
 
-            if (comboTime > 0)
+            var gaugeSen = new int[] {
+                gauge.HasSetsu ? 1 : 0,
+                gauge.HasKa ? 1 : 0,
+                gauge.HasGetsu ? 1 : 0
+            };
+
+            var canUseIkishoten = level >= SAM.Levels.Ikishoten
+                && IsOffCooldown(SAM.Ikishoten)
+                && InCombat();
+
+            if (canUseIkishoten && gauge.Kenki <= 40)
             {
-                if ((lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko) && level >= SAM.Levels.Mangetsu)
-                    return SAM.Mangetsu;
+                return SAM.Ikishoten;
             }
 
-            // Fuko
-            return OriginalHook(SAM.Fuga);
+            if (level >= SAM.Levels.HissatsuKyuten
+                && GCDClipCheck(actionID)
+                && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki > 40))
+                && HasEffect(SAM.Buffs.Jinpu))
+            {
+                return SAM.HissatsuKyuten;
+            }
+
+            if (level >= SAM.Levels.HissatsuGuren
+                && IsOffCooldown(SAM.HissatsuGuren)
+                && GCDClipCheck(actionID)
+                && gauge.Kenki >= 25
+                && HasEffect(SAM.Buffs.Jinpu))
+            {
+                return SAM.HissatsuGuren;
+            }
+
+            if (level >= SAM.Levels.MeikyoShisui && GCDClipCheck(actionID) && IsOffCooldown(SAM.MeikyoShisui))
+            {
+                return SAM.MeikyoShisui;
+            }
+
+            if (level >= SAM.Levels.TenkaGoken
+                && gaugeSen.Sum() == 2
+                && !IsMoving)
+            {
+                return SAM.TenkaGoken;
+            }
+
+            if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
+            {
+                if (!gauge.HasGetsu) return SAM.Mangetsu;
+                if (!gauge.HasKa) return SAM.Oka;
+            }
+
+            // Rear
+            if ((!gauge.HasGetsu || !HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Mangetsu)
+            {
+                if (lastComboMove == SAM.Fuga) return SAM.Mangetsu;
+            };
+
+            // Flank
+            if ((!gauge.HasKa || !HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Oka)
+            {
+                if (lastComboMove == SAM.Fuga) return SAM.Oka;
+            };
         }
 
         return actionID;

@@ -56,12 +56,14 @@ internal static class WAR
             ThrillOfBattle = 30,
             InnerBeast = 35,
             MythrilTempest = 40,
+            SteelCyclone = 45,
             StormsEye = 50,
             Infuriate = 50,
             FellCleave = 54,
             RawIntuition = 56,
             Equilibrium = 58,
             Decimate = 60,
+            Upheaval = 64,
             InnerRelease = 70,
             ChaoticCyclone = 72,
             MythrilTempestTrait = 74,
@@ -82,33 +84,33 @@ internal class WarriorStormsPathCombo : CustomCombo
         {
             var gauge = GetJobGauge<WARGauge>();
 
-            if (IsEnabled(CustomComboPreset.WarriorStormsPathInnerReleaseFeature))
+            if (IsOffCooldown(WAR.Upheaval)
+                && level >= WAR.Levels.Upheaval
+                && GCDClipCheck(actionID))
             {
-                if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
-                    return WAR.FellCleave;
+                return WAR.Upheaval;
             }
+
+            if (InCombat() && level >= WAR.Levels.Infuriate
+               && gauge.BeastGauge <= 50
+               && GetRemainingCharges(WAR.Infuriate) >= 2
+               && !HasEffect(WAR.Buffs.InnerRelease)
+               && GCDClipCheck(actionID))
+            {
+                return WAR.Infuriate;
+            }
+
+            //if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease)
+            //    || (level >= WAR.Levels.InnerBeast && (gauge.BeastGauge >= 80 || (gauge.BeastGauge >= 50 && GetRemainingCharges(WAR.Infuriate) >= 2))))
+            //{
+            //    return OriginalHook(WAR.InnerBeast);
+            //}
 
             if (comboTime > 0)
             {
-                if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && GetRemainingCharges(WAR.Infuriate) > 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
-                    return WAR.Infuriate;
-
-                if (IsOffCooldown(WAR.Upheaval) && CanUseAction(WAR.Upheaval) && GCDClipCheck(actionID))
-                {
-                    return WAR.Upheaval;
-                }
 
                 if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
                 {
-
-                    if (IsEnabled(CustomComboPreset.WarriorStormsPathOvercapFeature))
-                    {
-                        if (level >= WAR.Levels.InnerBeast && gauge.BeastGauge > 80)
-                            // Fell Cleave
-                            return OriginalHook(WAR.InnerBeast);
-                    }
-
-#if DEBUG
                     var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
                     if (surgingTempest is null && level >= WAR.Levels.StormsEye)
                         return WAR.StormsEye;
@@ -119,18 +121,17 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                     if (surgingTempest?.RemainingTime < 30 && level >= WAR.Levels.StormsEye)
                         return WAR.StormsEye;
-#endif
 
                     return WAR.StormsPath;
                 }
 
                 if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
                 {
-                    if (IsEnabled(CustomComboPreset.WarriorStormsPathOvercapFeature))
+                    if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease)
+                        || (level >= WAR.Levels.InnerBeast && gauge.BeastGauge >= 80) 
+                        || (gauge.BeastGauge >= 50 && GetRemainingCharges(WAR.Infuriate) >= 2))
                     {
-                        if (level >= WAR.Levels.InnerBeast && gauge.BeastGauge > 90)
-                            // Fell Cleave
-                            return OriginalHook(WAR.InnerBeast);
+                        return OriginalHook(WAR.InnerBeast);
                     }
 
                     return WAR.Maim;
@@ -178,19 +179,39 @@ internal class WarriorMythrilTempestCombo : CustomCombo
         {
             var gauge = GetJobGauge<WARGauge>();
 
-            if (InCombat() && level >= WAR.Levels.Infuriate && gauge.BeastGauge <= 50 && GetRemainingCharges(WAR.Infuriate) >= 1 && !HasEffect(WAR.Buffs.InnerRelease) && GCDClipCheck(actionID))
+            if (IsOffCooldown(WAR.Upheaval)
+                && level >= WAR.Levels.Upheaval
+                && GCDClipCheck(actionID))
+            {
+                return WAR.Upheaval;
+            }
+
+            if (InCombat() && level >= WAR.Levels.Infuriate
+               && gauge.BeastGauge <= 50
+               && GetRemainingCharges(WAR.Infuriate) >= 2
+               && !HasEffect(WAR.Buffs.InnerRelease)
+               && GCDClipCheck(actionID))
+            {
                 return WAR.Infuriate;
+            }
 
             if (level >= WAR.Levels.ChaoticCyclone && CanUseAction(WAR.ChaoticCyclone))
             {
                 return WAR.ChaoticCyclone;
             }
 
-            if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
+            if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease)
+                || (level >= WAR.Levels.SteelCyclone && gauge.BeastGauge >= 80)
+                || (gauge.BeastGauge >= 50 && GetRemainingCharges(WAR.Infuriate) >= 2))
             {
-                if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
-                    return WAR.Decimate;
+                return OriginalHook(WAR.SteelCyclone);
             }
+
+            //if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
+            //{
+            //    if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
+            //        return WAR.Decimate;
+            //}
 
             if (comboTime > 0)
             {

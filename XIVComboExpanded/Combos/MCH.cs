@@ -104,22 +104,30 @@ internal class MachinistCleanShot : CustomCombo
             }
 
             // Casts hypercharge if heat is over 50
-            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat >= 50) return MCH.Hypercharge;
+            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat == 100) return MCH.Hypercharge;
 
             if (IsEnabled(CustomComboPreset.MachinistHypercomboFeature))
             {
                 if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
                     return MCH.HeatBlast;
             }
-            
-            // Hot shot only fires if battery is less than 80
-            if (level <= MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot) && gauge.Battery <= 80)
+
+            // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
+            if (level < MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot) && gauge.Battery <= 80)
             {
                 return MCH.HotShot;
             }
 
+            if (level >= MCH.Levels.AirAnchor && IsOffCooldown(MCH.AirAnchor) && gauge.Battery <= 80 && gauge.Battery >= 10)
+            {
+                // Try to use Reassemble before drill if possible
+                if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
+
+                return MCH.AirAnchor;
+            }
+
             // Block for Drill
-            if (level >= MCH.Levels.Drill && IsOffCooldown(MCH.Drill))
+            if (level >= MCH.Levels.Drill && IsOffCooldown(MCH.Drill) && gauge.Battery >= 10)
             {
                 // Try to use Reassemble before drill if possible
                 if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
@@ -254,7 +262,7 @@ internal class MachinistSpreadShot : CustomCombo
                 return MCH.Bioblaster;
 
             // Casts hypercharge if heat is over 50
-            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat >= 50) return MCH.Hypercharge;
+            if (level >= MCH.Levels.Hypercharge && IsOffCooldown(MCH.Hypercharge) && gauge.Heat == 100) return MCH.Hypercharge;
 
             if (level >= MCH.Levels.AutoCrossbow && gauge.IsOverheated)
                 return MCH.AutoCrossbow;

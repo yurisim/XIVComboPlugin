@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -22,12 +23,15 @@ internal static class SCH
         Aetherpact = 7437,
         WhisperingDawn = 16537,
         FeyIllumination = 16538,
+        Biolysis = 16540,
         Recitation = 16542,
         FeyBless = 16543,
         SummonSeraph = 16545,
         Consolation = 16546,
         SummonEos = 17215,
         SummonSelene = 17216,
+        ArtOfWar2 = 25866,
+        Broil4 = 25865,
         Ruin2 = 17870;
 
     public static class Buffs
@@ -40,7 +44,7 @@ internal static class SCH
     public static class Debuffs
     {
         public const ushort
-            Placeholder = 0;
+            Biolysis = 1895;
     }
 
     public static class Levels
@@ -51,9 +55,11 @@ internal static class SCH
             Lustrate = 45,
             Excogitation = 62,
             ChainStratagem = 66,
+            Biolysis = 72,
             Recitation = 74,
             Consolation = 80,
-            SummonSeraph = 80;
+            SummonSeraph = 80,
+            Broil4 = 82;
     }
 }
 
@@ -102,16 +108,49 @@ internal class ScholarExcogitation : CustomCombo
 
 internal class ScholarEnergyDrain : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarEnergyDrainAetherflowFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SCH.EnergyDrain)
+        if (actionID == SCH.Broil4 || actionID == SCH.ArtOfWar2)
         {
             var gauge = GetJobGauge<SCHGauge>();
 
-            if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+            var aetherflowCD = GetCooldown(SCH.Aetherflow).CooldownRemaining;
+
+            if (level >= SCH.Levels.Aetherflow
+                && GCDClipCheck(actionID)
+                && gauge.Aetherflow >= 1
+                && (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3 
+                    || IsOffCooldown(SCH.Aetherflow))
+                )
+            {
+                return SCH.EnergyDrain;
+            }
+
+            if (level >= SCH.Levels.Aetherflow
+                && GCDClipCheck(actionID)
+                && gauge.Aetherflow == 0
+                && IsOffCooldown(SCH.Aetherflow))
+            {
                 return SCH.Aetherflow;
+            }
+
+            if (InCombat()
+                && IsOffCooldown(ADV.LucidDreaming)
+                && LocalPlayer?.CurrentMp <= 8000
+                && CanUseAction(ADV.LucidDreaming))
+            {
+                return ADV.LucidDreaming;
+            }
+
+            if (InCombat()
+                && actionID != SCH.ArtOfWar2
+                && TargetIsEnemy()
+                && FindTargetEffect(SCH.Debuffs.Biolysis)?.RemainingTime <= 5)
+            {
+                return SCH.Biolysis;
+            }
         }
 
         return actionID;

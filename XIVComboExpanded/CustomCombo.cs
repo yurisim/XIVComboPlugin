@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-
+using System.Numerics;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -51,6 +51,14 @@ internal abstract partial class CustomCombo
     /// </summary>
     protected byte ClassID { get; }
 
+    protected uint MovingCounter { get; set; }
+    protected Vector2 Position { get; set; }
+    protected float PlayerSpeed { get; set; }
+
+    protected bool IsMoving { get; set; }
+
+
+
     /// <summary>
     /// Gets the job ID associated with this combo.
     /// </summary>
@@ -68,6 +76,25 @@ internal abstract partial class CustomCombo
     public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
     {
         newActionID = 0;
+
+        if (this.MovingCounter == 0)
+        {
+            Vector2 newPosition = LocalPlayer is null ? Vector2.Zero : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+
+            this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
+
+            this.IsMoving = this.PlayerSpeed > 0;
+
+            this.Position = LocalPlayer is null ? Vector2.Zero : newPosition;
+
+            // Ensure this runs only once every 50 Dalamud ticks to make sure we get an actual, accurate representation of speed, rather than just spamming 0.
+            this.MovingCounter = 50;
+        }
+
+        if (this.MovingCounter > 0)
+        {
+            this.MovingCounter--;
+        }
 
         if (!IsEnabled(this.Preset))
             return false;
