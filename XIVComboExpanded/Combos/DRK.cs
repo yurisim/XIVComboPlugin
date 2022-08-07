@@ -10,11 +10,13 @@ internal static class DRK
         HardSlash = 3617,
         Unleash = 3621,
         SyphonStrike = 3623,
+        Unmend = 3624,
         Souleater = 3632,
         BloodWeapon = 3625,
         SaltedEarth = 3639,
         AbyssalDrain = 3641,
         CarveAndSpit = 3643,
+        Delirium = 7390,
         Quietus = 7391,
         Bloodspiller = 7392,
         FloodOfDarkness = 16466,
@@ -72,24 +74,34 @@ internal class DarkSouleater : CustomCombo
         {
             var gauge = GetJobGauge<DRKGauge>();
 
-            // Do a check for flood of darkness girst since it is a lower level
+            // Do a check for flood of darkness first since it is a lower level
             if (level >= DRK.Levels.FloodOfDarkness
-                    && LocalPlayer?.CurrentMp >= 3000
-                    && GCDClipCheck(actionID)
-                    && (gauge.DarksideTimeRemaining <= 1000
-                        || LocalPlayer?.CurrentMp >= 9000
-                        || gauge.HasDarkArts))
+                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && GCDClipCheck(actionID))
             {
                 // If you are high enough level for edge fo darkness then do that instead
-                return (level >= DRK.Levels.EdgeOfDarkness ? DRK.EdgeOfDarkness : DRK.FloodOfDarkness);
+                return (level >= DRK.Levels.EdgeOfDarkness ? OriginalHook(DRK.EdgeOfDarkness) : OriginalHook(DRK.FloodOfDarkness));
             }
 
             if (level >= DRK.Levels.BloodWeapon
                     && GCDClipCheck(actionID)
                     && IsOffCooldown(DRK.BloodWeapon)
-                    && gauge.Blood < 80)
+                    && gauge.Blood <= 70)
             {
                 return DRK.BloodWeapon;
+            }
+
+            if (level >= DRK.Levels.Delirium
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.Delirium)
+                    && gauge.Blood <= 70)
+            {
+                return DRK.Delirium;
+            }
+            
+            if (!InMeleeRange())
+            {
+                return DRK.Unmend;
             }
 
             if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
@@ -100,26 +112,25 @@ internal class DarkSouleater : CustomCombo
 
             if (level >= DRK.Levels.Bloodspiller
                 && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
-                    || gauge.Blood >= 80))
+                    || gauge.Blood >= 70))
             {
                 return DRK.Bloodspiller;
             }
 
-            if (IsEnabled(CustomComboPreset.DarkSouleaterCombo))
-            {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
-                    {
-                        return DRK.Souleater;
-                    }
 
-                    if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
-                        return DRK.SyphonStrike;
+            if (comboTime > 0)
+            {
+                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
+                {
+                    return DRK.Souleater;
                 }
 
-                return DRK.HardSlash;
+                if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
+                    return DRK.SyphonStrike;
             }
+
+            return DRK.HardSlash;
+
         }
 
         return actionID;
@@ -138,22 +149,27 @@ internal class DarkStalwartSoul : CustomCombo
 
             // Do a check for flood of darkness girst since it is a lower level
             if (level >= DRK.Levels.FloodOfDarkness
-                    && LocalPlayer?.CurrentMp >= 3000
-                    && GCDClipCheck(actionID)
-                    && (gauge.DarksideTimeRemaining <= 1000
-                        || LocalPlayer?.CurrentMp >= 9000
-                        || gauge.HasDarkArts))
+                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && GCDClipCheck(actionID))
             {
                 // If you are high enough level for edge fo darkness then do that instead
-                return DRK.FloodOfDarkness;
+                return OriginalHook(DRK.FloodOfDarkness);
             }
 
             if (level >= DRK.Levels.BloodWeapon
                     && GCDClipCheck(actionID)
                     && IsOffCooldown(DRK.BloodWeapon)
-                    && gauge.Blood < 80)
+                    && gauge.Blood <= 70)
             {
                 return DRK.BloodWeapon;
+            }
+
+            if (level >= DRK.Levels.Delirium
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.Delirium)
+                    && gauge.Blood <= 70)
+            {
+                return DRK.Delirium;
             }
 
             if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
@@ -163,7 +179,7 @@ internal class DarkStalwartSoul : CustomCombo
 
             if (level >= DRK.Levels.Quietus
                 && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
-                    || gauge.Blood >= 80))
+                    || gauge.Blood >= 70))
             {
                 return DRK.Quietus;
             }

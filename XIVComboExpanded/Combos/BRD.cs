@@ -94,26 +94,36 @@ internal class BardHeavyShot : CustomCombo
         {
             var gauge = GetJobGauge<BRDGauge>();
 
-            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire == 3 && GCDClipCheck(actionID))
+            if (level >= BRD.Levels.PitchPerfect // Be the right level
+                && gauge.Song == Song.WANDERER // be the right song 
+                && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 2500)) // You either have all stacks or you have 1 stack and the song timer is under 2500ms
+                && GCDClipCheck(actionID)) // You have enough GCD to use the action
+            {
                 return BRD.PitchPerfect;
-
-            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && gauge.Repertoire >= 1 && GCDClipCheck(actionID))
-            {
-                if (gauge.SongTimer <= 2500)
-                    return BRD.PitchPerfect;
             }
 
-            if ((gauge.Song != Song.WANDERER && gauge.SongTimer <= 15000) && gauge.Song != Song.MAGE)
-            {
-                if (level >= BRD.Levels.WanderersMinuet && IsOffCooldown(BRD.WanderersMinuet) && GCDClipCheck(actionID))
-                    return BRD.WanderersMinuet;
 
-                if (level >= BRD.Levels.MagesBallad && IsOffCooldown(BRD.MagesBallad) && GCDClipCheck(actionID))
-                    return BRD.MagesBallad;
+            if (level >= BRD.Levels.WanderersMinuet 
+                && IsOffCooldown(BRD.WanderersMinuet)
+                && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                && gauge.SongTimer <= 3000
+                && GCDClipCheck(actionID))
+                return BRD.WanderersMinuet;
 
-                if (level >= BRD.Levels.ArmysPaeon && IsOffCooldown(BRD.ArmysPaeon) && GCDClipCheck(actionID))
-                    return BRD.ArmysPaeon;
-            }
+            if (level >= BRD.Levels.MagesBallad
+                && IsOffCooldown(BRD.MagesBallad)
+                && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                && gauge.SongTimer <= 3000
+                && GCDClipCheck(actionID))
+                return BRD.MagesBallad;
+
+            if (level >= BRD.Levels.ArmysPaeon
+                && IsOffCooldown(BRD.ArmysPaeon)
+                && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                && gauge.SongTimer <= 12000
+                && GCDClipCheck(actionID))
+                return BRD.ArmysPaeon;
+
 
             if (level >= BRD.Levels.Sidewinder && IsOffCooldown(BRD.Sidewinder) && GCDClipCheck(actionID))
             {

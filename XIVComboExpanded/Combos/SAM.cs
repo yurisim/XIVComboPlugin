@@ -20,6 +20,7 @@ internal static class SAM
         Enpi = 7486,
         MidareSetsugekka = 7487,
         Higanbana = 7489,
+        KaeshiSetsugekka = 16486,
         // AoE
         Fuga = 7483,
         Mangetsu = 7484,
@@ -110,6 +111,14 @@ internal class SamuraiYukikaze : CustomCombo
             var canUseIkishoten = level >= SAM.Levels.Ikishoten
                 && IsOffCooldown(SAM.Ikishoten)
                 && InCombat();
+
+            if (level >= SAM.Levels.TsubameGaeshi 
+                && IsOffCooldown(SAM.TsubameGaeshi)
+                && HasEffect(SAM.Buffs.Jinpu)
+                && (OriginalHook(SAM.TsubameGaeshi) == SAM.KaeshiSetsugekka))
+            {
+                return OriginalHook(SAM.TsubameGaeshi);
+            }
 
             if (canUseIkishoten && gauge.Kenki <= 40)
             {
@@ -271,6 +280,14 @@ internal class SamuraiMangetsu : CustomCombo
             var canUseIkishoten = level >= SAM.Levels.Ikishoten
                 && IsOffCooldown(SAM.Ikishoten)
                 && InCombat();
+
+            if (level >= SAM.Levels.TsubameGaeshi 
+                && IsOffCooldown(SAM.TsubameGaeshi)
+                && HasEffect(SAM.Buffs.Jinpu)
+                && (OriginalHook(SAM.TsubameGaeshi) != SAM.TsubameGaeshi))
+            {
+                return OriginalHook(SAM.TsubameGaeshi);
+            }
 
             if (canUseIkishoten && gauge.Kenki <= 40)
             {

@@ -23,12 +23,14 @@ internal static class NIN
         Kassatsu = 2264,
         Fuma = 2265,
         Raiton = 2267,
+        Suiton = 2271,
         ArmorCrush = 3563,
         DreamWithinADream = 3566,
         Bhavacakra = 7402,
         TenChiJin = 7403,
         HakkeMujinsatsu = 16488,
         Meisui = 16489,
+        Ten = 18805,
         Chi = 18806,
         Jin = 18807,
         Bunshin = 16493,
@@ -88,27 +90,40 @@ internal class NinjaAeolianEdge : CustomCombo
         {
             var gauge = GetJobGauge<NINGauge>();
 
-            if (IsEnabled(CustomComboPreset.NinjaAeolianNinjutsuFeature))
+            var trickAttackCD = GetCooldown(NIN.TrickAttack).CooldownRemaining;
+
+            if (trickAttackCD <= 15 && !HasEffect(NIN.Buffs.Suiton) && level >= NIN.Levels.Suiton)
             {
-                //if (GetRemainingCharges(NIN.ChiNormal) >= 2)
-                //    return NIN.TenNormal;
+                if (GetRemainingCharges(NIN.ChiNormal) >= 2)
+                    return NIN.TenNormal;
 
-                //if (CanUseAction(NIN.Fuma) && !CanUseAction(NIN.Raiton))
-                //    return NIN.Chi;
+                if (OriginalHook(NIN.Ninjutsu) == NIN.Fuma)
+                    return NIN.Chi;
 
-                //if (CanUseAction(NIN.Raiton))
-                //    return NIN.Raiton;
+                if (OriginalHook(NIN.Ninjutsu) == NIN.Raiton)
+                    return NIN.Jin;
 
-                if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                if (OriginalHook(NIN.Ninjutsu) == NIN.Suiton)
                     return OriginalHook(NIN.Ninjutsu);
             }
-            
+            else
+            {
+                if (GetRemainingCharges(NIN.ChiNormal) >= 2)
+                    return NIN.TenNormal;
+
+                if (OriginalHook(NIN.Ninjutsu) == NIN.Fuma)
+                    return NIN.Chi;
+
+                if (OriginalHook(NIN.Ninjutsu) == NIN.Raiton)
+                    return OriginalHook(NIN.Ninjutsu);
+            }
+
             if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeRaijuFeature))
             {
                 if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                     return NIN.FleetingRaiju;
             }
-            
+
             if (IsEnabled(CustomComboPreset.NinjaAeolianEdgeHutonFeature))
             {
                 if (level >= NIN.Levels.Huraijin && gauge.HutonTimer == 0)

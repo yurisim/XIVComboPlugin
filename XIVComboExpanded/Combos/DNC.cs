@@ -221,44 +221,27 @@ internal class DancerCascadeFountain : CustomCombo
         if (actionID == DNC.Cascade)
         {
             var gauge = GetJobGauge<DNCGauge>();
-            if (IsEnabled(CustomComboPreset.DancerSingleTargetMultibutton))
-            {
 
-                if (level >= DNC.Levels.StarfallDance && CanUseAction(DNC.StarfallDance))
-                    return DNC.StarfallDance;
-                if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
-                    return DNC.FanDance4;
-                if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
-                    return DNC.FanDance3;
-                if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish) && GCDClipCheck(actionID))
-                    return DNC.Flourish;
-                if (gauge.Feathers == 4 || HasEffect(DNC.Buffs.Devilment) && GCDClipCheck(actionID)) return DNC.FanDance1;
-                if (level >= DNC.Levels.SaberDance && gauge.Esprit >= 90)
-                    return DNC.SaberDance;
-                if (level >= DNC.Levels.Fountainfall && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
-                    return DNC.Fountainfall;
 
-                if (level >= DNC.Levels.ReverseCascade && (HasEffect(DNC.Buffs.FlourishingSymmetry) || HasEffect(DNC.Buffs.SilkenSymmetry)))
-                    return DNC.ReverseCascade;
+            if (level >= DNC.Levels.StarfallDance && CanUseAction(DNC.StarfallDance))
+                return DNC.StarfallDance;
+            if (level >= DNC.Levels.FanDance4 && CanUseAction(DNC.FanDance4))
+                return DNC.FanDance4;
+            if (level >= DNC.Levels.FanDance3 && CanUseAction(DNC.FanDance3))
+                return DNC.FanDance3;
+            if (level >= DNC.Levels.Flourish && IsOffCooldown(DNC.Flourish) && CanUseAction(DNC.Flourish) && GCDClipCheck(actionID))
+                return DNC.Flourish;
+            if (gauge.Feathers == 4 || HasEffect(DNC.Buffs.Devilment) && GCDClipCheck(actionID)) return DNC.FanDance1;
+            if (level >= DNC.Levels.SaberDance && gauge.Esprit >= 90)
+                return DNC.SaberDance;
+            if (level >= DNC.Levels.Fountainfall && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
+                return DNC.Fountainfall;
 
-                if (lastComboMove == DNC.Cascade && level >= DNC.Levels.Fountain)
-                    return DNC.Fountain;
-            }
+            if (level >= DNC.Levels.ReverseCascade && (HasEffect(DNC.Buffs.FlourishingSymmetry) || HasEffect(DNC.Buffs.SilkenSymmetry)))
+                return DNC.ReverseCascade;
 
-            if (IsEnabled(CustomComboPreset.DancerSingleTargetProcs))
-            {
-                if (level >= DNC.Levels.ReverseCascade && (HasEffect(DNC.Buffs.FlourishingSymmetry) || HasEffect(DNC.Buffs.SilkenSymmetry)))
-                    return DNC.ReverseCascade;
-            }
-        }
-
-        if (actionID == DNC.Fountain)
-        {
-            if (IsEnabled(CustomComboPreset.DancerSingleTargetProcs))
-            {
-                if (level >= DNC.Levels.Fountainfall && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow)))
-                    return DNC.Fountainfall;
-            }
+            if (lastComboMove == DNC.Cascade && level >= DNC.Levels.Fountain)
+                return DNC.Fountain;
         }
 
         return actionID;
