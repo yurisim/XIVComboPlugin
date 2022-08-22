@@ -112,7 +112,6 @@ internal class PaladinGoringBlade : CustomCombo
 
             if (level >= PLD.Levels.Requiescat
                 && IsOffCooldown(PLD.Requiescat)
-                && goringBlade?.RemainingTime >= 13
                 && GCDClipCheck(actionID))
             {
 
@@ -125,7 +124,7 @@ internal class PaladinGoringBlade : CustomCombo
             }
 
             if (HasEffect(PLD.Buffs.Requiescat) 
-                && goringBlade?.RemainingTime >= 13)
+                && goringBlade != null)
             {
                 return PLD.HolySpirit;
             }
@@ -135,7 +134,7 @@ internal class PaladinGoringBlade : CustomCombo
 
                 if (lastComboMove == PLD.RiotBlade
                     && level >= PLD.Levels.GoringBlade
-                    && (goringBlade == null || goringBlade?.RemainingTime <= 4))
+                    && (goringBlade == null || goringBlade?.RemainingTime <= 5))
                 {
 
                     if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))

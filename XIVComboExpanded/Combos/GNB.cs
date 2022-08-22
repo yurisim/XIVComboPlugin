@@ -77,28 +77,38 @@ internal class GunbreakerSolidBarrel : CustomCombo
     {
         if (actionID == GNB.SolidBarrel)
         {
-            if (level >= GNB.Levels.DangerZone
-                && IsOnCooldown(GNB.NoMercy)
-                && GCDClipCheck(actionID)
-                && IsOffCooldown(GNB.DangerZone))
-            {
-                return GNB.DangerZone;
-            }
+            var targetOftarget = GetTargetOfTarget();
 
-            if (level >= GNB.Levels.BowShock
-                && IsOffCooldown(GNB.BowShock)
-                && IsOnCooldown(GNB.NoMercy)
-                && GCDClipCheck(actionID)
-                )
-            {
-                return GNB.BowShock;
-            }
+            var noMercy= GetCooldown(GNB.NoMercy).CooldownRemaining;
 
-            if (level >= GNB.Levels.Aurora && GCDClipCheck(actionID)
-                && IsOffCooldown(GNB.Aurora)
-                && LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.7)
+            if (GCDClipCheck(actionID))
             {
-                return GNB.Aurora;
+                if (level >= GNB.Levels.DangerZone
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 5)
+                    && IsOffCooldown(GNB.DangerZone))
+                {
+                    return GNB.DangerZone;
+                }
+
+                if (level >= GNB.Levels.BowShock
+                    && IsOffCooldown(GNB.BowShock)
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 10))
+                {
+                    return GNB.BowShock;
+                }
+
+                if (level >= GNB.Levels.Aurora
+                    && IsOffCooldown(GNB.Aurora)
+                    && targetOftarget != null
+                    && ((float)targetOftarget.CurrentHp / targetOftarget.MaxHp <= 0.8))
+                {
+                    return GNB.Aurora;
+                }
+
+                if (IsOffCooldown(GNB.NoMercy))
+                {
+                    return GNB.NoMercy;
+                }
             }
 
             if (CanUseAction(GNB.SavageClaw)) return GNB.SavageClaw;
@@ -110,7 +120,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
                 {
                     var gauge = GetJobGauge<GNBGauge>();
-                    //var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
 
                     if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeCont))
                     {
@@ -126,7 +135,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
                         }
 
-                        if (level >= GNB.Levels.GnashingFang && IsOffCooldown(GNB.GnashingFang) && gauge.Ammo >= 1)
+                        if (level >= GNB.Levels.GnashingFang && IsOffCooldown(GNB.GnashingFang) && gauge.Ammo >= 1 && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 10))
                         {
                             return GNB.GnashingFang;
 
@@ -138,7 +147,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
                         }
 
                     }
-                    else if (IsOffCooldown(GNB.NoMercy) && GCDClipCheck(actionID)) return GNB.NoMercy;
 
                     return GNB.SolidBarrel;
                 }

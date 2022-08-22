@@ -220,6 +220,11 @@ internal abstract partial class CustomCombo
     protected static GameObject? CurrentTarget
         => Service.TargetManager.Target;
 
+    protected static BattleChara? GetTargetOfTarget()
+    {
+        return Service.TargetManager?.Target?.TargetObject as BattleChara;
+    }
+    
     /// <summary>
     /// Calls the original hook.
     /// </summary>
@@ -288,6 +293,8 @@ internal abstract partial class CustomCombo
     protected static bool HasTarget()
         => CurrentTarget is not null;
 
+
+    
     /// <summary>
     /// Find if the player has no target.
     /// </summary>

@@ -80,7 +80,7 @@ internal class DarkSouleater : CustomCombo
                     && GCDClipCheck(actionID))
             {
                 // If you are high enough level for edge fo darkness then do that instead
-                return (level >= DRK.Levels.EdgeOfDarkness ? OriginalHook(DRK.EdgeOfDarkness) : OriginalHook(DRK.FloodOfDarkness));
+                return level >= DRK.Levels.EdgeOfDarkness ? OriginalHook(DRK.EdgeOfDarkness) : OriginalHook(DRK.FloodOfDarkness);
             }
 
             if (level >= DRK.Levels.BloodWeapon
@@ -106,7 +106,7 @@ internal class DarkSouleater : CustomCombo
 
             if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
             {
-                return (level >= DRK.Levels.CarveAndSpit ? DRK.CarveAndSpit : DRK.AbyssalDrain);
+                return level >= DRK.Levels.CarveAndSpit ? DRK.CarveAndSpit : DRK.AbyssalDrain;
             }
 
 

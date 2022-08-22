@@ -101,44 +101,58 @@ internal class AstrologianMalefic : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
-            if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne) && GCDClipCheck(actionID)) return AST.Astrodyne;
-
-            if (level >= AST.Levels.MinorArcana && CanUseAction(AST.MinorArcana) && IsOffCooldown(AST.MinorArcana) && gauge.DrawnCrownCard == CardType.NONE) return AST.MinorArcana;
-
-            if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE && HasCharges(AST.Draw) && GCDClipCheck(actionID))
-                return AST.Draw;
-
-            var seals = gauge.Seals;
-            if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null && GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID))
             {
+                if (level >= AST.Levels.Astrodyne 
+                    && CanUseAction(AST.Astrodyne)) 
+                    return AST.Astrodyne;
 
-                var drawnCard = gauge.DrawnCard;
+                if (level >= AST.Levels.MinorArcana 
+                    && IsOffCooldown(AST.MinorArcana) 
+                    && gauge.DrawnCrownCard == CardType.NONE) 
+                    return AST.MinorArcana;
 
-                switch (drawnCard)
+                if (level >= AST.Levels.Draw 
+                    && gauge.DrawnCard == CardType.NONE 
+                    && HasCharges(AST.Draw))
+                    return AST.Draw;
+
+                if (IsOffCooldown(ADV.LucidDreaming) 
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
+
+                var seals = gauge.Seals;
+                if (level >= AST.Levels.Redraw
+                    && CanUseAction(AST.Redraw)
+                    && seals != null)
                 {
-                    case CardType.BALANCE:
-                    case CardType.BOLE:
-                        if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
-                        break;
-                    case CardType.EWER:
-                    case CardType.ARROW:
-                        if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
-                        break;
-                    case CardType.SPIRE:
-                    case CardType.SPEAR:
-                        if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
-                        break;
-                    default:
-                        break;
+
+                    var drawnCard = gauge.DrawnCard;
+
+                    switch (drawnCard)
+                    {
+                        case CardType.BALANCE:
+                        case CardType.BOLE:
+                            if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
+                            break;
+                        case CardType.EWER:
+                        case CardType.ARROW:
+                            if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
+                            break;
+                        case CardType.SPIRE:
+                        case CardType.SPEAR:
+                            if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
+                            break;
+                        default:
+                            break;
+
+                    }
 
                 }
-
             }
 
-            if (HasCondition(ConditionFlag.InCombat) && IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000 && CanUseAction(ADV.LucidDreaming) && GCDClipCheck(actionID))
-                return ADV.LucidDreaming;
 
-            if (HasCondition(ConditionFlag.InCombat) && TargetIsEnemy() && FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 5)
+            if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 5)
                 return AST.Combust3;
         }
 
@@ -156,40 +170,54 @@ internal class AstrologianGravity : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
-            if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE && HasCharges(AST.Draw))
-                return AST.Draw;
-
-
-            if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne) && GCDClipCheck(actionID)) return AST.Astrodyne;
-
-            if (level >= AST.Levels.MinorArcana && CanUseAction(AST.MinorArcana) && IsOffCooldown(AST.MinorArcana) && gauge.DrawnCrownCard == CardType.NONE) return AST.MinorArcana;
-
-
-            var seals = gauge.Seals;
-            if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null && GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID))
             {
+                if (level >= AST.Levels.Astrodyne
+                    && CanUseAction(AST.Astrodyne))
+                    return AST.Astrodyne;
 
-                var drawnCard = gauge.DrawnCard;
+                if (level >= AST.Levels.MinorArcana
+                    && IsOffCooldown(AST.MinorArcana)
+                    && gauge.DrawnCrownCard == CardType.NONE)
+                    return AST.MinorArcana;
 
-                switch (drawnCard)
+                if (level >= AST.Levels.Draw
+                    && gauge.DrawnCard == CardType.NONE
+                    && HasCharges(AST.Draw))
+                    return AST.Draw;
+
+                if (IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
+
+                var seals = gauge.Seals;
+                if (level >= AST.Levels.Redraw
+                    && CanUseAction(AST.Redraw)
+                    && seals != null)
                 {
-                    case CardType.BALANCE:
-                    case CardType.BOLE:
-                        if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
-                        break;
-                    case CardType.EWER:
-                    case CardType.ARROW:
-                        if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
-                        break;
-                    case CardType.SPIRE:
-                    case CardType.SPEAR:
-                        if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
-                        break;
-                    default:
-                        break;
+
+                    var drawnCard = gauge.DrawnCard;
+
+                    switch (drawnCard)
+                    {
+                        case CardType.BALANCE:
+                        case CardType.BOLE:
+                            if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
+                            break;
+                        case CardType.EWER:
+                        case CardType.ARROW:
+                            if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
+                            break;
+                        case CardType.SPIRE:
+                        case CardType.SPEAR:
+                            if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
+                            break;
+                        default:
+                            break;
+
+                    }
 
                 }
-
             }
         }
 
@@ -328,8 +356,12 @@ internal class AstrologianLucidFeature : CustomCombo
         
         if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
         {
-            if (HasCondition(ConditionFlag.InCombat) && IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000 && CanUseAction(ADV.LucidDreaming))
-                action = ADV.LucidDreaming;
+            if (IsOffCooldown(ADV.LucidDreaming)
+                && LocalPlayer?.CurrentMp <= 8000
+                && GCDClipCheck(actionID))
+            {
+                return ADV.LucidDreaming;
+            }
         }
 
         return action;

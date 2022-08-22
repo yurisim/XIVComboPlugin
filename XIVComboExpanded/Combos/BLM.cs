@@ -110,44 +110,36 @@ internal class BlackFireBlizzard4 : CustomCombo
                 if (LocalPlayer?.CurrentMp >= 3200 && gauge.ElementTimeRemaining <= 6000)
                     return (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter)) ? BLM.Fire3 : BLM.Fire;
 
-                //if (level >= BLM.Levels.Flare && LocalPlayer?.CurrentMp >= 0 && LocalPlayer?.CurrentMp < 1600)
-                //{
-                //    if (level >= BLM.Levels.Despair) return BLM.Despair;
+                if (IsOffCooldown(BLM.Manafont)
+                    && LocalPlayer?.CurrentMp < 100
+                    && level >= BLM.Levels.Manafont)
+                {
+                    return BLM.Manafont;
+                }
 
-                //    // Flare block
-                //    if (!HasEffect(ADV.Buffs.Swiftcast)
-                //        && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont)))
-                //    {
-                //        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
-                //    }
-                //    else if (HasEffect(ADV.Buffs.Swiftcast))
-                //    {
-                //        if (LocalPlayer.CurrentMp > 1000)
-                //        {
-                //            return (level >= BLM.Levels.Despair) ? BLM.Despair : BLM.Flare;
-                //        }
-                //        else if (IsOffCooldown(BLM.Manafont))
-                //        {
-                //            return BLM.Manafont;
-                //        }
-                //    }
+                if (level >= BLM.Levels.Flare
+                    && LocalPlayer?.CurrentMp >= 800
+                    && LocalPlayer?.CurrentMp <= 1600)
+                {
+                    // Use Despair if you are high enough
+                    if (level >= BLM.Levels.Despair) return BLM.Despair;
 
-                //}
+                    // Only use the flare rotation if you don't have fire 4.
+                    if (level < BLM.Levels.Fire4)
+                    {
+                        if (HasEffect(ADV.Buffs.Swiftcast) || IsOffCooldown(ADV.Swiftcast))
+                        {
+                            if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
 
-                if (level >= BLM.Levels.Despair && LocalPlayer?.CurrentMp >= 800 && LocalPlayer?.CurrentMp <= 1600)
-                    return BLM.Despair;
+                            return BLM.Flare;
+                        }
+                    }
+                }
 
-                
 
-                //if (IsOffCooldown(BLM.Manafont) 
-                //    && LocalPlayer?.CurrentMp < 100 
-                //    && level >= BLM.Levels.Manafont)
-                //{
-                //    return BLM.Manafont;
-                //}
-
-                if (level >= BLM.Levels.Blizzard3 
-                    && (LocalPlayer?.CurrentMp < 1600 || gauge.ElementTimeRemaining <= 5000) 
+                if (level >= BLM.Levels.Blizzard3
+                    && GetCooldown(BLM.Manafont).CooldownRemaining <= 179
+                    && (LocalPlayer?.CurrentMp < 1600 || gauge.ElementTimeRemaining <= 5000)
                     && !(LocalPlayer?.CurrentMp >= 3000))
                     return BLM.Blizzard3;
 
@@ -156,7 +148,10 @@ internal class BlackFireBlizzard4 : CustomCombo
 
             if (gauge.InUmbralIce)
             {
-                if ((HasEffect(BLM.Buffs.Thundercloud) || IsOffCooldown(BLM.Sharpcast)) && gauge.ElementTimeRemaining >= 13000)
+                if ((HasEffect(BLM.Buffs.Thundercloud) 
+                        || IsOffCooldown(BLM.Sharpcast) 
+                        || HasEffect(BLM.Buffs.Sharpcast)) 
+                    && gauge.ElementTimeRemaining >= 13000)
                 {
                     if (level >= BLM.Levels.Sharpcast
                         && !HasEffect(BLM.Buffs.Thundercloud)
@@ -208,60 +203,52 @@ internal class BlackFireBlizzard2 : CustomCombo
             {
                 if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul) return BLM.Foul;
 
-                // Switch out of Fire Phase into Ice phase if less MP than 2500
-                if (LocalPlayer?.CurrentMp <= 3000)
+                if (IsOffCooldown(BLM.Manafont)
+                    && LocalPlayer?.CurrentMp < 100
+                    && level >= BLM.Levels.Manafont)
                 {
-                    if (level >= BLM.Levels.Flare)
-                    {
-                        // Flare block
-                        if (!HasEffect(ADV.Buffs.Swiftcast)
-                            && !HasEffect(BLM.Buffs.Triplecast)
-                            && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont)))
-                        {
-                            if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
+                    return BLM.Manafont;
+                }
 
-                            if (HasCharges(BLM.Triplecast)
-                                && level >= BLM.Levels.Triplecast
-                                && !HasEffect(ADV.Buffs.Swiftcast)) return BLM.Triplecast;
-                        }
-                        else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
+                // Switch out of Fire Phase into Ice phase if less MP than 2500
+
+                if (level >= BLM.Levels.Flare && LocalPlayer?.CurrentMp <= 3000)
+                {
+                    // Flare block
+                    if (!HasEffect(ADV.Buffs.Swiftcast)
+                        && !HasEffect(BLM.Buffs.Triplecast)
+                        && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont)))
+                    {
+                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
+
+                        if (HasCharges(BLM.Triplecast)
+                            && level >= BLM.Levels.Triplecast
+                            && !HasEffect(ADV.Buffs.Swiftcast)) return BLM.Triplecast;
+                    }
+                    else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
+                    {
+                        if (LocalPlayer.CurrentMp > 1000)
                         {
-                            if (LocalPlayer.CurrentMp > 1000)
-                            {
-                                return BLM.Flare;
-                            }
-                            else if (IsOffCooldown(BLM.Manafont))
-                            {
-                                return BLM.Manafont;
-                            }
+                            return BLM.Flare;
+                        }
+                        else if (IsOffCooldown(BLM.Manafont))
+                        {
+                            return BLM.Manafont;
                         }
                     }
-                };
+                }
 
-
-                return CanUseAction(BLM.Fire2) ? BLM.Fire2 : BLM.Blizzard2;
+                return LocalPlayer?.CurrentMp < 3000 && GetCooldown(BLM.Manafont).CooldownRemaining <= 179 
+                    ? BLM.Blizzard2 
+                    : BLM.Fire2;
             }
 
             if (gauge.InUmbralIce)
             {
-                //if (gauge.ElementTimeRemaining >= 13000 && level >= BLM.Levels.Thunder2)
-                //{
-                //    if (level >= BLM.Levels.Sharpcast
-                //        && !HasEffect(BLM.Buffs.Thundercloud)
-                //        && !HasEffect(BLM.Buffs.Sharpcast)
-                //        && IsOffCooldown(BLM.Sharpcast))
-                //    {
-                //        return BLM.Sharpcast;
-                //    }
-
-                //    var isThunder4 = level >= BLM.Levels.Thunder4;
-
-                //    var thunder = isThunder4 ? FindTargetEffect(BLM.Debuffs.Thunder4) : FindTargetEffect(BLM.Debuffs.Thunder2);
-
-                //    if ((thunder == null || thunder.RemainingTime <= 6)) return isThunder4 ? BLM.Thunder4 : BLM.Thunder2;
-                //}
-
-                if ((HasEffect(BLM.Buffs.Thundercloud) || IsOffCooldown(BLM.Sharpcast)) && gauge.ElementTimeRemaining >= 13000)
+                if ((HasEffect(BLM.Buffs.Thundercloud)
+                        || IsOffCooldown(BLM.Sharpcast)
+                        || HasEffect(BLM.Buffs.Sharpcast))
+                    && gauge.ElementTimeRemaining >= 13000)
                 {
                     if (level >= BLM.Levels.Sharpcast
                         && !HasEffect(BLM.Buffs.Thundercloud)

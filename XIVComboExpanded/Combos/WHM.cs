@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -25,6 +26,7 @@ internal static class WHM
         Assize = 3571,
         ThinAir = 7430,
         Stone4 = 7431,
+        DivineBenison = 7432,
         PlenaryIndulgence = 7433,
         AfflatusSolace = 16531,
         Dia = 16532,
@@ -56,9 +58,11 @@ internal static class WHM
             Cure2 = 30,
             AfflatusSolace = 52,
             ThinAir = 58,
+            Tetragrammaton = 60,
             PlenaryIndulgence = 70,
             AfflatusMisery = 74,
-            AfflatusRapture = 76;
+            AfflatusRapture = 76,
+            EnhancedBenison = 88;
     }
 }
 
@@ -224,15 +228,46 @@ internal class WhiteMageDiaFeature : CustomCombo
     {
         if (actionID == WHM.Stone2 || actionID == WHM.Stone3 || actionID == WHM.Stone4 || actionID == WHM.Glare || actionID == WHM.Glare3)
         {
-            // If I'm in combat and the target is an enemy and doesn't have dia, use dia.
-            if (HasCondition(ConditionFlag.InCombat) && TargetIsEnemy() && FindTargetEffect(WHM.Debuffs.Dia)?.RemainingTime <= 5)
-                return WHM.Dia;
-        }
+            var targetOftarget = GetTargetOfTarget();
 
-        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) && level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && IsOffCooldown(WHM.ThinAir))
+            var percentage = ((float)targetOftarget?.CurrentHp / targetOftarget?.MaxHp);
+            if (GCDClipCheck(actionID)
+                 && (percentage <= 0.80)
+                 && (percentage >= 0.10))
+            {
+                if (level >= WHM.Levels.Tetragrammaton
+                && IsOffCooldown(WHM.Tetragrammaton))
+                {
+                    return WHM.Tetragrammaton;
+                }
+
+                if (level >= WHM.Levels.EnhancedBenison
+                && GetRemainingCharges(WHM.DivineBenison) >= 2)
+                {
+                    return WHM.DivineBenison;
+                }
+            }
+
+            var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
+
+            // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
+            if (HasCondition(ConditionFlag.InCombat) 
+                && (diaFound?.RemainingTime <= 5 
+                    || (diaFound == null 
+                        && (CurrentTarget as BattleChara)?.MaxHp > 30000000)))
+            {
+                return WHM.Dia;
+            }
+        }
+       
+
+        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
+            && level >= WHM.Levels.ThinAir 
+            && !HasEffect(WHM.Buffs.ThinAir) 
+            && GetRemainingCharges(WHM.ThinAir) >= 1)
             return WHM.ThinAir;
 
-        if (actionID == WHM.Raise && level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && IsOffCooldown(WHM.ThinAir))
+        if (actionID == WHM.Raise && level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && GetRemainingCharges(WHM.ThinAir) >= 1)
             return WHM.ThinAir;
 
         return actionID;

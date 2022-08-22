@@ -103,16 +103,11 @@ internal class SamuraiYukikaze : CustomCombo
                 gauge.HasGetsu ? 1 : 0
             };
 
-            if (!InMeleeRange())
-            {
-                return SAM.Enpi;
-            }
-
             var canUseIkishoten = level >= SAM.Levels.Ikishoten
                 && IsOffCooldown(SAM.Ikishoten)
                 && InCombat();
 
-            if (level >= SAM.Levels.TsubameGaeshi 
+            if (level >= SAM.Levels.TsubameGaeshi
                 && IsOffCooldown(SAM.TsubameGaeshi)
                 && HasEffect(SAM.Buffs.Jinpu)
                 && (OriginalHook(SAM.TsubameGaeshi) == SAM.KaeshiSetsugekka))
@@ -120,50 +115,54 @@ internal class SamuraiYukikaze : CustomCombo
                 return OriginalHook(SAM.TsubameGaeshi);
             }
 
-            if (canUseIkishoten && gauge.Kenki <= 40)
+            if (GCDClipCheck(actionID))
             {
-                return SAM.Ikishoten;
+                if (canUseIkishoten && gauge.Kenki <= 50)
+                {
+                    return SAM.Ikishoten;
+                }
+
+                if (level >= SAM.Levels.HissatsuGuren
+                    && IsOffCooldown(SAM.HissatsuGuren)
+                    && gauge.Kenki >= 25
+                    && HasEffect(SAM.Buffs.Jinpu))
+                {
+                    return (level >= SAM.Levels.HissatsuSenei) ? SAM.HissatsuSenei : SAM.HissatsuGuren;
+                }
+
+                if (level >= SAM.Levels.HissatsuShinten
+                    && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki >= 50))
+                    && HasEffect(SAM.Buffs.Jinpu))
+                {
+                    return SAM.HissatsuShinten;
+                }
+
+                if (level >= SAM.Levels.MeikyoShisui
+                    && IsOffCooldown(SAM.MeikyoShisui))
+                {
+                    return SAM.MeikyoShisui;
+                }
             }
 
-            if (level >= SAM.Levels.HissatsuShinten 
-                && GCDClipCheck(actionID)
-                && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki > 40))
-                && HasEffect(SAM.Buffs.Jinpu))
+            if (!IsMoving)
             {
-                return SAM.HissatsuShinten;
+                var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
+                if (level >= SAM.Levels.Higanbana
+                    && gaugeSen.Sum() == 1
+                    && higanabana?.RemainingTime <= 10)
+                {
+                    return SAM.Higanbana;
+                }
+
+                if (level >= SAM.Levels.MidareSetsugekka
+                    && gaugeSen.Sum() == 3)
+                {
+                    return SAM.MidareSetsugekka;
+                }
             }
 
-            if (level >= SAM.Levels.HissatsuGuren
-                && IsOffCooldown(SAM.HissatsuGuren)
-                && GCDClipCheck(actionID)
-                && gauge.Kenki >= 25
-                && HasEffect(SAM.Buffs.Jinpu))
-            {
-                return (level >= SAM.Levels.HissatsuSenei) ? SAM.HissatsuSenei : SAM.HissatsuGuren;
-            }
-
-            if (level >= SAM.Levels.MeikyoShisui && GCDClipCheck(actionID) && IsOffCooldown(SAM.MeikyoShisui))
-            {
-                return SAM.MeikyoShisui;
-            }
-
-            var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
-            if (level >= SAM.Levels.Higanbana
-                && gaugeSen.Sum() == 1
-                && !IsMoving
-                && higanabana?.RemainingTime <= 10)
-            {
-                return SAM.Higanbana;
-            }
-
-            if (level >= SAM.Levels.MidareSetsugekka
-                && gaugeSen.Sum() == 3
-                && !IsMoving)
-            {
-                return SAM.MidareSetsugekka;
-            }
-
-            if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
+            if (level >= SAM.Levels.MeikyoShisui
+                && HasEffect(SAM.Buffs.MeikyoShisui))
             {
                 if (!gauge.HasGetsu) return SAM.Gekko;
                 if (!gauge.HasKa) return SAM.Kasha;
@@ -281,7 +280,7 @@ internal class SamuraiMangetsu : CustomCombo
                 && IsOffCooldown(SAM.Ikishoten)
                 && InCombat();
 
-            if (level >= SAM.Levels.TsubameGaeshi 
+            if (level >= SAM.Levels.TsubameGaeshi
                 && IsOffCooldown(SAM.TsubameGaeshi)
                 && HasEffect(SAM.Buffs.Jinpu)
                 && (OriginalHook(SAM.TsubameGaeshi) != SAM.TsubameGaeshi))
@@ -289,31 +288,35 @@ internal class SamuraiMangetsu : CustomCombo
                 return OriginalHook(SAM.TsubameGaeshi);
             }
 
-            if (canUseIkishoten && gauge.Kenki <= 40)
+            if (GCDClipCheck(actionID))
             {
-                return SAM.Ikishoten;
-            }
+                if (canUseIkishoten && gauge.Kenki <= 50)
+                {
+                    return SAM.Ikishoten;
+                }
 
-            if (level >= SAM.Levels.HissatsuKyuten
-                && GCDClipCheck(actionID)
-                && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki > 40))
-                && HasEffect(SAM.Buffs.Jinpu))
-            {
-                return SAM.HissatsuKyuten;
-            }
+                if (level >= SAM.Levels.HissatsuGuren
+                    && IsOffCooldown(SAM.HissatsuGuren)
+                    && GCDClipCheck(actionID)
+                    && gauge.Kenki >= 25
+                    && HasEffect(SAM.Buffs.Jinpu))
+                {
+                    return SAM.HissatsuGuren;
+                }
 
-            if (level >= SAM.Levels.HissatsuGuren
-                && IsOffCooldown(SAM.HissatsuGuren)
-                && GCDClipCheck(actionID)
-                && gauge.Kenki >= 25
-                && HasEffect(SAM.Buffs.Jinpu))
-            {
-                return SAM.HissatsuGuren;
-            }
+                if (level >= SAM.Levels.HissatsuKyuten
+                    && GCDClipCheck(actionID)
+                    && (gauge.Kenki >= 75 || (canUseIkishoten && gauge.Kenki >= 50))
+                    && HasEffect(SAM.Buffs.Jinpu))
+                {
+                    return SAM.HissatsuKyuten;
+                }
 
-            if (level >= SAM.Levels.MeikyoShisui && GCDClipCheck(actionID) && IsOffCooldown(SAM.MeikyoShisui))
-            {
-                return SAM.MeikyoShisui;
+                if (level >= SAM.Levels.MeikyoShisui
+                    && IsOffCooldown(SAM.MeikyoShisui))
+                {
+                    return SAM.MeikyoShisui;
+                }
             }
 
             if (level >= SAM.Levels.TenkaGoken
