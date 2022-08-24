@@ -37,7 +37,7 @@ internal class PluginAddressResolver : BaseAddressResolver
 
         this.GetAdjustedActionId = scanner.ScanText("E8 ?? ?? ?? ?? 8B F8 3B DF");  // Client::Game::ActionManager.GetAdjustedActionId
 
-        this.IsActionIdReplaceable = scanner.ScanText("81 F9 ?? ?? ?? ?? 7F 35");
+        this.IsActionIdReplaceable = scanner.ScanText("E8 ?? ?? ?? ?? 8B F8 3B DF");
 
         PluginLog.Verbose("===== X I V C O M B O =====");
         PluginLog.Verbose($"{nameof(this.GetAdjustedActionId)}   0x{this.GetAdjustedActionId:X}");
