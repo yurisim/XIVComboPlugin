@@ -70,6 +70,7 @@ internal static class RDM
             Fleche = 45,
             Redoublement = 50,
             Acceleration = 50,
+            Moulinent = 52,
             Vercure = 54,
             ContreSixte = 56,
             Embolden = 58,
@@ -102,6 +103,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 if (level >= RDM.Levels.Manafication
                     && gauge.BlackMana <= 50
                     && gauge.WhiteMana <= 50
+                    && gauge.ManaStacks == 0
                     && (HasEffect(RDM.Buffs.Embolden)
                         || level < RDM.Levels.Embolden
                         || GetCooldown(RDM.Embolden).CooldownRemaining >= 5.5)
@@ -148,13 +150,11 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 || HasEffect(ADV.Buffs.Swiftcast);
 
             // Melee Combo
-            if (((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
+            if ((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
                     || (gauge.WhiteMana >= 50 && gauge.BlackMana >= 50 && HasEffect(RDM.Buffs.Embolden))
-                    || (gauge.WhiteMana >= 80
-                        && gauge.BlackMana >= 80
-                        && !hasSpeedy)))
+                    || (gauge.WhiteMana >= 85 && gauge.BlackMana >= 85 && !hasSpeedy))
             {
-                if (lastComboMove == RDM.Zwerchhau
+                if ((lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau)
                     && level >= RDM.Levels.Redoublement)
                     // Enchanted
                     return OriginalHook(RDM.Redoublement);
@@ -243,11 +243,10 @@ internal class RedMageVeraeroVerthunder2 : CustomCombo
                 || HasEffect(RDM.Buffs.Acceleration)
                 || HasEffect(ADV.Buffs.Swiftcast);
 
-            if (((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
+            if (level >= RDM.Levels.Moulinent 
+                && ((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
                     || (gauge.WhiteMana >= 60 && gauge.BlackMana >= 60 && HasEffect(RDM.Buffs.Embolden))
-                    || (gauge.WhiteMana >= 80
-                        && gauge.BlackMana >= 80
-                        && !hasSpeedy)))
+                    || (gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy)))
             {
                 // Enchanted
                 return OriginalHook(RDM.Moulinet);

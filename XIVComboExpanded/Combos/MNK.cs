@@ -114,8 +114,9 @@ internal class MonkAoECombo : CustomCombo
                 }
 
                 if (gauge.Chakra >= 5
+                    && GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2
                     && disciplinedFist != null
-                    && InCombat() 
+                    && InCombat()
                     && HasTarget())
                 {
                     // Idk why howling fist isn't working
@@ -134,6 +135,7 @@ internal class MonkAoECombo : CustomCombo
             }
 
             if (level >= MNK.Levels.PerfectBalance
+                && disciplinedFist?.RemainingTime >= 8
                 && GetRemainingCharges(MNK.PerfectBalance) > 0
                 && HasEffect(MNK.Buffs.RaptorForm)
                 && !HasEffect(MNK.Buffs.PerfectBalance))
@@ -200,14 +202,6 @@ internal class MonkDragonKick : CustomCombo
                         return MNK.RiddleOfFire;
                     }
 
-                    if (gauge.Chakra >= 5
-                        && InCombat()
-                        && disciplinedFist != null
-                        && HasTarget())
-                    {
-                        return OriginalHook(MNK.SteelPeak);
-                    }
-                    
                     if (level >= MNK.Levels.RiddleOfWind
                         && IsOffCooldown(MNK.RiddleOfWind)
                         && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 9))
@@ -215,6 +209,14 @@ internal class MonkDragonKick : CustomCombo
                         return MNK.RiddleOfWind;
                     }
 
+                    if (gauge.Chakra >= 5
+                        && GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2
+                        && disciplinedFist != null
+                        && InCombat()
+                        && HasTarget())
+                    {
+                        return OriginalHook(MNK.SteelPeak);
+                    }
                 }
             }
 
@@ -245,6 +247,7 @@ internal class MonkDragonKick : CustomCombo
             }
 
             if (level >= MNK.Levels.PerfectBalance
+                && disciplinedFist?.RemainingTime >= 8
                 && HasEffect(MNK.Buffs.RaptorForm)
                 && GetRemainingCharges(MNK.PerfectBalance) > 0
                 && !HasEffect(MNK.Buffs.PerfectBalance))
@@ -295,8 +298,6 @@ internal class MonkDragonKick : CustomCombo
             {
                 return MNK.Bootshine;
             }
-            //}
-
         }
 
         return actionID;

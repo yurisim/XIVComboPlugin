@@ -79,12 +79,13 @@ internal class GunbreakerSolidBarrel : CustomCombo
         {
             var targetOftarget = GetTargetOfTarget();
 
-            var noMercy= GetCooldown(GNB.NoMercy).CooldownRemaining;
+            var noMercy = GetCooldown(GNB.NoMercy).CooldownRemaining;
+            var gauge = GetJobGauge<GNBGauge>();
 
             if (GCDClipCheck(actionID))
             {
                 if (level >= GNB.Levels.DangerZone
-                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 5)
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.DangerZone).CooldownTotal * 0.2)
                     && IsOffCooldown(GNB.DangerZone))
                 {
                     return GNB.DangerZone;
@@ -92,7 +93,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
                 if (level >= GNB.Levels.BowShock
                     && IsOffCooldown(GNB.BowShock)
-                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 10))
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.BowShock).CooldownTotal * 0.2))
                 {
                     return GNB.BowShock;
                 }
@@ -115,37 +116,45 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (CanUseAction(GNB.WickedTalon)) return GNB.WickedTalon;
 
+
+            // Weaponskills
+            if (level >= GNB.Levels.SonicBreak
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.SonicBreak).CooldownTotal * 0.2)
+                && IsOffCooldown(GNB.SonicBreak))
+            {
+                return GNB.SonicBreak;
+
+            }
+
+            if (level >= GNB.Levels.GnashingFang
+                && IsOffCooldown(GNB.GnashingFang)
+            && gauge.Ammo >= 1
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.GnashingFang).CooldownTotal * 0.2))
+            {
+                return GNB.GnashingFang;
+
+            }
+
+            var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
+
+            if (level >= GNB.Levels.BurstStrike
+            && (gauge.Ammo >= maxAmmo
+            || (gauge.Ammo >= 1
+                    && HasEffect(GNB.Buffs.NoMercy))))
+            {
+                return GNB.BurstStrike;
+            }
+
+            // COMBO BLOCK
             if (comboTime > 0)
             {
-                if (lastComboMove == GNB.BrutalShell && level >= GNB.Levels.SolidBarrel)
+                if (lastComboMove == GNB.BrutalShell
+                    && level >= GNB.Levels.SolidBarrel)
                 {
-                    var gauge = GetJobGauge<GNBGauge>();
-
                     if (IsEnabled(CustomComboPreset.GunbreakerBurstStrikeCont))
                     {
                         if (level >= GNB.Levels.EnhancedContinuation && HasEffect(GNB.Buffs.ReadyToBlast))
                             return GNB.Hypervelocity;
-                    }
-
-                    if (IsOnCooldown(GNB.NoMercy))
-                    {
-                        if (level >= GNB.Levels.SonicBreak && IsOffCooldown(GNB.SonicBreak))
-                        {
-                            return GNB.SonicBreak;
-
-                        }
-
-                        if (level >= GNB.Levels.GnashingFang && IsOffCooldown(GNB.GnashingFang) && gauge.Ammo >= 1 && (HasEffect(GNB.Buffs.NoMercy) || noMercy > 10))
-                        {
-                            return GNB.GnashingFang;
-
-                        }
-
-                        if (level >= GNB.Levels.BurstStrike && gauge.Ammo >= 1)
-                        {
-                            return GNB.BurstStrike;
-                        }
-
                     }
 
                     return GNB.SolidBarrel;
@@ -250,43 +259,53 @@ internal class GunbreakerDemonSlaughter : CustomCombo
     {
         if (actionID == GNB.DemonSlaughter)
         {
-            if (level >= GNB.Levels.DangerZone
-                && IsOnCooldown(GNB.NoMercy)
-                && GCDClipCheck(actionID)
-                && IsOffCooldown(GNB.DangerZone))
+            var targetOftarget = GetTargetOfTarget();
+
+            var noMercy = GetCooldown(GNB.NoMercy).CooldownRemaining;
+            var gauge = GetJobGauge<GNBGauge>();
+
+            if (GCDClipCheck(actionID))
             {
-                return GNB.DangerZone;
+                if (level >= GNB.Levels.DangerZone
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.DangerZone).CooldownTotal * 0.2)
+                    && IsOffCooldown(GNB.DangerZone))
+                {
+                    return GNB.DangerZone;
+                }
+
+                if (level >= GNB.Levels.BowShock
+                    && IsOffCooldown(GNB.BowShock)
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.BowShock).CooldownTotal * 0.2))
+                {
+                    return GNB.BowShock;
+                }
+
+                if (level >= GNB.Levels.Aurora
+                    && IsOffCooldown(GNB.Aurora)
+                    && targetOftarget != null
+                    && ((float)targetOftarget.CurrentHp / targetOftarget.MaxHp <= 0.8))
+                {
+                    return GNB.Aurora;
+                }
+
+                if (IsOffCooldown(GNB.NoMercy))
+                {
+                    return GNB.NoMercy;
+                }
             }
 
-            if (level >= GNB.Levels.BowShock
-                && IsOffCooldown(GNB.BowShock)
-                && IsOnCooldown(GNB.NoMercy)
-                && GCDClipCheck(actionID)
-                )
+            if (comboTime > 0 
+                && lastComboMove == GNB.DemonSlice 
+                && level >= GNB.Levels.DemonSlaughter)
             {
-                return GNB.BowShock;
-            }
-
-            if (level >= GNB.Levels.Aurora && GCDClipCheck(actionID)
-                && IsOffCooldown(GNB.Aurora)
-                && LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.7)
-            {
-                return GNB.Aurora;
-            }
-
-            if (comboTime > 0 && lastComboMove == GNB.DemonSlice && level >= GNB.Levels.DemonSlaughter && IsOnCooldown(GNB.NoMercy))
-            {
-
-                var gauge = GetJobGauge<GNBGauge>();
                 var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
 
-                if (level >= GNB.Levels.FatedCircle && gauge.Ammo == maxAmmo)
+                if (level >= GNB.Levels.FatedCircle 
+                    && gauge.Ammo >= 1)
                     return GNB.FatedCircle;
 
                 return GNB.DemonSlaughter;
             }
-            else if (IsOffCooldown(GNB.NoMercy) && GCDClipCheck(actionID)) return GNB.NoMercy;
-
 
             return GNB.DemonSlice;
         }

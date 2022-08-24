@@ -139,30 +139,29 @@ internal class NinjaAeolianEdge : CustomCombo
                     }
 
                     if (level >= NIN.Levels.TrickAttack
-                        && IsOnCooldown(NIN.Kassatsu)
+                        && (HasEffect(NIN.Buffs.Kassatsu) || GetCooldown(NIN.Kassatsu).CooldownRemaining > 6 || level < NIN.Levels.Kassatsu)
                         && IsOnCooldown(NIN.Mug))
                     {
                         return NIN.TrickAttack;
                     }
                 }
 
+                if (level >= NIN.Levels.Bunshin
+                    && IsOffCooldown(NIN.Bunshin)
+                    && GetCooldown(NIN.TrickAttack).CooldownRemaining > 8
+                    && gauge.Ninki >= 50)
+                {
+                    return NIN.Bunshin;
+                }
+
                 if (!HasEffect(NIN.Buffs.Kassatsu))
                 {
                     if (level >= NIN.Levels.Meisui
-
                         && IsOffCooldown(NIN.Meisui)
                         && HasEffect(NIN.Buffs.Suiton)
                         && gauge.Ninki <= 50
                         && GetCooldown(NIN.TrickAttack).CooldownRemaining >= 18)
                         return NIN.Meisui;
-
-                    if (level >= NIN.Levels.Bunshin
-                        && IsOffCooldown(NIN.Bunshin)
-                        && GetCooldown(NIN.TrickAttack).CooldownRemaining > 8
-                        && gauge.Ninki >= 50)
-                    {
-                        return NIN.Bunshin;
-                    }
 
                     if (level >= NIN.Levels.Assassinate
                         && IsOffCooldown(OriginalHook(NIN.Assassinate))
