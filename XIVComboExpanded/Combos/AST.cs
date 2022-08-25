@@ -101,8 +101,16 @@ internal class AstrologianMalefic : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
+            var targetOfTarget = GetTargetOfTarget();
+
             if (GCDClipCheck(actionID))
             {
+                if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
+                    && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
+                        || (gauge.DrawnCrownCard == CardType.LADY && (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp <= 0.85)))
+                    return AST.MinorArcana;
+
+
                 if (level >= AST.Levels.Astrodyne 
                     && CanUseAction(AST.Astrodyne)) 
                     return AST.Astrodyne;
@@ -152,7 +160,7 @@ internal class AstrologianMalefic : CustomCombo
             }
 
 
-            if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 5)
+            if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 4)
                 return AST.Combust3;
         }
 
@@ -278,58 +286,6 @@ internal class AstrologianDraw : CustomCombo
         return actionID;
     }
 }
-
-internal class AstrologianMinorArcana : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaCrownPlayFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.MinorArcana)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
-
-            if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
-            {
-                if (IsEnabled(CustomComboPreset.AstrologianCrownPlayDelayFeature))
-                {
-                    var cd = GetCooldown(AST.MinorArcana);
-                    if (cd.IsCooldown && cd.CooldownElapsed > 1)
-                    {
-                        // Card action
-                        return OriginalHook(AST.CrownPlay);
-                    }
-                }
-                else
-                {
-                    // Card action
-                    return OriginalHook(AST.CrownPlay);
-                }
-            }
-        }           
-
-        return actionID;
-    }
-}
-
-internal class AstrologianCrownPlay : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianCrownPlayMinorArcanaFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.CrownPlay)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
-
-            if (level >= AST.Levels.MinorArcana && gauge.DrawnCrownCard == CardType.NONE)
-                return AST.MinorArcana;
-        }
-
-        return actionID;
-    }
-}
-
 internal class AstrologianBenefic2 : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficSyncFeature;
@@ -343,27 +299,5 @@ internal class AstrologianBenefic2 : CustomCombo
         }
 
         return actionID;
-    }
-}
-
-internal class AstrologianLucidFeature : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianLucidFeature;
-    
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        var action = actionID;
-        
-        if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
-        {
-            if (IsOffCooldown(ADV.LucidDreaming)
-                && LocalPlayer?.CurrentMp <= 8000
-                && GCDClipCheck(actionID))
-            {
-                return ADV.LucidDreaming;
-            }
-        }
-
-        return action;
     }
 }

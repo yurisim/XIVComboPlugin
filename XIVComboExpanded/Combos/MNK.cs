@@ -48,6 +48,7 @@ internal static class MNK
             CoerlForm = 109,
             PerfectBalance = 110,
             Brotherhood = 1182,
+            RiddleOfFire = 1181,
             LeadenFist = 1861,
             FormlessFist = 2513,
             DisciplinedFist = 3001;
@@ -100,6 +101,20 @@ internal class MonkAoECombo : CustomCombo
             // NO GCDs
             if (GCDClipCheck(actionID))
             {
+                var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
+
+                if (level >= MNK.Levels.PerfectBalance
+                     && disciplinedFist?.RemainingTime >= 8
+                     && HasCharges(MNK.PerfectBalance)
+                     && (riddleOfFire?.RemainingTime >= 8
+                         || GetRemainingCharges(MNK.PerfectBalance) == 2
+                         || level < MNK.Levels.RiddleOfFire)
+                     && HasEffect(MNK.Buffs.RaptorForm)
+                     && !HasEffect(MNK.Buffs.PerfectBalance))
+                {
+                    return MNK.PerfectBalance;
+                }
+
                 if (level >= MNK.Levels.RiddleOfFire
                     && IsOffCooldown(MNK.RiddleOfFire))
                 {
@@ -108,13 +123,13 @@ internal class MonkAoECombo : CustomCombo
 
                 if (level >= MNK.Levels.RiddleOfWind
                     && IsOffCooldown(MNK.RiddleOfWind)
-                    && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 9))
+                    && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 12))
                 {
                     return MNK.RiddleOfWind;
                 }
 
                 if (gauge.Chakra >= 5
-                    && GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2
+                    && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2 || level < MNK.Levels.RiddleOfFire)
                     && disciplinedFist != null
                     && InCombat()
                     && HasTarget())
@@ -132,15 +147,6 @@ internal class MonkAoECombo : CustomCombo
                 && (OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz))
             {
                 return OriginalHook(MNK.MasterfulBlitz);
-            }
-
-            if (level >= MNK.Levels.PerfectBalance
-                && disciplinedFist?.RemainingTime >= 8
-                && GetRemainingCharges(MNK.PerfectBalance) > 0
-                && HasEffect(MNK.Buffs.RaptorForm)
-                && !HasEffect(MNK.Buffs.PerfectBalance))
-            {
-                return MNK.PerfectBalance;
             }
 
             if (HasEffect(MNK.Buffs.RaptorForm)
@@ -191,11 +197,27 @@ internal class MonkDragonKick : CustomCombo
             var disciplinedFist = FindEffect(MNK.Buffs.DisciplinedFist);
             var refreshFist = disciplinedFist == null || disciplinedFist?.RemainingTime <= 6;
 
+            var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
+
             // NO GCDs
             if (GCDClipCheck(actionID))
             {
-                if ((brotherhoodCD > 6 || level < MNK.Levels.Brotherhood))
+                if (brotherhoodCD > 6 || level < MNK.Levels.Brotherhood)
                 {
+                    if (level >= MNK.Levels.PerfectBalance
+                        && HasCharges(MNK.PerfectBalance)
+                        && (riddleOfFire?.RemainingTime >= 8
+                            || (GetRemainingCharges(MNK.PerfectBalance) >= 1
+                                && GetCooldown(MNK.PerfectBalance).ChargeCooldownRemaining <= 8)
+                            || GetRemainingCharges(MNK.PerfectBalance) == 2
+                            || level < MNK.Levels.RiddleOfFire)
+                        && HasEffect(MNK.Buffs.RaptorForm)
+                        && gauge.BlitzTimeRemaining <= 1
+                        && !HasEffect(MNK.Buffs.PerfectBalance))
+                    {
+                        return MNK.PerfectBalance;
+                    }
+
                     if (level >= MNK.Levels.RiddleOfFire
                         && IsOffCooldown(MNK.RiddleOfFire))
                     {
@@ -210,7 +232,7 @@ internal class MonkDragonKick : CustomCombo
                     }
 
                     if (gauge.Chakra >= 5
-                        && GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2
+                        && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 2 || level < MNK.Levels.RiddleOfFire)
                         && disciplinedFist != null
                         && InCombat()
                         && HasTarget())
@@ -241,27 +263,18 @@ internal class MonkDragonKick : CustomCombo
             if (level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && disciplinedFist != null
+                && (riddleOfFire != null || gauge.BlitzTimeRemaining <= 5)
                 && (OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz))
             {
                 return OriginalHook(MNK.MasterfulBlitz);
             }
-
-            if (level >= MNK.Levels.PerfectBalance
-                && disciplinedFist?.RemainingTime >= 8
-                && HasEffect(MNK.Buffs.RaptorForm)
-                && GetRemainingCharges(MNK.PerfectBalance) > 0
-                && !HasEffect(MNK.Buffs.PerfectBalance))
-            {
-                return MNK.PerfectBalance;
-            }
-
 
             var perfectBalance = FindEffect(MNK.Buffs.PerfectBalance);
 
             if (HasEffect(MNK.Buffs.RaptorForm)
                 || (perfectBalance?.StackCount >= 3
                     && (!gauge.Nadi.HasFlag(Nadi.SOLAR)
-                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR))))
+                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR) && refreshFist)))
                 || (HasEffect(MNK.Buffs.FormlessFist) && refreshFist))
             {
                 if (refreshFist && level >= MNK.Levels.TwinSnakes)
@@ -277,7 +290,7 @@ internal class MonkDragonKick : CustomCombo
             if (HasEffect(MNK.Buffs.CoerlForm)
                 || (perfectBalance?.StackCount >= 2
                     && (!gauge.Nadi.HasFlag(Nadi.SOLAR)
-                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR))))
+                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR) && refreshDemolish)))
                 || (HasEffect(MNK.Buffs.FormlessFist) && refreshDemolish))
             {
                 if (refreshDemolish && level >= MNK.Levels.Demolish)
