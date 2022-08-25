@@ -74,7 +74,7 @@ internal partial class CustomComboCache : IDisposable
 
         foreach (var status in chara.StatusList)
         {
-            if (status.StatusId == statusID && (!sourceID.HasValue || status.SourceID == 0 || status.SourceID == InvalidObjectID || status.SourceID == sourceID))
+            if (status.StatusId == statusID && (!sourceID.HasValue || status.SourceId == 0 || status.SourceId == InvalidObjectID || status.SourceId == sourceID))
                 return this.statusCache[key] = status;
         }
 
