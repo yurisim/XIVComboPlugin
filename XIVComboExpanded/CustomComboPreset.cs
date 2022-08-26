@@ -341,6 +341,9 @@ public enum CustomComboPreset
     // ====================================================================================
     #region DRAGOON
 
+    [CustomComboInfo("Jump + Mirage Dive", "Replace (High) Jump with Mirage Dive when Dive Ready.", DRG.JobID)]
+    DragoonJumpFeature = 2201,
+
     [CustomComboInfo("Coerthan Torment Combo", "Replace Coerthan Torment with its combo chain.", DRG.JobID)]
     DragoonCoerthanTormentCombo = 2202,
 
