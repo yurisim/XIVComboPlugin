@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -479,6 +480,26 @@ internal abstract partial class CustomCombo
 
         return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
+
+    /// <summary>
+    /// Gets the distance from the target.
+    /// </summary>
+    /// <returns>Double representing the distance from the target.</returns>
+    protected static double GetTargetofTargetDistance()
+    {
+        if (GetTargetOfTarget() is null)
+            return 0;
+
+        if (GetTargetOfTarget() is not BattleChara chara)
+            return 0;
+
+        double distanceX = chara.YalmDistanceX;
+        double distanceY = chara.YalmDistanceZ;
+
+        return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+    }
+
+    
 
     /// <summary>
     /// Checks to see if the GCD would not currently clip if you used a cooldown.

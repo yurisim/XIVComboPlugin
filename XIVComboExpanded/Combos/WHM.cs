@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
+using System.Data;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -204,63 +205,50 @@ internal class WhiteMageMedica : CustomCombo
     }
 }
 
-internal class WhiteMageLucidFeature : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageLucidFeature;
-    
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == WHM.Stone2 || actionID == WHM.Stone3 || actionID == WHM.Stone4 || actionID == WHM.Glare || actionID == WHM.Glare3)
-        {
-            if (HasCondition(ConditionFlag.InCombat) && IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000 && CanUseAction(ADV.LucidDreaming) && GCDClipCheck(actionID))
-                return ADV.LucidDreaming;
-        }
-
-        return actionID;
-    }
-}
-
 internal class WhiteMageDiaFeature : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageDiaFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
     
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == WHM.Stone2 || actionID == WHM.Stone3 || actionID == WHM.Stone4 || actionID == WHM.Glare || actionID == WHM.Glare3)
         {
-            var targetOftarget = GetTargetOfTarget();
+            var targetOfTarget = GetTargetOfTarget();
 
-            var percentage = ((float)targetOftarget?.CurrentHp / targetOftarget?.MaxHp);
-            if (GCDClipCheck(actionID)
-                 && (percentage <= 0.80)
-                 && (percentage >= 0.10))
+            var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
+            
+            if (GCDClipCheck(actionID))
             {
-                if (level >= WHM.Levels.Tetragrammaton
-                && IsOffCooldown(WHM.Tetragrammaton))
-                {
-                    return WHM.Tetragrammaton;
-                }
+                if (HasCondition(ConditionFlag.InCombat) 
+                    && IsOffCooldown(ADV.LucidDreaming) 
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
 
-                if (level >= WHM.Levels.EnhancedBenison
-                && GetRemainingCharges(WHM.DivineBenison) >= 2)
+                if ((percentage <= 0.80) && (percentage >= 0.10))
                 {
-                    return WHM.DivineBenison;
+                    if (level >= WHM.Levels.Tetragrammaton
+                    && IsOffCooldown(WHM.Tetragrammaton))
+                    {
+                        return WHM.Tetragrammaton;
+                    }
+
+                    if (level >= WHM.Levels.EnhancedBenison
+                    && GetRemainingCharges(WHM.DivineBenison) >= 2)
+                    {
+                        return WHM.DivineBenison;
+                    }
                 }
             }
-
+            
             var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
-            if (HasCondition(ConditionFlag.InCombat) 
-                && (diaFound?.RemainingTime <= 5 
-                    || (diaFound == null 
-                        && (CurrentTarget as BattleChara)?.MaxHp > 30000000)))
+            if (InCombat() && (diaFound?.RemainingTime <= 5 || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp > 20000000)))
             {
                 return WHM.Dia;
             }
         }
        
-
         if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
             && level >= WHM.Levels.ThinAir 
             && !HasEffect(WHM.Buffs.ThinAir) 

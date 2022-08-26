@@ -231,15 +231,6 @@ internal class NinjaAeolianEdge : CustomCombo
             if (level >= NIN.Levels.Huraijin && gauge.HutonTimer == 0)
                 return NIN.Huraijin;
 
-            if (comboTime > 0)
-            {
-                if (lastComboMove == NIN.GustSlash 
-                    && level >= NIN.Levels.ArmorCrush 
-                    && gauge.HutonTimer <= 30_000)
-                    return NIN.ArmorCrush;
-            }
-
-
             if (level >= NIN.Levels.PhantomKamaitachi
                 && OriginalHook(NIN.Bunshin) != NIN.Bunshin)
             {
@@ -248,6 +239,11 @@ internal class NinjaAeolianEdge : CustomCombo
 
             if (comboTime > 0)
             {
+                if (lastComboMove == NIN.GustSlash
+                    && level >= NIN.Levels.ArmorCrush
+                    && gauge.HutonTimer <= 30000)
+                    return NIN.ArmorCrush;
+
                 if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
                     return NIN.AeolianEdge;
 

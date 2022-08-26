@@ -105,9 +105,11 @@ internal class AstrologianMalefic : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
+
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
                     && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
-                        || (gauge.DrawnCrownCard == CardType.LADY && (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp <= 0.85)))
+                        || (gauge.DrawnCrownCard == CardType.LADY && percentage <= 0.85)))
                     return AST.MinorArcana;
 
 

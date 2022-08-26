@@ -88,6 +88,9 @@ internal class WarriorStormsPathCombo : CustomCombo
 
 
             if (GCDClipCheck(actionID)) {
+                
+                var localPlayerPercentage = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+
                 if (IsOffCooldown(WAR.Upheaval)
                     && surgingTempest is not null
                     && level >= WAR.Levels.Upheaval)
@@ -113,7 +116,7 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                 if (level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && ((float)LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.75))
+                    && (localPlayerPercentage <= 0.75))
                 {
                     return WAR.Equilibrium;
                 }
@@ -196,6 +199,8 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                var localPlayerPercentage = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+
                 if (IsOffCooldown(WAR.Upheaval)
                     && level >= WAR.Levels.Upheaval)
                 {
@@ -216,10 +221,10 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                 {
                     return OriginalHook(WAR.Berserk);
                 }
-
+                
                 if (level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && ((float)LocalPlayer?.CurrentHp / LocalPlayer?.MaxHp <= 0.75))
+                    && localPlayerPercentage <= 0.75)
                 {
                     return WAR.Equilibrium;
                 }
