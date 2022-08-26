@@ -49,10 +49,6 @@
   <ItemGroup>
     <PackageReference Include="DalamudPackager" Version="2.1.8" />
     <PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <ProjectReference Include="..\lib\FFXIVClientStructs\FFXIVClientStructs\FFXIVClientStructs.csproj" />
     <Reference Include="Dalamud" Private="False" />
     <Reference Include="ImGui.NET" Private="False" />
