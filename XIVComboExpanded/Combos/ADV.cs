@@ -39,8 +39,8 @@ internal class SwiftRaiseFeature : CustomCombo
             (actionID == SCH.Ressurection && level >= SCH.Levels.Ressurection) ||
             (actionID == SGE.Egeiro && level >= SGE.Levels.Egeiro) ||
             (actionID == WHM.Raise && level >= WHM.Levels.Raise) ||
-            (actionID == RDM.Verraise && level >= RDM.Levels.Verraise && !HasEffect(RDM.Buffs.Dualcast))) ||
-            (actionID == BLU.AngelWhisper)
+            (actionID == RDM.Verraise && level >= RDM.Levels.Verraise && !HasEffect(RDM.Buffs.Dualcast)) ||
+            (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
         {
             if (level >= ADV.Levels.Swiftcast && IsOffCooldown(ADV.Swiftcast))
                 return ADV.Swiftcast;
