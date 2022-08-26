@@ -90,7 +90,22 @@ internal static class DRG
     }
 }
 
-// AoE Rotation
+internal class DragoonJump : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonJumpFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == DRG.Jump || actionID == DRG.HighJump)
+        {
+            if (level >= DRG.Levels.MirageDive && HasEffect(DRG.Buffs.DiveReady))
+                return DRG.MirageDive;
+        }
+
+        return actionID;
+    }
+}
+
 internal class DragoonCoerthanTorment : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;

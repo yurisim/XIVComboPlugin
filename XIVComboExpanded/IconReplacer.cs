@@ -35,8 +35,8 @@ internal sealed partial class IconReplacer : IDisposable
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook = new Hook<GetIconDelegate>(Service.Address.GetAdjustedActionId, this.GetIconDetour);
-        this.isIconReplaceableHook = new Hook<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
+        this.getIconHook = Hook<GetIconDelegate>.FromAddress(Service.Address.GetAdjustedActionId, this.GetIconDetour);
+        this.isIconReplaceableHook = Hook<IsIconReplaceableDelegate>.FromAddress(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();

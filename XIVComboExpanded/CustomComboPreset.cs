@@ -84,7 +84,7 @@ public enum CustomComboPreset
     // ====================================================================================
     #region ADV
 
-    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, and Verraise with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
+    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, Verraise, and Angel Whisper with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
     AllSwiftcastFeature = 1000,
 
     #endregion
@@ -346,6 +346,9 @@ public enum CustomComboPreset
     #endregion
     // ====================================================================================
     #region DRAGOON
+
+    [CustomComboInfo("Jump + Mirage Dive", "Replace (High) Jump with Mirage Dive when Dive Ready.", DRG.JobID)]
+    DragoonJumpFeature = 2201,
 
     [CustomComboInfo("Coerthan Torment Combo", "Replace Coerthan Torment with its combo chain.", DRG.JobID)]
     DragoonCoerthanTormentCombo = 2202,
@@ -690,7 +693,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Scythe Guillotine Feature", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
     ReaperScytheGuillotineFeature = 3907,
 
-    [CustomComboInfo("Scythe Lemure's Feature", "Replace Nightmare Scythe with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+    [CustomComboInfo("Scythe Lemure's Feature", "Replace Nightmare Scythe with Lemure's Scythe when two or more stacks of Void Shroud are active.", RPR.JobID)]
     ReaperScytheLemuresFeature = 3921,
 
     [CustomComboInfo("Scythe Communio Feature", "Replace Nightmare Scythe with Communio when one stack is left of Shroud.", RPR.JobID)]
