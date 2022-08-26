@@ -149,7 +149,8 @@ internal class NinjaAeolianEdge : CustomCombo
                 if (level >= NIN.Levels.Bunshin
                     && IsOffCooldown(NIN.Bunshin)
                     && GetCooldown(NIN.TrickAttack).CooldownRemaining > 8
-                    && gauge.Ninki >= 50)
+                    && gauge.Ninki >= 50
+                    )
                 {
                     return NIN.Bunshin;
                 }
