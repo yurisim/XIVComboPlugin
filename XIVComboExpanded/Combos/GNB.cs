@@ -77,8 +77,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
     {
         if (actionID == GNB.SolidBarrel)
         {
-            var targetOftarget = GetTargetOfTarget();
-
             var noMercy = GetCooldown(GNB.NoMercy).CooldownRemaining;
             var gauge = GetJobGauge<GNBGauge>();
 
@@ -97,11 +95,11 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 {
                     return GNB.BowShock;
                 }
-
+                
                 if (level >= GNB.Levels.Aurora
                     && IsOffCooldown(GNB.Aurora)
-                    && targetOftarget != null
-                    && ((float)targetOftarget.CurrentHp / targetOftarget.MaxHp <= 0.8))
+                    && TargetOfTargetHPercentage() <= 0.8
+                    )
                 {
                     return GNB.Aurora;
                 }
@@ -128,7 +126,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (level >= GNB.Levels.GnashingFang
                 && IsOffCooldown(GNB.GnashingFang)
-            && gauge.Ammo >= 1
+                && gauge.Ammo >= 1
                 && (HasEffect(GNB.Buffs.NoMercy) || noMercy > GetCooldown(GNB.GnashingFang).CooldownTotal * 0.2))
             {
                 return GNB.GnashingFang;
@@ -259,7 +257,6 @@ internal class GunbreakerDemonSlaughter : CustomCombo
     {
         if (actionID == GNB.DemonSlaughter)
         {
-            var targetOftarget = GetTargetOfTarget();
 
             var noMercy = GetCooldown(GNB.NoMercy).CooldownRemaining;
             var gauge = GetJobGauge<GNBGauge>();
@@ -282,8 +279,8 @@ internal class GunbreakerDemonSlaughter : CustomCombo
 
                 if (level >= GNB.Levels.Aurora
                     && IsOffCooldown(GNB.Aurora)
-                    && targetOftarget != null
-                    && ((float)targetOftarget.CurrentHp / targetOftarget.MaxHp <= 0.8))
+                    && (TargetOfTargetHPercentage() <= 0.8)
+                    )
                 {
                     return GNB.Aurora;
                 }

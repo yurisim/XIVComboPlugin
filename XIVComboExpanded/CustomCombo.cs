@@ -242,6 +242,18 @@ internal abstract partial class CustomCombo
     protected static bool CanUseAction(uint actionID) => Service.IconReplacer.CanUseAction(actionID);
 
     /// <summary>
+    /// Gets percentage of the target of target's health. If no target of target, returns 1.
+    /// </summary>
+    /// <returns>A number between 0 and 1 that indicates their health percentage. /returns>
+    protected static float TargetOfTargetHPercentage()
+    {
+        var target = GetTargetOfTarget();
+        
+        return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
+    }
+
+
+    /// <summary>
     /// Compare the original hook to the given action ID.
     /// </summary>
     /// <param name="actionID">Action ID.</param>

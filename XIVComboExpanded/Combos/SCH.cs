@@ -33,6 +33,7 @@ internal static class SCH
         SummonSelene = 17216,
         ArtOfWar2 = 25866,
         Broil4 = 25865,
+        Protraction = 25867,
         Expedient = 25868,
         Ruin2 = 17870;
 
@@ -57,6 +58,7 @@ internal static class SCH
             Aetherflow = 45,
             Lustrate = 45,
             SacredSoil = 50,
+            Indomitability = 52,
             DeploymentTactics = 56,
             Dissipation = 60,
             Excogitation = 62,
@@ -68,6 +70,7 @@ internal static class SCH
             Consolation = 80,
             SummonSeraph = 80,
             Broil4 = 82,
+            Protraction = 86,
             Expedient = 90;
     }
 }
@@ -111,37 +114,14 @@ internal class ScholarEnergyDrain : CustomCombo
                             && level >= SCH.Levels.Dissipation
                             && gauge.SeraphTimer == 0;
 
-            var targetOfTarget = GetTargetOfTarget();
-
-            var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
 
             if (GCDClipCheck(actionID))
             {
-                //var targetDistance = GetTargetofTargetDistance();
-                if (level >= SCH.Levels.Aetherpact
-                     //&& targetDistance <= 30
-                     //&& targetDistance != 0
-                     && gauge.FairyGauge >= 50
-                     && percentage <= 0.70
-                     && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
-                     && !HasEffect(SCH.Buffs.Dissipation)
-                     && gauge.SeraphTimer == 0)
-                {
-                    return SCH.Aetherpact;
-                }
-
-                if (level >= SCH.Levels.Aetherpact
-                     && percentage >= 0.90
-                     && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
-                {
-                    return OriginalHook(SCH.Aetherpact);
-                }
-
                 if (level >= SCH.Levels.Aetherflow
                     && gauge.Aetherflow >= 1
                     && (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3
                         || IsOffCooldown(SCH.Aetherflow)
-                        || (doDissipation)
+                        || doDissipation
                         )
                     )
                 {
@@ -149,6 +129,7 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
 
                 if (level >= SCH.Levels.Aetherflow
+                    && CanUseAction(SCH.Aetherflow)
                     && gauge.Aetherflow == 0
                     && IsOffCooldown(SCH.Aetherflow))
                 {
@@ -168,6 +149,23 @@ internal class ScholarEnergyDrain : CustomCombo
                     && LocalPlayer?.CurrentMp <= 8000)
                 {
                     return ADV.LucidDreaming;
+                }
+
+                if (level >= SCH.Levels.Aetherpact
+                     && gauge.FairyGauge >= 50
+                     && TargetOfTargetHPercentage() <= 0.60
+                     && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
+                     && !HasEffect(SCH.Buffs.Dissipation)
+                     && gauge.SeraphTimer == 0)
+                {
+                    return SCH.Aetherpact;
+                }
+
+                if (level >= SCH.Levels.Aetherpact
+                     && TargetOfTargetHPercentage() >= 0.90
+                     && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
+                {
+                    return OriginalHook(SCH.Aetherpact);
                 }
             }
            
@@ -235,13 +233,50 @@ internal class ScholarIndomitability : CustomCombo
 
             if (level >= SCH.Levels.FaeBlessing 
                 && IsOffCooldown(SCH.FeyBlessing)
-                && gauge.SeraphTimer == 0)
+                && gauge.SeraphTimer <= 1)
             {
                 return SCH.FeyBlessing;
             }
 
-            return CalcBestAction(actionID, SCH.FeyBlessing, actionID);
+            if (level >= SCH.Levels.Indomitability
+                && IsOffCooldown(SCH.Indomitability)
+                && gauge.Aetherflow >= 1)
+            {
+                return SCH.Indomitability;
+            }
 
+            return CalcBestAction(actionID, SCH.FeyBlessing);
+
+        }
+
+        return actionID;
+    }
+}
+
+internal class ScholarExcog : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SCH.Excogitation)
+        {
+            var gauge = GetJobGauge<SCHGauge>();
+
+            if (level >= SCH.Levels.Protraction
+                && IsOffCooldown(SCH.Protraction))
+            {
+                return SCH.Protraction;
+            }
+
+            if (level >= SCH.Levels.Excogitation
+                && gauge.Aetherflow >= 1
+                && IsOffCooldown(SCH.Excogitation))
+            {
+                return SCH.Excogitation;
+            }
+
+            return CalcBestAction(actionID, SCH.Protraction);
         }
 
         return actionID;
@@ -264,7 +299,7 @@ internal class ScholarAdloCrit : CustomCombo
             }
 
             if (level >= SCH.Levels.DeploymentTactics
-                && (TargetHasEffect(SCH.Buffs.Galvanize))
+                && TargetHasEffect(SCH.Buffs.Galvanize)
                 && IsOffCooldown(SCH.DeploymentTactics))
             {
                 return SCH.DeploymentTactics;

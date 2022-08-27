@@ -224,7 +224,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                     && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
-                if ((percentage <= 0.80) && (percentage >= 0.10))
+                if ((percentage <= 0.80) && (percentage >= 0.25))
                 {
                     if (level >= WHM.Levels.Tetragrammaton
                     && IsOffCooldown(WHM.Tetragrammaton))
@@ -243,7 +243,8 @@ internal class WhiteMageDiaFeature : CustomCombo
             var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
-            if (InCombat() && (diaFound?.RemainingTime <= 5 || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp > 20000000)))
+            if (InCombat() 
+                && (diaFound?.RemainingTime <= 5 || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= 20000000)))
             {
                 return WHM.Dia;
             }
