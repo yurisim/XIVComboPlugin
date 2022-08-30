@@ -1,4 +1,7 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
+using System.Data;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -10,19 +13,29 @@ internal static class WHM
     public const uint
         Cure = 120,
         Medica = 124,
+        Stone2 = 127,
         Raise = 125,
+        Cure3 = 131,
+        Medica2 = 133,
         Cure2 = 135,
         PresenceOfMind = 136,
         Holy = 139,
         Benediction = 140,
         Asylum = 3569,
+        Stone3 = 3568,
         Tetragrammaton = 3570,
         Assize = 3571,
+        ThinAir = 7430,
+        Stone4 = 7431,
+        DivineBenison = 7432,
         PlenaryIndulgence = 7433,
         AfflatusSolace = 16531,
+        Dia = 16532,
+        Glare = 16533,
         AfflatusRapture = 16534,
         AfflatusMisery = 16535,
         Temperance = 16536,
+        Glare3 = 25859,
         Holy3 = 25860,
         Aquaveil = 25861,
         LiturgyOfTheBell = 25862;
@@ -30,13 +43,13 @@ internal static class WHM
     public static class Buffs
     {
         public const ushort
-            Placeholder = 0;
+            ThinAir = 1217;
     }
 
     public static class Debuffs
     {
         public const ushort
-            Placeholder = 0;
+            Dia = 1871;
     }
 
     public static class Levels
@@ -45,8 +58,12 @@ internal static class WHM
             Raise = 12,
             Cure2 = 30,
             AfflatusSolace = 52,
+            ThinAir = 58,
+            Tetragrammaton = 60,
+            PlenaryIndulgence = 70,
             AfflatusMisery = 74,
-            AfflatusRapture = 76;
+            AfflatusRapture = 76,
+            EnhancedBenison = 88;
     }
 }
 
@@ -175,10 +192,72 @@ internal class WhiteMageMedica : CustomCombo
                         return WHM.AfflatusMisery;
                 }
 
+                if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
+                    return WHM.PlenaryIndulgence;
+
+
                 if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                     return WHM.AfflatusRapture;
             }
         }
+
+        return actionID;
+    }
+}
+
+internal class WhiteMageDiaFeature : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
+    
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == WHM.Stone2 || actionID == WHM.Stone3 || actionID == WHM.Stone4 || actionID == WHM.Glare || actionID == WHM.Glare3)
+        {
+            var targetOfTarget = GetTargetOfTarget();
+
+            var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
+            
+            if (GCDClipCheck(actionID))
+            {
+                if (HasCondition(ConditionFlag.InCombat) 
+                    && IsOffCooldown(ADV.LucidDreaming) 
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
+
+                if ((percentage <= 0.80) && (percentage >= 0.25))
+                {
+                    if (level >= WHM.Levels.Tetragrammaton
+                    && IsOffCooldown(WHM.Tetragrammaton))
+                    {
+                        return WHM.Tetragrammaton;
+                    }
+
+                    if (level >= WHM.Levels.EnhancedBenison
+                    && GetRemainingCharges(WHM.DivineBenison) >= 2)
+                    {
+                        return WHM.DivineBenison;
+                    }
+                }
+            }
+            
+            var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
+
+            // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
+            if (InCombat() 
+                && (diaFound?.RemainingTime <= 5 || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= 20000000)))
+            {
+                return WHM.Dia;
+            }
+        }
+       
+        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
+            && level >= WHM.Levels.ThinAir 
+            && !HasEffect(WHM.Buffs.ThinAir) 
+            && GetRemainingCharges(WHM.ThinAir) >= 1)
+            return WHM.ThinAir;
+
+        if (actionID == WHM.Raise && level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && GetRemainingCharges(WHM.ThinAir) >= 1)
+            return WHM.ThinAir;
 
         return actionID;
     }

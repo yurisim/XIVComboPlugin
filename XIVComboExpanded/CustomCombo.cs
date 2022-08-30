@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
-
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -51,6 +52,14 @@ internal abstract partial class CustomCombo
     /// </summary>
     protected byte ClassID { get; }
 
+    protected uint MovingCounter { get; set; }
+    protected Vector2 Position { get; set; }
+    protected float PlayerSpeed { get; set; }
+
+    protected bool IsMoving { get; set; }
+
+
+
     /// <summary>
     /// Gets the job ID associated with this combo.
     /// </summary>
@@ -68,6 +77,25 @@ internal abstract partial class CustomCombo
     public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
     {
         newActionID = 0;
+
+        if (this.MovingCounter == 0)
+        {
+            Vector2 newPosition = LocalPlayer is null ? Vector2.Zero : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+
+            this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
+
+            this.IsMoving = this.PlayerSpeed > 0;
+
+            this.Position = LocalPlayer is null ? Vector2.Zero : newPosition;
+
+            // Ensure this runs only once every 50 Dalamud ticks to make sure we get an actual, accurate representation of speed, rather than just spamming 0.
+            this.MovingCounter = 50;
+        }
+
+        if (this.MovingCounter > 0)
+        {
+            this.MovingCounter--;
+        }
 
         if (!IsEnabled(this.Preset))
             return false;
@@ -193,6 +221,11 @@ internal abstract partial class CustomCombo
     protected static GameObject? CurrentTarget
         => Service.TargetManager.Target;
 
+    protected static BattleChara? GetTargetOfTarget()
+    {
+        return Service.TargetManager?.Target?.TargetObject as BattleChara;
+    }
+    
     /// <summary>
     /// Calls the original hook.
     /// </summary>
@@ -200,6 +233,25 @@ internal abstract partial class CustomCombo
     /// <returns>The result from the hook.</returns>
     protected static uint OriginalHook(uint actionID)
         => Service.IconReplacer.OriginalHook(actionID);
+
+    /// <summary>
+    /// Gets bool determining if action is greyed out or not.
+    /// </summary>
+    /// <param name="actionID">Action ID.</param>
+    /// <returns>A bool value of whether the action can be used or not.</returns>
+    protected static bool CanUseAction(uint actionID) => Service.IconReplacer.CanUseAction(actionID);
+
+    /// <summary>
+    /// Gets percentage of the target of target's health. If no target of target, returns 1.
+    /// </summary>
+    /// <returns>A number between 0 and 1 that indicates their health percentage. /returns>
+    protected static float TargetOfTargetHPercentage()
+    {
+        var target = GetTargetOfTarget();
+        
+        return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
+    }
+
 
     /// <summary>
     /// Compare the original hook to the given action ID.
@@ -254,6 +306,8 @@ internal abstract partial class CustomCombo
     protected static bool HasTarget()
         => CurrentTarget is not null;
 
+
+    
     /// <summary>
     /// Find if the player has no target.
     /// </summary>
@@ -438,6 +492,32 @@ internal abstract partial class CustomCombo
 
         return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
+
+    /// <summary>
+    /// Gets the distance from the target.
+    /// </summary>
+    /// <returns>Double representing the distance from the target.</returns>
+    protected static double GetTargetofTargetDistance()
+    {
+        if (GetTargetOfTarget() is null)
+            return 0;
+
+        if (GetTargetOfTarget() is not BattleChara chara)
+            return 0;
+
+        double distanceX = chara.YalmDistanceX;
+        double distanceY = chara.YalmDistanceZ;
+
+        return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+    }
+
+    
+
+    /// <summary>
+    /// Checks to see if the GCD would not currently clip if you used a cooldown.
+    /// </summary>
+    /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
+    protected static bool GCDClipCheck(uint actionID) => GetCooldown(actionID).CooldownRemaining >= 0.6;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.

@@ -84,7 +84,7 @@ public enum CustomComboPreset
     // ====================================================================================
     #region ADV
 
-    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, and Verraise with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
+    [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, Verraise, and Angel Whisper with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
     AllSwiftcastFeature = 1000,
 
     #endregion
@@ -122,6 +122,9 @@ public enum CustomComboPreset
 
     [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Replace Benefic 2 with Benefic when below level 26 in synced content.", AST.JobID)]
     AstrologianBeneficSyncFeature = 3303,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", AST.JobID)]
+    AstrologianLucidFeature = 3305,
 
     #endregion
     // ====================================================================================
@@ -177,11 +180,14 @@ public enum CustomComboPreset
     [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
     BlackScatheFeature = 2507,
 
+    [CustomComboInfo("One Button Black Mage", "Automates your Black Mage", BLM.JobID)]
+    OneButtonAOEBlackMageFeature = 2525,
+
     #endregion
-    // ====================================================================================
+// ====================================================================================
     #region BARD
 
-    [CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
+[CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
     BardStraightShotUpgradeFeature = 2302,
 
     [CustomComboInfo("Iron Jaws Feature", "Replace Iron Jaws with Caustic Bite/Stormbite depending on which is not present on the target.", BRD.JobID)]
@@ -340,6 +346,9 @@ public enum CustomComboPreset
     #endregion
     // ====================================================================================
     #region DRAGOON
+
+    [CustomComboInfo("Jump + Mirage Dive", "Replace (High) Jump with Mirage Dive when Dive Ready.", DRG.JobID)]
+    DragoonJumpFeature = 2201,
 
     [CustomComboInfo("Coerthan Torment Combo", "Replace Coerthan Torment with its combo chain.", DRG.JobID)]
     DragoonCoerthanTormentCombo = 2202,
@@ -684,7 +693,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Scythe Guillotine Feature", "Replace Nightmare Scythe with Guillotine while Reaving or Enshrouded.", RPR.JobID)]
     ReaperScytheGuillotineFeature = 3907,
 
-    [CustomComboInfo("Scythe Lemure's Feature", "Replace Nightmare Scythe with Lemure's Slice when two or more stacks of Void Shroud are active.", RPR.JobID)]
+    [CustomComboInfo("Scythe Lemure's Feature", "Replace Nightmare Scythe with Lemure's Scythe when two or more stacks of Void Shroud are active.", RPR.JobID)]
     ReaperScytheLemuresFeature = 3921,
 
     [CustomComboInfo("Scythe Communio Feature", "Replace Nightmare Scythe with Communio when one stack is left of Shroud.", RPR.JobID)]
@@ -1039,6 +1048,12 @@ public enum CustomComboPreset
 
     [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace and Medica with Afflatus Rapture when a Lily is available.", WHM.JobID)]
     WhiteMageAfflatusFeature = 2404,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", WHM.JobID)]
+    WhiteMageLucidFeature = 2408,
+
+    [CustomComboInfo("Dia Auto Cast", "Automatically cast Dia if it doesn't exist on the target", WHM.JobID)]
+    WhiteMageDiaFeature = 2410,
 
     #endregion
     // ====================================================================================

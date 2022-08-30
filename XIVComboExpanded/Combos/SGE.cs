@@ -1,4 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using System.Linq;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -37,13 +39,16 @@ internal static class SGE
     public static class Buffs
     {
         public const ushort
-            Kardion = 2604;
+            Kardion = 2604,
+            Eukrasia = 2606;
     }
 
     public static class Debuffs
     {
         public const ushort
-            Placeholder = 0;
+            EDosis1 = 2614,
+            EDosis2 = 2615,
+            EDosis3 = 2616;
     }
 
     public static class Levels
@@ -53,6 +58,7 @@ internal static class SGE
             Prognosis = 10,
             Egeiro = 12,
             Phlegma = 26,
+            EDosis1 = 30,
             Soteria = 35,
             Druochole = 45,
             Dyskrasia = 46,
@@ -60,14 +66,16 @@ internal static class SGE
             Ixochole = 52,
             Physis2 = 60,
             Taurochole = 62,
-            Toxicon = 66,
+            Toxikon = 66,
             Haima = 70,
             Phlegma2 = 72,
             Dosis2 = 72,
+            EDosis2 = 72,
             Rhizomata = 74,
             Holos = 76,
             Panhaima = 80,
             Phlegma3 = 82,
+            EDosis3 = 82,
             Dosis3 = 82,
             Krasis = 86,
             Pneuma = 90;
@@ -123,13 +131,91 @@ internal class SageSoteria : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SGE.Soteria)
+        if (actionID == SGE.Dosis)
         {
-            if (IsEnabled(CustomComboPreset.SageSoteriaKardionFeature))
+
+            var targetOftarget = GetTargetOfTarget();
+
+            var gauge = GetJobGauge<SGEGauge>();
+
+            if (GCDClipCheck(actionID))
             {
-                if (!HasEffect(SGE.Buffs.Kardion) && IsOffCooldown(SGE.Soteria))
-                    return SGE.Kardia;
+                // Use Lucid Dreaming if low enough mana
+                if (IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                {
+                    return ADV.LucidDreaming;
+                }
+
+                var hpPercent = (targetOftarget is not null)
+                    ? (float)targetOftarget.CurrentHp / targetOftarget.MaxHp
+                    : 1;
+
+                if (level >= SGE.Levels.Soteria
+                    && IsOffCooldown(SGE.Soteria)
+                    && (hpPercent <= 0.8))
+                {
+                    return SGE.Soteria;
+                }
+
+                if (level >= SGE.Levels.Krasis
+                    && IsOffCooldown(SGE.Krasis)
+                    && (hpPercent <= 0.75))
+                {
+                    return SGE.Krasis;
+                }
+
+                // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
+                if (level >= SGE.Levels.Druochole 
+                    && gauge.Addersgall >= 3
+                    && hpPercent <= 0.7)        
+                {
+                    return (level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)) 
+                        ? SGE.Taurochole 
+                        : SGE.Druochole;
+                }
             }
+
+
+            (ushort Debuff, ushort Level)[] EDosises = new[]
+            {
+                ( SGE.Debuffs.EDosis3, SGE.Levels.EDosis3 ),
+                ( SGE.Debuffs.EDosis2, SGE.Levels.EDosis2 ),
+                ( SGE.Debuffs.EDosis1, SGE.Levels.EDosis1 )
+            };
+
+
+            uint? foundDosis = null;
+            foreach (var (Debuff, Level) in EDosises)
+            {
+                if (level >= Level
+                    && FindTargetEffect(Debuff)?.RemainingTime <= 5)
+                {
+                    if (!HasEffect(SGE.Buffs.Eukrasia))
+                    {
+                        return SGE.Eukrasia;
+                    }
+
+                    foundDosis = OriginalHook(SGE.Dosis);
+                    break;
+                }
+            }
+
+            if (foundDosis != null) return foundDosis.Value;
+
+            if (GetTargetDistance() <= 6
+                && GetRemainingCharges(OriginalHook(SGE.Phlegma)) >= 2)
+            {
+                return OriginalHook(SGE.Phlegma);
+            }
+
+            if (IsMoving
+                && gauge.Addersting >= 1
+                && level >= SGE.Levels.Toxikon)
+            {
+                return OriginalHook(SGE.Toxikon);
+            }
+
         }
 
         return actionID;
@@ -244,6 +330,21 @@ internal class SagePhlegma : CustomCombo
         {
             var gauge = GetJobGauge<SGEGauge>();
 
+            var phlegma =
+                level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
+                level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
+                level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
+
+            if (GCDClipCheck(actionID))
+            {
+                // Use Lucid Dreaming if low enough mana
+                if (IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                {
+                    return ADV.LucidDreaming;
+                }
+            }
+
             if (IsEnabled(CustomComboPreset.SagePhlegmaDyskrasia))
             {
                 if (level >= SGE.Levels.Dyskrasia && HasNoTarget())
@@ -252,22 +353,13 @@ internal class SagePhlegma : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SagePhlegmaToxicon))
             {
-                var phlegma =
-                    level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
-                    level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
-                    level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
-                if (level >= SGE.Levels.Toxicon && phlegma != 0 && HasNoCharges(phlegma) && gauge.Addersting > 0)
+                if (level >= SGE.Levels.Toxikon && phlegma != 0 && HasNoCharges(phlegma) && gauge.Addersting > 0)
                     return OriginalHook(SGE.Toxikon);
             }
 
             if (IsEnabled(CustomComboPreset.SagePhlegmaDyskrasia))
             {
-                var phlegma =
-                    level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
-                    level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
-                    level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
-
                 if (level >= SGE.Levels.Dyskrasia && phlegma != 0 && HasNoCharges(phlegma))
                     return OriginalHook(SGE.Dyskrasia);
             }

@@ -10,11 +10,13 @@ internal static class DRK
         HardSlash = 3617,
         Unleash = 3621,
         SyphonStrike = 3623,
+        Unmend = 3624,
         Souleater = 3632,
         BloodWeapon = 3625,
         SaltedEarth = 3639,
         AbyssalDrain = 3641,
         CarveAndSpit = 3643,
+        Delirium = 7390,
         Quietus = 7391,
         Bloodspiller = 7392,
         FloodOfDarkness = 16466,
@@ -72,39 +74,63 @@ internal class DarkSouleater : CustomCombo
         {
             var gauge = GetJobGauge<DRKGauge>();
 
-            if (IsEnabled(CustomComboPreset.DarkDeliriumFeature))
+            // Do a check for flood of darkness first since it is a lower level
+            if (level >= DRK.Levels.FloodOfDarkness
+                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && GCDClipCheck(actionID))
             {
-                if (level >= DRK.Levels.Bloodspiller && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
-                    return DRK.Bloodspiller;
+                // If you are high enough level for edge fo darkness then do that instead
+                return level >= DRK.Levels.EdgeOfDarkness ? OriginalHook(DRK.EdgeOfDarkness) : OriginalHook(DRK.FloodOfDarkness);
             }
 
-            if (IsEnabled(CustomComboPreset.DarkSouleaterCombo))
+            if (level >= DRK.Levels.BloodWeapon
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.BloodWeapon)
+                    && gauge.Blood <= 70)
             {
-                if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapFeature))
-                {
-                    if (level >= DRK.Levels.Bloodspiller && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
-                        return DRK.Bloodspiller;
-                }
-
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
-                    {
-                        if (IsEnabled(CustomComboPreset.DarkSouleaterOvercapFeature))
-                        {
-                            if (level >= DRK.Levels.Bloodspiller && (gauge.Blood > 80 || (gauge.Blood > 70 && HasEffect(DRK.Buffs.BloodWeapon))))
-                                return DRK.Bloodspiller;
-                        }
-
-                        return DRK.Souleater;
-                    }
-
-                    if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
-                        return DRK.SyphonStrike;
-                }
-
-                return DRK.HardSlash;
+                return DRK.BloodWeapon;
             }
+
+            if (level >= DRK.Levels.Delirium
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.Delirium)
+                    && gauge.Blood <= 70)
+            {
+                return DRK.Delirium;
+            }
+            
+            if (!InMeleeRange())
+            {
+                return DRK.Unmend;
+            }
+
+            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
+            {
+                return level >= DRK.Levels.CarveAndSpit ? DRK.CarveAndSpit : DRK.AbyssalDrain;
+            }
+
+
+            if (level >= DRK.Levels.Bloodspiller
+                && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
+                    || gauge.Blood >= 70))
+            {
+                return DRK.Bloodspiller;
+            }
+
+
+            if (comboTime > 0)
+            {
+                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
+                {
+                    return DRK.Souleater;
+                }
+
+                if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
+                    return DRK.SyphonStrike;
+            }
+
+            return DRK.HardSlash;
+
         }
 
         return actionID;
@@ -121,30 +147,50 @@ internal class DarkStalwartSoul : CustomCombo
         {
             var gauge = GetJobGauge<DRKGauge>();
 
-            if (IsEnabled(CustomComboPreset.DarkDeliriumFeature))
+            // Do a check for flood of darkness girst since it is a lower level
+            if (level >= DRK.Levels.FloodOfDarkness
+                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && GCDClipCheck(actionID))
             {
-                if (level >= DRK.Levels.Quietus && level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
-                    return DRK.Quietus;
+                // If you are high enough level for edge fo darkness then do that instead
+                return OriginalHook(DRK.FloodOfDarkness);
+            }
+
+            if (level >= DRK.Levels.BloodWeapon
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.BloodWeapon)
+                    && gauge.Blood <= 70)
+            {
+                return DRK.BloodWeapon;
+            }
+
+            if (level >= DRK.Levels.Delirium
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(DRK.Delirium)
+                    && gauge.Blood <= 70)
+            {
+                return DRK.Delirium;
+            }
+
+            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
+            {
+                return DRK.AbyssalDrain;
+            }
+
+            if (level >= DRK.Levels.Quietus
+                && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
+                    || gauge.Blood >= 70))
+            {
+                return DRK.Quietus;
             }
 
             if (IsEnabled(CustomComboPreset.DarkStalwartSoulCombo))
             {
-                if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapFeature))
-                {
-                    if (level >= DRK.Levels.Quietus && gauge.Blood > 90 && HasEffect(DRK.Buffs.BloodWeapon))
-                        return DRK.Quietus;
-                }
 
                 if (comboTime > 0)
                 {
                     if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
                     {
-                        if (IsEnabled(CustomComboPreset.DarkStalwartSoulOvercapFeature))
-                        {
-                            if (level >= DRK.Levels.Quietus && (gauge.Blood > 80 || (gauge.Blood > 70 && HasEffect(DRK.Buffs.BloodWeapon))))
-                                return DRK.Quietus;
-                        }
-
                         return DRK.StalwartSoul;
                     }
                 }

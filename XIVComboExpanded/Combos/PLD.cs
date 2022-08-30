@@ -1,3 +1,5 @@
+using Dalamud.Game.ClientState.JobGauge.Types;
+
 namespace XIVComboExpandedPlugin.Combos;
 
 internal static class PLD
@@ -9,9 +11,11 @@ internal static class PLD
         FastBlade = 9,
         RiotBlade = 15,
         ShieldBash = 16,
+        FightOrFlight = 20,
         RageOfHalone = 21,
         CircleOfScorn = 23,
         SpiritsWithin = 29,
+        Sheltron = 3542,
         GoringBlade = 3538,
         RoyalAuthority = 3539,
         TotalEclipse = 7381,
@@ -38,7 +42,7 @@ internal static class PLD
     public static class Debuffs
     {
         public const ushort
-            Placeholder = 0;
+            GoringBlade = 725;
     }
 
     public static class Levels
@@ -47,11 +51,13 @@ internal static class PLD
             RiotBlade = 4,
             LowBlow = 12,
             SpiritsWithin = 30,
+            Sheltron = 35,
             CircleOfScorn = 50,
             RageOfHalone = 26,
             Prominence = 40,
             GoringBlade = 54,
             RoyalAuthority = 60,
+            Requiescat = 68,
             HolyCircle = 72,
             Atonement = 76,
             Confiteor = 80,
@@ -76,19 +82,78 @@ internal class PaladinGoringBlade : CustomCombo
                     return PLD.Atonement;
             }
 
-            if (IsEnabled(CustomComboPreset.PaladinGoringBladeCombo))
+            if (level >= PLD.Levels.CircleOfScorn
+                && IsOffCooldown(PLD.CircleOfScorn)
+                && GCDClipCheck(actionID))
             {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.GoringBlade)
-                        return PLD.GoringBlade;
 
-                    if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
-                        return PLD.RiotBlade;
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
                 }
 
-                return PLD.FastBlade;
+                return PLD.CircleOfScorn;
             }
+
+            if (level >= PLD.Levels.SpiritsWithin
+                && IsOffCooldown(PLD.SpiritsWithin)
+                && GCDClipCheck(actionID))
+            {
+
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
+                }
+
+                return PLD.SpiritsWithin;
+            }
+
+            var goringBlade = FindTargetEffect(PLD.Debuffs.GoringBlade);
+
+            if (level >= PLD.Levels.Requiescat
+                && IsOffCooldown(PLD.Requiescat)
+                && GCDClipCheck(actionID))
+            {
+
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
+                }
+
+                return PLD.Requiescat;
+            }
+
+            if (HasEffect(PLD.Buffs.Requiescat) 
+                && goringBlade != null)
+            {
+                return PLD.HolySpirit;
+            }
+
+            if (comboTime > 0)
+            {
+
+                if (lastComboMove == PLD.RiotBlade
+                    && level >= PLD.Levels.GoringBlade
+                    && (goringBlade == null || goringBlade?.RemainingTime <= 5))
+                {
+
+                    if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                    {
+                        return PLD.FightOrFlight;
+                    }
+
+                    return PLD.GoringBlade;
+                }
+
+                if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
+                    // Royal Authority
+                    return OriginalHook(PLD.RageOfHalone);
+
+                if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
+                    return PLD.RiotBlade;
+            }
+
+            return PLD.FastBlade;
         }
 
         return actionID;
@@ -137,6 +202,60 @@ internal class PaladinProminence : CustomCombo
     {
         if (actionID == PLD.Prominence)
         {
+            if (level >= PLD.Levels.CircleOfScorn
+                && IsOffCooldown(PLD.CircleOfScorn)
+                && GCDClipCheck(actionID))
+            {
+
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
+                }
+
+                return PLD.CircleOfScorn;
+            }
+
+            if (level >= PLD.Levels.SpiritsWithin
+                && IsOffCooldown(PLD.SpiritsWithin)
+                && GCDClipCheck(actionID))
+            {
+
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
+                }
+
+                return PLD.SpiritsWithin;
+            }
+
+            if (level >= PLD.Levels.Requiescat
+                && IsOffCooldown(PLD.Requiescat)
+                && GCDClipCheck(actionID))
+            {
+
+                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                {
+                    return PLD.FightOrFlight;
+                }
+                
+                return PLD.Requiescat;
+            }
+
+            var gauge = GetJobGauge<PLDGauge>();
+
+
+            if (level >= PLD.Levels.Sheltron
+                && gauge.OathGauge == 100
+                && GCDClipCheck(actionID))
+            {
+                return PLD.Sheltron;
+            }
+
+            if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.HolyCircle)
+            {
+                return PLD.HolyCircle;
+            }
+
             if (comboTime > 0)
             {
                 if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)

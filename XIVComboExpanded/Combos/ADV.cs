@@ -6,13 +6,15 @@ internal static class ADV
     public const byte JobID = 0;
 
     public const uint
-        LucidDreaming = 1204,
+        LucidDreaming = 7562,
+        AngelWhisper = 18317,
         Swiftcast = 7561;
 
     public static class Buffs
     {
         public const ushort
-            Medicated = 49;
+            Medicated = 49,
+            Swiftcast = 167;
     }
 
     public static class Debuffs
@@ -38,7 +40,8 @@ internal class SwiftRaiseFeature : CustomCombo
             (actionID == SCH.Ressurection && level >= SCH.Levels.Ressurection) ||
             (actionID == SGE.Egeiro && level >= SGE.Levels.Egeiro) ||
             (actionID == WHM.Raise && level >= WHM.Levels.Raise) ||
-            (actionID == RDM.Verraise && level >= RDM.Levels.Verraise && !HasEffect(RDM.Buffs.Dualcast)))
+            (actionID == RDM.Verraise && level >= RDM.Levels.Verraise && !HasEffect(RDM.Buffs.Dualcast)) ||
+            (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
         {
             if (level >= ADV.Levels.Swiftcast && IsOffCooldown(ADV.Swiftcast))
                 return ADV.Swiftcast;
