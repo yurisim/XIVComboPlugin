@@ -74,7 +74,7 @@ internal class PaladinGoringBlade : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == PLD.GoringBlade)
+        if (actionID == PLD.FastBlade)
         {
             if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
             {
@@ -160,43 +160,9 @@ internal class PaladinGoringBlade : CustomCombo
     }
 }
 
-internal class PaladinRoyalAuthority : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
-        {
-            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
-            {
-                if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
-                    return PLD.Atonement;
-            }
-
-            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityCombo))
-            {
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
-                        // Royal Authority
-                        return OriginalHook(PLD.RageOfHalone);
-
-                    if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
-                        return PLD.RiotBlade;
-                }
-
-                return PLD.FastBlade;
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class PaladinProminence : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinProminenceCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

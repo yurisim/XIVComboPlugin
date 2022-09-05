@@ -17,6 +17,7 @@ internal static class SGE
         Physis = 24288,
         Phlegma = 24289,
         Eukrasia = 24290,
+        EukrasianPrognosis = 24292,
         Soteria = 24294,
         Druochole = 24296,
         Dyskrasia = 24297,
@@ -64,6 +65,7 @@ internal static class SGE
             Dyskrasia = 46,
             Kerachole = 50,
             Ixochole = 52,
+            Zoe = 56,
             Physis2 = 60,
             Taurochole = 62,
             Toxikon = 66,
@@ -133,20 +135,12 @@ internal class SageSoteria : CustomCombo
     {
         if (actionID == SGE.Dosis)
         {
-
             var targetOftarget = GetTargetOfTarget();
 
             var gauge = GetJobGauge<SGEGauge>();
 
             if (GCDClipCheck(actionID))
             {
-                // Use Lucid Dreaming if low enough mana
-                if (IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000)
-                {
-                    return ADV.LucidDreaming;
-                }
-
                 var hpPercent = (targetOftarget is not null)
                     ? (float)targetOftarget.CurrentHp / targetOftarget.MaxHp
                     : 1;
@@ -167,15 +161,28 @@ internal class SageSoteria : CustomCombo
 
                 // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
                 if (level >= SGE.Levels.Druochole 
-                    && gauge.Addersgall >= 3
+                    && gauge.Addersgall >= 2
                     && hpPercent <= 0.7)        
                 {
                     return (level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)) 
                         ? SGE.Taurochole 
                         : SGE.Druochole;
                 }
-            }
 
+                if (level >= SGE.Levels.Rhizomata
+                    && gauge.Addersgall <= 1
+                    && IsOffCooldown(SGE.Rhizomata))
+                {
+                    return SGE.Rhizomata;
+                }
+
+                // Use Lucid Dreaming if low enough mana
+                if (IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                {
+                    return ADV.LucidDreaming;
+                }
+            }
 
             (ushort Debuff, ushort Level)[] EDosises = new[]
             {
@@ -203,8 +210,18 @@ internal class SageSoteria : CustomCombo
 
             if (foundDosis != null) return foundDosis.Value;
 
+            var myHP = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+
+            if (level >= SGE.Levels.Pneuma 
+                && IsOffCooldown(SGE.Pneuma) 
+                && myHP <= 0.85) 
+                return SGE.Pneuma;
+
+            var phlegmaCharges = GetRemainingCharges(OriginalHook(SGE.Phlegma));
+
             if (GetTargetDistance() <= 6
-                && GetRemainingCharges(OriginalHook(SGE.Phlegma)) >= 2)
+                && phlegmaCharges >= 1
+                && (phlegmaCharges >= 2 || IsMoving))
             {
                 return OriginalHook(SGE.Phlegma);
             }
@@ -244,6 +261,24 @@ internal class SageTaurochole : CustomCombo
                     return SGE.Taurochole;
 
                 return SGE.Druochole;
+            }
+        }
+
+        return actionID;
+    }
+}
+
+internal class SageZoe : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SGE.Prognosis || actionID == SGE.EukrasianPrognosis)
+        {
+            if (IsOffCooldown(SGE.Zoe) && level >= SGE.Levels.Zoe)
+            {
+                return SGE.Zoe;
             }
         }
 
@@ -335,13 +370,58 @@ internal class SagePhlegma : CustomCombo
                 level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
                 level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
 
+            var targetOftarget = GetTargetOfTarget();
+
+
             if (GCDClipCheck(actionID))
             {
+                var hpPercent = (targetOftarget is not null)
+                       ? (float)targetOftarget.CurrentHp / targetOftarget.MaxHp
+                       : 1;
+
+                if (level >= SGE.Levels.Soteria
+                    && IsOffCooldown(SGE.Soteria)
+                    && (hpPercent <= 0.8))
+                {
+                    return SGE.Soteria;
+                }
+
+                if (level >= SGE.Levels.Krasis
+                    && IsOffCooldown(SGE.Krasis)
+                    && (hpPercent <= 0.75))
+                {
+                    return SGE.Krasis;
+                }
+
+                // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
+                if (level >= SGE.Levels.Druochole
+                    && gauge.Addersgall >= 2
+                    && hpPercent <= 0.7)
+                {
+                    return (level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole))
+                        ? SGE.Taurochole
+                        : SGE.Druochole;
+                }
+
                 // Use Lucid Dreaming if low enough mana
                 if (IsOffCooldown(ADV.LucidDreaming)
                     && LocalPlayer?.CurrentMp <= 8000)
                 {
                     return ADV.LucidDreaming;
+                }
+
+                //if (hpPercent <= 95
+                //    && IsOffCooldown(SGE.Kardia)
+                //    && FindTargetOfTargetEffect(SGE.Buffs.Kardion) is null)
+                //{
+                //    return SGE.Kardia;
+                //}
+
+                if (level >= SGE.Levels.Rhizomata
+                    && gauge.Addersgall <= 1
+                    && IsOffCooldown(SGE.Rhizomata))
+                {
+                    return SGE.Rhizomata;
                 }
             }
 

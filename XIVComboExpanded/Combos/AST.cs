@@ -83,7 +83,7 @@ internal static class AST
 
 internal class AstrologianMalefic : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMaleficDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -107,9 +107,11 @@ internal class AstrologianMalefic : CustomCombo
             {
                 var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
 
+                var myHP = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
                     && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
-                        || (gauge.DrawnCrownCard == CardType.LADY && percentage <= 0.85)))
+                        || (gauge.DrawnCrownCard == CardType.LADY && myHP <= 0.85)))
                     return AST.MinorArcana;
 
 

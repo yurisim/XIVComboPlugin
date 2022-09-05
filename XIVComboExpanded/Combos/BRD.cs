@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
-
 namespace XIVComboExpandedPlugin.Combos;
 
 internal static class BRD
@@ -205,12 +204,11 @@ internal class BardHeavyShot : CustomCombo
                     return BRD.ApexArrow;
             }
 
-            if (IsEnabled(CustomComboPreset.BardStraightShotUpgradeFeature))
-            {
+
                 if (level >= BRD.Levels.StraightShot && HasEffect(BRD.Buffs.StraightShotReady))
                     // Refulgent Arrow
                     return OriginalHook(BRD.StraightShot);
-            }
+            
         }
 
         return actionID;

@@ -41,6 +41,7 @@ internal static class SCH
     {
         public const ushort
             Galvanize = 297,
+            Catalyze = 1918,
             Dissipation = 791,
             Recitation = 1896;
     }
@@ -66,7 +67,7 @@ internal static class SCH
             Aetherpact = 70,
             Biolysis = 72,
             Recitation = 74,
-            FaeBlessing = 76,
+            FeyBlessing = 76,
             Consolation = 80,
             SummonSeraph = 80,
             Broil4 = 82,
@@ -152,7 +153,7 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
 
                 if (level >= SCH.Levels.Aetherpact
-                     && gauge.FairyGauge >= 50
+                     && gauge.FairyGauge >= 30
                      && TargetOfTargetHPercentage() <= 0.60
                      && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
                      && !HasEffect(SCH.Buffs.Dissipation)
@@ -231,7 +232,8 @@ internal class ScholarIndomitability : CustomCombo
                 && GetRemainingCharges(SCH.Consolation) > 0)
                 return SCH.Consolation;
 
-            if (level >= SCH.Levels.FaeBlessing 
+            if (level >= SCH.Levels.FeyBlessing
+                && !HasEffect(SCH.Buffs.Dissipation)
                 && IsOffCooldown(SCH.FeyBlessing)
                 && gauge.SeraphTimer <= 1)
             {
@@ -299,7 +301,7 @@ internal class ScholarAdloCrit : CustomCombo
             }
 
             if (level >= SCH.Levels.DeploymentTactics
-                && TargetHasEffect(SCH.Buffs.Galvanize)
+                && TargetHasEffect(SCH.Buffs.Catalyze)
                 && IsOffCooldown(SCH.DeploymentTactics))
             {
                 return SCH.DeploymentTactics;

@@ -80,7 +80,7 @@ internal static class MCH
 
 internal class MachinistCleanShot : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistMainCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MchAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -90,9 +90,24 @@ internal class MachinistCleanShot : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                //if (IsOffCooldown(MCH.Reassemble)
+                //    && ((IsOffCooldown(MCH.AirAnchor) && level >= MCH.Levels.AirAnchor)
+                //        || (IsOffCooldown(MCH.Drill) && level >= MCH.Levels.Drill))
+                //    ) return MCH.Reassemble;
+
                 if (level >= MCH.Levels.RookOverdrive && gauge.Battery >= 100)
                 {
                     return OriginalHook(MCH.RookAutoturret);
+                }
+
+                // Casts hypercharge if heat is over 50
+                if (level >= MCH.Levels.BarrelStabilizer
+                    && InCombat()
+                    && IsOnCooldown(MCH.Wildfire)
+                    && IsOffCooldown(MCH.BarrelStabilizer)
+                    && gauge.Heat <= 50)
+                {
+                    return MCH.BarrelStabilizer;
                 }
 
                 var gaussRoundCharges = GetRemainingCharges(MCH.GaussRound);
@@ -120,33 +135,12 @@ internal class MachinistCleanShot : CustomCombo
                 {
                     return MCH.Hypercharge;
                 }
-
-                // Casts hypercharge if heat is over 50
-                if (level >= MCH.Levels.BarrelStabilizer
-                    && InCombat()
-                    && TargetHasEffect(MCH.Debuffs.Wildfire)
-                    && IsOffCooldown(MCH.BarrelStabilizer)
-                    && gauge.Heat < 50)
-                {
-                    return MCH.BarrelStabilizer;
-                }
-
-            }
-
-            if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
-                return MCH.HeatBlast;
-
-            // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
-            if (level < MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot) && gauge.Battery <= 80)
-            {
-                return MCH.HotShot;
             }
 
             if (level >= MCH.Levels.AirAnchor && IsOffCooldown(MCH.AirAnchor) && gauge.Battery <= 80 && gauge.Battery >= 10)
             {
                 // Try to use Reassemble before drill if possible
-                if (IsOffCooldown(MCH.Reassemble) 
-                    && GCDClipCheck(actionID)) return MCH.Reassemble;
+                if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
 
                 return MCH.AirAnchor;
             }
@@ -155,10 +149,19 @@ internal class MachinistCleanShot : CustomCombo
             if (level >= MCH.Levels.Drill && IsOffCooldown(MCH.Drill) && gauge.Battery >= 10)
             {
                 // Try to use Reassemble before drill if possible
-                if (IsOffCooldown(MCH.Reassemble) && GCDClipCheck(actionID)) return MCH.Reassemble;
+                if (IsOffCooldown(MCH.Reassemble)) return MCH.Reassemble;
 
                 return MCH.Drill;
             }
+
+            // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
+            if (level < MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot) && gauge.Battery <= 80)
+            {
+                return MCH.HotShot;
+            }
+
+            if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
+                return MCH.HeatBlast;
 
             if (comboTime > 0)
             {
@@ -259,7 +262,7 @@ internal class MachinistHeatBlastAutoCrossbow : CustomCombo
 
 internal class MachinistSpreadShot : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MachinistSpreadShotFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MchAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

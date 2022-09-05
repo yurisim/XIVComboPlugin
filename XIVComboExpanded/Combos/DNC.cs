@@ -189,31 +189,6 @@ internal class DancerStandardStepTechnicalStep : CustomCombo
     }
 }
 
-internal class DancerFlourish : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DncAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == DNC.Flourish)
-        {
-            if (IsEnabled(CustomComboPreset.DancerFlourishFan3Feature))
-            {
-                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
-                    return DNC.FanDance3;
-            }
-
-            if (IsEnabled(CustomComboPreset.DancerFlourishFan4Feature))
-            {
-                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
-                    return DNC.FanDance4;
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class DancerCascadeFountain : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DncAny;
