@@ -40,9 +40,11 @@ internal static class SCH
     public static class Buffs
     {
         public const ushort
+            WhisperingDawn = 315,
             Galvanize = 297,
             Catalyze = 1918,
             Dissipation = 791,
+            SeraphicVeil = 3097,
             Recitation = 1896;
     }
 
@@ -56,6 +58,8 @@ internal static class SCH
     {
         public const byte
             Ressurection = 12,
+            WhisperingDawn = 20,
+            FeyIllumination = 40,
             Aetherflow = 45,
             Lustrate = 45,
             SacredSoil = 50,
@@ -76,19 +80,22 @@ internal static class SCH
     }
 }
 
-internal class ScholarExcogitation : CustomCombo
+internal class ScholarSacredSoil : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SCH.Excogitation)
+        if (actionID == SCH.SacredSoil)
         {
-            if (IsEnabled(CustomComboPreset.ScholarExcogitationLustrateFeature))
-            {
-                if (level < SCH.Levels.Excogitation || IsOnCooldown(SCH.Excogitation))
-                    return SCH.Lustrate;
-            }
+
+            if (level >= SCH.Levels.FeyIllumination 
+                && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
+                && !HasEffect(SCH.Buffs.Dissipation)
+                )
+                return OriginalHook(SCH.FeyIllumination);
+
+            return actionID;
         }
 
         return actionID;
@@ -107,17 +114,50 @@ internal class ScholarEnergyDrain : CustomCombo
 
             var aetherflowCD = GetCooldown(SCH.Aetherflow).CooldownRemaining;
 
-            var doDissipation = IsOnCooldown(SCH.WhisperingDawn)
-                            && IsOnCooldown(SCH.FeyBlessing)
-                            && IsOnCooldown(SCH.SummonSeraph)
-                            && IsOnCooldown(SCH.FeyIllumination)
-                            && IsOffCooldown(SCH.Dissipation)
-                            && level >= SCH.Levels.Dissipation
-                            && gauge.SeraphTimer == 0;
-
-
             if (GCDClipCheck(actionID))
             {
+                var doDissipation = IsOnCooldown(SCH.WhisperingDawn)
+                                && IsOnCooldown(SCH.FeyBlessing)
+                                && IsOnCooldown(SCH.SummonSeraph)
+                                && IsOnCooldown(SCH.FeyIllumination)
+                                && IsOffCooldown(SCH.Dissipation)
+                                && level >= SCH.Levels.Dissipation
+                                && gauge.SeraphTimer == 0;
+
+                var isThereSacredSoil = (IsOffCooldown(SCH.SacredSoil) || GetCooldown(SCH.SacredSoil).CooldownRemaining < 15);
+
+                var isThereRaidDamage = PlayerHealthPercentage() <= 0.85;
+
+                if (level >= SCH.Levels.Consolation
+                    && gauge.SeraphTimer > 0
+                    && !HasEffect(SCH.Buffs.SeraphicVeil)
+                    && GetRemainingCharges(SCH.Consolation) >= 2)
+                {
+                    return SCH.Consolation;
+                }
+
+                if (level >= SCH.Levels.WhisperingDawn
+                    && IsOffCooldown(OriginalHook(SCH.WhisperingDawn))
+                    && !HasEffect(SCH.Buffs.Dissipation)
+                    && (!isThereSacredSoil || PlayerHealthPercentage() <= 0.70)
+                    && isThereRaidDamage
+                    )
+                {
+                    return OriginalHook(SCH.WhisperingDawn);
+                }
+
+                if (level >= SCH.Levels.FeyBlessing
+                    && IsOffCooldown(SCH.FeyBlessing)
+                    && gauge.SeraphTimer == 0
+                    && !HasEffect(SCH.Buffs.Dissipation)
+                    && isThereRaidDamage
+                    && (!isThereSacredSoil || PlayerHealthPercentage() <= 0.65)
+                    && GetCooldown(OriginalHook(SCH.WhisperingDawn)).CooldownRemaining <= 45
+                    )
+                {
+                    return SCH.FeyBlessing;
+                }
+
                 if (level >= SCH.Levels.Aetherflow
                     && gauge.Aetherflow >= 1
                     && (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3
@@ -153,8 +193,8 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
 
                 if (level >= SCH.Levels.Aetherpact
-                     && gauge.FairyGauge >= 30
-                     && TargetOfTargetHPercentage() <= 0.60
+                     && gauge.FairyGauge >= 20
+                     && TargetOfTargetHPercentage() <= 0.75
                      && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
                      && !HasEffect(SCH.Buffs.Dissipation)
                      && gauge.SeraphTimer == 0)
@@ -163,13 +203,13 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
 
                 if (level >= SCH.Levels.Aetherpact
-                     && TargetOfTargetHPercentage() >= 0.90
+                     && TargetOfTargetHPercentage() >= 0.95
                      && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
                 {
                     return OriginalHook(SCH.Aetherpact);
                 }
             }
-           
+
 
             if (InCombat()
                 && actionID != SCH.ArtOfWar2
@@ -184,39 +224,6 @@ internal class ScholarEnergyDrain : CustomCombo
     }
 }
 
-internal class ScholarLustrate : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == SCH.Lustrate)
-        {
-            var gauge = GetJobGauge<SCHGauge>();
-
-            if (IsEnabled(CustomComboPreset.ScholarLustrateRecitationFeature))
-            {
-                if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
-                    return SCH.Recitation;
-            }
-
-            if (IsEnabled(CustomComboPreset.ScholarLustrateExcogitationFeature))
-            {
-                if (level >= SCH.Levels.Excogitation && IsOffCooldown(SCH.Excogitation))
-                    return SCH.Excogitation;
-            }
-
-            if (IsEnabled(CustomComboPreset.ScholarLustrateAetherflowFeature))
-            {
-                if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
-                    return SCH.Aetherflow;
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class ScholarIndomitability : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
@@ -227,7 +234,7 @@ internal class ScholarIndomitability : CustomCombo
         {
             var gauge = GetJobGauge<SCHGauge>();
 
-            if (level >= SCH.Levels.Consolation 
+            if (level >= SCH.Levels.Consolation
                 && gauge.SeraphTimer > 0
                 && GetRemainingCharges(SCH.Consolation) > 0)
                 return SCH.Consolation;
@@ -289,11 +296,20 @@ internal class ScholarExcog : CustomCombo
 internal class ScholarAdloCrit : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
-    
+
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SCH.Adloquium)
         {
+
+            if (level >= SCH.Levels.FeyIllumination
+                && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
+                && !HasEffect(SCH.Buffs.Dissipation)
+                )
+            {
+                return OriginalHook(SCH.FeyIllumination);
+            }
+
             if (level >= SCH.Levels.Recitation
                 && IsOffCooldown(SCH.Recitation))
             {
@@ -305,6 +321,13 @@ internal class ScholarAdloCrit : CustomCombo
                 && IsOffCooldown(SCH.DeploymentTactics))
             {
                 return SCH.DeploymentTactics;
+            }
+
+            var cd = GetCooldown(SCH.DeploymentTactics);
+
+            if (cd.IsCooldown && cd.CooldownElapsed <= 1)
+            {
+                return OriginalHook(SCH.Broil4);
             }
         }
 

@@ -90,22 +90,6 @@ internal static class DRG
     }
 }
 
-internal class DragoonJump : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonJumpFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == DRG.Jump || actionID == DRG.HighJump)
-        {
-            if (level >= DRG.Levels.MirageDive && HasEffect(DRG.Buffs.DiveReady))
-                return DRG.MirageDive;
-        }
-
-        return actionID;
-    }
-}
-
 internal class DragoonCoerthanTorment : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
@@ -146,11 +130,18 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return DRG.LifeSurge;
                 }
 
-                if ((IsOffCooldown(OriginalHook(DRG.Jump)) || HasEffect(DRG.Buffs.DiveReady))
+                if ((IsOffCooldown(OriginalHook(DRG.Jump)))
                     && level >= DRG.Levels.Jump
                     && (hasLanceCharge || lanceChargeCD > 3))
                 {
                     return OriginalHook(DRG.Jump);
+                }
+
+                if (HasEffect(DRG.Buffs.DiveReady)
+                    && level >= DRG.Levels.MirageDive
+                    && (hasLanceCharge || lanceChargeCD > 3))
+                {
+                    return DRG.MirageDive;
                 }
 
                 if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
@@ -257,12 +248,20 @@ internal class DragoonChaosThrust : CustomCombo
                         return DRG.LifeSurge;
                     }
 
-                    if ((IsOffCooldown(OriginalHook(DRG.Jump)) || HasEffect(DRG.Buffs.DiveReady))
+                    if ((IsOffCooldown(OriginalHook(DRG.Jump)))
                         && level >= DRG.Levels.Jump
                         && (hasLanceCharge || lanceChargeCD > 3)
                         && (hasLitany || litanyCD > 2 || level < DRG.Levels.BattleLitany))
                     {
                         return OriginalHook(DRG.Jump);
+                    }
+
+                    if (HasEffect(DRG.Buffs.DiveReady)
+                        && level >= DRG.Levels.MirageDive
+                        && (hasLanceCharge || lanceChargeCD > 3)
+                        && (hasLitany || litanyCD > 2 || level < DRG.Levels.BattleLitany))
+                    {
+                        return DRG.MirageDive;
                     }
 
                     if (IsOffCooldown(OriginalHook(DRG.Geirskogul))

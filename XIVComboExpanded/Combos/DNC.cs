@@ -199,6 +199,14 @@ internal class DancerCascadeFountain : CustomCombo
         {
             var gauge = GetJobGauge<DNCGauge>();
 
+            if (level >= DNC.Levels.StandardStep && gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
+            {
+                if (gauge.CompletedSteps < 2)
+                    return gauge.NextStep;
+
+                return OriginalHook(DNC.StandardStep);
+            }
+
             if (GCDClipCheck(actionID))
             {
                 if (level >= DNC.Levels.Devilment
@@ -215,6 +223,7 @@ internal class DancerCascadeFountain : CustomCombo
                     return DNC.FanDance3;
 
                 if (level >= DNC.Levels.Flourish
+                    && gauge.Feathers < 4
                     && IsOffCooldown(DNC.Flourish)
                     && (HasEffect(DNC.Buffs.Devilment) || GetCooldown(DNC.Devilment).CooldownRemaining > 20))
                     return DNC.Flourish;
@@ -224,7 +233,10 @@ internal class DancerCascadeFountain : CustomCombo
                     || (HasEffect(DNC.Buffs.Devilment) && gauge.Feathers > 0))
                     return DNC.FanDance1;
 
+
             }
+
+            if (level >= DNC.Levels.StandardStep && IsOffCooldown(DNC.StandardStep)) return DNC.StandardStep;
 
             if (level >= DNC.Levels.SaberDance
                     // Use only if you are gonna soon cap the Esprit gauge

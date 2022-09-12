@@ -252,6 +252,15 @@ internal abstract partial class CustomCombo
         return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
 
+    /// <summary>
+    /// Gets percentage of the players's health. If no target of target, returns 1.
+    /// </summary>
+    /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
+    protected static float PlayerHealthPercentage()
+    {
+        return (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+    }
+
 
     /// <summary>
     /// Compare the original hook to the given action ID.

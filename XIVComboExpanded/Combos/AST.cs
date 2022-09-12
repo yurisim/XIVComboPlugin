@@ -75,6 +75,7 @@ internal static class AST
             AspectedHelios = 42,
             Redraw = 40,
             Astrodyne = 50,
+            EarthlyStar = 62,
             MinorArcana = 70,
             CrownPlay = 70,
             Horoscope = 76;
@@ -101,19 +102,27 @@ internal class AstrologianMalefic : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
-            var targetOfTarget = GetTargetOfTarget();
+
+            if (level >= AST.Levels.EarthlyStar
+                && IsOffCooldown(AST.EarthlyStar))
+            {
+                return AST.EarthlyStar;
+            }
 
             if (GCDClipCheck(actionID))
             {
-                var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
-
-                var myHP = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
-
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
                     && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
-                        || (gauge.DrawnCrownCard == CardType.LADY && myHP <= 0.85)))
-                    return AST.MinorArcana;
+                        || (gauge.DrawnCrownCard == CardType.LADY && PlayerHealthPercentage() <= 0.85)))
+                    return OriginalHook(AST.MinorArcana);
 
+                if (OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
+                    && PlayerHealthPercentage() <= 0.85
+                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
+                    )
+                {
+                    return OriginalHook(AST.EarthlyStar);
+                }
 
                 if (level >= AST.Levels.Astrodyne 
                     && CanUseAction(AST.Astrodyne)) 
@@ -174,7 +183,7 @@ internal class AstrologianMalefic : CustomCombo
 
 internal class AstrologianGravity : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianGravityDrawFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

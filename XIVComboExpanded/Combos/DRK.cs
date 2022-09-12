@@ -70,13 +70,13 @@ internal class DarkSouleater : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == DRK.Souleater)
+        if (actionID == DRK.HardSlash)
         {
             var gauge = GetJobGauge<DRKGauge>();
 
             // Do a check for flood of darkness first since it is a lower level
             if (level >= DRK.Levels.FloodOfDarkness
-                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && (LocalPlayer?.CurrentMp >= 9200 || gauge.HasDarkArts)
                     && GCDClipCheck(actionID))
             {
                 // If you are high enough level for edge fo darkness then do that instead
@@ -99,7 +99,7 @@ internal class DarkSouleater : CustomCombo
                 return DRK.Delirium;
             }
             
-            if (!InMeleeRange())
+            if (GetTargetDistance() >= 7)
             {
                 return DRK.Unmend;
             }
@@ -184,9 +184,6 @@ internal class DarkStalwartSoul : CustomCombo
                 return DRK.Quietus;
             }
 
-            if (IsEnabled(CustomComboPreset.DarkStalwartSoulCombo))
-            {
-
                 if (comboTime > 0)
                 {
                     if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
@@ -196,7 +193,7 @@ internal class DarkStalwartSoul : CustomCombo
                 }
 
                 return DRK.Unleash;
-            }
+            
         }
 
         return actionID;

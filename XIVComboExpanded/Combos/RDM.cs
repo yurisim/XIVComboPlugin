@@ -126,7 +126,8 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
                 if (level >= RDM.Levels.Engagement
                     && InMeleeRange()
-                    && GetRemainingCharges(RDM.Engagement) > 1)
+                    && HasCharges(RDM.Engagement)
+                    && (GetRemainingCharges(RDM.Engagement) >= 2 || HasEffect(RDM.Buffs.Embolden)))
                 {
                     return RDM.Engagement;
                 }

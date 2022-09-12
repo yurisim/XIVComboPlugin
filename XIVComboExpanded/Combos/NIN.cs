@@ -264,7 +264,7 @@ internal class NinjaAeolianEdge : CustomCombo
             if (level >= NIN.Levels.Huraijin && hutonDuration == 0)
                 return NIN.Huraijin;
 
-            if (GetTargetDistance() >= 6)
+            if (GetTargetDistance() >= 7)
             {
                 return NIN.ThrowingDagger;
             }
@@ -291,39 +291,33 @@ internal class NinjaAeolianEdge : CustomCombo
     }
 }
 
-internal class NinjaArmorCrush : CustomCombo
+internal class TenChiJin : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == NIN.ArmorCrush)
+        if (actionID == NIN.TenChiJin)
         {
-            if (IsEnabled(CustomComboPreset.NinjaArmorCrushRaijuFeature))
+            if (HasEffect(NIN.Buffs.TenChiJin))
             {
-                if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
-                    return NIN.ForkedRaiju;
-            }
-
-            if (IsEnabled(CustomComboPreset.NinjaArmorCrushNinjutsuFeature))
-            {
-                if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
-                    return OriginalHook(NIN.Ninjutsu);
-            }
-
-            if (IsEnabled(CustomComboPreset.NinjaArmorCrushCombo))
-            {
-                if (comboTime > 0)
+                if (OriginalHook(NIN.TenNormal) != NIN.TenNormal)
                 {
-                    if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
-                        return NIN.ArmorCrush;
-
-                    if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
-                        return NIN.GustSlash;
+                    return OriginalHook(NIN.TenNormal);
                 }
 
-                return NIN.SpinningEdge;
+                if (OriginalHook(NIN.ChiNormal) != NIN.ChiNormal)
+                {
+                    return OriginalHook(NIN.ChiNormal);
+                }
+
+                if (OriginalHook(NIN.JinNormal) != NIN.JinNormal)
+                {
+                    return OriginalHook(NIN.JinNormal);
+                }
             }
+
+            return NIN.TenChiJin;
         }
 
         return actionID;

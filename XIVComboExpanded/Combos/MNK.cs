@@ -121,6 +121,10 @@ internal class MonkDragonKick : CustomCombo
                     && InCombat()
                     && HasTarget()
                     && !HasEffect(MNK.Buffs.FormlessFist)
+                    && disciplinedFist is not null
+                    && (disciplinedFist.RemainingTime >= 8 
+                        || !gauge.Nadi.HasFlag(Nadi.SOLAR) 
+                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR)))
                     && (OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz)
                     && (riddleOfFire?.RemainingTime >= 8
                         || (GetCooldown(MNK.PerfectBalance).ChargeCooldownRemaining <= 6)
@@ -151,7 +155,7 @@ internal class MonkDragonKick : CustomCombo
             }
 
             // Ranged GCDs
-            if (!InMeleeRange() || !InCombat() || !HasTarget())
+            if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
             {
                 if (level >= MNK.Levels.Meditation
                     && gauge.Chakra < 5)
@@ -248,6 +252,7 @@ internal class MonkAoECombo : CustomCombo
                     && InCombat()
                     && HasTarget()
                     && !HasEffect(MNK.Buffs.FormlessFist)
+                    && disciplinedFist is not null 
                     && (OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz)
                     && (riddleOfFire?.RemainingTime >= 8
                          || (GetCooldown(MNK.PerfectBalance).ChargeCooldownRemaining <= 6)

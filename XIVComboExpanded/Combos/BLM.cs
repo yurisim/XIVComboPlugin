@@ -84,24 +84,13 @@ internal static class BLM
     }
 }
 
-internal class BlackFireBlizzard4 : CustomCombo
+internal class BlackMageFire : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == BLM.Blizzard4)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
-            {
-                if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
-                    return BLM.UmbralSoul;
-            }
-        }
-
-        if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
+        if (actionID == BLM.Fire)
         {
             var gauge = GetJobGauge<BLMGauge>();
 
@@ -136,6 +125,10 @@ internal class BlackFireBlizzard4 : CustomCombo
                     }
                 }
 
+                if (HasEffect(BLM.Buffs.Firestarter))
+                {
+                    return BLM.Fire3;
+                }
 
                 if (level >= BLM.Levels.Blizzard3
                     && GetCooldown(BLM.Manafont).CooldownRemaining <= 179
@@ -162,7 +155,6 @@ internal class BlackFireBlizzard4 : CustomCombo
                     }
 
                     return OriginalHook(BLM.Thunder);
-
                 }
 
                 if (level >= BLM.Levels.Fire3 && (gauge.UmbralHearts >= 3 || gauge.ElementTimeRemaining <= 5000))

@@ -89,7 +89,7 @@ internal static class SAM
 
 internal class SamuraiYukikaze : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiYukikazeCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -262,7 +262,7 @@ internal class SamuraiKasha : CustomCombo
 
 internal class SamuraiMangetsu : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamuraiMangetsuCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
