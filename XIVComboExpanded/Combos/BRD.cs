@@ -212,8 +212,8 @@ internal class BardHeavyShot : CustomCombo
                 return BRD.BlastArrow;
 
             if (level >= BRD.Levels.ApexArrow
-                && (gauge.SoulVoice >= 80 && HasEffect(BRD.Buffs.RagingStrikes)
-                    || (gauge.SoulVoice == 100 && ragingStrikesCD >= 18)))
+                && (gauge.SoulVoice >= 80 && HasEffect(BRD.Buffs.RagingStrikes) && HasEffect(BRD.Buffs.BattleVoice)
+                    || (gauge.SoulVoice == 100 && ragingStrikesCD >= 12)))
                 return BRD.ApexArrow;
 
 

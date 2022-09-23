@@ -138,7 +138,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 }
             }
 
-            var upcomingTrickAttack = trickAttackCD <= 13 || IsOffCooldown(NIN.TrickAttack);
+            var upcomingTrickAttack = trickAttackCD <= 15 || IsOffCooldown(NIN.TrickAttack);
 
             // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
             if (GCDClipCheck(actionID)

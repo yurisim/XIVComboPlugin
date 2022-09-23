@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -13,6 +14,9 @@ internal static class SMN
         Ruin3 = 3579,
         Ruin4 = 7426,
         Fester = 181,
+        SummonRuby = 25802,
+        SummonTopaz = 25803,
+        SummonEmerald = 25804,
         Painflare = 3578,
         DreadwyrmTrance = 3581,
         SummonBahamut = 7427,
@@ -37,6 +41,8 @@ internal static class SMN
     {
         public const ushort
             FurtherRuin = 2701,
+            RadiantAegis = 3224,
+            SearingLight = 2703,
             IfritsFavor = 2724,
             GarudasFavor = 2725,
             TitansFavor = 2853;
@@ -56,10 +62,12 @@ internal static class SMN
             Gemshine = 6,
             EnergyDrain = 10,
             Fester = 10,
+            SummonEmerald = 22,
             PreciousBrilliance = 26,
             Painflare = 40,
             EnergySyphon = 52,
             Ruin3 = 54,
+            AstralFlow = 60,
             Ruin4 = 62,
             SearingLight = 66,
             EnkindleBahamut = 70,
@@ -117,30 +125,133 @@ internal class SummonerRuin : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SMN.Ruin || actionID == SMN.Ruin2 || actionID == SMN.Ruin3)
+        if (actionID == SMN.Ruin 
+            || actionID == SMN.Ruin2 
+            || actionID == SMN.Outburst 
+            || actionID == SMN.TriDisaster)
         {
             var gauge = GetJobGauge<SMNGauge>();
 
-            if (IsEnabled(CustomComboPreset.SummonerRuinTitansFavorFeature))
+            var hasSearing = HasEffect(SMN.Buffs.SearingLight);
+
+            var searingCD = GetCooldown(SMN.SearingLight).CooldownRemaining;
+
+            var searingElapsed = GetCooldown(SMN.SearingLight).CooldownElapsed;
+
+            if (GCDClipCheck(actionID))
             {
-                if (level >= SMN.Levels.ElementalMastery && HasEffect(SMN.Buffs.TitansFavor))
-                    return SMN.MountainBuster;
+                if (CanUseAction(OriginalHook(SMN.EnkindleBahamut))
+                    && ((hasSearing && searingElapsed > 5) || searingCD >= 10 || level < SMN.Levels.SearingLight)
+                    && IsOffCooldown(OriginalHook(SMN.EnkindleBahamut)))
+                {
+                    return OriginalHook(SMN.EnkindleBahamut);
+                }
+
+                if (OriginalHook(SMN.AstralFlow) != SMN.AstralFlow
+                    && ((hasSearing && searingElapsed > 5) || searingCD >= 10 || level < SMN.Levels.SearingLight)
+                    && !gauge.IsGarudaAttuned && !gauge.IsIfritAttuned
+                    && IsOffCooldown(OriginalHook(SMN.AstralFlow)))
+                {
+                    return OriginalHook(SMN.AstralFlow);
+                }
+
+                if (IsOffCooldown(SMN.EnergyDrain)
+                    && ((hasSearing && searingElapsed > 5) || searingCD >= 2 || level < SMN.Levels.SearingLight))
+                {
+                    return level >= SMN.Levels.EnergySyphon
+                        && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                            ? SMN.EnergySyphon
+                            : SMN.EnergyDrain;
+                }
+
+                if (gauge.HasAetherflowStacks)
+                {
+                    return level >= SMN.Levels.Painflare 
+                        && (actionID == SMN.Outburst || actionID == SMN.TriDisaster) 
+                            ? SMN.Painflare 
+                            : SMN.Fester;
+                }
+
+                if (HasCondition(ConditionFlag.InCombat)
+                    && IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
+
+                //if (HasCharges(SMN.RadiantAegis) 
+                //    && CanUseAction(SMN.RadiantAegis)
+                //    && !HasEffect(SMN.Buffs.RadiantAegis))
+                //{
+                //    return SMN.RadiantAegis;
+                //}
             }
 
-            if (IsEnabled(CustomComboPreset.SummonerRuinFeature))
+            // Bahamut & Pheonix Summmon
+            if (IsOffCooldown(OriginalHook(SMN.Aethercharge)))
             {
-                if (level >= SMN.Levels.Gemshine)
+                return OriginalHook(SMN.Aethercharge);
+            }
+
+            if (level >= SMN.Levels.AstralFlow)
+            {
+                if (HasEffect(SMN.Buffs.TitansFavor)
+                    || (HasEffect(SMN.Buffs.GarudasFavor)
+                        && (!IsMoving || HasEffect(ADV.Buffs.Swiftcast))))
                 {
-                    if (gauge.IsIfritAttuned || gauge.IsTitanAttuned || gauge.IsGarudaAttuned)
-                        return OriginalHook(SMN.Gemshine);
+                    return OriginalHook(SMN.AstralFlow);
+                }
+
+                if ((HasEffect(SMN.Buffs.IfritsFavor) || lastComboMove == SMN.CrimsonCyclone)
+                        && InMeleeRange())
+                {
+                    return OriginalHook(SMN.AstralFlow);
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.SummonerFurtherRuinFeature))
+            if (OriginalHook(SMN.Gemshine) != SMN.Gemshine)
             {
-                if (level >= SMN.Levels.Ruin4 && gauge.SummonTimerRemaining == 0 && gauge.AttunmentTimerRemaining == 0 && HasEffect(SMN.Buffs.FurtherRuin))
-                    return SMN.Ruin4;
+                return level >= SMN.Levels.PreciousBrilliance
+                    && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                        ? OriginalHook(SMN.PreciousBrilliance)
+                        : OriginalHook(SMN.Gemshine);
             }
+
+            // RUIN 4
+            if (OriginalHook(SMN.Ruin3) != SMN.Ruin3)
+            {
+                return level >= SMN.Levels.PreciousBrilliance
+                    && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                        ? OriginalHook(SMN.Outburst)
+                        : OriginalHook(SMN.Ruin3);
+            }
+
+            if (gauge.IsTitanReady)
+            {
+                return OriginalHook(SMN.SummonTopaz);
+            }
+
+            if (gauge.IsGarudaReady)
+            {
+                return OriginalHook(SMN.SummonEmerald);
+            }
+
+            if (gauge.IsIfritReady)
+            {
+                if (HasEffect(SMN.Buffs.GarudasFavor) && IsOffCooldown(ADV.Swiftcast)) {
+                    return ADV.Swiftcast;
+                }
+
+                return OriginalHook(SMN.SummonRuby);
+            }
+
+            if (HasEffect(SMN.Buffs.FurtherRuin))
+            {
+                return SMN.Ruin4;
+            }
+
+            return level >= SMN.Levels.PreciousBrilliance
+                && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                    ? OriginalHook(SMN.Outburst)
+                    : OriginalHook(SMN.Ruin);
         }
 
         return actionID;

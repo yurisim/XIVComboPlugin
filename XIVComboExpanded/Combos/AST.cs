@@ -103,11 +103,11 @@ internal class AstrologianMalefic : CustomCombo
             var gauge = GetJobGauge<ASTGauge>();
 
 
-            if (level >= AST.Levels.EarthlyStar
-                && IsOffCooldown(AST.EarthlyStar))
-            {
-                return AST.EarthlyStar;
-            }
+            //if (level >= AST.Levels.EarthlyStar
+            //    && IsOffCooldown(AST.EarthlyStar))
+            //{
+            //    return AST.EarthlyStar;
+            //}
 
             if (GCDClipCheck(actionID))
             {

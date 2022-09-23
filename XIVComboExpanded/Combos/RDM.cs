@@ -152,6 +152,8 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             // Melee Combo
             if ((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
+                    || lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte
+                    || lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau
                     || (gauge.WhiteMana >= 50 && gauge.BlackMana >= 50 && HasEffect(RDM.Buffs.Embolden))
                     || (gauge.WhiteMana >= 85 && gauge.BlackMana >= 85 && !hasSpeedy))
             {

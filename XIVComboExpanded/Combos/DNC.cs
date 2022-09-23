@@ -207,12 +207,13 @@ internal class DancerCascadeFountain : CustomCombo
                 return OriginalHook(DNC.StandardStep);
             }
 
+            if (level >= DNC.Levels.Devilment
+                    && IsOffCooldown(DNC.Devilment)
+                    && (HasEffect(DNC.Buffs.TechnicalFinish) || level < DNC.Levels.TechnicalStep))
+                return DNC.Devilment;
+
             if (GCDClipCheck(actionID))
             {
-                if (level >= DNC.Levels.Devilment
-                        && IsOffCooldown(DNC.Devilment)
-                        && (HasEffect(DNC.Buffs.TechnicalFinish) || level < DNC.Levels.TechnicalStep))
-                    return DNC.Devilment;
 
                 if (level >= DNC.Levels.FanDance4
                     && HasEffect(DNC.Buffs.FourfoldFanDance))

@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
+using System;
 using System.Data;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -184,13 +185,7 @@ internal class WhiteMageMedica : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (IsEnabled(CustomComboPreset.WhiteMageAfflatusFeature))
-            {
-                if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature))
-                {
-                    if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && TargetIsEnemy())
-                        return WHM.AfflatusMisery;
-                }
+
 
                 if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
                     return WHM.PlenaryIndulgence;
@@ -198,7 +193,7 @@ internal class WhiteMageMedica : CustomCombo
 
                 if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                     return WHM.AfflatusRapture;
-            }
+            
         }
 
         return actionID;
@@ -211,12 +206,18 @@ internal class WhiteMageDiaFeature : CustomCombo
     
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Stone2 || actionID == WHM.Stone3 || actionID == WHM.Stone4 || actionID == WHM.Glare || actionID == WHM.Glare3)
+        if (actionID == WHM.Stone2 
+            || actionID == WHM.Stone3 
+            || actionID == WHM.Stone4 
+            || actionID == WHM.Glare 
+            || actionID == WHM.Glare3)
         {
             var targetOfTarget = GetTargetOfTarget();
 
             var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
-            
+
+            var gauge = GetJobGauge<WHMGauge>();
+
             if (GCDClipCheck(actionID))
             {
                 if (HasCondition(ConditionFlag.InCombat) 
@@ -244,19 +245,29 @@ internal class WhiteMageDiaFeature : CustomCombo
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
             if (InCombat() 
-                && (diaFound?.RemainingTime <= 5 || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= 20000000)))
+                && (diaFound?.RemainingTime <= 5 
+                || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= 20000000)))
             {
                 return WHM.Dia;
             }
+
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+            {
+                return WHM.AfflatusMisery;
+            }
+
         }
-       
+
         if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
             && level >= WHM.Levels.ThinAir 
             && !HasEffect(WHM.Buffs.ThinAir) 
             && GetRemainingCharges(WHM.ThinAir) >= 1)
             return WHM.ThinAir;
 
-        if (actionID == WHM.Raise && level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && GetRemainingCharges(WHM.ThinAir) >= 1)
+        if (actionID == WHM.Raise 
+            && level >= WHM.Levels.ThinAir 
+            && !HasEffect(WHM.Buffs.ThinAir) 
+            && GetRemainingCharges(WHM.ThinAir) >= 1)
             return WHM.ThinAir;
 
         return actionID;

@@ -104,6 +104,19 @@ internal class MonkDragonKick : CustomCombo
 
             var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
 
+            var demolish = FindTargetEffect(MNK.Debuffs.Demolish);
+            var refreshDemolish = demolish == null || demolish?.RemainingTime <= 5;
+
+            var doesNotHaveSolar = !gauge.Nadi.HasFlag(Nadi.SOLAR);
+
+            var hasSolarLunar = gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR);
+
+            var medicated = FindEffect(ADV.Buffs.Medicated);
+
+            var medicatedGood = medicated is not null && medicated.RemainingTime >= 8;
+
+
+
             // NO GCDs
             if (GCDClipCheck(actionID))
             {
@@ -120,13 +133,15 @@ internal class MonkDragonKick : CustomCombo
                     && GetRemainingCharges(MNK.PerfectBalance) >= 1
                     && InCombat()
                     && HasTarget()
+                    && (demolish is not null || doesNotHaveSolar || hasSolarLunar)
                     && !HasEffect(MNK.Buffs.FormlessFist)
                     && disciplinedFist is not null
                     && (disciplinedFist.RemainingTime >= 8 
-                        || !gauge.Nadi.HasFlag(Nadi.SOLAR) 
-                        || (gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR)))
+                        || doesNotHaveSolar
+                        || hasSolarLunar)
                     && (OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz)
                     && (riddleOfFire?.RemainingTime >= 8
+                        || medicatedGood
                         || (GetCooldown(MNK.PerfectBalance).ChargeCooldownRemaining <= 6)
                         || GetRemainingCharges(MNK.PerfectBalance) == 2
                         || GetCooldown(MNK.RiddleOfFire).CooldownRemaining < 10
@@ -137,9 +152,10 @@ internal class MonkDragonKick : CustomCombo
                 }
 
                 if (level >= MNK.Levels.RiddleOfFire
+                    && (brotherhoodCD > 6 || level < MNK.Levels.Brotherhood)
                     && InCombat()
                     && HasTarget()
-                    && (brotherhoodCD > 6 || level < MNK.Levels.Brotherhood)
+                    && InMeleeRange()
                     && IsOffCooldown(MNK.RiddleOfFire))
                 {
                     return MNK.RiddleOfFire;
@@ -147,7 +163,10 @@ internal class MonkDragonKick : CustomCombo
 
                 if (level >= MNK.Levels.RiddleOfWind
                     && IsOffCooldown(MNK.RiddleOfWind)
-                    && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 9))
+                    && (GetCooldown(MNK.RiddleOfFire).CooldownRemaining > 9)
+                    && InCombat()
+                    && HasTarget()
+                    && InMeleeRange())
                 {
                     return MNK.RiddleOfWind;
                 }
@@ -170,9 +189,6 @@ internal class MonkDragonKick : CustomCombo
                     return MNK.FormShift;
                 }
             }
-
-            var demolish = FindTargetEffect(MNK.Debuffs.Demolish);
-            var refreshDemolish = demolish == null || demolish?.RemainingTime <= 5;
 
             if (level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
@@ -218,7 +234,7 @@ internal class MonkDragonKick : CustomCombo
                 }
             }
 
-            if (!HasEffect(MNK.Buffs.LeadenFist) && level >= MNK.Levels.DragonKick)
+            if (!HasEffect(MNK.Buffs.LeadenFist))
             {
                 return MNK.DragonKick;
             }
