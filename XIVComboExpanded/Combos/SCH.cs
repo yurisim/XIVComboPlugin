@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -126,12 +127,14 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 var isThereSacredSoil = (IsOffCooldown(SCH.SacredSoil) || GetCooldown(SCH.SacredSoil).CooldownRemaining < 15);
 
+
                 var isThereRaidDamage = PlayerHealthPercentage() <= 0.85;
 
                 if (level >= SCH.Levels.Consolation
                     && gauge.SeraphTimer > 0
                     && !HasEffect(SCH.Buffs.SeraphicVeil)
-                    && GetRemainingCharges(SCH.Consolation) >= 2)
+                    && HasCharges(SCH.Consolation)
+                    && (GetRemainingCharges(SCH.Consolation) >= 2 || gauge.SeraphTimer < 5))
                 {
                     return SCH.Consolation;
                 }
@@ -210,11 +213,14 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
             }
 
+            var bio = FindTargetEffect(SCH.Debuffs.Biolysis);
 
             if (InCombat()
                 && actionID != SCH.ArtOfWar2
+                && InCombat()
                 && TargetIsEnemy()
-                && FindTargetEffect(SCH.Debuffs.Biolysis)?.RemainingTime <= 5)
+                && ((bio is not null && bio.RemainingTime <= 5) 
+                    || (bio is null && ShouldRefreshDots())))
             {
                 return SCH.Biolysis;
             }

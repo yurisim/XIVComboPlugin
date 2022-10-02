@@ -128,7 +128,8 @@ internal class AstrologianMalefic : CustomCombo
                     && CanUseAction(AST.Astrodyne)) 
                     return AST.Astrodyne;
 
-                if (level >= AST.Levels.MinorArcana 
+                if (level >= AST.Levels.MinorArcana
+                    && InCombat()
                     && IsOffCooldown(AST.MinorArcana) 
                     && gauge.DrawnCrownCard == CardType.NONE) 
                     return AST.MinorArcana;

@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Lumina.Excel.GeneratedSheets;
 using System;
+using System.Reflection.Metadata;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -98,19 +99,27 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (level >= GNB.Levels.HeartOfCorundum 
+                if (level >= GNB.Levels.HeartOfCorundum
                     && IsOffCooldown(GNB.HeartOfCorundum)
                     && !HasEffect(GNB.Buffs.Superbolide)
-                    && (PlayerHealthPercentage() <= 0.5 || TargetOfTargetHPercentage() <= 0.5)
+                    && (PlayerHealthPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
                     )
                 {
                     return GNB.HeartOfCorundum;
                 }
 
+                if (level >= GNB.Levels.Bloodfest
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 24 || lastComboMove == GNB.BrutalShell)
+                    && IsOffCooldown(GNB.Bloodfest)
+                    && gauge.Ammo == 0)
+                {
+                    return GNB.Bloodfest;
+                }
+
                 if (IsOffCooldown(GNB.NoMercy) 
                     && (gauge.Ammo >= 1 
-                        || level < GNB.Levels.BurstStrike 
-                        || GNB.Continuation != OriginalHook(GNB.Continuation)))
+                        || level < GNB.Levels.BurstStrike
+                        || lastComboMove == GNB.BrutalShell))
                 {
                     return GNB.NoMercy;
                 }
@@ -130,10 +139,9 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 }
 
                 if (level >= GNB.Levels.RoughDivide
-                    && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 6)
+                    && HasEffect(GNB.Buffs.NoMercy)
                     && HasCharges(GNB.RoughDivide)
-                    && GetTargetDistance() <= 2
-                    && GetRemainingCharges(GNB.RoughDivide) >= 2
+                    && GetTargetDistance() <= 1
                     )
                 {
                     return GNB.RoughDivide;
@@ -142,18 +150,10 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 if (level >= GNB.Levels.Aurora
                     && (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
                     && !HasEffect(GNB.Buffs.Aurora)
-                    && (TargetOfTargetHPercentage() <= 0.8)
+                    && (TargetOfTargetHPercentage() <= 0.7)
                     )
                 {
                     return GNB.Aurora;
-                }
-
-                if (level >= GNB.Levels.Bloodfest
-                    && HasEffect(GNB.Buffs.NoMercy)
-                    && IsOffCooldown(GNB.Bloodfest)
-                    && gauge.Ammo == 0)
-                {
-                    return GNB.Bloodfest;
                 }
 
             }
@@ -162,22 +162,31 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (CanUseAction(GNB.WickedTalon)) return GNB.WickedTalon;
 
+            var oneMinCD = 58.80 * 0.2;
+
             // Weaponskills
             if (level >= GNB.Levels.SonicBreak
-                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 57.24 * 0.2)
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD)
                 && IsOffCooldown(GNB.SonicBreak))
             {
                 return GNB.SonicBreak;
 
             }
 
+            if (level >= GNB.Levels.DoubleDown
+                && IsOffCooldown(GNB.DoubleDown)
+                && gauge.Ammo >= 2
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD))
+            {
+                return GNB.DoubleDown;
+            }
+
             if (level >= GNB.Levels.GnashingFang
                 && IsOffCooldown(GNB.GnashingFang)
                 && gauge.Ammo >= 1
-                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 28.62 * 0.2))
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD / 2))
             {
                 return GNB.GnashingFang;
-
             }
 
             var noMercy = FindEffect(GNB.Buffs.NoMercy);
@@ -189,6 +198,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
             if (level >= GNB.Levels.BurstStrike
                 && gauge.Ammo >= 1
                 && noMercy is not null
+                && (level < GNB.Levels.DoubleDown || IsOnCooldown(GNB.DoubleDown))
                 && (bloodfestOffCD || (noMercy.RemainingTime < gauge.Ammo * 4)))
             {
                 return GNB.BurstStrike;
@@ -269,7 +279,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 if (level >= GNB.Levels.HeartOfCorundum
                     && IsOffCooldown(GNB.HeartOfCorundum)
                     && !HasEffect(GNB.Buffs.Superbolide)
-                    && (PlayerHealthPercentage() <= 0.5 || TargetOfTargetHPercentage() <= 0.5)
+                    && (PlayerHealthPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
                     )
                 {
                     return GNB.HeartOfCorundum;
@@ -297,7 +307,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 if (level >= GNB.Levels.Aurora
                     && (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
                     && !HasEffect(GNB.Buffs.Aurora)
-                    && (TargetOfTargetHPercentage() <= 0.8)
+                    && (TargetOfTargetHPercentage() <= 0.7)
                     )
                 {
                     return GNB.Aurora;
@@ -312,10 +322,21 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 }
             }
 
+            var oneMinCD = 58.80 * 0.2;
+
             var noMercyDuration = FindEffect(GNB.Buffs.NoMercy);
+
+            if (level >= GNB.Levels.DoubleDown
+                && IsOffCooldown(GNB.DoubleDown)
+                && gauge.Ammo >= 2
+                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD))
+            {
+                return GNB.DoubleDown;
+            }
 
             if (level >= GNB.Levels.FatedCircle
                 && gauge.Ammo >= 1
+                && (level < GNB.Levels.DoubleDown || IsOnCooldown(GNB.DoubleDown))
                 && (gauge.Ammo >= maxAmmo || noMercyDuration?.RemainingTime <= gauge.Ammo * 4))
             {
                 return GNB.FatedCircle;

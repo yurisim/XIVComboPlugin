@@ -222,6 +222,19 @@ internal class DragoonChaosThrust : CustomCombo
                 var hasLitany = HasEffect(DRG.Buffs.BattleLitany);
                 var litanyCD = GetCooldown(DRG.BattleLitany).CooldownRemaining;
 
+                if (IsOffCooldown(DRG.BattleLitany)
+                    && level >= DRG.Levels.BattleLitany
+                    && HasRaidBuffs())
+                {
+                    return DRG.BattleLitany;
+                }
+
+                if (IsOffCooldown(DRG.DragonSight)
+                    && level >= DRG.Levels.DragonSight
+                    && (HasRaidBuffs() || hasLitany || litanyCD > 6))
+                {
+                    return DRG.DragonSight;
+                }
 
                 if (IsOffCooldown(DRG.LanceCharge)
                     && level >= DRG.Levels.LanceCharge
@@ -230,18 +243,24 @@ internal class DragoonChaosThrust : CustomCombo
                     return DRG.LanceCharge;
                 }
 
-                if (IsOffCooldown(DRG.DragonSight)
-                    && level >= DRG.Levels.DragonSight
-                    && (hasLitany || litanyCD > 6))
-                {
-                    return DRG.DragonSight;
-                }
-
                 if (disembowelDuration is not null)
                 {
+                    if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                        && level >= DRG.Levels.Geirskogul
+                        && (hasLanceCharge || lanceChargeCD > 3))
+                    {
+                        return OriginalHook(DRG.Geirskogul);
+                    }
+
+                    if (IsOffCooldown(DRG.Stardiver)
+                        && gauge.IsLOTDActive
+                        && level >= DRG.Levels.Stardiver
+                        && (hasLanceCharge || lanceChargeCD > gauge.LOTDTimer / 1000 - 3))
+                    {
+                        return DRG.Stardiver;
+                    }
+
                     if (IsOffCooldown(DRG.LifeSurge)
-                        //&& (hasLitany || litanyCD > 2)
-                        //&& (hasLanceCharge || lanceChargeCD > 4 || level < DRG.Levels.LanceCharge)
                         && ((lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
                             || (lastComboMove == DRG.TrueThrust && level < DRG.Levels.FullThrust)))
                     {
@@ -250,41 +269,29 @@ internal class DragoonChaosThrust : CustomCombo
 
                     if ((IsOffCooldown(OriginalHook(DRG.Jump)))
                         && level >= DRG.Levels.Jump
-                        && (hasLanceCharge || lanceChargeCD > 3)
-                        && (hasLitany || litanyCD > 2 || level < DRG.Levels.BattleLitany))
+                        && (hasLanceCharge || lanceChargeCD > 3))
                     {
                         return OriginalHook(DRG.Jump);
                     }
 
                     if (HasEffect(DRG.Buffs.DiveReady)
                         && level >= DRG.Levels.MirageDive
-                        && (hasLanceCharge || lanceChargeCD > 3)
-                        && (hasLitany || litanyCD > 2 || level < DRG.Levels.BattleLitany))
+                        && (hasLanceCharge || lanceChargeCD > 3))
                     {
                         return DRG.MirageDive;
-                    }
-
-                    if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                        && level >= DRG.Levels.Geirskogul
-                        && (hasLanceCharge || lanceChargeCD > 3)
-                        && (hasLitany || litanyCD > 2))
-                    {
-                        return OriginalHook(DRG.Geirskogul);
                     }
 
                     // Optimize with Litany
                     if (IsOffCooldown(DRG.DragonfireDive)
                         && level >= DRG.Levels.DragonfireDive
-                        && (hasLanceCharge || lanceChargeCD > 11)
-                        && (hasLitany || litanyCD > 6 || level < DRG.Levels.BattleLitany))
+                        && (hasLanceCharge || lanceChargeCD > 11))
                     {
                         return DRG.DragonfireDive;
                     }
 
                     if (IsOffCooldown(DRG.SpineshatterDive)
                         && level >= DRG.Levels.SpineshatterDive
-                        && (hasLanceCharge || lanceChargeCD > 6)
-                        && (hasLitany || litanyCD > 3 || level < DRG.Levels.BattleLitany))
+                        && (hasLanceCharge || lanceChargeCD > 6))
                     {
                         return DRG.SpineshatterDive;
                     }
@@ -334,50 +341,6 @@ internal class DragoonChaosThrust : CustomCombo
             }
 
             return OriginalHook(DRG.TrueThrust);
-        }
-
-        return actionID;
-    }
-}
-
-internal class DragoonFullThrust : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == DRG.FullThrust || actionID == DRG.HeavensThrust)
-        {
-            if (IsEnabled(CustomComboPreset.DragoonFangThrustFeature))
-            {
-                if (level >= DRG.Levels.FangAndClaw && (HasEffect(DRG.Buffs.FangAndClawBared) || HasEffect(DRG.Buffs.WheelInMotion)))
-                    return DRG.FangAndClaw;
-            }
-
-            if (IsEnabled(CustomComboPreset.DragoonFullThrustCombo))
-            {
-                if (level >= DRG.Levels.WheelingThrust && HasEffect(DRG.Buffs.WheelInMotion))
-                    return DRG.WheelingThrust;
-
-                if (level >= DRG.Levels.FangAndClaw && HasEffect(DRG.Buffs.FangAndClawBared))
-                    return DRG.FangAndClaw;
-
-                if (comboTime > 0)
-                {
-                    if (lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
-                        // Heavens' Thrust
-                        return IsOffCooldown(DRG.LifeSurge) ? DRG.LifeSurge : OriginalHook(DRG.FullThrust);
-
-                    if ((lastComboMove == DRG.TrueThrust || lastComboMove == DRG.RaidenThrust) && level >= DRG.Levels.VorpalThrust)
-                        return DRG.VorpalThrust;
-                }
-
-                if (IsEnabled(CustomComboPreset.DragoonFullThrustComboOption))
-                    return DRG.VorpalThrust;
-
-                // Vorpal Thrust
-                return OriginalHook(DRG.TrueThrust);
-            }
         }
 
         return actionID;

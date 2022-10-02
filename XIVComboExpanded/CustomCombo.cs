@@ -235,6 +235,30 @@ internal abstract partial class CustomCombo
         => Service.IconReplacer.OriginalHook(actionID);
 
     /// <summary>
+    /// Should refresh DoTs
+    /// </summary>
+    /// <returns>Whether or not the</returns>
+    protected static bool ShouldRefreshDots()
+        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 40;
+
+    /// <summary>
+    /// Should refresh DoTs
+    /// </summary>
+    /// <returns>Whether or not the</returns>
+    protected static bool HasRaidBuffs()
+    {
+        var raidBuffs = new[]
+        {
+            HasEffectAny(DNC.Buffs.TechnicalFinish),
+            HasEffectAny(DRG.Buffs.BattleLitany),
+            HasEffectAny(SMN.Buffs.SearingLight),
+            HasEffectAny(RPR.Buffs.ArcaneCircle)
+        };
+
+        return raidBuffs.Where(x => x == true).Count() >= 2;
+    }
+
+    /// <summary>
     /// Gets bool determining if action is greyed out or not.
     /// </summary>
     /// <param name="actionID">Action ID.</param>

@@ -246,7 +246,7 @@ internal class WhiteMageDiaFeature : CustomCombo
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
             if (InCombat() 
                 && (diaFound?.RemainingTime <= 5 
-                || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= 20000000)))
+                || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= LocalPlayer?.MaxHp * 200)))
             {
                 return WHM.Dia;
             }
