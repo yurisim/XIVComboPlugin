@@ -232,8 +232,8 @@ internal class ScholarEnergyDrain : CustomCombo
                 && InCombat()
                 && TargetIsEnemy()
                 && ((bio is not null 
-                        && (bio.RemainingTime <= 4 
-                            || (bio.RemainingTime <= 8 && IsMoving)))
+                        && (bio.RemainingTime <= 3 
+                            || (bio.RemainingTime <= 6 && IsMoving)))
                         || (bio is null && ShouldRefreshDots())))
             {
                 return SCH.Biolysis;

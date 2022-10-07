@@ -106,6 +106,8 @@ internal class PaladinGoringBlade : CustomCombo
 
                 if (level >= PLD.Levels.CircleOfScorn
                     && IsOffCooldown(PLD.CircleOfScorn)
+                    && HasTarget()
+                    && GetTargetDistance() <= 5
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
                 {
                     return PLD.CircleOfScorn;
@@ -178,6 +180,8 @@ internal class PaladinProminence : CustomCombo
 
                 if (level >= PLD.Levels.CircleOfScorn
                     && IsOffCooldown(PLD.CircleOfScorn)
+                    && HasTarget()
+                    && GetTargetDistance() <= 5
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
                 {
                     return PLD.CircleOfScorn;

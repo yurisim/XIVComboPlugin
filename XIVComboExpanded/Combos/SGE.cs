@@ -230,8 +230,8 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.EDosis3
                     && (debuff is not null
-                        && (debuffTime <= 4
-                            || (debuffTime <= 8 && IsMoving))
+                        && (debuffTime <= 3
+                            || (debuffTime <= 6 && IsMoving))
                         || (debuff is null && ShouldRefreshDots())))
                 {
                     if (!HasEffect(SGE.Buffs.Eukrasia))

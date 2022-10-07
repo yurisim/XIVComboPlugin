@@ -115,6 +115,10 @@ internal class SamuraiYukikaze : CustomCombo
                 return OriginalHook(SAM.TsubameGaeshi);
             }
 
+            if (gauge.MeditationStacks == 3 
+                && (gaugeSen.Count(sen => sen == 1) == 1
+                    || HasRaidBuffs())) return SAM.Shoha;
+
             if (GCDClipCheck(actionID))
             {
                 if (canUseIkishoten && gauge.Kenki <= 50)

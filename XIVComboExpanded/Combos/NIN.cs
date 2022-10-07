@@ -97,13 +97,13 @@ internal static class NIN
     }
 }
 
-[StructLayout(LayoutKind.Explicit, Size = 0x10)]
-public struct TmpNinjaGauge
-{
-    [FieldOffset(0x08)] public ushort HutonTimer;
-    [FieldOffset(0x0A)] public byte Ninki;
-    [FieldOffset(0x0B)] public byte HutonManualCasts;
-}
+//[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+//public struct TmpNinjaGauge
+//{
+//    [FieldOffset(0x08)] public ushort HutonTimer;
+//    [FieldOffset(0x0A)] public byte Ninki;
+//    [FieldOffset(0x0B)] public byte HutonManualCasts;
+//}
 
 internal class NinjaAeolianEdge : CustomCombo
 {
@@ -114,9 +114,13 @@ internal class NinjaAeolianEdge : CustomCombo
         if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush)
         {
             var g = GetJobGauge<NINGauge>();
-            TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            var hutonDuration = gauge->HutonTimer;
-            var ninki = gauge->Ninki;
+            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            //var hutonDuration = gauge->HutonTimer;
+            //var ninki = gauge->Ninki;
+
+            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            var hutonDuration = g.HutonTimer;
+            var ninki = g.Ninki;
 
             var trickAttackCD = GetCooldown(NIN.TrickAttack).CooldownRemaining;
 
@@ -374,9 +378,15 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
         if (actionID == NIN.HakkeMujinsatsu)
         {
             var g = GetJobGauge<NINGauge>();
-            TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            var hutonDuration = gauge->HutonTimer;
-            var ninki = gauge->Ninki;
+            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            //var hutonDuration = gauge->HutonTimer;
+            //var ninki = gauge->Ninki;
+            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            //var hutonDuration = gauge->HutonTimer;
+            //var ninki = gauge->Ninki;
+
+            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            var ninki = g.Ninki;
 
             //var gauge = GetJobGauge<NINGauge>();
 
