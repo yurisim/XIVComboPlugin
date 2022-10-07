@@ -280,7 +280,7 @@ internal abstract partial class CustomCombo
     /// Gets percentage of the players's health. If no target of target, returns 1.
     /// </summary>
     /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
-    protected static float PlayerHealthPercentage()
+    protected static float LocalPlayerPercentage()
     {
         return (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
     }
@@ -406,6 +406,15 @@ internal abstract partial class CustomCombo
     /// <returns>Status object or null.</returns>
     protected static Status? FindTargetOfTargetEffect(ushort effectID)
         => FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, LocalPlayer?.ObjectId);
+
+    /// <summary>
+    /// Finds an effect on the current target of target.
+    /// The effect can be owned by anyone.
+    /// </summary>
+    /// <param name="effectID">Status effect ID.</param>
+    /// <returns>Status object or null.</returns>
+    protected static Status? FindTargetOfTargetEffectAny(ushort effectID)
+        => FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, null);
 
     /// <summary>
     /// Find if an effect on the player exists.

@@ -41,6 +41,7 @@ internal static class SCH
     public static class Buffs
     {
         public const ushort
+            SacredSoil = 299,
             WhisperingDawn = 315,
             Galvanize = 297,
             Catalyze = 1918,
@@ -90,7 +91,7 @@ internal class ScholarSacredSoil : CustomCombo
         if (actionID == SCH.SacredSoil)
         {
 
-            if (level >= SCH.Levels.FeyIllumination 
+            if (level >= SCH.Levels.FeyIllumination
                 && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
                 && !HasEffect(SCH.Buffs.Dissipation)
                 )
@@ -109,7 +110,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SCH.Broil4 || actionID == SCH.ArtOfWar2)
+        if (actionID == SCH.Broil4 || actionID == SCH.ArtOfWar2 || actionID == SCH.Ruin2)
         {
             var gauge = GetJobGauge<SCHGauge>();
 
@@ -117,18 +118,16 @@ internal class ScholarEnergyDrain : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                var doDissipation = IsOnCooldown(SCH.WhisperingDawn)
-                                && IsOnCooldown(SCH.FeyBlessing)
-                                && IsOnCooldown(SCH.SummonSeraph)
-                                && IsOnCooldown(SCH.FeyIllumination)
-                                && IsOffCooldown(SCH.Dissipation)
-                                && level >= SCH.Levels.Dissipation
-                                && gauge.SeraphTimer == 0;
+                var isThereSacredSoil = HasEffect(SCH.Buffs.SacredSoil);
 
-                var isThereSacredSoil = (IsOffCooldown(SCH.SacredSoil) || GetCooldown(SCH.SacredSoil).CooldownRemaining < 15);
+                var isThereRaidDamage = LocalPlayerPercentage() <= 0.90;
 
-
-                var isThereRaidDamage = PlayerHealthPercentage() <= 0.85;
+                if (level >= SCH.Levels.ChainStratagem 
+                    && IsOffCooldown(SCH.ChainStratagem)
+                    && HasRaidBuffs())
+                {
+                    return SCH.ChainStratagem;
+                }
 
                 if (level >= SCH.Levels.Consolation
                     && gauge.SeraphTimer > 0
@@ -139,27 +138,39 @@ internal class ScholarEnergyDrain : CustomCombo
                     return SCH.Consolation;
                 }
 
-                if (level >= SCH.Levels.WhisperingDawn
-                    && IsOffCooldown(OriginalHook(SCH.WhisperingDawn))
-                    && !HasEffect(SCH.Buffs.Dissipation)
-                    && (!isThereSacredSoil || PlayerHealthPercentage() <= 0.70)
-                    && isThereRaidDamage
-                    )
+                if (!HasEffect(SCH.Buffs.Dissipation) && isThereRaidDamage)
                 {
-                    return OriginalHook(SCH.WhisperingDawn);
-                }
-
-                if (level >= SCH.Levels.FeyBlessing
+                    if (level >= SCH.Levels.FeyBlessing
                     && IsOffCooldown(SCH.FeyBlessing)
                     && gauge.SeraphTimer == 0
-                    && !HasEffect(SCH.Buffs.Dissipation)
-                    && isThereRaidDamage
-                    && (!isThereSacredSoil || PlayerHealthPercentage() <= 0.65)
-                    && GetCooldown(OriginalHook(SCH.WhisperingDawn)).CooldownRemaining <= 45
-                    )
-                {
-                    return SCH.FeyBlessing;
+                    && (!isThereSacredSoil || LocalPlayerPercentage() <= 0.70))
+                    {
+                        return SCH.FeyBlessing;
+                    }
+
+                    if (level >= SCH.Levels.WhisperingDawn
+                        && IsOffCooldown(OriginalHook(SCH.WhisperingDawn))
+                        && (!isThereSacredSoil || LocalPlayerPercentage() <= 0.60))
+                    {
+                        return OriginalHook(SCH.WhisperingDawn);
+                    }
                 }
+
+                if (TargetOfTargetHPercentage() <= 0.6
+                    && level >= SCH.Levels.Excogitation
+                    && IsOffCooldown(SCH.Excogitation)
+                    && gauge.Aetherflow >= 2)
+                {
+                    return SCH.Excogitation;
+                }
+
+                var doDissipation = IsOnCooldown(SCH.WhisperingDawn)
+                                && IsOnCooldown(SCH.FeyBlessing)
+                                && IsOnCooldown(SCH.SummonSeraph)
+                                && IsOnCooldown(SCH.FeyIllumination)
+                                && IsOffCooldown(SCH.Dissipation)
+                                && level >= SCH.Levels.Dissipation
+                                && gauge.SeraphTimer == 0;
 
                 if (level >= SCH.Levels.Aetherflow
                     && gauge.Aetherflow >= 1
@@ -195,21 +206,22 @@ internal class ScholarEnergyDrain : CustomCombo
                     return ADV.LucidDreaming;
                 }
 
-                if (level >= SCH.Levels.Aetherpact
-                     && gauge.FairyGauge >= 20
-                     && TargetOfTargetHPercentage() <= 0.75
-                     && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
-                     && !HasEffect(SCH.Buffs.Dissipation)
-                     && gauge.SeraphTimer == 0)
+                if (level >= SCH.Levels.Aetherpact)
                 {
-                    return SCH.Aetherpact;
-                }
+                    if (gauge.FairyGauge >= 20
+                         && TargetOfTargetHPercentage() <= 0.75
+                         && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
+                         && !HasEffect(SCH.Buffs.Dissipation)
+                         && gauge.SeraphTimer == 0)
+                    {
+                        return SCH.Aetherpact;
+                    }
 
-                if (level >= SCH.Levels.Aetherpact
-                     && TargetOfTargetHPercentage() >= 0.95
-                     && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
-                {
-                    return OriginalHook(SCH.Aetherpact);
+                    if (TargetOfTargetHPercentage() >= 0.95
+                         && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
+                    {
+                        return OriginalHook(SCH.Aetherpact);
+                    }
                 }
             }
 
@@ -219,8 +231,10 @@ internal class ScholarEnergyDrain : CustomCombo
                 && actionID != SCH.ArtOfWar2
                 && InCombat()
                 && TargetIsEnemy()
-                && ((bio is not null && bio.RemainingTime <= 5) 
-                    || (bio is null && ShouldRefreshDots())))
+                && ((bio is not null 
+                        && (bio.RemainingTime <= 4 
+                            || (bio.RemainingTime <= 8 && IsMoving)))
+                        || (bio is null && ShouldRefreshDots())))
             {
                 return SCH.Biolysis;
             }

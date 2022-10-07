@@ -45,6 +45,7 @@ internal static class DRG
     public static class Buffs
     {
         public const ushort
+            LifeSurge = 116,
             PowerSurge = 2720,
             BattleLitany = 786,
             FangAndClawBared = 802,
@@ -110,6 +111,19 @@ internal class DragoonCoerthanTorment : CustomCombo
                 var hasLitany = HasEffect(DRG.Buffs.BattleLitany);
                 var litanyCD = GetCooldown(DRG.BattleLitany).CooldownRemaining;
 
+                if (gauge.FirstmindsFocusCount == 2
+                    && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust 
+                        || hasLanceCharge))
+                    return DRG.WyrmwindThrust;
+
+                if (gauge.IsLOTDActive
+                    && IsOffCooldown(DRG.Stardiver)
+                    && level >= DRG.Levels.Stardiver
+                    && (hasLanceCharge || lanceChargeCD > gauge.LOTDTimer / 1000 - 5))
+                {
+                    return DRG.Stardiver;
+                }
+
                 if (IsOffCooldown(DRG.LanceCharge)
                     && level >= DRG.Levels.LanceCharge)
                 {
@@ -123,7 +137,8 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return DRG.DragonSight;
                 }
 
-                if (IsOffCooldown(DRG.LifeSurge)
+                if ((IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
+                    && !HasEffect(DRG.Buffs.LifeSurge)
                     && ((lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
                         || (lastComboMove == DRG.DoomSpike && level < DRG.Levels.CoerthanTorment)))
                 {
@@ -151,22 +166,19 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return OriginalHook(DRG.Geirskogul);
                 }
 
+                if ((IsOffCooldown(DRG.SpineshatterDive) || HasCharges(DRG.SpineshatterDive))
+                && level >= DRG.Levels.SpineshatterDive
+                    && (hasLanceCharge || lanceChargeCD > 6))
+                {
+                    return DRG.SpineshatterDive;
+                }
+
                 // Optimize with Litany
                 if (IsOffCooldown(DRG.DragonfireDive)
                     && level >= DRG.Levels.DragonfireDive)
                 {
                     return DRG.DragonfireDive;
                 }
-
-                if (IsOffCooldown(DRG.SpineshatterDive)
-                    && level >= DRG.Levels.SpineshatterDive
-                    && (hasLanceCharge || lanceChargeCD > 6))
-                {
-                    return DRG.SpineshatterDive;
-                }
-
-                if (gauge.FirstmindsFocusCount == 2)
-                    return DRG.WyrmwindThrust;
 
             }
 
@@ -222,6 +234,12 @@ internal class DragoonChaosThrust : CustomCombo
                 var hasLitany = HasEffect(DRG.Buffs.BattleLitany);
                 var litanyCD = GetCooldown(DRG.BattleLitany).CooldownRemaining;
 
+
+                if (gauge.FirstmindsFocusCount == 2
+                    && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust
+                        || hasLanceCharge))
+                    return DRG.WyrmwindThrust;
+
                 if (IsOffCooldown(DRG.BattleLitany)
                     && level >= DRG.Levels.BattleLitany
                     && HasRaidBuffs())
@@ -245,22 +263,16 @@ internal class DragoonChaosThrust : CustomCombo
 
                 if (disembowelDuration is not null)
                 {
-                    if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                        && level >= DRG.Levels.Geirskogul
-                        && (hasLanceCharge || lanceChargeCD > 3))
-                    {
-                        return OriginalHook(DRG.Geirskogul);
-                    }
-
                     if (IsOffCooldown(DRG.Stardiver)
                         && gauge.IsLOTDActive
                         && level >= DRG.Levels.Stardiver
-                        && (hasLanceCharge || lanceChargeCD > gauge.LOTDTimer / 1000 - 3))
+                        && (hasLanceCharge || lanceChargeCD > gauge.LOTDTimer / 1000 - 5))
                     {
                         return DRG.Stardiver;
                     }
 
-                    if (IsOffCooldown(DRG.LifeSurge)
+                    if ((IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
+                        && !HasEffect(DRG.Buffs.LifeSurge)
                         && ((lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
                             || (lastComboMove == DRG.TrueThrust && level < DRG.Levels.FullThrust)))
                     {
@@ -281,19 +293,26 @@ internal class DragoonChaosThrust : CustomCombo
                         return DRG.MirageDive;
                     }
 
+                    if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                        && level >= DRG.Levels.Geirskogul
+                        && (hasLanceCharge || lanceChargeCD > 3))
+                    {
+                        return OriginalHook(DRG.Geirskogul);
+                    }
+
+                    if ((IsOffCooldown(DRG.SpineshatterDive) || HasCharges(DRG.SpineshatterDive))
+                        && level >= DRG.Levels.SpineshatterDive
+                        && (hasLanceCharge || lanceChargeCD > 6))
+                    {
+                        return DRG.SpineshatterDive;
+                    }
+
                     // Optimize with Litany
                     if (IsOffCooldown(DRG.DragonfireDive)
                         && level >= DRG.Levels.DragonfireDive
                         && (hasLanceCharge || lanceChargeCD > 11))
                     {
                         return DRG.DragonfireDive;
-                    }
-
-                    if (IsOffCooldown(DRG.SpineshatterDive)
-                        && level >= DRG.Levels.SpineshatterDive
-                        && (hasLanceCharge || lanceChargeCD > 6))
-                    {
-                        return DRG.SpineshatterDive;
                     }
                 }
             }
@@ -312,10 +331,27 @@ internal class DragoonChaosThrust : CustomCombo
                 // AM I doing Disembowel or Vorpal Thrust after True Thrust?
                 if (lastComboMove == DRG.TrueThrust || lastComboMove == DRG.RaidenThrust)
                 {
-                    var needToRefreshDisembowel = disembowelDuration is null || disembowelDuration <= timeOfRotation;
+                    var needToRefreshDisembowel = disembowelDuration is null || disembowelDuration <= timeOfRotation - 2.5;
+
+                    var whichDot = level >= DRG.Levels.ChaoticSpring
+                        ? DRG.ChaoticSpring
+                        : level >= DRG.Levels.ChaosThrust
+                            ? DRG.ChaosThrust
+                            : 0;
+
+                    var whichDotEffect = level >= DRG.Levels.ChaoticSpring
+                        ? FindTargetEffect(DRG.Debuffs.ChaoticSpring)
+                        : level >= DRG.Levels.ChaosThrust
+                            ? FindTargetEffect(DRG.Debuffs.ChaosThrust)
+                            : null;
+
+                    var refreshDot = whichDot != 0
+                        && ((whichDotEffect is not null && whichDotEffect.RemainingTime <= timeOfRotation) 
+                            || (whichDotEffect is null && ShouldRefreshDots() && level >= DRG.Levels.ChaosThrust));
+
 
                     if (level >= DRG.Levels.Disembowel
-                        && needToRefreshDisembowel)
+                        && (needToRefreshDisembowel || refreshDot))
                     {
                         return DRG.Disembowel;
                     }

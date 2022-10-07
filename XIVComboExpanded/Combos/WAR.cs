@@ -35,6 +35,7 @@ internal static class WAR
     {
         public const ushort
             Berserk = 86,
+            Holmgang = 409,
             InnerRelease = 1177,
             NascentChaos = 1897,
             PrimalRendReady = 2624,
@@ -76,7 +77,7 @@ internal static class WAR
 
 internal class WarriorStormsPathCombo : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsPathCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
     
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -88,8 +89,9 @@ internal class WarriorStormsPathCombo : CustomCombo
 
 
             if (GCDClipCheck(actionID)) {
-                
-                var localPlayerPercentage = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+
+                var localPlayerPercentage = LocalPlayerPercentage();
+
 
                 if (IsOffCooldown(WAR.Upheaval)
                     && surgingTempest is not null
@@ -100,7 +102,9 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                 if (level >= WAR.Levels.Infuriate
                    && gauge.BeastGauge <= 50
-                   && (GetRemainingCharges(WAR.Infuriate) >= 2 
+                   && HasCharges(WAR.Infuriate)
+                   && (GetRemainingCharges(WAR.Infuriate) >= 2
+                        || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasEffect(WAR.Buffs.Berserk))
                    && !HasEffect(WAR.Buffs.InnerRelease))
                 {
@@ -116,7 +120,7 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                 if (level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && (localPlayerPercentage <= 0.75))
+                    && (localPlayerPercentage <= 0.60))
                 {
                     return WAR.Equilibrium;
                 }
@@ -163,37 +167,13 @@ internal class WarriorStormsPathCombo : CustomCombo
     }
 }
 
-internal class WarriorStormsEyeCombo : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorStormsEyeCombo;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == WAR.StormsEye)
-        {
-            if (comboTime > 0)
-            {
-                if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsEye)
-                    return WAR.StormsEye;
-
-                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
-                    return WAR.Maim;
-            }
-
-            return WAR.HeavySwing;
-        }
-
-        return actionID;
-    }
-}
-
 internal class WarriorMythrilTempestCombo : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorMythrilTempestCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WAR.MythrilTempest)
+        if (actionID == WAR.Overpower)
         {
             var gauge = GetJobGauge<WARGauge>();
 
@@ -209,7 +189,10 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
                 if (level >= WAR.Levels.Infuriate
                    && gauge.BeastGauge <= 50
+                   && HasCharges(WAR.Infuriate)
                    && (GetRemainingCharges(WAR.Infuriate) >= 2
+                        || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
+                        || HasRaidBuffs()
                         || HasEffect(WAR.Buffs.Berserk))
                    && !HasEffect(WAR.Buffs.InnerRelease))
                 {
@@ -224,7 +207,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                 
                 if (level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && localPlayerPercentage <= 0.75)
+                    && localPlayerPercentage <= 0.70)
                 {
                     return WAR.Equilibrium;
                 }
@@ -254,7 +237,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                 }
             }
 
-            return WAR.Overpower;
+            return actionID;
         }
 
         return actionID;

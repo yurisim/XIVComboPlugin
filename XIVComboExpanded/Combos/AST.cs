@@ -113,11 +113,11 @@ internal class AstrologianMalefic : CustomCombo
             {
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
                     && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
-                        || (gauge.DrawnCrownCard == CardType.LADY && PlayerHealthPercentage() <= 0.85)))
+                        || (gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85)))
                     return OriginalHook(AST.MinorArcana);
 
                 if (OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
-                    && PlayerHealthPercentage() <= 0.85
+                    && LocalPlayerPercentage() <= 0.85
                     && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
                     )
                 {

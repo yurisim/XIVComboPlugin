@@ -143,12 +143,13 @@ internal class SageSoteria : CustomCombo
         {
             var gauge = GetJobGauge<SGEGauge>();
 
-            var myHP = PlayerHealthPercentage();
+            var myHP = LocalPlayerPercentage();
 
             var threshold = 0.8;
 
             if (GCDClipCheck(actionID))
             {
+
                 var targetHPPercent = TargetOfTargetHPercentage();
 
                 if (level >= SGE.Levels.Physis
@@ -165,10 +166,8 @@ internal class SageSoteria : CustomCombo
                 if (level >= SGE.Levels.Ixochole
                     && IsOffCooldown(SGE.Ixochole)
                     && (!HasEffect(SGE.Buffs.Physis)
-                        //|| needToUseAddersgall
-                        //|| !HasEffect(SGE.Buffs.Kerakeia)
                         || !HasEffect(SGE.Buffs.Physis2))
-                    && (myHP <= threshold - 0.3))
+                    && (myHP <= threshold - 0.15))
                 {
                     return SGE.Ixochole;
                 }
@@ -242,7 +241,7 @@ internal class SageSoteria : CustomCombo
                 && IsOffCooldown(SGE.Pneuma)
                 && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
                 && !IsMoving
-                && myHP <= threshold - 0.15)
+                && myHP <= threshold - 0.2)
             {
                 return SGE.Pneuma;
             }
@@ -336,7 +335,7 @@ internal class SagePhlegma : CustomCombo
 
             var targetHPPercent = TargetOfTargetHPercentage();
 
-            var myHP = PlayerHealthPercentage();
+            var myHP = LocalPlayerPercentage();
 
             var threshold = 0.8;
 

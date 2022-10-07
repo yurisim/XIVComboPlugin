@@ -102,7 +102,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 if (level >= GNB.Levels.HeartOfCorundum
                     && IsOffCooldown(GNB.HeartOfCorundum)
                     && !HasEffect(GNB.Buffs.Superbolide)
-                    && (PlayerHealthPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
+                    && (LocalPlayerPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
                     )
                 {
                     return GNB.HeartOfCorundum;
@@ -279,7 +279,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 if (level >= GNB.Levels.HeartOfCorundum
                     && IsOffCooldown(GNB.HeartOfCorundum)
                     && !HasEffect(GNB.Buffs.Superbolide)
-                    && (PlayerHealthPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
+                    && (LocalPlayerPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
                     )
                 {
                     return GNB.HeartOfCorundum;

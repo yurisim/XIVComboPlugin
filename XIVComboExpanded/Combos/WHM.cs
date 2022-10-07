@@ -59,6 +59,7 @@ internal static class WHM
             Raise = 12,
             Cure2 = 30,
             AfflatusSolace = 52,
+            Assize = 56,
             ThinAir = 58,
             Tetragrammaton = 60,
             PlenaryIndulgence = 70,
@@ -212,20 +213,16 @@ internal class WhiteMageDiaFeature : CustomCombo
             || actionID == WHM.Glare 
             || actionID == WHM.Glare3)
         {
-            var targetOfTarget = GetTargetOfTarget();
+            var tarPercentage = TargetOfTargetHPercentage();
 
-            var percentage = (targetOfTarget is not null) ? (float)targetOfTarget.CurrentHp / targetOfTarget.MaxHp : 1;
+            var playerPercentage = LocalPlayerPercentage();
 
             var gauge = GetJobGauge<WHMGauge>();
 
             if (GCDClipCheck(actionID))
             {
-                if (HasCondition(ConditionFlag.InCombat) 
-                    && IsOffCooldown(ADV.LucidDreaming) 
-                    && LocalPlayer?.CurrentMp <= 8000)
-                    return ADV.LucidDreaming;
-
-                if ((percentage <= 0.80) && (percentage >= 0.25))
+                if (tarPercentage <= 0.80 
+                    && FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (level >= WHM.Levels.Tetragrammaton
                     && IsOffCooldown(WHM.Tetragrammaton))
@@ -239,14 +236,26 @@ internal class WhiteMageDiaFeature : CustomCombo
                         return WHM.DivineBenison;
                     }
                 }
+
+                if (playerPercentage <= 0.80 
+                    && level >= WHM.Levels.Assize
+                    && IsOffCooldown(WHM.Assize))
+                {
+                    return WHM.Assize;
+                }
+
+                if (HasCondition(ConditionFlag.InCombat)
+                    && IsOffCooldown(ADV.LucidDreaming)
+                    && LocalPlayer?.CurrentMp <= 8000)
+                    return ADV.LucidDreaming;
             }
             
             var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
             if (InCombat() 
-                && (diaFound?.RemainingTime <= 5 
-                || (diaFound is null && (CurrentTarget as BattleChara)?.MaxHp >= LocalPlayer?.MaxHp * 200)))
+                && (diaFound?.RemainingTime <= 4
+                    || (diaFound is null && ShouldRefreshDots())))
             {
                 return WHM.Dia;
             }
@@ -256,6 +265,17 @@ internal class WhiteMageDiaFeature : CustomCombo
                 return WHM.AfflatusMisery;
             }
 
+            if (playerPercentage <= 0.80 && gauge.Lily == 3)
+            {
+                return OriginalHook(WHM.AfflatusRapture);
+            }
+
+            if (tarPercentage <= 0.80 && gauge.Lily == 3)
+            {
+                return WHM.AfflatusSolace;
+            }
+
+            return actionID;
         }
 
         if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
