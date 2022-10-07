@@ -74,45 +74,51 @@ internal class DarkSouleater : CustomCombo
         {
             var gauge = GetJobGauge<DRKGauge>();
 
-            // Do a check for flood of darkness first since it is a lower level
-            if (level >= DRK.Levels.FloodOfDarkness
-                    && (LocalPlayer?.CurrentMp >= 9200 || gauge.HasDarkArts)
-                    && GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID))
             {
-                // If you are high enough level for edge fo darkness then do that instead
-                return level >= DRK.Levels.EdgeOfDarkness ? OriginalHook(DRK.EdgeOfDarkness) : OriginalHook(DRK.FloodOfDarkness);
+                // Do a check for flood of darkness first since it is a lower level
+                if (level >= DRK.Levels.FloodOfDarkness
+                        && (LocalPlayer?.CurrentMp >= 9000 
+                            || gauge.HasDarkArts)
+                            || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs())
+                            )
+                {
+                    // If you are high enough level for edge fo darkness then do that instead
+                    return level >= DRK.Levels.EdgeOfDarkness 
+                        ? OriginalHook(DRK.EdgeOfDarkness) 
+                        : OriginalHook(DRK.FloodOfDarkness);
+                }
+
+                if (level >= DRK.Levels.BloodWeapon
+                        && IsOffCooldown(DRK.BloodWeapon)
+                        && gauge.Blood <= 70)
+                {
+                    return DRK.BloodWeapon;
+                }
+
+                if (level >= DRK.Levels.Delirium
+                        && IsOffCooldown(DRK.Delirium)
+                        && gauge.Blood <= 70)
+                {
+                    return DRK.Delirium;
+                }
             }
 
-            if (level >= DRK.Levels.BloodWeapon
-                    && GCDClipCheck(actionID)
-                    && IsOffCooldown(DRK.BloodWeapon)
-                    && gauge.Blood <= 70)
+            if (level >= DRK.Levels.AbyssalDrain 
+                && IsOffCooldown(DRK.AbyssalDrain))
             {
-                return DRK.BloodWeapon;
-            }
-
-            if (level >= DRK.Levels.Delirium
-                    && GCDClipCheck(actionID)
-                    && IsOffCooldown(DRK.Delirium)
-                    && gauge.Blood <= 70)
-            {
-                return DRK.Delirium;
-            }
-            
-            if (GetTargetDistance() >= 7)
-            {
-                return DRK.Unmend;
-            }
-
-            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
-            {
-                return level >= DRK.Levels.CarveAndSpit ? DRK.CarveAndSpit : DRK.AbyssalDrain;
+                return level >= DRK.Levels.CarveAndSpit 
+                    ? DRK.CarveAndSpit 
+                    : DRK.AbyssalDrain;
             }
 
 
             if (level >= DRK.Levels.Bloodspiller
-                && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
-                    || gauge.Blood >= 70))
+                && gauge.Blood >= 50
+                && (HasEffect(DRK.Buffs.Delirium)
+                    || gauge.Blood >= 70
+                    || HasRaidBuffs()
+                    ))
             {
                 return DRK.Bloodspiller;
             }

@@ -61,6 +61,7 @@ internal static class NIN
     public static class Debuffs
     {
         public const ushort
+            Mug = 638,
             TrickAttack = 3254;
     }
 
@@ -117,7 +118,6 @@ internal class NinjaAeolianEdge : CustomCombo
             var hutonDuration = gauge->HutonTimer;
             var ninki = gauge->Ninki;
 
-
             var trickAttackCD = GetCooldown(NIN.TrickAttack).CooldownRemaining;
 
             if (HasEffect(NIN.Buffs.TenChiJin))
@@ -146,7 +146,9 @@ internal class NinjaAeolianEdge : CustomCombo
                 && !HasEffect(NIN.Buffs.Mudra)
                 )
             {
-                var kassatsuCD = GetCooldown(NIN.Kassatsu).CooldownRemaining;
+                if (level >= NIN.Levels.Mug
+                    && IsOffCooldown(NIN.Mug)
+                    && HasRaidBuffs()) return NIN.Mug;
 
                 if (level >= NIN.Levels.TrickAttack
                     && InMeleeRange()

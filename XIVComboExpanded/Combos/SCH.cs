@@ -52,6 +52,7 @@ internal static class SCH
     public static class Debuffs
     {
         public const ushort
+            ChainStrategem = 1221,
             Biolysis = 1895;
     }
 

@@ -249,13 +249,19 @@ internal abstract partial class CustomCombo
     {
         var raidBuffs = new[]
         {
+            TargetHasEffectAny(SCH.Debuffs.ChainStrategem),
+            TargetHasEffectAny(NIN.Debuffs.Mug),
+            HasEffectAny(AST.Buffs.Divination),
+            HasEffectAny(BRD.Buffs.BattleVoice),
             HasEffectAny(DNC.Buffs.TechnicalFinish),
             HasEffectAny(DRG.Buffs.BattleLitany),
+            HasEffectAny(RDM.Buffs.Embolden),
+            HasEffectAny(MNK.Buffs.Brotherhood),
             HasEffectAny(SMN.Buffs.SearingLight),
             HasEffectAny(RPR.Buffs.ArcaneCircle)
         };
 
-        return raidBuffs.Where(x => x == true).Count() >= 2;
+        return raidBuffs.Count(isBuffFound => isBuffFound) >= 2;
     }
 
     /// <summary>

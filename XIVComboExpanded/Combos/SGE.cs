@@ -147,7 +147,9 @@ internal class SageSoteria : CustomCombo
 
             var threshold = 0.8;
 
-            if (GCDClipCheck(actionID))
+            var pneumaCD = GetCooldown(SGE.Pneuma).CooldownRemaining;
+
+            if (GCDClipCheck(actionID) && pneumaCD <= 119)
             {
 
                 var targetHPPercent = TargetOfTargetHPercentage();
@@ -241,7 +243,7 @@ internal class SageSoteria : CustomCombo
                 }
 
                 if (level >= SGE.Levels.Pneuma
-                    && IsOffCooldown(SGE.Pneuma)
+                    && pneumaCD == 0
                     && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
                     && !IsMoving
                     && myHP <= threshold - 0.2)

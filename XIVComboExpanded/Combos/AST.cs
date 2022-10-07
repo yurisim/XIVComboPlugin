@@ -50,6 +50,7 @@ internal static class AST
     public static class Buffs
     {
         public const ushort
+            Divination = 1878,
             AspectedHelios = 836,
             BalanceDrawn = 913,
             BoleDrawn = 914,
@@ -112,6 +113,10 @@ internal class AstrologianMalefic : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                if (level >= AST.Levels.Astrodyne 
+                    && IsOffCooldown(AST.Divination) 
+                    && HasRaidBuffs()) return AST.Divination;
+
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
                     && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
                         || (gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85)))
