@@ -221,27 +221,30 @@ internal class WhiteMageDiaFeature : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (tarPercentage <= 0.80 
-                    && FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+                if (GetTargetDistance() <= 15
+                    && level >= WHM.Levels.Assize
+                    && IsOffCooldown(WHM.Assize))
+                {
+                    return WHM.Assize;
+                }
+
+                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (level >= WHM.Levels.Tetragrammaton
+                    && tarPercentage <= 0.8
                     && IsOffCooldown(WHM.Tetragrammaton))
                     {
                         return WHM.Tetragrammaton;
                     }
 
                     if (level >= WHM.Levels.EnhancedBenison
-                    && GetRemainingCharges(WHM.DivineBenison) >= 2)
+                    && HasCharges(WHM.DivineBenison)
+                    && (GetRemainingCharges(WHM.DivineBenison) >= 2
+                        || tarPercentage <= 0.4
+                        || GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5))
                     {
                         return WHM.DivineBenison;
                     }
-                }
-
-                if (playerPercentage <= 0.80 
-                    && level >= WHM.Levels.Assize
-                    && IsOffCooldown(WHM.Assize))
-                {
-                    return WHM.Assize;
                 }
 
                 if (HasCondition(ConditionFlag.InCombat)

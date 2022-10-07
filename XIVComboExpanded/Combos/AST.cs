@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -106,7 +107,7 @@ internal class AstrologianMalefic : CustomCombo
             //if (level >= AST.Levels.EarthlyStar
             //    && IsOffCooldown(AST.EarthlyStar))
             //{
-            //    return AST.EarthlyStar;
+            //    return OriginalHook(AST.EarthlyStar);
             //}
 
             if (GCDClipCheck(actionID))

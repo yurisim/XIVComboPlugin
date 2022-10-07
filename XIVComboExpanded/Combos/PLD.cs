@@ -34,6 +34,7 @@ internal static class PLD
     public static class Buffs
     {
         public const ushort
+            FightOrFlight = 76,
             Requiescat = 1368,
             SwordOath = 1902,
             BladeOfFaithReady = 3019;
@@ -76,72 +77,61 @@ internal class PaladinGoringBlade : CustomCombo
     {
         if (actionID == PLD.FastBlade)
         {
-            if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
-            {
-                if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
-                    return PLD.Atonement;
-            }
-
-            if (level >= PLD.Levels.CircleOfScorn
-                && IsOffCooldown(PLD.CircleOfScorn)
-                && GCDClipCheck(actionID))
-            {
-
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
-                {
-                    return PLD.FightOrFlight;
-                }
-
-                return PLD.CircleOfScorn;
-            }
-
-            if (level >= PLD.Levels.SpiritsWithin
-                && IsOffCooldown(PLD.SpiritsWithin)
-                && GCDClipCheck(actionID))
-            {
-
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
-                {
-                    return PLD.FightOrFlight;
-                }
-
-                return PLD.SpiritsWithin;
-            }
+            //if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
+            //{
+            //    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
+            //        return PLD.Atonement;
+            //}
 
             var goringBlade = FindTargetEffect(PLD.Debuffs.GoringBlade);
 
-            if (level >= PLD.Levels.Requiescat
-                && IsOffCooldown(PLD.Requiescat)
-                && GCDClipCheck(actionID))
-            {
+            var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID))
+            {
+                if (IsOffCooldown(PLD.FightOrFlight)
+                    && (level < PLD.Levels.GoringBlade 
+                        || lastComboMove == PLD.RiotBlade
+                        || TargetHasEffect(PLD.Debuffs.GoringBlade)))
                 {
                     return PLD.FightOrFlight;
                 }
 
-                return PLD.Requiescat;
+                if (level >= PLD.Levels.Requiescat
+                    && IsOffCooldown(PLD.Requiescat)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 15))
+                {
+                    return PLD.Requiescat;
+                }
+
+                if (level >= PLD.Levels.CircleOfScorn
+                    && IsOffCooldown(PLD.CircleOfScorn)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
+                {
+                    return PLD.CircleOfScorn;
+                }
+
+                if (level >= PLD.Levels.SpiritsWithin
+                    && IsOffCooldown(PLD.SpiritsWithin)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
+                {
+                    return OriginalHook(PLD.SpiritsWithin);
+                }
             }
 
             if (HasEffect(PLD.Buffs.Requiescat) 
-                && goringBlade != null)
+                && goringBlade is not null)
             {
                 return PLD.HolySpirit;
             }
 
-            if (comboTime > 0)
+            if (comboTime > 0 && InMeleeRange())
             {
 
                 if (lastComboMove == PLD.RiotBlade
                     && level >= PLD.Levels.GoringBlade
-                    && (goringBlade == null || goringBlade?.RemainingTime <= 5))
+                    && (goringBlade is null || (goringBlade is not null && goringBlade.RemainingTime <= 5)))
                 {
-
-                    if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
-                    {
-                        return PLD.FightOrFlight;
-                    }
-
                     return PLD.GoringBlade;
                 }
 
@@ -166,55 +156,47 @@ internal class PaladinProminence : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == PLD.Prominence)
+        if (actionID == PLD.TotalEclipse)
         {
-            if (level >= PLD.Levels.CircleOfScorn
-                && IsOffCooldown(PLD.CircleOfScorn)
-                && GCDClipCheck(actionID))
-            {
+            var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID))
+            {
+                if (IsOffCooldown(PLD.FightOrFlight)
+                    && (lastComboMove == PLD.TotalEclipse 
+                        || HasEffect(PLD.Buffs.Requiescat)))
                 {
                     return PLD.FightOrFlight;
                 }
 
-                return PLD.CircleOfScorn;
-            }
-
-            if (level >= PLD.Levels.SpiritsWithin
-                && IsOffCooldown(PLD.SpiritsWithin)
-                && GCDClipCheck(actionID))
-            {
-
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                if (level >= PLD.Levels.Requiescat
+                    && IsOffCooldown(PLD.Requiescat)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 15))
                 {
-                    return PLD.FightOrFlight;
+                    return PLD.Requiescat;
                 }
 
-                return PLD.SpiritsWithin;
-            }
-
-            if (level >= PLD.Levels.Requiescat
-                && IsOffCooldown(PLD.Requiescat)
-                && GCDClipCheck(actionID))
-            {
-
-                if (IsOffCooldown(PLD.FightOrFlight) && GCDClipCheck(actionID))
+                if (level >= PLD.Levels.CircleOfScorn
+                    && IsOffCooldown(PLD.CircleOfScorn)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
                 {
-                    return PLD.FightOrFlight;
+                    return PLD.CircleOfScorn;
                 }
-                
-                return PLD.Requiescat;
-            }
 
-            var gauge = GetJobGauge<PLDGauge>();
+                if (level >= PLD.Levels.SpiritsWithin
+                    && IsOffCooldown(PLD.SpiritsWithin)
+                    && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5))
+                {
+                    return OriginalHook(PLD.SpiritsWithin);
+                }
 
+                var gauge = GetJobGauge<PLDGauge>();
 
-            if (level >= PLD.Levels.Sheltron
-                && gauge.OathGauge == 100
-                && GCDClipCheck(actionID))
-            {
-                return PLD.Sheltron;
+                if (level >= PLD.Levels.Sheltron
+                    && gauge.OathGauge == 100)
+                {
+                    return PLD.Sheltron;
+                }
             }
 
             if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.HolyCircle)

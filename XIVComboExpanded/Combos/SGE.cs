@@ -160,9 +160,6 @@ internal class SageSoteria : CustomCombo
                     return OriginalHook(SGE.Physis);
                 }
 
-                var needToUseAddersgall = (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10)
-                        || gauge.Addersgall == 3;
-
                 if (level >= SGE.Levels.Ixochole
                     && IsOffCooldown(SGE.Ixochole)
                     && (!HasEffect(SGE.Buffs.Physis)
@@ -185,6 +182,9 @@ internal class SageSoteria : CustomCombo
                 {
                     return SGE.Krasis;
                 }
+
+                var needToUseAddersgall = (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10)
+                        || gauge.Addersgall == 3;
 
                 // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
                 if (level >= SGE.Levels.Druochole
@@ -220,53 +220,65 @@ internal class SageSoteria : CustomCombo
             //    ( SGE.Debuffs.EDosis1, SGE.Levels.EDosis1 )
             //};
 
-            var debuff = FindTargetEffect(SGE.Debuffs.EDosis3);
-
-            if (InCombat()
-                && level >= SGE.Levels.EDosis3
-                && ((debuff is not null
-                    && (debuff.RemainingTime <= 4
-                        || (debuff.RemainingTime <= 8 && IsMoving))
-                    || (debuff is null && ShouldRefreshDots()))))
+            if (InCombat())
             {
-                if (!HasEffect(SGE.Buffs.Eukrasia))
+                var debuff = FindTargetEffect(SGE.Debuffs.EDosis3);
+
+                var debuffTime = debuff?.RemainingTime;
+
+                if (level >= SGE.Levels.EDosis3
+                    && (debuff is not null
+                        && (debuffTime <= 4
+                            || (debuffTime <= 8 && IsMoving))
+                        || (debuff is null && ShouldRefreshDots())))
                 {
-                    return SGE.Eukrasia;
+                    if (!HasEffect(SGE.Buffs.Eukrasia))
+                    {
+                        return SGE.Eukrasia;
+                    }
+
+                    return OriginalHook(SGE.Dosis);
                 }
 
-                return OriginalHook(SGE.Dosis);
-            }
+                if (level >= SGE.Levels.Pneuma
+                    && IsOffCooldown(SGE.Pneuma)
+                    && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
+                    && !IsMoving
+                    && myHP <= threshold - 0.2)
+                {
+                    return SGE.Pneuma;
+                }
 
-            if (level >= SGE.Levels.Pneuma
-                && IsOffCooldown(SGE.Pneuma)
-                && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
-                && !IsMoving
-                && myHP <= threshold - 0.2)
-            {
-                return SGE.Pneuma;
-            }
+                var plegma = OriginalHook(SGE.Phlegma);
 
-            var plegma = OriginalHook(SGE.Phlegma);
+                if (GetTargetDistance() <= 6
+                    && HasCharges(plegma)
+                    && (IsMoving
+                        || HasRaidBuffs()
+                        || GetCooldown(plegma).ChargeCooldownRemaining <= 5
+                        || GetRemainingCharges(plegma) == 2))
+                {
+                    return OriginalHook(SGE.Phlegma);
+                }
 
-            if (GetTargetDistance() <= 6
-                && HasCharges(plegma)
-                && InCombat()
-                && (IsMoving
-                    || HasRaidBuffs()
-                    || GetCooldown(plegma).ChargeCooldownRemaining <= 5
-                    || GetRemainingCharges(plegma) == 2))
-            {
-                return OriginalHook(SGE.Phlegma);
-            }
+                if (IsMoving)
+                {
+                    if (gauge.Addersting >= 1
+                        && level >= SGE.Levels.Toxikon)
+                    {
+                        return OriginalHook(SGE.Toxikon);
+                    }
 
-            if (IsMoving
-                && gauge.Addersting >= 1
-                && level >= SGE.Levels.Toxikon)
-            {
-                return OriginalHook(SGE.Toxikon);
+                    if (GetTargetDistance() <= 5
+                        && HasTarget()
+                        && TargetIsEnemy())
+                    {
+                        return OriginalHook(SGE.Dyskrasia);
+                    }
+                }
             }
+            return actionID;
         }
-
         return actionID;
     }
 }

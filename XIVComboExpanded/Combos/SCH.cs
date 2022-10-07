@@ -46,7 +46,6 @@ internal static class SCH
             Galvanize = 297,
             Catalyze = 1918,
             Dissipation = 791,
-            SeraphicVeil = 3097,
             Recitation = 1896;
     }
 
@@ -131,9 +130,9 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 if (level >= SCH.Levels.Consolation
                     && gauge.SeraphTimer > 0
-                    && !HasEffect(SCH.Buffs.SeraphicVeil)
                     && HasCharges(SCH.Consolation)
-                    && (GetRemainingCharges(SCH.Consolation) >= 2 || gauge.SeraphTimer < 5))
+                    && (GetRemainingCharges(SCH.Consolation) >= 2 || gauge.SeraphTimer <= 10)
+                    )
                 {
                     return SCH.Consolation;
                 }
