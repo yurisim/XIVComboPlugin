@@ -116,8 +116,8 @@ internal class GunbreakerSolidBarrel : CustomCombo
                     return GNB.Bloodfest;
                 }
 
-                if (IsOffCooldown(GNB.NoMercy) 
-                    && (gauge.Ammo >= 1 
+                if (IsOffCooldown(GNB.NoMercy)
+                    && (gauge.Ammo >= 1
                         || level < GNB.Levels.BurstStrike
                         || lastComboMove == GNB.BrutalShell))
                 {
@@ -176,32 +176,40 @@ internal class GunbreakerSolidBarrel : CustomCombo
             if (level >= GNB.Levels.DoubleDown
                 && IsOffCooldown(GNB.DoubleDown)
                 && gauge.Ammo >= 2
+                && GetTargetDistance() <= 5
                 && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD))
             {
                 return GNB.DoubleDown;
             }
 
-            if (level >= GNB.Levels.GnashingFang
-                && IsOffCooldown(GNB.GnashingFang)
-                && gauge.Ammo >= 1
-                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD / 2))
+
+            if (level < GNB.Levels.DoubleDown 
+                || (IsOnCooldown(GNB.DoubleDown) 
+                    && GetCooldown(GNB.DoubleDown).CooldownRemaining >= 5))
             {
-                return GNB.GnashingFang;
-            }
+                if (level >= GNB.Levels.GnashingFang
+                    && IsOffCooldown(GNB.GnashingFang)
+                    && gauge.Ammo >= 1
+                    && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD / 2))
+                {
+                    return GNB.GnashingFang;
+                }
 
-            var noMercy = FindEffect(GNB.Buffs.NoMercy);
+                var noMercy = FindEffect(GNB.Buffs.NoMercy);
 
-            var bloodfestOffCD = level >= GNB.Levels.Bloodfest
-                        && HasEffect(GNB.Buffs.NoMercy)
-                        && IsOffCooldown(GNB.Bloodfest);
+                var bloodfestOffCD = level >= GNB.Levels.Bloodfest
+                            && HasEffect(GNB.Buffs.NoMercy)
+                            && IsOffCooldown(GNB.Bloodfest);
 
-            if (level >= GNB.Levels.BurstStrike
-                && gauge.Ammo >= 1
-                && noMercy is not null
-                && (level < GNB.Levels.DoubleDown || IsOnCooldown(GNB.DoubleDown))
-                && (bloodfestOffCD || (noMercy.RemainingTime < gauge.Ammo * 4)))
-            {
-                return GNB.BurstStrike;
+                if (gauge.Ammo >= 1
+                    && (level < GNB.Levels.GnashingFang
+                        || (IsOnCooldown(GNB.GnashingFang)
+                            && GetCooldown(GNB.GnashingFang).CooldownRemaining >= 5))
+                    && noMercy is not null
+                    && (bloodfestOffCD || (noMercy.RemainingTime < gauge.Ammo * 4)))
+                {
+                    return GNB.BurstStrike;
+                }
             }
 
             // COMBO BLOCK
@@ -211,8 +219,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                     && level >= GNB.Levels.SolidBarrel)
                 {
                     if (level >= GNB.Levels.BurstStrike
-                        && gauge.Ammo >= 1
-                        && (gauge.Ammo == maxAmmo))
+                        && gauge.Ammo == maxAmmo)
                     {
                         return GNB.BurstStrike;
                     }
@@ -329,6 +336,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
             if (level >= GNB.Levels.DoubleDown
                 && IsOffCooldown(GNB.DoubleDown)
                 && gauge.Ammo >= 2
+                && GetTargetDistance() <= 5
                 && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD))
             {
                 return GNB.DoubleDown;

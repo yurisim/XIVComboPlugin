@@ -145,7 +145,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return DRG.LifeSurge;
                 }
 
-                if ((IsOffCooldown(OriginalHook(DRG.Jump)))
+                if (IsOffCooldown(OriginalHook(DRG.Jump))
                     && level >= DRG.Levels.Jump
                     && (hasLanceCharge || lanceChargeCD > 3))
                 {
@@ -279,7 +279,7 @@ internal class DragoonChaosThrust : CustomCombo
                         return DRG.LifeSurge;
                     }
 
-                    if ((IsOffCooldown(OriginalHook(DRG.Jump)))
+                    if (IsOffCooldown(OriginalHook(DRG.Jump))
                         && level >= DRG.Levels.Jump
                         && (hasLanceCharge || lanceChargeCD > 3))
                     {

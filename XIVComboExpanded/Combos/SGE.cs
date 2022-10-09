@@ -149,7 +149,7 @@ internal class SageSoteria : CustomCombo
 
             var pneumaCD = GetCooldown(SGE.Pneuma).CooldownRemaining;
 
-            if (GCDClipCheck(actionID) && pneumaCD <= 119)
+            if (GCDClipCheck(actionID) && (pneumaCD <= 118 || IsOffCooldown(SGE.Pneuma)))
             {
 
                 var targetHPPercent = TargetOfTargetHPercentage();
@@ -191,7 +191,7 @@ internal class SageSoteria : CustomCombo
                 // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
                 if (level >= SGE.Levels.Druochole
                     && targetHPPercent >= 0.2
-                    && gauge.Addersgall >= 1
+                    && gauge.Addersgall >= 2
                     && (targetHPPercent <= threshold - 0.2
                         || (needToUseAddersgall && targetHPPercent <= threshold - 0.1)))
                 {
