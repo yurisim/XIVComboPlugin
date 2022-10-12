@@ -1,7 +1,4 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Lumina.Excel.GeneratedSheets;
-using System;
-using System.Reflection.Metadata;
 
 namespace XIVComboExpandedPlugin.Combos;
 

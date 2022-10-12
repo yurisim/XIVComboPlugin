@@ -1,6 +1,4 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
-
-namespace XIVComboExpandedPlugin.Combos;
+﻿namespace XIVComboExpandedPlugin.Combos;
 
 internal static class BLU
 {

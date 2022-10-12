@@ -1,8 +1,5 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.Types;
-using System;
-using System.Data;
 
 namespace XIVComboExpandedPlugin.Combos;
 

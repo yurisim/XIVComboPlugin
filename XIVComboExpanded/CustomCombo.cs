@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -239,7 +238,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>Whether or not the</returns>
     protected static bool ShouldRefreshDots()
-        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 40;
+        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 35;
 
     /// <summary>
     /// Should refresh DoTs

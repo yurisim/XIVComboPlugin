@@ -1,7 +1,4 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Game.ClientState.Objects.Types;
-using System.Linq;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -145,7 +142,7 @@ internal class SageSoteria : CustomCombo
 
             var myHP = LocalPlayerPercentage();
 
-            var threshold = 0.8;
+            var threshold = 0.75;
 
             var pneumaCD = GetCooldown(SGE.Pneuma).CooldownRemaining;
 
@@ -155,7 +152,7 @@ internal class SageSoteria : CustomCombo
                 var targetHPPercent = TargetOfTargetHPercentage();
 
                 if (level >= SGE.Levels.Physis
-                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.2)
+                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
                     && IsOffCooldown(OriginalHook(SGE.Physis))
                     && myHP <= threshold)
                 {
@@ -164,9 +161,12 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Ixochole
                     && IsOffCooldown(SGE.Ixochole)
+                    && gauge.Addersgall >= 2
                     && (!HasEffect(SGE.Buffs.Physis)
-                        || !HasEffect(SGE.Buffs.Physis2))
-                    && (myHP <= threshold - 0.15))
+                        || !HasEffect(SGE.Buffs.Physis2)
+                        || !HasEffect(SGE.Buffs.Kerakeia)
+                        || myHP <= threshold - 0.35)
+                    && (myHP <= threshold - 0.10))
                 {
                     return SGE.Ixochole;
                 }
