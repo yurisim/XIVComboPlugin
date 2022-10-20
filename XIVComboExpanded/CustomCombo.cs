@@ -79,7 +79,9 @@ internal abstract partial class CustomCombo
 
         if (this.MovingCounter == 0)
         {
-            Vector2 newPosition = LocalPlayer is null ? Vector2.Zero : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+            Vector2 newPosition = LocalPlayer is null 
+                ? Vector2.Zero 
+                : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
             this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
 
@@ -88,7 +90,7 @@ internal abstract partial class CustomCombo
             this.Position = LocalPlayer is null ? Vector2.Zero : newPosition;
 
             // Ensure this runs only once every 50 Dalamud ticks to make sure we get an actual, accurate representation of speed, rather than just spamming 0.
-            this.MovingCounter = 50;
+            this.MovingCounter = 100;
         }
 
         if (this.MovingCounter > 0)
@@ -238,7 +240,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>Whether or not the</returns>
     protected static bool ShouldRefreshDots()
-        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 35;
+        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 30;
 
     /// <summary>
     /// Should refresh DoTs

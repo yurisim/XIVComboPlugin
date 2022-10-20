@@ -12,6 +12,7 @@ internal static class AST
         Redraw = 3593,
         Benefic = 3594,
         Malefic = 3596,
+        EssentialDignity = 3614,
         Malefic2 = 3598,
         Helios = 3600,
         AspectedHelios = 3601,
@@ -32,6 +33,7 @@ internal static class AST
         MinorArcana = 7443,
         SleeveDraw = 7448,
         Divination = 16552,
+        CelestialIntersection = 16556,
         CelestialOpposition = 16553,
         Combust3 = 16554,
         Malefic4 = 16555,
@@ -78,6 +80,8 @@ internal static class AST
             EarthlyStar = 62,
             MinorArcana = 70,
             CrownPlay = 70,
+            CelestialIntersection = 74,
+            Exaltation = 86,
             Horoscope = 76;
     }
 }
@@ -109,8 +113,31 @@ internal class AstrologianMalefic : CustomCombo
             //    return OriginalHook(AST.EarthlyStar);
             //}
 
+            var tarPercentage = TargetOfTargetHPercentage();
+
+            var playerPercentage = LocalPlayerPercentage();
+
             if (GCDClipCheck(actionID))
             {
+                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+                {
+                    if (tarPercentage <= 0.75
+                    && (IsOffCooldown(AST.EssentialDignity) 
+                        || HasCharges(AST.EssentialDignity)))
+                    {
+                        return AST.EssentialDignity;
+                    }
+
+                    if (level >= AST.Levels.CelestialIntersection
+                    && HasCharges(AST.CelestialIntersection)
+                    && (GetRemainingCharges(AST.CelestialIntersection) >= 2
+                        || tarPercentage <= 0.5
+                        || GetCooldown(AST.CelestialIntersection).CooldownRemaining <= 5))
+                    {
+                        return AST.CelestialIntersection;
+                    }
+                }
+
                 if (level >= AST.Levels.Astrodyne 
                     && IsOffCooldown(AST.Divination) 
                     && HasRaidBuffs()) return AST.Divination;
@@ -198,6 +225,7 @@ internal class AstrologianGravity : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+
                 if (level >= AST.Levels.Astrodyne
                     && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
@@ -245,6 +273,29 @@ internal class AstrologianGravity : CustomCombo
 
                 }
             }
+        }
+
+        return actionID;
+    }
+}
+
+internal class AstroCelestial : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == AST.CelestialIntersection)
+        {
+            if (level >= AST.Levels.Exaltation
+                && IsOffCooldown(AST.Exaltation)
+                && GetRemainingCharges(AST.CelestialIntersection) <= 1
+                )
+            {
+                return AST.Exaltation;
+            }
+
+            return CalcBestAction(actionID, AST.Exaltation, AST.CelestialIntersection);
         }
 
         return actionID;

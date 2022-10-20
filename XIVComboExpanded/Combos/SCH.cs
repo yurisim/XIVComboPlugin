@@ -174,6 +174,7 @@ internal class ScholarEnergyDrain : CustomCombo
                     && gauge.Aetherflow >= 1
                     && (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3
                         || IsOffCooldown(SCH.Aetherflow)
+                        || (HasRaidBuffs() && gauge.Aetherflow >= 3)
                         || doDissipation
                         )
                     )

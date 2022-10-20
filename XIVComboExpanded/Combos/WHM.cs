@@ -55,6 +55,7 @@ internal static class WHM
         public const byte
             Raise = 12,
             Cure2 = 30,
+            PresenceOfMind = 30,
             AfflatusSolace = 52,
             Assize = 56,
             ThinAir = 58,
@@ -62,6 +63,7 @@ internal static class WHM
             PlenaryIndulgence = 70,
             AfflatusMisery = 74,
             AfflatusRapture = 76,
+            Aquaveil = 86,
             EnhancedBenison = 88;
     }
 }
@@ -184,7 +186,6 @@ internal class WhiteMageMedica : CustomCombo
             var gauge = GetJobGauge<WHMGauge>();
 
 
-
                 if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
                     return WHM.PlenaryIndulgence;
 
@@ -192,6 +193,29 @@ internal class WhiteMageMedica : CustomCombo
                 if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                     return WHM.AfflatusRapture;
             
+        }
+
+        return actionID;
+    }
+}
+
+internal class WHiteMageBenison : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == WHM.DivineBenison)
+        {
+            if (level >= WHM.Levels.Aquaveil 
+                && IsOffCooldown(WHM.Aquaveil)
+                && GetRemainingCharges(WHM.DivineBenison) <= 1
+                )
+            {
+                return WHM.Aquaveil;
+            }
+
+            return CalcBestAction(actionID, WHM.Aquaveil, WHM.DivineBenison);
         }
 
         return actionID;
@@ -218,6 +242,14 @@ internal class WhiteMageDiaFeature : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                if (level >= WHM.Levels.PresenceOfMind
+                    && IsOffCooldown(WHM.PresenceOfMind)
+                    && HasRaidBuffs()
+                    )
+                {
+                    return WHM.PresenceOfMind;
+                }
+
                 if (GetTargetDistance() <= 15
                     && level >= WHM.Levels.Assize
                     && IsOffCooldown(WHM.Assize))
@@ -228,7 +260,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (level >= WHM.Levels.Tetragrammaton
-                    && tarPercentage <= 0.8
+                    && tarPercentage <= 0.75
                     && IsOffCooldown(WHM.Tetragrammaton))
                     {
                         return WHM.Tetragrammaton;
@@ -237,7 +269,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                     if (level >= WHM.Levels.EnhancedBenison
                     && HasCharges(WHM.DivineBenison)
                     && (GetRemainingCharges(WHM.DivineBenison) >= 2
-                        || tarPercentage <= 0.4
+                        || tarPercentage <= 0.5
                         || GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5))
                     {
                         return WHM.DivineBenison;
@@ -254,10 +286,11 @@ internal class WhiteMageDiaFeature : CustomCombo
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
             if (InCombat() 
-                && (diaFound?.RemainingTime <= 4
+                && ((diaFound is not null 
+                        && (diaFound.RemainingTime <= 3 || (diaFound.RemainingTime <= 6 && IsMoving)))
                     || (diaFound is null && ShouldRefreshDots())))
             {
-                return WHM.Dia;
+                return OriginalHook(WHM.Dia);
             }
 
             if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
@@ -265,14 +298,17 @@ internal class WhiteMageDiaFeature : CustomCombo
                 return WHM.AfflatusMisery;
             }
 
-            if (playerPercentage <= 0.80 && gauge.Lily == 3)
+            if (gauge.Lily == 3)
             {
-                return OriginalHook(WHM.AfflatusRapture);
-            }
+                if (playerPercentage <= 0.80 && level >= WHM.Levels.AfflatusRapture)
+                {
+                    return WHM.AfflatusRapture;
+                }
 
-            if (tarPercentage <= 0.80 && gauge.Lily == 3)
-            {
-                return WHM.AfflatusSolace;
+                if (tarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace)
+                {
+                    return WHM.AfflatusSolace;
+                }
             }
 
             return actionID;
@@ -285,10 +321,13 @@ internal class WhiteMageDiaFeature : CustomCombo
             return WHM.ThinAir;
 
         if (actionID == WHM.Raise 
-            && level >= WHM.Levels.ThinAir 
+            && level >= WHM.Levels.ThinAir
+            //&& IsOffCooldown(ADV.Swiftcast)
             && !HasEffect(WHM.Buffs.ThinAir) 
             && GetRemainingCharges(WHM.ThinAir) >= 1)
+        {
             return WHM.ThinAir;
+        }
 
         return actionID;
     }

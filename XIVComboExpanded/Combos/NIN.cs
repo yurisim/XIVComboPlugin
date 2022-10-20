@@ -141,7 +141,9 @@ internal class NinjaAeolianEdge : CustomCombo
                 }
             }
 
-            var upcomingTrickAttack = trickAttackCD <= 12 || IsOffCooldown(NIN.TrickAttack);
+            var trickThreshold = 14;
+
+            var upcomingTrickAttack = trickAttackCD <= trickThreshold || IsOffCooldown(NIN.TrickAttack);
 
             // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
             if (GCDClipCheck(actionID)
@@ -224,17 +226,20 @@ internal class NinjaAeolianEdge : CustomCombo
                 return OriginalHook(NIN.Bunshin);
             }
 
-            //var chiCD = GetCooldown(NIN.ChiNormal).CooldownRemaining <= 5;
-
             // Need to put before instant GCDs to not interrupot mudras.
-            if (level >= NIN.Levels.Ninjitsu
-                && (HasEffect(NIN.Buffs.Mudra) || HasCharges(NIN.ChiNormal) || HasEffect(NIN.Buffs.Kassatsu))
-                && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+
+            var continueMudra = HasEffect(NIN.Buffs.Mudra)
+                    || HasCharges(NIN.ChiNormal)
+                    || HasEffect(NIN.Buffs.Kassatsu);
+
+            var startMudra = TargetHasEffect(NIN.Debuffs.TrickAttack)
                     || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton))
-                    //|| (GetRemainingCharges(NIN.ChiNormal) >= 2)
-                    //|| (HasCharges(NIN.ChiNormal) && chiCD)
-                    || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack))
-                    ))
+                    || GetCooldown(NIN.ChiNormal).CooldownRemaining <= 3
+                    || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
+
+            // DOes not handle just kassatsu
+            if (level >= NIN.Levels.Ninjitsu
+                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu || (continueMudra && startMudra)))
             {
                 if (HasEffect(NIN.Buffs.Kassatsu) && level >= NIN.Levels.EnhancedKassatsu)
                 {
@@ -409,13 +414,15 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 }
             }
 
+            var continueMudra = HasEffect(NIN.Buffs.Mudra)
+                    || HasCharges(NIN.ChiNormal);
+
+            var startMudra = GetCooldown(NIN.ChiNormal).CooldownRemaining <= 5;
+
             if (level >= NIN.Levels.Ninjitsu
-                && !HasEffect(NIN.Buffs.TenChiJin)
-                && (GetRemainingCharges(NIN.ChiNormal) >= 2
-                    || (GetRemainingCharges(NIN.ChiNormal) >= 1
-                        && GetCooldown(NIN.ChiNormal).ChargeCooldownRemaining <= 5)
+                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu 
                     || HasEffect(NIN.Buffs.Kassatsu)
-                    || HasEffect(NIN.Buffs.Mudra)))
+                    || (continueMudra && startMudra)))
             {
                 if (OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu)
                     return OriginalHook(NIN.JinNormal);

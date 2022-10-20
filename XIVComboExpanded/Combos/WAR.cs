@@ -105,6 +105,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                    && HasCharges(WAR.Infuriate)
                    && (GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
+                        || HasRaidBuffs()
                         || HasEffect(WAR.Buffs.Berserk))
                    && !HasEffect(WAR.Buffs.InnerRelease))
                 {
@@ -127,12 +128,12 @@ internal class WarriorStormsPathCombo : CustomCombo
             }
            
             if (level >= WAR.Levels.InnerBeast
-                && ((surgingTempest is not null) 
-                    || level < WAR.Levels.StormsEye)
+                && (surgingTempest is not null || level < WAR.Levels.StormsEye)
                 && (gauge.BeastGauge >= 90
                     || (HasEffect(WAR.Buffs.NascentChaos) && level >= WAR.Levels.InnerChaos)
                     || (gauge.BeastGauge >= 50
-                        && (GetRemainingCharges(WAR.Infuriate) >= 2 
+                        && (GetRemainingCharges(WAR.Infuriate) >= 2
+                            || HasRaidBuffs()
                             || HasEffect(WAR.Buffs.Berserk)))
                     || HasEffect(WAR.Buffs.InnerRelease)))
             {

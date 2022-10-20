@@ -173,6 +173,10 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Soteria
                     && IsOffCooldown(SGE.Soteria)
+                    && (!HasEffect(SGE.Buffs.Physis)
+                        || !HasEffect(SGE.Buffs.Physis2)
+                        || !HasEffect(SGE.Buffs.Kerakeia)
+                        || myHP <= threshold - 0.15)
                     && (targetHPPercent <= threshold))
                 {
                     return SGE.Soteria;
@@ -180,6 +184,10 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Krasis
                     && IsOffCooldown(SGE.Krasis)
+                    && (!HasEffect(SGE.Buffs.Physis)
+                        || !HasEffect(SGE.Buffs.Physis2)
+                        || !HasEffect(SGE.Buffs.Kerakeia)
+                        || myHP <= threshold - 0.25)
                     && (targetHPPercent <= threshold - 0.1))
                 {
                     return SGE.Krasis;
@@ -243,8 +251,10 @@ internal class SageSoteria : CustomCombo
                 }
 
                 if (level >= SGE.Levels.Pneuma
-                    && pneumaCD == 0
-                    && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
+                    && IsOffCooldown(SGE.Pneuma)
+                    && !(HasEffect(SGE.Buffs.Physis) 
+                        || HasEffect(SGE.Buffs.Physis2)
+                        || HasEffect(SGE.Buffs.Kerakeia))
                     && !IsMoving
                     && myHP <= threshold - 0.2)
                 {
@@ -256,9 +266,10 @@ internal class SageSoteria : CustomCombo
                 if (GetTargetDistance() <= 6
                     && HasCharges(plegma)
                     && (IsMoving
-                        || HasRaidBuffs()
                         || GetCooldown(plegma).ChargeCooldownRemaining <= 5
-                        || GetRemainingCharges(plegma) == 2))
+                        || GetRemainingCharges(plegma) == 2
+                        || HasRaidBuffs()
+                        ))
                 {
                     return OriginalHook(SGE.Phlegma);
                 }
