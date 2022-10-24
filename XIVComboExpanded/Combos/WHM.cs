@@ -268,9 +268,8 @@ internal class WhiteMageDiaFeature : CustomCombo
 
                     if (level >= WHM.Levels.EnhancedBenison
                     && HasCharges(WHM.DivineBenison)
-                    && (GetRemainingCharges(WHM.DivineBenison) >= 2
-                        || tarPercentage <= 0.5
-                        || GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5))
+                    && ((GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5 && tarPercentage <= 0.75)
+                        || tarPercentage <= 0.5))
                     {
                         return WHM.DivineBenison;
                     }

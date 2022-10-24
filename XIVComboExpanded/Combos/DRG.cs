@@ -48,6 +48,7 @@ internal static class DRG
             LifeSurge = 116,
             PowerSurge = 2720,
             BattleLitany = 786,
+            LeftEye = 1184,
             FangAndClawBared = 802,
             WheelInMotion = 803,
             DiveReady = 1243,

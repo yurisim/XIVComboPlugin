@@ -243,26 +243,61 @@ internal abstract partial class CustomCombo
         => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 30;
 
     /// <summary>
-    /// Should refresh DoTs
+    /// Should return whether or not player has raid debuffs.
+    /// Uses forEach loops for faster iterations rather than count for shortcircuiting
     /// </summary>
     /// <returns>Whether or not the</returns>
     protected static bool HasRaidBuffs()
     {
+        var hasRaidBuffs = false;
+
         var raidBuffs = new[]
         {
-            TargetHasEffectAny(SCH.Debuffs.ChainStrategem),
-            TargetHasEffectAny(NIN.Debuffs.Mug),
-            HasEffectAny(AST.Buffs.Divination),
-            HasEffectAny(BRD.Buffs.BattleVoice),
-            HasEffectAny(DNC.Buffs.TechnicalFinish),
-            HasEffectAny(DRG.Buffs.BattleLitany),
-            HasEffectAny(RDM.Buffs.Embolden),
-            HasEffectAny(MNK.Buffs.Brotherhood),
-            HasEffectAny(SMN.Buffs.SearingLight),
-            HasEffectAny(RPR.Buffs.ArcaneCircle)
+            DNC.Buffs.TechnicalFinish,
+            SMN.Buffs.SearingLight,
+            RPR.Buffs.ArcaneCircle,
+            AST.Buffs.Divination,
+            RDM.Buffs.Embolden,
+            BRD.Buffs.BattleVoice,
+            DRG.Buffs.BattleLitany,
+            DRG.Buffs.LeftEye,
+            RDM.Buffs.Embolden,
+            MNK.Buffs.Brotherhood,
         };
 
-        return raidBuffs.Count(isBuffFound => isBuffFound) >= 2;
+        var raidDebuffs = new[]
+        {
+            SCH.Debuffs.ChainStrategem,
+            NIN.Debuffs.Mug
+        };
+
+
+        var raidCDsFound = 0;
+
+        foreach (var buff in raidBuffs)
+        {
+            if (HasEffectAny(buff)) raidCDsFound++;
+
+            if (raidCDsFound >= 2)
+            {
+                hasRaidBuffs = true;
+                break;
+            };
+
+        }
+
+        foreach (var debuff in raidDebuffs)
+        {
+            if (TargetHasEffectAny(debuff)) raidCDsFound++;
+
+            if (raidCDsFound >= 2)
+            {
+                hasRaidBuffs = true;
+                break;
+            };
+        }
+
+        return hasRaidBuffs;
     }
 
     /// <summary>

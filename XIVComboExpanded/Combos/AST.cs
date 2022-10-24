@@ -102,7 +102,11 @@ internal class AstrologianMalefic : CustomCombo
         //    return HasEffect(AST.Buffs.AspectedHelios) || level < AST.Levels.AspectedHelios ? AST.Helios : AST.AspectedHelios;
         //}
 
-        if (actionID == AST.Malefic || actionID == AST.Malefic2 || actionID == AST.Malefic3 || actionID == AST.Malefic4 || actionID == AST.FallMalefic)
+        if (actionID == AST.Malefic 
+            || actionID == AST.Malefic2 
+            || actionID == AST.Malefic3 
+            || actionID == AST.Malefic4 
+            || actionID == AST.FallMalefic)
         {
             var gauge = GetJobGauge<ASTGauge>();
 

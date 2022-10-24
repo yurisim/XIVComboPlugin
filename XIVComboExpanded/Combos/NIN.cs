@@ -160,7 +160,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     if (level >= NIN.Levels.TrickAttack
                         && HasEffect(NIN.Buffs.Suiton)
                         && IsOffCooldown(NIN.TrickAttack)
-                        && IsOnCooldown(NIN.Mug))
+                        && (GetCooldown(NIN.Mug).CooldownRemaining >= 10))
                     {
                         return NIN.TrickAttack;
                     }
@@ -228,14 +228,14 @@ internal class NinjaAeolianEdge : CustomCombo
 
             // Need to put before instant GCDs to not interrupot mudras.
 
+            var startMudra = TargetHasEffect(NIN.Debuffs.TrickAttack)
+                    || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton))
+                    || GetCooldown(NIN.ChiNormal).CooldownRemaining <= 1
+                    || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
+
             var continueMudra = HasEffect(NIN.Buffs.Mudra)
                     || HasCharges(NIN.ChiNormal)
                     || HasEffect(NIN.Buffs.Kassatsu);
-
-            var startMudra = TargetHasEffect(NIN.Debuffs.TrickAttack)
-                    || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton))
-                    || GetCooldown(NIN.ChiNormal).CooldownRemaining <= 3
-                    || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
 
             // DOes not handle just kassatsu
             if (level >= NIN.Levels.Ninjitsu

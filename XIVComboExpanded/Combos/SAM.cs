@@ -114,6 +114,20 @@ internal class SamuraiYukikaze : CustomCombo
                 return OriginalHook(SAM.TsubameGaeshi);
             }
 
+            var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
+
+            var higanbanaTime = ((higanabana is null && ShouldRefreshDots())
+                        || (higanabana is not null && higanabana.RemainingTime <= 6));
+
+            if (gauge.MeditationStacks == 3
+                && (higanbanaTime
+                    || HasRaidBuffs()
+                    || (gaugeSen.Sum() >= 3)
+                    ))
+            {
+                return SAM.Shoha;
+            }
+
             if (GCDClipCheck(actionID))
             {
                 if (canUseIkishoten && gauge.Kenki <= 50)
@@ -141,18 +155,16 @@ internal class SamuraiYukikaze : CustomCombo
                 {
                     return SAM.MeikyoShisui;
                 }
-
-                if (gauge.MeditationStacks == 3
-                    && (gaugeSen.Count(sen => sen == 1) == 1
-                        || HasRaidBuffs())) return SAM.Shoha;
             }
 
             if (!IsMoving)
             {
-                var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
                 if (level >= SAM.Levels.Higanbana
+                    && !HasEffect(SAM.Buffs.MeikyoShisui)
                     && gaugeSen.Sum() == 1
-                    && higanabana?.RemainingTime <= 10)
+                    && ((higanabana is null && ShouldRefreshDots())
+                        || (higanabana is not null && higanabana.RemainingTime <= 6))
+                    )
                 {
                     return SAM.Higanbana;
                 }

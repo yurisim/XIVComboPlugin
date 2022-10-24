@@ -87,49 +87,6 @@ internal static class SGE
     }
 }
 
-internal class SageDosis : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == SGE.Dosis)
-        {
-            if (IsEnabled(CustomComboPreset.SageDosisKardiaFeature))
-            {
-                if (!HasEffect(SGE.Buffs.Kardion))
-                    return SGE.Kardia;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class SageToxikon : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == SGE.Toxikon)
-        {
-            if (IsEnabled(CustomComboPreset.SageToxikonPhlegma))
-            {
-                var phlegma =
-                    level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
-                    level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
-                    level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
-
-                if (phlegma != 0 && HasCharges(phlegma))
-                    return OriginalHook(SGE.Phlegma);
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class SageSoteria : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
@@ -142,11 +99,9 @@ internal class SageSoteria : CustomCombo
 
             var myHP = LocalPlayerPercentage();
 
-            var threshold = 0.75;
+            var threshold = 0.80;
 
-            var pneumaCD = GetCooldown(SGE.Pneuma).CooldownRemaining;
-
-            if (GCDClipCheck(actionID) && (pneumaCD <= 118 || IsOffCooldown(SGE.Pneuma)))
+            if (GCDClipCheck(actionID))
             {
 
                 var targetHPPercent = TargetOfTargetHPercentage();
@@ -176,7 +131,7 @@ internal class SageSoteria : CustomCombo
                     && (!HasEffect(SGE.Buffs.Physis)
                         || !HasEffect(SGE.Buffs.Physis2)
                         || !HasEffect(SGE.Buffs.Kerakeia)
-                        || myHP <= threshold - 0.15)
+                        || targetHPPercent <= threshold - 0.15)
                     && (targetHPPercent <= threshold))
                 {
                     return SGE.Soteria;
@@ -187,7 +142,7 @@ internal class SageSoteria : CustomCombo
                     && (!HasEffect(SGE.Buffs.Physis)
                         || !HasEffect(SGE.Buffs.Physis2)
                         || !HasEffect(SGE.Buffs.Kerakeia)
-                        || myHP <= threshold - 0.25)
+                        || targetHPPercent <= threshold - 0.25)
                     && (targetHPPercent <= threshold - 0.1))
                 {
                     return SGE.Krasis;
@@ -252,9 +207,10 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Pneuma
                     && IsOffCooldown(SGE.Pneuma)
-                    && !(HasEffect(SGE.Buffs.Physis) 
+                    && !(HasEffect(SGE.Buffs.Physis)
                         || HasEffect(SGE.Buffs.Physis2)
                         || HasEffect(SGE.Buffs.Kerakeia))
+                    && IsOnCooldown(SGE.Ixochole)
                     && !IsMoving
                     && myHP <= threshold - 0.2)
                 {
@@ -271,7 +227,7 @@ internal class SageSoteria : CustomCombo
                         || HasRaidBuffs()
                         ))
                 {
-                    return OriginalHook(SGE.Phlegma);
+                    return SGE.Phlegma3;
                 }
 
                 if (IsMoving)
@@ -289,6 +245,8 @@ internal class SageSoteria : CustomCombo
                         return OriginalHook(SGE.Dyskrasia);
                     }
                 }
+
+                return actionID;
             }
             return actionID;
         }
@@ -353,49 +311,39 @@ internal class SagePhlegma : CustomCombo
         {
             var gauge = GetJobGauge<SGEGauge>();
 
-            var phlegma =
-                level >= SGE.Levels.Phlegma3 ? SGE.Phlegma3 :
-                level >= SGE.Levels.Phlegma2 ? SGE.Phlegma2 :
-                level >= SGE.Levels.Phlegma ? SGE.Phlegma : 0;
-
             var targetHPPercent = TargetOfTargetHPercentage();
 
             var myHP = LocalPlayerPercentage();
 
-            var threshold = 0.8;
+            var threshold = 0.85;
 
             if (GCDClipCheck(actionID))
             {
                 if (level >= SGE.Levels.Physis
-                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.2)
+                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
                     && IsOffCooldown(OriginalHook(SGE.Physis))
                     && myHP <= threshold)
                 {
                     return OriginalHook(SGE.Physis);
                 }
 
-                var needToUseAddersgall = (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10)
-                        || gauge.Addersgall == 3;
-
                 if (level >= SGE.Levels.Soteria
                     && IsOffCooldown(SGE.Soteria)
-                    && (targetHPPercent <= threshold))
+                    && (targetHPPercent <= threshold - 0.1))
                 {
                     return SGE.Soteria;
                 }
 
                 if (level >= SGE.Levels.Krasis
                     && IsOffCooldown(SGE.Krasis)
-                    && (targetHPPercent <= threshold - 0.1))
+                    && (targetHPPercent <= threshold - 0.175))
                 {
                     return SGE.Krasis;
                 }
 
                 if (level >= SGE.Levels.Druochole
-                    && targetHPPercent >= 0.2
-                    && gauge.Addersgall >= 1
-                    && (targetHPPercent <= threshold - 0.2
-                        || (needToUseAddersgall && targetHPPercent <= threshold - 0.1)))
+                    && gauge.Addersgall >= 2
+                    && (targetHPPercent <= threshold - 0.2125))
                 {
                     return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
                         ? SGE.Taurochole
@@ -415,24 +363,22 @@ internal class SagePhlegma : CustomCombo
                 {
                     return ADV.LucidDreaming;
                 }
-
-                //if (hpPercent <= 95
-                //    && IsOffCooldown(SGE.Kardia)
-                //    && FindTargetOfTargetEffect(SGE.Buffs.Kardion) is null)
-                //{
-                //    return SGE.Kardia;
-                //}
             }
 
             var plegma = OriginalHook(SGE.Phlegma);
 
-            if (GetTargetDistance() <= 6
-                && HasCharges(plegma)
-                && InCombat()
-                && HasTarget()
-                && TargetIsEnemy())
+            if (level >= SGE.Levels.Pneuma
+                && IsOffCooldown(SGE.Pneuma)
+                && !IsMoving
+                && TargetOfTargetHPercentage() <= threshold - 0.25)
             {
-                return plegma;
+                return SGE.Pneuma;
+            }
+
+            if (GetTargetDistance() <= 6
+                && HasCharges(plegma))
+            {
+                return OriginalHook(SGE.Phlegma);
             }
 
             if (level >= SGE.Levels.Toxikon
@@ -443,20 +389,19 @@ internal class SagePhlegma : CustomCombo
                 return OriginalHook(SGE.Toxikon);
             }
 
-            if (level >= SGE.Levels.Pneuma
-                && IsOffCooldown(SGE.Pneuma)
-                && !(HasEffect(SGE.Buffs.Physis) || HasEffect(SGE.Buffs.Physis2))
-                && !IsMoving
-                && myHP <= threshold - 0.15)
+            if (gauge.Addersting >= 1
+                && level >= SGE.Levels.Toxikon)
             {
-                return SGE.Pneuma;
+                return OriginalHook(SGE.Toxikon);
             }
 
-            if (level >= SGE.Levels.Dyskrasia)
+            if (HasTarget()
+                && TargetIsEnemy())
             {
                 return OriginalHook(SGE.Dyskrasia);
             }
 
+            return actionID;
         }
 
         return actionID;

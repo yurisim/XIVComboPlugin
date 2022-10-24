@@ -130,10 +130,12 @@ internal class ScholarEnergyDrain : CustomCombo
                 if (level >= SCH.Levels.Consolation
                     && gauge.SeraphTimer > 0
                     && HasCharges(SCH.Consolation)
-                    && (GetRemainingCharges(SCH.Consolation) >= 2 || gauge.SeraphTimer <= 10)
+                    && (GetRemainingCharges(SCH.Consolation) >= 2 
+                        || LocalPlayerPercentage() < 0.80 
+                        || gauge.SeraphTimer <= 5 )
                     )
                 {
-                    return SCH.Consolation;
+                    return OriginalHook(SCH.SummonSeraph);
                 }
 
                 if (!HasEffect(SCH.Buffs.Dissipation) && isThereRaidDamage)
@@ -154,7 +156,7 @@ internal class ScholarEnergyDrain : CustomCombo
                     }
                 }
 
-                if (TargetOfTargetHPercentage() <= 0.6
+                if (TargetOfTargetHPercentage() <= 0.5
                     && level >= SCH.Levels.Excogitation
                     && IsOffCooldown(SCH.Excogitation)
                     && gauge.Aetherflow >= 2)
