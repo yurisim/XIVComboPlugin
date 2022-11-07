@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Serilog.Events;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -27,6 +28,7 @@ internal static class SGE
         Taurochole = 24303,
         Toxikon = 24304,
         Haima = 24305,
+        Dyskrasia2 = 24315,
         Phlegma2 = 24307,
         Rhizomata = 24309,
         Holos = 24310,
@@ -117,10 +119,9 @@ internal class SageSoteria : CustomCombo
                 if (level >= SGE.Levels.Ixochole
                     && IsOffCooldown(SGE.Ixochole)
                     && gauge.Addersgall >= 2
-                    && (!HasEffect(SGE.Buffs.Physis)
-                        || !HasEffect(SGE.Buffs.Physis2)
-                        || !HasEffect(SGE.Buffs.Kerakeia)
-                        || myHP <= threshold - 0.35)
+                    && ((!HasEffect(SGE.Buffs.Physis)
+                        && !HasEffect(SGE.Buffs.Physis2)
+                        && !HasEffect(SGE.Buffs.Kerakeia)) || myHP <= threshold - 0.40)
                     && (myHP <= threshold - 0.10))
                 {
                     return SGE.Ixochole;
@@ -128,10 +129,9 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Soteria
                     && IsOffCooldown(SGE.Soteria)
-                    && (!HasEffect(SGE.Buffs.Physis)
-                        || !HasEffect(SGE.Buffs.Physis2)
-                        || !HasEffect(SGE.Buffs.Kerakeia)
-                        || targetHPPercent <= threshold - 0.15)
+                    && ((!HasEffect(SGE.Buffs.Physis)
+                        && !HasEffect(SGE.Buffs.Physis2)
+                        && !HasEffect(SGE.Buffs.Kerakeia)) || myHP <= threshold - 0.15)
                     && (targetHPPercent <= threshold))
                 {
                     return SGE.Soteria;
@@ -139,10 +139,9 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Krasis
                     && IsOffCooldown(SGE.Krasis)
-                    && (!HasEffect(SGE.Buffs.Physis)
-                        || !HasEffect(SGE.Buffs.Physis2)
-                        || !HasEffect(SGE.Buffs.Kerakeia)
-                        || targetHPPercent <= threshold - 0.25)
+                    && ((!HasEffect(SGE.Buffs.Physis)
+                        && !HasEffect(SGE.Buffs.Physis2)
+                        && !HasEffect(SGE.Buffs.Kerakeia)) || myHP <= threshold - 0.25)
                     && (targetHPPercent <= threshold - 0.1))
                 {
                     return SGE.Krasis;
@@ -207,9 +206,9 @@ internal class SageSoteria : CustomCombo
 
                 if (level >= SGE.Levels.Pneuma
                     && IsOffCooldown(SGE.Pneuma)
-                    && !(HasEffect(SGE.Buffs.Physis)
-                        || HasEffect(SGE.Buffs.Physis2)
-                        || HasEffect(SGE.Buffs.Kerakeia))
+                    && ((!HasEffect(SGE.Buffs.Physis)
+                        && !HasEffect(SGE.Buffs.Physis2)
+                        && !HasEffect(SGE.Buffs.Kerakeia)) || myHP <= threshold - 0.4)
                     && IsOnCooldown(SGE.Ixochole)
                     && !IsMoving
                     && myHP <= threshold - 0.2)
@@ -221,8 +220,8 @@ internal class SageSoteria : CustomCombo
 
                 if (GetTargetDistance() <= 6
                     && HasCharges(plegma)
-                    && (IsMoving
-                        || GetCooldown(plegma).ChargeCooldownRemaining <= 5
+                    && (GetCooldown(plegma).ChargeCooldownRemaining <= 5
+                        //|| IsMoving
                         || GetRemainingCharges(plegma) == 2
                         || HasRaidBuffs()
                         ))
@@ -240,9 +239,10 @@ internal class SageSoteria : CustomCombo
 
                     if (GetTargetDistance() <= 5
                         && HasTarget()
+                        && level >= SGE.Levels.Dyskrasia
                         && TargetIsEnemy())
                     {
-                        return OriginalHook(SGE.Dyskrasia);
+                        return level >= SGE.Levels.Phlegma3 ? SGE.Dyskrasia2 : SGE.Dyskrasia;
                     }
                 }
 
@@ -295,6 +295,11 @@ internal class SageZoe : CustomCombo
             {
                 return SGE.Zoe;
             }
+
+            //if (actionID == SGE.Pneuma)
+            //{
+            //    return CalcBestAction(SGE.Pneuma, SGE.Zoe, SGE.Pneuma);
+            //}
         }
 
         return actionID;
@@ -307,7 +312,7 @@ internal class SagePhlegma : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SGE.Phlegma || actionID == SGE.Phlegma2 || actionID == SGE.Phlegma3)
+        if (actionID == SGE.Dyskrasia2 || actionID == SGE.Dyskrasia)
         {
             var gauge = GetJobGauge<SGEGauge>();
 
@@ -320,30 +325,30 @@ internal class SagePhlegma : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (level >= SGE.Levels.Physis
-                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
+                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.3)
                     && IsOffCooldown(OriginalHook(SGE.Physis))
-                    && myHP <= threshold)
+                    && myHP <= threshold - 0.1)
                 {
                     return OriginalHook(SGE.Physis);
                 }
 
                 if (level >= SGE.Levels.Soteria
                     && IsOffCooldown(SGE.Soteria)
-                    && (targetHPPercent <= threshold - 0.1))
+                    && (targetHPPercent <= threshold - 0.15))
                 {
                     return SGE.Soteria;
                 }
 
                 if (level >= SGE.Levels.Krasis
                     && IsOffCooldown(SGE.Krasis)
-                    && (targetHPPercent <= threshold - 0.175))
+                    && (targetHPPercent <= threshold - 0.2))
                 {
                     return SGE.Krasis;
                 }
 
                 if (level >= SGE.Levels.Druochole
                     && gauge.Addersgall >= 2
-                    && (targetHPPercent <= threshold - 0.2125))
+                    && (targetHPPercent <= threshold - 0.25))
                 {
                     return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
                         ? SGE.Taurochole
@@ -367,14 +372,6 @@ internal class SagePhlegma : CustomCombo
 
             var plegma = OriginalHook(SGE.Phlegma);
 
-            if (level >= SGE.Levels.Pneuma
-                && IsOffCooldown(SGE.Pneuma)
-                && !IsMoving
-                && TargetOfTargetHPercentage() <= threshold - 0.25)
-            {
-                return SGE.Pneuma;
-            }
-
             if (GetTargetDistance() <= 6
                 && HasCharges(plegma))
             {
@@ -393,12 +390,6 @@ internal class SagePhlegma : CustomCombo
                 && level >= SGE.Levels.Toxikon)
             {
                 return OriginalHook(SGE.Toxikon);
-            }
-
-            if (HasTarget()
-                && TargetIsEnemy())
-            {
-                return OriginalHook(SGE.Dyskrasia);
             }
 
             return actionID;

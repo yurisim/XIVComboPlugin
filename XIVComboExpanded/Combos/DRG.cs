@@ -112,17 +112,19 @@ internal class DragoonCoerthanTorment : CustomCombo
                 var hasLitany = HasEffect(DRG.Buffs.BattleLitany);
                 var litanyCD = GetCooldown(DRG.BattleLitany).CooldownRemaining;
 
-                if (gauge.FirstmindsFocusCount == 2
-                    && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust 
-                        || hasLanceCharge))
-                    return DRG.WyrmwindThrust;
-
                 if (gauge.IsLOTDActive
                     && IsOffCooldown(DRG.Stardiver)
                     && level >= DRG.Levels.Stardiver
                     && (hasLanceCharge || lanceChargeCD > gauge.LOTDTimer / 1000 - 5))
                 {
                     return DRG.Stardiver;
+                }
+
+                if (HasRaidBuffs()
+                    && level >= DRG.Levels.BattleLitany
+                    && IsOffCooldown(DRG.BattleLitany)) 
+                {
+                    return DRG.BattleLitany;
                 }
 
                 if (IsOffCooldown(DRG.LanceCharge)
@@ -137,6 +139,18 @@ internal class DragoonCoerthanTorment : CustomCombo
                 {
                     return DRG.DragonSight;
                 }
+
+                if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                    && level >= DRG.Levels.Geirskogul
+                    && (hasLanceCharge || lanceChargeCD > 1))
+                {
+                    return OriginalHook(DRG.Geirskogul);
+                }
+
+                if (gauge.FirstmindsFocusCount == 2
+                    && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust 
+                        || hasLanceCharge))
+                    return DRG.WyrmwindThrust;
 
                 if ((IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
                     && !HasEffect(DRG.Buffs.LifeSurge)
@@ -160,15 +174,8 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return DRG.MirageDive;
                 }
 
-                if (IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                    && level >= DRG.Levels.Geirskogul
-                    && (hasLanceCharge || lanceChargeCD > 3))
-                {
-                    return OriginalHook(DRG.Geirskogul);
-                }
-
                 if ((IsOffCooldown(DRG.SpineshatterDive) || HasCharges(DRG.SpineshatterDive))
-                && level >= DRG.Levels.SpineshatterDive
+                    && level >= DRG.Levels.SpineshatterDive
                     && (hasLanceCharge || lanceChargeCD > 6))
                 {
                     return DRG.SpineshatterDive;

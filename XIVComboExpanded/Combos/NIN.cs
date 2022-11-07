@@ -141,7 +141,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 }
             }
 
-            var trickThreshold = 14;
+            var trickThreshold = 15;
 
             var upcomingTrickAttack = trickAttackCD <= trickThreshold || IsOffCooldown(NIN.TrickAttack);
 
@@ -202,7 +202,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     && (ninki >= 90
                         || TargetHasEffect(NIN.Debuffs.TrickAttack) 
                         || HasEffect(NIN.Buffs.Meisui))
-                        || (IsOffCooldown(NIN.Mug) && level >= NIN.Levels.EnhancedMug && IsOffCooldown(NIN.Mug) && ninki >= 60))
+                        || (level >= NIN.Levels.EnhancedMug && GetCooldown(NIN.Mug).CooldownRemaining <= 3 && ninki >= 60))
                 {
                     return (level >= NIN.Levels.Bhavacakra)
                             ? NIN.Bhavacakra
@@ -220,7 +220,10 @@ internal class NinjaAeolianEdge : CustomCombo
                 && !HasEffect(NIN.Buffs.TenChiJin)
                 && !HasEffect(NIN.Buffs.RaijuReady)
                 && OriginalHook(NIN.Bunshin) != NIN.Bunshin
-                && (TargetHasEffect(NIN.Debuffs.TrickAttack) || phantomTime <= 10 || trickAttackCD >= phantomTime)
+                && (TargetHasEffect(NIN.Debuffs.TrickAttack) 
+                    || phantomTime <= 10 
+                    || trickAttackCD >= phantomTime 
+                    || HasRaidBuffs())
                 )
             {
                 return OriginalHook(NIN.Bunshin);
@@ -230,7 +233,7 @@ internal class NinjaAeolianEdge : CustomCombo
 
             var startMudra = TargetHasEffect(NIN.Debuffs.TrickAttack)
                     || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton))
-                    || GetCooldown(NIN.ChiNormal).CooldownRemaining <= 1
+                    || GetCooldown(NIN.ChiNormal).CooldownRemaining <= 2
                     || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
 
             var continueMudra = HasEffect(NIN.Buffs.Mudra)

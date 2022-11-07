@@ -203,7 +203,9 @@ internal class PaladinProminence : CustomCombo
                 }
             }
 
-            if (HasEffect(PLD.Buffs.Requiescat) && level >= PLD.Levels.HolyCircle)
+            if (HasEffect(PLD.Buffs.Requiescat) 
+                && level >= PLD.Levels.HolyCircle 
+                && GetTargetDistance() <= 5)
             {
                 return PLD.HolyCircle;
             }

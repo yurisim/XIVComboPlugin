@@ -88,11 +88,6 @@ internal class MachinistCleanShot : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                //if (IsOffCooldown(MCH.Reassemble)
-                //    && ((IsOffCooldown(MCH.AirAnchor) && level >= MCH.Levels.AirAnchor)
-                //        || (IsOffCooldown(MCH.Drill) && level >= MCH.Levels.Drill))
-                //    ) return MCH.Reassemble;
-
                 // Casts hypercharge if heat is over 50
                 if (level >= MCH.Levels.Wildfire
                     && InCombat()
@@ -149,7 +144,7 @@ internal class MachinistCleanShot : CustomCombo
                     && HasTarget()
                     && IsOffCooldown(MCH.Hypercharge)
                     && gauge.Heat >= 50
-                    && (gauge.Heat >= 95
+                    && (gauge.Heat >= 90
                         || TargetHasEffect(MCH.Debuffs.Wildfire)
                         || HasRaidBuffs()))
                 {

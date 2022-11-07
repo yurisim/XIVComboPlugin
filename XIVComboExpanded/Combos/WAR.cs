@@ -92,17 +92,10 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                 var localPlayerPercentage = LocalPlayerPercentage();
 
-
-                if (IsOffCooldown(WAR.Upheaval)
-                    && surgingTempest is not null
-                    && level >= WAR.Levels.Upheaval)
-                {
-                    return WAR.Upheaval;
-                }
-
                 if (level >= WAR.Levels.Infuriate
                    && gauge.BeastGauge <= 50
                    && HasCharges(WAR.Infuriate)
+                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos)) 
                    && (GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasRaidBuffs()
@@ -111,6 +104,14 @@ internal class WarriorStormsPathCombo : CustomCombo
                 {
                     return WAR.Infuriate;
                 }
+
+                if (IsOffCooldown(WAR.Upheaval)
+                    && surgingTempest is not null
+                    && level >= WAR.Levels.Upheaval)
+                {
+                    return WAR.Upheaval;
+                }
+
 
                 if (IsOffCooldown(OriginalHook(WAR.Berserk))
                     && (level < WAR.Levels.StormsEye || surgingTempest is not null)
@@ -189,8 +190,10 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                 }
 
                 if (level >= WAR.Levels.Infuriate
+                    && InCombat()
                    && gauge.BeastGauge <= 50
                    && HasCharges(WAR.Infuriate)
+                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
                    && (GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasRaidBuffs()
@@ -218,13 +221,10 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
 
             if (level >= WAR.Levels.SteelCyclone
-                && ((surgingTempest is not null)
-                    || level < WAR.Levels.MythrilTempest)
+                && (surgingTempest is not null || level < WAR.Levels.MythrilTempest)
                 && (gauge.BeastGauge >= 80
                     || (HasEffect(WAR.Buffs.NascentChaos) && level >= WAR.Levels.ChaoticCyclone)
-                    || (gauge.BeastGauge >= 50
-                        && (GetRemainingCharges(WAR.Infuriate) >= 2
-                            || HasEffect(WAR.Buffs.Berserk)))
+                    || (gauge.BeastGauge >= 50 && (GetRemainingCharges(WAR.Infuriate) >= 2 || HasEffect(WAR.Buffs.Berserk)))
                     || HasEffect(WAR.Buffs.InnerRelease)))
             {
                 return OriginalHook(WAR.SteelCyclone);
