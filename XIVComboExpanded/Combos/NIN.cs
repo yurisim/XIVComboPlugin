@@ -237,12 +237,13 @@ internal class NinjaAeolianEdge : CustomCombo
                     || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
 
             var continueMudra = HasEffect(NIN.Buffs.Mudra)
-                    || HasCharges(NIN.ChiNormal)
-                    || HasEffect(NIN.Buffs.Kassatsu);
+                    || HasCharges(NIN.ChiNormal);
 
             // DOes not handle just kassatsu
             if (level >= NIN.Levels.Ninjitsu
-                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu || (continueMudra && startMudra)))
+                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu 
+                    || HasEffect(NIN.Buffs.Kassatsu) 
+                    || (continueMudra && startMudra)))
             {
                 if (HasEffect(NIN.Buffs.Kassatsu) && level >= NIN.Levels.EnhancedKassatsu)
                 {
@@ -279,7 +280,7 @@ internal class NinjaAeolianEdge : CustomCombo
             if (level >= NIN.Levels.Huraijin && hutonDuration == 0)
                 return NIN.Huraijin;
 
-            if (GetTargetDistance() >= 7)
+            if (GetTargetDistance() >= 8)
             {
                 return NIN.ThrowingDagger;
             }

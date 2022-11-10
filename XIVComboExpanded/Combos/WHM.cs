@@ -251,6 +251,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                 }
 
                 if (GetTargetDistance() <= 15
+                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
                     && level >= WHM.Levels.Assize
                     && IsOffCooldown(WHM.Assize))
                 {
