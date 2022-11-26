@@ -237,13 +237,13 @@ internal class SageSoteria : CustomCombo
                         return OriginalHook(SGE.Toxikon);
                     }
 
-                    if (GetTargetDistance() <= 5
-                        && HasTarget()
-                        && level >= SGE.Levels.Dyskrasia
-                        && TargetIsEnemy())
-                    {
-                        return level >= SGE.Levels.Phlegma3 ? SGE.Dyskrasia2 : SGE.Dyskrasia;
-                    }
+                    //if (GetTargetDistance() <= 5
+                    //    && HasTarget()
+                    //    && level >= SGE.Levels.Dyskrasia
+                    //    && TargetIsEnemy())
+                    //{
+                    //    return level >= SGE.Levels.Phlegma3 ? SGE.Dyskrasia2 : SGE.Dyskrasia;
+                    //}
                 }
 
                 return actionID;

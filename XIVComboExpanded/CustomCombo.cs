@@ -318,6 +318,13 @@ internal abstract partial class CustomCombo
         return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
 
+    protected static float TargetHPercentage()
+    {
+        var target = CurrentTarget as BattleChara;
+
+        return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
+    }
+
     /// <summary>
     /// Gets percentage of the players's health. If no target of target, returns 1.
     /// </summary>

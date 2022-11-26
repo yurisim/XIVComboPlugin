@@ -234,7 +234,7 @@ internal class WhiteMageDiaFeature : CustomCombo
             || actionID == WHM.Glare 
             || actionID == WHM.Glare3)
         {
-            var tarPercentage = TargetOfTargetHPercentage();
+            var tarOfTarPercentage = TargetOfTargetHPercentage();
 
             var playerPercentage = LocalPlayerPercentage();
 
@@ -250,10 +250,11 @@ internal class WhiteMageDiaFeature : CustomCombo
                     return WHM.PresenceOfMind;
                 }
 
-                if (GetTargetDistance() <= 15
-                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
-                    && level >= WHM.Levels.Assize
-                    && IsOffCooldown(WHM.Assize))
+                if (level >= WHM.Levels.Assize
+                    && IsOffCooldown(WHM.Assize)
+                    && GetTargetDistance() <= 15
+                    && (playerPercentage < 1 || TargetHPercentage() <= 0.95)
+                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs()))
                 {
                     return WHM.Assize;
                 }
@@ -261,7 +262,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (level >= WHM.Levels.Tetragrammaton
-                    && tarPercentage <= 0.75
+                    && tarOfTarPercentage <= 0.75
                     && IsOffCooldown(WHM.Tetragrammaton))
                     {
                         return WHM.Tetragrammaton;
@@ -269,8 +270,8 @@ internal class WhiteMageDiaFeature : CustomCombo
 
                     if (level >= WHM.Levels.EnhancedBenison
                     && HasCharges(WHM.DivineBenison)
-                    && ((GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5 && tarPercentage <= 0.75)
-                        || tarPercentage <= 0.5))
+                    && ((GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5 && tarOfTarPercentage <= 0.75)
+                        || tarOfTarPercentage <= 0.5))
                     {
                         return WHM.DivineBenison;
                     }
@@ -305,7 +306,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                     return WHM.AfflatusRapture;
                 }
 
-                if (tarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace)
+                if (tarOfTarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace)
                 {
                     return WHM.AfflatusSolace;
                 }
