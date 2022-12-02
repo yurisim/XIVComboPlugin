@@ -487,23 +487,6 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
     }
 }
 
-internal class NinjaKassatsu : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaKassatsuTrickFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == NIN.Kassatsu)
-        {
-            if ((level >= NIN.Levels.Hide && HasEffect(NIN.Buffs.Hidden)) ||
-                (level >= NIN.Levels.Suiton && HasEffect(NIN.Buffs.Suiton)))
-                return NIN.TrickAttack;
-        }
-
-        return actionID;
-    }
-}
-
 internal class NinjaHide : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
