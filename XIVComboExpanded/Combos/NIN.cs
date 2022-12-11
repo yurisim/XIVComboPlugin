@@ -219,7 +219,7 @@ internal class NinjaAeolianEdge : CustomCombo
             // DOes not handle just kassatsu
             if (level >= NIN.Levels.Ninjitsu
                 && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
-                    || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton))
+                    || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton) && continueMudra)
                     || HasEffect(NIN.Buffs.Kassatsu) 
                     || (continueMudra && startMudra)))
             {

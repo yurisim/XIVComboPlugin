@@ -201,7 +201,7 @@ internal class SummonerRuin : CustomCombo
                 }
 
                 if ((HasEffect(SMN.Buffs.IfritsFavor) || lastComboMove == SMN.CrimsonCyclone)
-                        && InMeleeRange())
+                        && GetTargetDistance() <= 1)
                 {
                     return OriginalHook(SMN.AstralFlow);
                 }
