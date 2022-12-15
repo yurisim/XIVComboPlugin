@@ -92,15 +92,6 @@ internal class AstrologianMalefic : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        //if (actionID == AST.AspectedHelios)
-        //{
-        //    if (level >= AST.Levels.Horoscope && IsOffCooldown(AST.Horoscope))
-        //    {
-        //        return AST.Horoscope;
-        //    }
-
-        //    return HasEffect(AST.Buffs.AspectedHelios) || level < AST.Levels.AspectedHelios ? AST.Helios : AST.AspectedHelios;
-        //}
 
         if (actionID == AST.Malefic 
             || actionID == AST.Malefic2 
@@ -111,11 +102,11 @@ internal class AstrologianMalefic : CustomCombo
             var gauge = GetJobGauge<ASTGauge>();
 
 
-            //if (level >= AST.Levels.EarthlyStar
-            //    && IsOffCooldown(AST.EarthlyStar))
-            //{
-            //    return OriginalHook(AST.EarthlyStar);
-            //}
+            if (level >= AST.Levels.EarthlyStar
+                && IsOffCooldown(AST.EarthlyStar))
+            {
+                return OriginalHook(AST.EarthlyStar);
+            }
 
             var tarPercentage = TargetOfTargetHPercentage();
 
