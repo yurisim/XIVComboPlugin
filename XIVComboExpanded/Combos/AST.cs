@@ -101,16 +101,7 @@ internal class AstrologianMalefic : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
-
-            if (level >= AST.Levels.EarthlyStar
-                && IsOffCooldown(AST.EarthlyStar))
-            {
-                return OriginalHook(AST.EarthlyStar);
-            }
-
             var tarPercentage = TargetOfTargetHPercentage();
-
-            var playerPercentage = LocalPlayerPercentage();
 
             if (GCDClipCheck(actionID))
             {
