@@ -150,8 +150,8 @@ internal class NinjaAeolianEdge : CustomCombo
                 if (InMeleeRange())
                 {
                     //if (level >= NIN.Levels.Mug
-                        //&& IsOffCooldown(NIN.Mug)
-                        //&& HasRaidBuffs()) return NIN.Mug;
+                    //&& IsOffCooldown(NIN.Mug)
+                    //&& HasRaidBuffs()) return NIN.Mug;
 
                     if (level >= NIN.Levels.TrickAttack
                         && HasEffect(NIN.Buffs.Suiton)
@@ -197,7 +197,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     && InMeleeRange()
                     && ninki >= 50
                     && (ninki >= 80
-                        || TargetHasEffect(NIN.Debuffs.TrickAttack) 
+                        || TargetHasEffect(NIN.Debuffs.TrickAttack)
                         || HasEffect(NIN.Buffs.Meisui)
                         || (level >= NIN.Levels.EnhancedMug && GetCooldown(NIN.Mug).CooldownRemaining <= 5))
                     )
@@ -207,6 +207,25 @@ internal class NinjaAeolianEdge : CustomCombo
                             : NIN.HellfrogMedium;
                 }
 
+            }
+
+            var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);
+
+            var phantomTime = phantom is not null ? phantom.RemainingTime : 0;
+
+            if (level >= NIN.Levels.PhantomKamaitachi
+                && OriginalHook(NIN.Bunshin) != NIN.Bunshin
+                && !HasEffect(NIN.Buffs.Mudra)
+                && !HasEffect(NIN.Buffs.TenChiJin)
+                && !HasEffect(NIN.Buffs.RaijuReady)
+                && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+                    || phantomTime <= 10
+                    || GetTargetDistance() >= 9
+                    || trickAttackCD >= phantomTime
+                    || HasRaidBuffs())
+                )
+            {
+                return OriginalHook(NIN.Bunshin);
             }
 
             // Need to put before instant GCDs to not interrupot mudras.
@@ -220,7 +239,7 @@ internal class NinjaAeolianEdge : CustomCombo
             if (level >= NIN.Levels.Ninjitsu
                 && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                     || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton) && continueMudra)
-                    || HasEffect(NIN.Buffs.Kassatsu) 
+                    || HasEffect(NIN.Buffs.Kassatsu)
                     || (continueMudra && startMudra)))
             {
                 if (HasEffect(NIN.Buffs.Kassatsu) && level >= NIN.Levels.EnhancedKassatsu)
@@ -252,24 +271,6 @@ internal class NinjaAeolianEdge : CustomCombo
                 return OriginalHook(NIN.Ninjutsu);
             }
 
-            var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);
-
-            var phantomTime = phantom is not null ? phantom.RemainingTime : 0;
-
-            if (level >= NIN.Levels.PhantomKamaitachi
-                && OriginalHook(NIN.Bunshin) != NIN.Bunshin
-                && !HasEffect(NIN.Buffs.Mudra)
-                && !HasEffect(NIN.Buffs.TenChiJin)
-                && !HasEffect(NIN.Buffs.RaijuReady)
-                && (TargetHasEffect(NIN.Debuffs.TrickAttack)
-                    || phantomTime <= 10
-                    || trickAttackCD >= phantomTime
-                    || HasRaidBuffs())
-                )
-            {
-                return OriginalHook(NIN.Bunshin);
-            }
-
             if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                 return NIN.FleetingRaiju;
 
@@ -278,7 +279,7 @@ internal class NinjaAeolianEdge : CustomCombo
             if (level >= NIN.Levels.Huraijin && hutonDuration == 0)
                 return NIN.Huraijin;
 
-            if (GetTargetDistance() >= 8)
+            if (GetTargetDistance() >= 9)
             {
                 return NIN.ThrowingDagger;
             }
@@ -422,7 +423,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             var startMudra = GetCooldown(NIN.ChiNormal).CooldownRemaining <= 5;
 
             if (level >= NIN.Levels.Ninjitsu
-                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu 
+                && (OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                     || HasEffect(NIN.Buffs.Kassatsu)
                     || (continueMudra && startMudra)))
             {
