@@ -583,28 +583,30 @@ public enum CustomComboPreset
     // ====================================================================================
     #region PALADIN
 
-    [CustomComboInfo("Goring Blade Combo", "Replace Goring Blade with its combo chain.", PLD.JobID)]
-    PaladinGoringBladeCombo = 1901,
-
-    [ConflictingCombos(PaladinRoyalAuthorityAtonementFeature)]
-    [CustomComboInfo("Goring Blade Atonement Feature", "Replace Goring Blade with Atonement when under the effect of Sword Oath.", PLD.JobID)]
-    PaladinGoringBladeAtonementFeature = 1909,
-
     [CustomComboInfo("Royal Authority Combo", "Replace Royal Authority with its combo chain.", PLD.JobID)]
     PaladinRoyalAuthorityCombo = 1902,
 
-    [ConflictingCombos(PaladinGoringBladeAtonementFeature)]
+    [ParentCombo(PaladinRoyalAuthorityCombo)]
+    [CustomComboInfo("Royal Authority Divine Might Feature", "Replace Royal Authority with Holy Spirit when Divine Might is active.", PLD.JobID)]
+    PaladinRoyalAuthorityDivineMightFeature = 1912,
+
     [CustomComboInfo("Royal Authority Atonement Feature", "Replace Royal Authority with Atonement when under the effect of Sword Oath.", PLD.JobID)]
     PaladinRoyalAuthorityAtonementFeature = 1903,
 
     [CustomComboInfo("Prominence Combo", "Replace Prominence with its combo chain.", PLD.JobID)]
     PaladinProminenceCombo = 1904,
 
+    [ParentCombo(PaladinProminenceCombo)]
+    [CustomComboInfo("Prominence Divine Might Feature", "Replace Prominence with Holy Circle when Divine Might is active.", PLD.JobID)]
+    PaladinProminenceDivineMightFeature = 1913,
+
+    [CustomComboInfo("Fight or Flight Goring Blade Feature", "Replace Fight or Flight with Goring Blade while Fight or Flight is active.", PLD.JobID)]
+    PaladinFightOrFlightGoringBladeFeature = 1911,
+
     [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinRequiescatCombo = 1905,
 
-    [SecretCustomCombo]
-    [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor when Requiescat is up and MP is under 2000 or only one stack remains.", PLD.JobID)]
+    [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinConfiteorFeature = 1907,
 
     [SecretCustomCombo]
