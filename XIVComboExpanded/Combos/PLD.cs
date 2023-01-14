@@ -146,17 +146,15 @@ internal class PaladinHolySpiritHolyCircle : CustomCombo
     {
         if (actionID == PLD.HolySpirit || actionID == PLD.HolyCircle)
         {
-            if (lastComboMove == PLD.BladeOfTruth && level >= PLD.Levels.BladeOfValor)
-                return PLD.BladeOfValor;
+            if (level >= PLD.Levels.Confiteor)
+            {
+                var original = OriginalHook(PLD.Confiteor);
+                if (original != PLD.Confiteor)
+                    return original;
 
-            if (lastComboMove == PLD.BladeOfFaith && level >= PLD.Levels.BladeOfTruth)
-                return PLD.BladeOfTruth;
-
-            if (lastComboMove == PLD.Confiteor && level >= PLD.Levels.BladeOfFaith)
-                return PLD.BladeOfFaith;
-
-            if (level >= PLD.Levels.Confiteor && HasEffect(PLD.Buffs.ConfiteorReady))
-                return PLD.Confiteor;
+                if (HasEffect(PLD.Buffs.ConfiteorReady))
+                    return PLD.Confiteor;
+            }
         }
 
         return actionID;
@@ -190,17 +188,15 @@ internal class PaladinRequiescat : CustomCombo
     {
         if (actionID == PLD.Requiescat)
         {
-            if (lastComboMove == PLD.BladeOfTruth && level >= PLD.Levels.BladeOfValor)
-                return PLD.BladeOfValor;
+            if (level >= PLD.Levels.Confiteor)
+            {
+                var original = OriginalHook(PLD.Confiteor);
+                if (original != PLD.Confiteor)
+                    return original;
 
-            if (lastComboMove == PLD.BladeOfFaith && level >= PLD.Levels.BladeOfTruth)
-                return PLD.BladeOfTruth;
-
-            if (lastComboMove == PLD.Confiteor && level >= PLD.Levels.BladeOfFaith)
-                return PLD.BladeOfFaith;
-
-            if (level >= PLD.Levels.Confiteor && HasEffect(PLD.Buffs.ConfiteorReady))
-                return PLD.Confiteor;
+                if (HasEffect(PLD.Buffs.ConfiteorReady))
+                    return PLD.Confiteor;
+            }
 
             if (level >= PLD.Levels.Requiescat && HasEffect(PLD.Buffs.Requiescat))
                 return PLD.HolySpirit;
