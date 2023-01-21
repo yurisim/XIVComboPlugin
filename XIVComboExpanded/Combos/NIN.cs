@@ -250,14 +250,19 @@ internal class NinjaKassatsu : CustomCombo
 
 internal class NinjaHide : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinjaHideMugFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == NIN.Hide)
         {
-            if (level >= NIN.Levels.Mug && InCombat())
-                return NIN.Mug;
+            if (IsEnabled(CustomComboPreset.NinjaHideMugFeature))
+                if (level >= NIN.Levels.Mug && InCombat())
+                    return NIN.Mug;
+
+            if (IsEnabled(CustomComboPreset.NinjaHideNinjutsuFeature))
+                if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
+                    return OriginalHook(NIN.Ninjutsu);
         }
 
         return actionID;
