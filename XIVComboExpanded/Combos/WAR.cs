@@ -1,3 +1,4 @@
+using System;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -106,7 +107,9 @@ internal class WarriorStormsPathCombo : CustomCombo
                     if (HasEffect(ADV.Buffs.Medicated) && surgingTempest.RemainingTime > 10)
                         return WAR.StormsPath;
 
-                    if (surgingTempest.RemainingTime < 30)
+                    var innerReleleaseCd = GetCooldown(WAR.InnerRelease).CooldownRemaining;
+                    var surgingTempestFromIR = Math.Max(0, 10 - innerReleleaseCd);
+                    if (surgingTempest.RemainingTime + 30 + surgingTempestFromIR < 60)
                         return WAR.StormsEye;
 #endif
 
