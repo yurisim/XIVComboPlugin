@@ -256,13 +256,17 @@ internal class NinjaHide : CustomCombo
     {
         if (actionID == NIN.Hide)
         {
-            if (IsEnabled(CustomComboPreset.NinjaHideMugFeature))
-                if (level >= NIN.Levels.Mug && InCombat())
-                    return NIN.Mug;
-
             if (IsEnabled(CustomComboPreset.NinjaHideNinjutsuFeature))
+            {
                 if (level >= NIN.Levels.Ninjitsu && HasEffect(NIN.Buffs.Mudra))
                     return OriginalHook(NIN.Ninjutsu);
+            }
+
+            if (IsEnabled(CustomComboPreset.NinjaHideMugFeature))
+            {
+                if (level >= NIN.Levels.Mug && InCombat())
+                    return NIN.Mug;
+            }
         }
 
         return actionID;
