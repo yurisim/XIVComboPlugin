@@ -47,6 +47,7 @@ internal static class PLD
     public static class Levels
     {
         public const byte
+            FightOrFlight = 2,
             RiotBlade = 4,
             LowBlow = 12,
             SpiritsWithin = 30,
@@ -75,6 +76,12 @@ internal class PaladinRoyalAuthority : CustomCombo
     {
         if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
         {
+            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
+            {
+                if (level >= PLD.Levels.HolySpirit && HasEffect(PLD.Buffs.DivineMight))
+                    return PLD.HolySpirit;
+            }
+
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
             {
                 if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
@@ -86,16 +93,8 @@ internal class PaladinRoyalAuthority : CustomCombo
                 if (comboTime > 0)
                 {
                     if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
-                    {
-                        if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
-                        {
-                            if (level >= PLD.Levels.HolySpirit && HasEffect(PLD.Buffs.DivineMight))
-                                return PLD.HolySpirit;
-                        }
-
                         // Royal Authority
                         return OriginalHook(PLD.RageOfHalone);
-                    }
 
                     if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
                         return PLD.RiotBlade;
@@ -182,24 +181,34 @@ internal class PaladinFightOrFlight : CustomCombo
 
 internal class PaladinRequiescat : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PaladinRequiescatCombo;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == PLD.Requiescat)
         {
-            if (level >= PLD.Levels.Confiteor)
+            if (IsEnabled(CustomComboPreset.PaladinRequiescatCombo))
             {
-                var original = OriginalHook(PLD.Confiteor);
-                if (original != PLD.Confiteor)
-                    return original;
+                if (level >= PLD.Levels.Confiteor)
+                {
+                    // Blade combo
+                    var original = OriginalHook(PLD.Confiteor);
+                    if (original != PLD.Confiteor)
+                        return original;
 
-                if (HasEffect(PLD.Buffs.ConfiteorReady))
-                    return PLD.Confiteor;
+                    if (HasEffect(PLD.Buffs.ConfiteorReady))
+                        return PLD.Confiteor;
+                }
+
+                if (level >= PLD.Levels.Requiescat && HasEffect(PLD.Buffs.Requiescat))
+                    return PLD.HolySpirit;
             }
 
-            if (level >= PLD.Levels.Requiescat && HasEffect(PLD.Buffs.Requiescat))
-                return PLD.HolySpirit;
+            if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature))
+            {
+                if (level >= PLD.Levels.FightOrFlight && IsOffCooldown(PLD.FightOrFlight))
+                    return PLD.FightOrFlight;
+            }
         }
 
         return actionID;

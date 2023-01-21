@@ -589,7 +589,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Royal Authority Combo", "Replace Royal Authority with its combo chain.", PLD.JobID)]
     PaladinRoyalAuthorityCombo = 1902,
 
-    [ParentCombo(PaladinRoyalAuthorityCombo)]
     [CustomComboInfo("Royal Authority Divine Might Feature", "Replace Royal Authority with Holy Spirit when Divine Might is active.", PLD.JobID)]
     PaladinRoyalAuthorityDivineMightFeature = 1912,
 
@@ -608,6 +607,9 @@ public enum CustomComboPreset
 
     [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinRequiescatCombo = 1905,
+
+    [CustomComboInfo("Requiescat Fight or Flight Feature", "Replace Requiescat with Fight or Flight when off cooldown.", PLD.JobID)]
+    PaladinRequiescatFightOrFlightFeature = 1914,
 
     [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinConfiteorFeature = 1907,
