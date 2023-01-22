@@ -83,7 +83,7 @@ internal class WarriorStormsPathCombo : CustomCombo
             if (IsEnabled(CustomComboPreset.WarriorStormsPathInnerReleaseFeature))
             {
                 if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
-                    return WAR.FellCleave;
+                    return OriginalHook(WAR.FellCleave);
             }
 
             if (comboTime > 0)
@@ -170,7 +170,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
             if (IsEnabled(CustomComboPreset.WarriorMythrilTempestInnerReleaseFeature))
             {
                 if (level >= WAR.Levels.InnerRelease && HasEffect(WAR.Buffs.InnerRelease))
-                    return WAR.Decimate;
+                    return OriginalHook(WAR.Decimate);
             }
 
             if (comboTime > 0)
@@ -180,7 +180,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                     if (IsEnabled(CustomComboPreset.WarriorMythrilTempestOvercapFeature))
                     {
                         if (level >= WAR.Levels.MythrilTempestTrait && gauge.BeastGauge > 80)
-                            return WAR.Decimate;
+                            return OriginalHook(WAR.Decimate);
                     }
 
                     return WAR.MythrilTempest;
