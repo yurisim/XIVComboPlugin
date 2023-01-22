@@ -177,6 +177,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
     BlackScatheFeature = 2507,
 
+    [CustomComboInfo("Thunder 3/4 to Sharpcast", "Thunder 3 and Thunder 4 become Sharpcast when available.", BLM.JobID)]
+    BlackThunderFeature = 2519,
+
     #endregion
     // ====================================================================================
     #region BARD

@@ -20,9 +20,11 @@ internal static class BLM
         Freeze = 159,
         Flare = 162,
         LeyLines = 3573,
+        Sharpcast = 3574,
         Blizzard4 = 3576,
         Fire4 = 3577,
         BetweenTheLines = 7419,
+        Thunder4 = 7420,
         Despair = 16505,
         UmbralSoul = 16506,
         Xenoglossy = 16507,
@@ -55,6 +57,7 @@ internal static class BLM
             Freeze = 40,
             Thunder3 = 45,
             Flare = 50,
+            Sharpcast = 54,
             Blizzard4 = 58,
             Fire4 = 60,
             BetweenTheLines = 62,
@@ -324,6 +327,22 @@ internal class BlackScathe : CustomCombo
 
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
+        }
+
+        return actionID;
+    }
+}
+
+internal class BlackThunder : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackThunderFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
+        {
+            if (level >= BLM.Levels.Sharpcast && IsOffCooldown(BLM.Sharpcast))
+                return BLM.Sharpcast;
         }
 
         return actionID;
