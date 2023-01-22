@@ -941,6 +941,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Summon Seraph Feature", "Replace Summon Eos and Selene with Summon Seraph when a summon is out.", SCH.JobID)]
     ScholarSeraphFeature = 2805,
 
+    [CustomComboInfo("Adloquium Level Sync", "Replace Adloquium with Physick when below level 30 in synced content.", SCH.JobID)]
+    ScholarAdloquiumSyncFeature = 2810,
+
     #endregion
     // ====================================================================================
     #region SUMMONER
