@@ -76,12 +76,6 @@ internal class PaladinRoyalAuthority : CustomCombo
     {
         if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
         {
-            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
-            {
-                if (level >= PLD.Levels.HolySpirit && HasEffect(PLD.Buffs.DivineMight))
-                    return PLD.HolySpirit;
-            }
-
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
             {
                 if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
@@ -93,8 +87,16 @@ internal class PaladinRoyalAuthority : CustomCombo
                 if (comboTime > 0)
                 {
                     if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
+                    {
+                        if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
+                        {
+                            if (level >= PLD.Levels.HolySpirit && HasEffect(PLD.Buffs.DivineMight))
+                                return PLD.HolySpirit;
+                        }
+
                         // Royal Authority
                         return OriginalHook(PLD.RageOfHalone);
+                    }
 
                     if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
                         return PLD.RiotBlade;
