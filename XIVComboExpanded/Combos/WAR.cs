@@ -99,18 +99,21 @@ internal class WarriorStormsPathCombo : CustomCombo
                     }
 
 #if DEBUG
-                    var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
-                    if (surgingTempest is null)
-                        return WAR.StormsEye;
+                    if (level >= WAR.Levels.StormsEye)
+                    {
+                        var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
+                        if (surgingTempest is null)
+                            return WAR.StormsEye;
 
-                    // Medicated + Opener
-                    if (HasEffect(ADV.Buffs.Medicated) && surgingTempest.RemainingTime > 10)
-                        return WAR.StormsPath;
+                        // Medicated + Opener
+                        if (HasEffect(ADV.Buffs.Medicated) && surgingTempest.RemainingTime > 10)
+                            return WAR.StormsPath;
 
-                    var innerReleleaseCd = GetCooldown(WAR.InnerRelease).CooldownRemaining;
-                    var surgingTempestFromIR = Math.Max(0, 10 - innerReleleaseCd);
-                    if (surgingTempest.RemainingTime + 30 + surgingTempestFromIR < 60)
-                        return WAR.StormsEye;
+                        var innerReleleaseCd = GetCooldown(WAR.InnerRelease).CooldownRemaining;
+                        var surgingTempestFromIR = Math.Max(0, 10 - innerReleleaseCd);
+                        if (surgingTempest.RemainingTime + 30 + surgingTempestFromIR < 60)
+                            return WAR.StormsEye;
+                    }
 #endif
 
                     return WAR.StormsPath;
