@@ -39,6 +39,7 @@ internal static class BLM
             Thundercloud = 164,
             Firestarter = 165,
             LeyLines = 737,
+            Sharpcast = 867,
             EnhancedFlare = 2960;
     }
 
@@ -66,6 +67,7 @@ internal static class BLM
             Xenoglossy = 80,
             HighFire2 = 82,
             HighBlizzard2 = 82,
+            EnhancedSharpcast2 = 88,
             Paradox = 90;
     }
 }
@@ -341,8 +343,17 @@ internal class BlackThunder : CustomCombo
     {
         if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
         {
-            if (level >= BLM.Levels.Sharpcast && IsOffCooldown(BLM.Sharpcast))
-                return BLM.Sharpcast;
+
+            if (level >= BLM.Levels.EnhancedSharpcast2)
+            {
+                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
+                    return BLM.Sharpcast;
+            }
+            else if (level >= BLM.Levels.Sharpcast)
+            {
+                if (IsOffCooldown(BLM.Sharpcast))
+                    return BLM.Sharpcast;
+            }
         }
 
         return actionID;
