@@ -9,6 +9,7 @@ internal static class AST
 
     public const uint
         Draw = 3590,
+        Redraw = 3593,
         Benefic = 3594,
         Malefic = 3596,
         Malefic2 = 3598,
@@ -60,6 +61,7 @@ internal static class AST
             Ascend = 12,
             Benefic2 = 26,
             Draw = 30,
+            Redraw = 40,
             Astrodyne = 50,
             MinorArcana = 70,
             CrownPlay = 70;
@@ -124,12 +126,25 @@ internal class AstrologianPlay : CustomCombo
                 {
                     var draw = GetCooldown(AST.Draw);
 
-                    if (level >= AST.Levels.Astrodyne && !gauge.ContainsSeal(SealType.NONE) && draw.RemainingCharges == 0)
+                    if (level >= AST.Levels.Astrodyne && !gauge.ContainsSeal(SealType.NONE) && (draw.RemainingCharges == 0 || gauge.DrawnCard != CardType.NONE))
                         return AST.Astrodyne;
                 }
 
                 if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
                     return AST.Draw;
+            }
+
+            if (IsEnabled(AstrologianPlayRedrawFeature))
+            {
+                // Use redraw if and only if the player has has a card drawn and the drawn card is a seal type the 
+                // player already has.  Note that there is no check here to see if the player already has 3 seals.
+                // While players should never use Draw at 3 seals, if the player has not enabled the Play to Astrodyne
+                // or Play to Draw to Astrodyne feature, we should still handle the Redraw check as normal, since the
+                // ONLY reason to use Play at 3 seals is to try to fish for the 3-different-seals Astrodyne, even though
+                // that's an unmitigated DPS loss over using Astrodyne at only 1 or 2 seals.
+                if (level >= AST.Levels.Redraw && gauge.DrawnCard != CardType.NONE && 
+                    gauge.ContainsSeal(gauge.DrawnCard))
+                    return AST.Redraw;
             }
         }
 
@@ -150,57 +165,6 @@ internal class AstrologianDraw : CustomCombo
             if (gauge.DrawnCard != CardType.NONE)
                 // Malefic4
                 return OriginalHook(AST.Malefic);
-        }
-
-        return actionID;
-    }
-}
-
-internal class AstrologianMinorArcana : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianMinorArcanaCrownPlayFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.MinorArcana)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
-
-            if (level >= AST.Levels.CrownPlay && gauge.DrawnCrownCard != CardType.NONE)
-            {
-                if (IsEnabled(CustomComboPreset.AstrologianCrownPlayDelayFeature))
-                {
-                    var cd = GetCooldown(AST.MinorArcana);
-                    if (cd.IsCooldown && cd.CooldownElapsed > 1)
-                    {
-                        // Card action
-                        return OriginalHook(AST.CrownPlay);
-                    }
-                }
-                else
-                {
-                    // Card action
-                    return OriginalHook(AST.CrownPlay);
-                }
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class AstrologianCrownPlay : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianCrownPlayMinorArcanaFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.CrownPlay)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
-
-            if (level >= AST.Levels.MinorArcana && gauge.DrawnCrownCard == CardType.NONE)
-                return AST.MinorArcana;
         }
 
         return actionID;

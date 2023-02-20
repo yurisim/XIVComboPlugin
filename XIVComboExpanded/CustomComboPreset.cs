@@ -101,24 +101,17 @@ public enum CustomComboPreset
     AstrologianPlayDrawFeature = 3301,
 
     [ParentCombo(AstrologianPlayDrawFeature)]
-    [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
+    [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on cooldown or a card is drawn.", AST.JobID)]
     AstrologianPlayDrawAstrodyneFeature = 3307,
+
+    [CustomComboInfo("Play to Redraw", "Replace Play with Redraw if a card is drawn and would grant a seal you already have.", AST.JobID)]
+    AstrologianPlayRedrawFeature = 3311,
 
     [CustomComboInfo("Play to Astrodyne", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
     AstrologianPlayAstrodyneFeature = 3304,
 
     [CustomComboInfo("Draw Lockout", "Replace Draw (not Play to Draw) with Malefic when a card is drawn.", AST.JobID)]
     AstrologianDrawLockoutFeature = 3306,
-
-    [CustomComboInfo("Minor Arcana to Crown Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
-    AstrologianMinorArcanaCrownPlayFeature = 3302,
-
-    [ParentCombo(AstrologianMinorArcanaCrownPlayFeature)]
-    [CustomComboInfo("Crown Play Delay Feature", "Delay Crown Play by 1s after using Minor Arcnaa.", AST.JobID)]
-    AstrologianCrownPlayDelayFeature = 3311,
-
-    [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
-    AstrologianCrownPlayMinorArcanaFeature = 3308,
 
     [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Replace Benefic 2 with Benefic when below level 26 in synced content.", AST.JobID)]
     AstrologianBeneficSyncFeature = 3303,
