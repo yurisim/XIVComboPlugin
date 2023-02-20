@@ -77,14 +77,15 @@ internal class PaladinRoyalAuthority : CustomCombo
         if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
         {
             // During FoF, prioritize the higher-potency Divine Might cast over Atonement and the normal combo chain
-            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature)) {
+            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
+            {
                 if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
                     return PLD.HolySpirit;
             }
 
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
             {
-                if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
+                if (level >= PLD.Levels.Atonement && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade && HasEffect(PLD.Buffs.SwordOath))
                     return PLD.Atonement;
             }
 
@@ -125,7 +126,8 @@ internal class PaladinProminence : CustomCombo
         if (actionID == PLD.Prominence)
         {
             // During FoF, prioritize the higher-potency Divine Might cast over Atonement and the normal combo chain
-            if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature)) {
+            if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature))
+            {
                 if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
                     return PLD.HolyCircle;
             }
@@ -207,7 +209,7 @@ internal class PaladinRequiescat : CustomCombo
                 // most of the Confiteor combo (900p -> 700p -> 800p -> 900p), Goring Blade uniquely requires melee
                 // range to cast, while the entire Confiteor combo chain does not.  Since Requiescat also requires
                 // melee range to cast, the most reliable time that the player will be in melee range during the Req
-                // buff is immediately following the usage of Req.  This minimizes potential losses and potential 
+                // buff is immediately following the usage of Req.  This minimizes potential losses and potential
                 // cooldown drift if the player is forced out of melee range during the Confiteor combo and is unable
                 // to return to melee range by the time it is completed.
                 //
@@ -216,10 +218,11 @@ internal class PaladinRequiescat : CustomCombo
                 // net reduction in potency, and *may* in fact increase it if someone is slightly late in applying
                 // their party buffs, as it shifts the high-potency Confiteor cast back into the party buff window by a
                 // single GCD.
-                if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature) && 
-                  IsEnabled(CustomComboPreset.PaladinFightOrFlightGoringBladeFeature) && 
-                  level >= PLD.Levels.GoringBlade && IsOffCooldown(PLD.GoringBlade))
-                    return PLD.GoringBlade;
+                if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature) && IsEnabled(CustomComboPreset.PaladinFightOrFlightGoringBladeFeature))
+                {
+                    if (level >= PLD.Levels.GoringBlade && IsOffCooldown(PLD.GoringBlade))
+                        return PLD.GoringBlade;
+                }
 
                 if (level >= PLD.Levels.Confiteor)
                 {
