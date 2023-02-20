@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -108,6 +110,16 @@ internal class AstrologianPlay : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
+    private Dictionary<CardType, SealType> CardSeals { get; } = new Dictionary<CardType, SealType>
+    {
+        { CardType.BALANCE, SealType.SUN },
+        { CardType.BOLE, SealType.SUN },
+        { CardType.ARROW, SealType.MOON },
+        { CardType.EWER, SealType.MOON },
+        { CardType.SPEAR, SealType.CELESTIAL },
+        { CardType.SPIRE, SealType.CELESTIAL },
+    };
+
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == AST.Play)
@@ -134,17 +146,22 @@ internal class AstrologianPlay : CustomCombo
                     return AST.Draw;
             }
 
-            if (IsEnabled(AstrologianPlayRedrawFeature))
+            if (IsEnabled(CustomComboPreset.AstrologianPlayRedrawFeature))
             {
-                // Use redraw if and only if the player has has a card drawn and the drawn card is a seal type the 
+                // Use redraw if and only if the player has has a card drawn and the drawn card is a seal type the
                 // player already has.  Note that there is no check here to see if the player already has 3 seals.
                 // While players should never use Draw at 3 seals, if the player has not enabled the Play to Astrodyne
                 // or Play to Draw to Astrodyne feature, we should still handle the Redraw check as normal, since the
                 // ONLY reason to use Play at 3 seals is to try to fish for the 3-different-seals Astrodyne, even though
                 // that's an unmitigated DPS loss over using Astrodyne at only 1 or 2 seals.
-                if (level >= AST.Levels.Redraw && gauge.DrawnCard != CardType.NONE && 
-                    gauge.ContainsSeal(gauge.DrawnCard))
-                    return AST.Redraw;
+
+                if (level >= AST.Levels.Redraw && gauge.DrawnCard != CardType.NONE)
+                {
+                    var cardSeal = this.CardSeals.GetValueOrDefault(gauge.DrawnCard, SealType.NONE);
+
+                    if (gauge.ContainsSeal(cardSeal))
+                        return AST.Redraw;
+                }
             }
         }
 
