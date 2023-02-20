@@ -76,6 +76,12 @@ internal class PaladinRoyalAuthority : CustomCombo
     {
         if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
         {
+            // During FoF, prioritize the higher-potency Divine Might cast over Atonement and the normal combo chain
+            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature)) {
+                if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
+                    return PLD.HolySpirit;
+            }
+
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
             {
                 if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
@@ -118,6 +124,12 @@ internal class PaladinProminence : CustomCombo
     {
         if (actionID == PLD.Prominence)
         {
+            // During FoF, prioritize the higher-potency Divine Might cast over Atonement and the normal combo chain
+            if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature)) {
+                if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
+                    return PLD.HolyCircle;
+            }
+
             if (comboTime > 0)
             {
                 if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
@@ -172,7 +184,7 @@ internal class PaladinFightOrFlight : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.PaladinFightOrFlightGoringBladeFeature))
             {
-                if (level >= PLD.Levels.GoringBlade && HasEffect(PLD.Buffs.FightOrFlight))
+                if (level >= PLD.Levels.GoringBlade && HasEffect(PLD.Buffs.FightOrFlight) && IsOffCooldown(PLD.GoringBlade))
                     return PLD.GoringBlade;
             }
         }
@@ -191,6 +203,24 @@ internal class PaladinRequiescat : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.PaladinRequiescatCombo))
             {
+                // Prioritize Goring Blade over the Confiteor combo.  While Goring Blade deals less damage (700p) than
+                // most of the Confiteor combo (900p -> 700p -> 800p -> 900p), Goring Blade uniquely requires melee
+                // range to cast, while the entire Confiteor combo chain does not.  Since Requiescat also requires
+                // melee range to cast, the most reliable time that the player will be in melee range during the Req
+                // buff is immediately following the usage of Req.  This minimizes potential losses and potential 
+                // cooldown drift if the player is forced out of melee range during the Confiteor combo and is unable
+                // to return to melee range by the time it is completed.
+                //
+                // Since Goring Blade, the entire Confiteor combo, *and* one additional GCD (typically Holy Spirit) fits
+                // within even the shortest of party buffs (15s ones like Battle Litany), this should not result in a
+                // net reduction in potency, and *may* in fact increase it if someone is slightly late in applying
+                // their party buffs, as it shifts the high-potency Confiteor cast back into the party buff window by a
+                // single GCD.
+                if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature) && 
+                  IsEnabled(CustomComboPreset.PaladinFightOrFlightGoringBladeFeature) && 
+                  level >= PLD.Levels.GoringBlade && IsOffCooldown(PLD.GoringBlade))
+                    return PLD.GoringBlade;
+
                 if (level >= PLD.Levels.Confiteor)
                 {
                     // Blade combo
@@ -208,8 +238,13 @@ internal class PaladinRequiescat : CustomCombo
 
             if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature))
             {
-                if (level >= PLD.Levels.FightOrFlight && IsOffCooldown(PLD.FightOrFlight))
-                    return PLD.FightOrFlight;
+                // Prefer FoF if it is off cooldown, or if it will be ready sooner than Requiescat.  In practice, this
+                // means that Req should only be returned if FoF is on cooldown and Req is not, ie. immediately after
+                // FoF is cast.  This ensures that the button shows the action that will next be available for use in
+                // that hotbar slot, rather than swapping to FoF at the last instant when FoF comes off cooldown a
+                // a single weave slot earlier than Req.
+                if (level >= PLD.Levels.FightOrFlight)
+                    return CalcBestAction(PLD.FightOrFlight, PLD.Requiescat);
             }
         }
 
