@@ -194,6 +194,12 @@ internal abstract partial class CustomCombo
         => Service.TargetManager.Target;
 
     /// <summary>
+    /// Gets the current territory type.
+    /// </summary>
+    protected static ushort CurrentTerritory
+        => Service.ClientState.TerritoryType;
+
+    /// <summary>
     /// Calls the original hook.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
