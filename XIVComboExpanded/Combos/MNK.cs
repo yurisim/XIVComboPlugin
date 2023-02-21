@@ -223,6 +223,23 @@ internal class MonkTwinSnakes : CustomCombo
     }
 }
 
+internal class MonkTrueStrike : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkTrueStrikeFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == MNK.TrueStrike && level >= MNK.Levels.TwinSnakes)
+        {
+            var buff = FindEffect(MNK.Buffs.DisciplinedFist);
+            if (buff == null || buff.RemainingTime <= 6.0)
+                return MNK.TwinSnakes;
+        }
+
+        return actionID;
+    }
+}
+
 internal class MonkDemolish : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;

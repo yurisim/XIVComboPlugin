@@ -484,12 +484,17 @@ public enum CustomComboPreset
     [CustomComboInfo("Dragon Kick / Bootshine Feature", "Replace Dragon Kick with Bootshine if Leaden Fist is up.", MNK.JobID)]
     MonkBootshineFeature = 2011,
 
+    [ConflictingCombos(MonkTrueStrikeFeature)]
     [CustomComboInfo("Twin Snakes / True Strike Feature", "Replace Twin Snakes with True Strike if Twin Snakes has more than 6s remaining.", MNK.JobID)]
     MonkTwinSnakesFeature = 2013,
 
     [ParentCombo(MonkTwinSnakesFeature)]
     [CustomComboInfo("Formless Snakes Option", "While Formless Fist is active, do not replace Twin Snakes.", MNK.JobID)]
     MonkFormlessSnakesOption = 2015,
+
+    [ConflictingCombos(MonkTwinSnakesFeature)]
+    [CustomComboInfo("True Strike / Twin Snakes Feature", "Replace True Strike with Twin Snakes if Twin Snakes has less than 6s remaining.", MNK.JobID)]
+    MonkTrueStrikeFeature = 2016,
 
     [CustomComboInfo("Demolish / Snap Punch Feature", "Replace Demolish with Snap Punch if Demolish has more than 6s remaining on your current target.", MNK.JobID)]
     MonkDemolishFeature = 2014,
