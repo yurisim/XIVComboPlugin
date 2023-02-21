@@ -220,8 +220,10 @@ internal class PaladinRequiescat : CustomCombo
                 // single GCD.
                 if (IsEnabled(CustomComboPreset.PaladinRequiescatFightOrFlightFeature) && IsEnabled(CustomComboPreset.PaladinFightOrFlightGoringBladeFeature))
                 {
-                    if (level >= PLD.Levels.GoringBlade && IsOffCooldown(PLD.GoringBlade))
-                        return PLD.GoringBlade;
+                    if (level >= PLD.Levels.GoringBlade && IsOffCooldown(PLD.GoringBlade)) {
+                        if (IsOnCooldown(PLD.FightOrFlight) && (IsOnCooldown(PLD.Requiescat) || level < PLD.Levels.Requiescat))
+                            return PLD.GoringBlade;
+                    }
                 }
 
                 if (level >= PLD.Levels.Confiteor)
@@ -247,7 +249,7 @@ internal class PaladinRequiescat : CustomCombo
                 // that hotbar slot, rather than swapping to FoF at the last instant when FoF comes off cooldown a
                 // a single weave slot earlier than Req.
                 if (level >= PLD.Levels.FightOrFlight)
-                    return CalcBestAction(PLD.FightOrFlight, PLD.Requiescat);
+                    return CalcBestAction(PLD.FightOrFlight, PLD.FightOrFlight, PLD.Requiescat);
             }
         }
 
