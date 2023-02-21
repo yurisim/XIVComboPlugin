@@ -249,7 +249,7 @@ internal class PaladinRequiescat : CustomCombo
                 // that hotbar slot, rather than swapping to FoF at the last instant when FoF comes off cooldown a
                 // a single weave slot earlier than Req.
                 if (level >= PLD.Levels.FightOrFlight)
-                    return CalcBestAction(PLD.FightOrFlight, PLD.Requiescat);
+                    return CalcBestAction(PLD.FightOrFlight, PLD.FightOrFlight, PLD.Requiescat);
             }
         }
 
