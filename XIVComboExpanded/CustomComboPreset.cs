@@ -986,6 +986,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Radiant Carbuncle Feature", "Change Radiant Aegis into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
     SummonerRadiantCarbuncleFeature = 2711,
 
+    [CustomComboInfo("Demi Carbuncle Feature", "Change Summon Bahamut into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
+    SummonerDemiCarbuncleFeature = 2716,
+
     #endregion
     // ====================================================================================
     #region WARRIOR
