@@ -225,6 +225,9 @@ internal class SummonerDemiFeature : CustomCombo
     {
         if (actionID == SMN.Aethercharge || actionID == SMN.DreadwyrmTrance || actionID == SMN.SummonBahamut)
         {
+            if (IsEnabled(CustomComboPreset.SummonerDemiCarbuncleFeature) && !HasPetPresent())
+                return SMN.SummonCarbuncle;
+
             var gauge = GetJobGauge<SMNGauge>();
 
             if (IsEnabled(CustomComboPreset.SummonerDemiSearingLightFeature))
