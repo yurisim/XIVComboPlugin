@@ -382,6 +382,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Geirskogul to Wyrmwind Thrust", "Replace Geirskogul with Wyrmwind Thrust when available and Geirskogul or Nastrond are on cooldown.", DRG.JobID)]
     DragoonGeirskogulWyrmwindFeature = 2212,
 
+    [CustomComboInfo("Lance Charge to Dragon Sight and Battle Litany", "Replace Lance Charge with Dragon Sight and Battle Litany when available and Lance Charge is on cooldown.", DRG.JobID)]
+    DragoonLanceChargeFeature = 2213,
+
     #endregion
     // ====================================================================================
     #region GUNBREAKER
