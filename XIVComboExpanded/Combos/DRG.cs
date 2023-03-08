@@ -35,7 +35,11 @@ internal static class DRG
         MirageDive = 7399,
         // Dragon
         Stardiver = 16480,
-        WyrmwindThrust = 25773;
+        WyrmwindThrust = 25773,
+        // Buff abilities
+        LanceCharge = 85,
+        DragonSight = 7398,
+        BattleLitany = 3557;
 
     public static class Buffs
     {
@@ -60,12 +64,14 @@ internal static class DRG
             SpineshatterDive = 45,
             DragonfireDive = 50,
             ChaosThrust = 50,
+            BattleLitany = 52,
             HeavensThrust = 86,
             ChaoticSpring = 86,
             FangAndClaw = 56,
             WheelingThrust = 58,
             Geirskogul = 60,
             SonicThrust = 62,
+            DragonSight = 66,
             MirageDive = 68,
             LifeOfTheDragon = 70,
             CoerthanTorment = 72,
@@ -295,6 +301,28 @@ internal class DragoonGierskogul : CustomCombo
                         return DRG.WyrmwindThrust;
                 }
             }
+        }
+
+        return actionID;
+    }
+}
+
+internal class DragoonLanceCharge : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DragoonLanceChargeFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == DRG.LanceCharge)
+        {
+            if (!IsOnCooldown(DRG.LanceCharge))
+                return DRG.LanceCharge;
+
+            if (level >= DRG.Levels.DragonSight && !IsOnCooldown(DRG.DragonSight))
+                return DRG.DragonSight;
+
+            if (level >= DRG.Levels.BattleLitany && !IsOnCooldown(DRG.BattleLitany))
+                return DRG.BattleLitany;
         }
 
         return actionID;
