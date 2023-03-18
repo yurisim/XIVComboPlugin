@@ -47,8 +47,7 @@ internal static class AST
     public static class Buffs
     {
         public const ushort
-            LordOfCrownsDrawn = 2054,
-            LadyOfCrownsDrawn = 2055;
+            ClarifyingDraw = 2713;
     }
 
     public static class Debuffs
@@ -155,7 +154,7 @@ internal class AstrologianPlay : CustomCombo
                 // ONLY reason to use Play at 3 seals is to try to fish for the 3-different-seals Astrodyne, even though
                 // that's an unmitigated DPS loss over using Astrodyne at only 1 or 2 seals.
 
-                if (level >= AST.Levels.Redraw && gauge.DrawnCard != CardType.NONE)
+                if (level >= AST.Levels.Redraw && gauge.DrawnCard != CardType.NONE && HasEffect(AST.Buffs.ClarifyingDraw))
                 {
                     var cardSeal = this.CardSeals.GetValueOrDefault(gauge.DrawnCard, SealType.NONE);
 
