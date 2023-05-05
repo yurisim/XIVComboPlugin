@@ -176,6 +176,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Thunder 3/4 to Sharpcast", "Thunder 3 and Thunder 4 become Sharpcast when available.", BLM.JobID)]
     BlackThunderFeature = 2519,
 
+    [ParentCombo(BlackThunderFeature)]
+    [CustomComboInfo("Delay replacement after casting Thunder", "Delay changing Thunder into Sharpcast immediately after casting Thunder.", BLM.JobID)]
+    BlackThunderOption = 2520,
+
     #endregion
     // ====================================================================================
     #region BARD
