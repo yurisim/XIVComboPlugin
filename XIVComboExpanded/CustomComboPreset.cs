@@ -135,8 +135,11 @@ public enum CustomComboPreset
     [CustomComboInfo("Enochian No Sync Feature", "Fire 4 and Blizzard 4 will not sync to Fire 1 and Blizzard 1.", BLM.JobID)]
     BlackEnochianNoSyncFeature = 2518,
 
-    [CustomComboInfo("Umbral Soul/Transpose Switcher", "Replace Transpose with Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
-    BlackManaFeature = 2502,
+    [CustomComboInfo("Transpose into Umbral Soul", "Replace Transpose with Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
+    BlackTransposeUmbralSoulFeature = 2502,
+
+    [CustomComboInfo("Umbral Soul into Transpose", "Replace Umbral Soul with Transpose when Umbral Soul is not usable.", BLM.JobID)]
+    BlackUmbralSoulTransposeFeature = 2522,
 
     [CustomComboInfo("(Between the) Ley Lines", "Replace Ley Lines with BTL when Ley Lines is active.", BLM.JobID)]
     BlackLeyLinesFeature = 2503,
@@ -168,7 +171,7 @@ public enum CustomComboPreset
     BlackFireBlizzard2Option = 2514,
 
     [CustomComboInfo("Umbral Soul Feature", "Replace your ice spells with Umbral Soul, while in Umbral Ice and having no target.", BLM.JobID)]
-    BlackUmbralSoulFeature = 2517,
+    BlackSpellsUmbralSoulFeature = 2517,
 
     [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
     BlackScatheFeature = 2507,
