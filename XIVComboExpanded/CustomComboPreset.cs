@@ -155,6 +155,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Blizzard 1/3 Feature", "Replace Blizzard 1 with Blizzard 3 when unlocked and becomes Paradox when available.", BLM.JobID)]
     BlackBlizzardFeature = 2505,
 
+    [ParentCombo(BlackBlizzardFeature)]
+    [CustomComboInfo("Paradox only during Umbral Ice", "Only replace Blizzard with Paradox during Umbral Ice.", BLM.JobID)]
+    BlackBlizzardParadoxOption = 2521,
+
     [CustomComboInfo("Freeze/Flare Feature", "Freeze and Flare become whichever action you can currently use.", BLM.JobID)]
     BlackFreezeFlareFeature = 2506,
 
