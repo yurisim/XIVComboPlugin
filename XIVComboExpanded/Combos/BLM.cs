@@ -229,8 +229,11 @@ internal class BlackBlizzard : CustomCombo
 
             if (IsEnabled(CustomComboPreset.BlackBlizzardFeature))
             {
-                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600))
-                    return BLM.Paradox;
+                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                {
+                    if (gauge.InUmbralIce || (!IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption) && LocalPlayer?.CurrentMp >= 1600))
+                        return BLM.Paradox;
+                }
 
                 if (level >= BLM.Levels.Blizzard3)
                     return BLM.Blizzard3;
