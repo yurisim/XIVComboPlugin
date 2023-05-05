@@ -38,8 +38,10 @@ internal static class BLM
         public const ushort
             Thundercloud = 164,
             Firestarter = 165,
+            Swiftcast = 167,
             LeyLines = 737,
             Sharpcast = 867,
+            Triplecast = 1211,
             EnhancedFlare = 2960;
     }
 
@@ -69,6 +71,13 @@ internal static class BLM
             HighBlizzard2 = 82,
             EnhancedSharpcast2 = 88,
             Paradox = 90;
+    }
+
+    public static class MpCosts
+    {
+        public const ushort
+            Fire2 = 3000,
+            Flare = 800;
     }
 }
 
@@ -276,8 +285,28 @@ internal class BlackFire2 : CustomCombo
                     return actionID;
             }
 
-            if (level >= BLM.Levels.Flare && gauge.InAstralFire && (gauge.UmbralHearts == 1 || LocalPlayer?.CurrentMp < 3800 || HasEffect(BLM.Buffs.EnhancedFlare)))
-                return BLM.Flare;
+            if (level >= BLM.Levels.Flare && gauge.InAstralFire)
+            {
+                // Lv 50 rotation without Umbral Hearts
+                if (LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare)
+                    return BLM.Flare;
+
+                // Standard AoE rotation Fire2 until 1 Umbral Heart, followed by 2 Flare
+                if (gauge.UmbralHearts == 1 || (gauge.UmbralHearts == 0 && HasEffect(BLM.Buffs.EnhancedFlare)))
+                    return BLM.Flare;
+
+                if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
+                {
+                    int triplecasts = FindEffect(BLM.Buffs.Triplecast)?.StackCount ?? 0;
+
+                    // (Umbral Ice) Fire2 -> Triplecast -> Fire2 -> Swiftcast -> Flare -> Flare -> Manafont -> Flare
+                    if (gauge.UmbralHearts > 0 && triplecasts == 2)
+                        return BLM.Flare;
+
+                    if (triplecasts == 1)
+                        return BLM.Flare;
+                }
+            }
         }
 
         return actionID;
