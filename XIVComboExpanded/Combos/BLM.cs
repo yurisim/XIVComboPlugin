@@ -82,7 +82,7 @@ internal class BlackFireBlizzard4 : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -125,7 +125,7 @@ internal class BlackFireBlizzard4 : CustomCombo
 
 internal class BlackTranspose : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackManaFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackTransposeUmbralSoulFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -135,6 +135,24 @@ internal class BlackTranspose : CustomCombo
 
             if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
                 return BLM.UmbralSoul;
+        }
+
+        return actionID;
+    }
+}
+
+internal class BlackUmbralSoul : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackUmbralSoulTransposeFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BLM.UmbralSoul)
+        {
+            var gauge = GetJobGauge<BLMGauge>();
+
+            if (level < BLM.Levels.UmbralSoul || (gauge.IsEnochianActive && gauge.InAstralFire))
+                return BLM.Transpose;
         }
 
         return actionID;
@@ -203,7 +221,7 @@ internal class BlackBlizzard : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -235,7 +253,7 @@ internal class BlackFreezeFlare : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -294,7 +312,7 @@ internal class BlackBlizzard2 : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
