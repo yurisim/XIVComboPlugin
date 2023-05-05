@@ -364,19 +364,27 @@ internal class BlackThunder : CustomCombo
     {
         if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
         {
-
-            if (level >= BLM.Levels.EnhancedSharpcast2)
+            if (IsEnabled(CustomComboPreset.BlackThunderOption) && !IsThunderCastRecently(lastComboMove))
             {
-                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
-                    return BLM.Sharpcast;
-            }
-            else if (level >= BLM.Levels.Sharpcast)
-            {
-                if (IsOffCooldown(BLM.Sharpcast))
-                    return BLM.Sharpcast;
+                if (level >= BLM.Levels.EnhancedSharpcast2)
+                {
+                    if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
+                        return BLM.Sharpcast;
+                }
+                else if (level >= BLM.Levels.Sharpcast)
+                {
+                    if (IsOffCooldown(BLM.Sharpcast))
+                        return BLM.Sharpcast;
+                }
             }
         }
 
         return actionID;
+    }
+
+    private bool IsThunderCastRecently(uint lastComboMove)
+    {
+        bool isGcdOnCooldown = IsOnCooldown(BLM.Thunder3); // shared with Thunder4
+        return isGcdOnCooldown && (lastComboMove == BLM.Thunder3 || lastComboMove == BLM.Thunder4);
     }
 }
