@@ -189,7 +189,7 @@ public enum CustomComboPreset
 
     [ParentCombo(BlackThunderFeature)]
     [CustomComboInfo("Delay replacement after casting Thunder", "Delay changing Thunder into Sharpcast immediately after casting Thunder.", BLM.JobID)]
-    BlackThunderOption = 2520,
+    BlackThunderDelayOption = 2520,
 
     #endregion
     // ====================================================================================
