@@ -33,9 +33,9 @@ internal class PluginAddressResolver : BaseAddressResolver
     /// <inheritdoc/>
     protected override void Setup64Bit(SigScanner scanner)
     {
-        this.ComboTimer = scanner.GetStaticAddressFromSig("F3 0F 11 05 ?? ?? ?? ?? F3 0F 10 45 ?? E8");
+        this.ComboTimer = scanner.GetStaticAddressFromSig("F3 0F 11 05 ?? ?? ?? ?? 48 83 C7 08");
 
-        this.GetAdjustedActionId = scanner.ScanText("E8 ?? ?? ?? ?? 8B F8 3B DF");  // Client::Game::ActionManager.GetAdjustedActionId
+        this.GetAdjustedActionId = scanner.ScanText("E8 ?? ?? ?? ?? 89 03 8B 03"); // Client::Game::ActionManager.GetAdjustedActionId
 
         this.IsActionIdReplaceable = scanner.ScanText("E8 ?? ?? ?? ?? 84 C0 74 4C 8B D3");
 
