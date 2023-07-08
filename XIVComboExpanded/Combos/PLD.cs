@@ -109,7 +109,7 @@ internal class PaladinRoyalAuthority : PaladinCombo
         if (actionID == PLD.RageOfHalone || actionID == PLD.RoyalAuthority)
         {
             // During FoF, prioritize the higher-potency Divine Might cast over Atonement and the normal combo chain
-            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
+            if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityFightOrFlightFeature))
             {
                 if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight) && HasMp(PLD.HolySpirit))
                     return PLD.HolySpirit;
