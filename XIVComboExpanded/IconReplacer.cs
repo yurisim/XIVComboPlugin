@@ -26,7 +26,7 @@ internal sealed partial class IconReplacer : IDisposable
     public IconReplacer()
     {
         this.customCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
-            .Where(t => !t.IsAbstract && t.BaseType == typeof(CustomCombo))
+            .Where(t => !t.IsAbstract && IsDescendant(t, typeof(CustomCombo)))
             .Select(t => Activator.CreateInstance(t))
             .Cast<CustomCombo>()
             .ToList();
@@ -36,6 +36,13 @@ internal sealed partial class IconReplacer : IDisposable
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
+    }
+
+    private static bool IsDescendant(Type clazz, Type ancestor)
+    {
+        if (clazz.BaseType == null) return false;
+        if (clazz.BaseType == ancestor) return true;
+        return IsDescendant(clazz.BaseType, ancestor);
     }
 
     private delegate ulong IsIconReplaceableDelegate(uint actionID);
