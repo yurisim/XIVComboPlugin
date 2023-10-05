@@ -31,7 +31,7 @@ internal class PluginAddressResolver : BaseAddressResolver
     public IntPtr IsActionIdReplaceable { get; private set; }
 
     /// <inheritdoc/>
-    protected override void Setup64Bit(SigScanner scanner)
+    protected override void Setup64Bit(ISigScanner scanner)
     {
         this.ComboTimer = scanner.GetStaticAddressFromSig("F3 0F 11 05 ?? ?? ?? ?? 48 83 C7 08");
 
