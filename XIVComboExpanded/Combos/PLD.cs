@@ -112,8 +112,10 @@ internal class PaladinRoyalAuthority : PaladinCombo
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityFightOrFlightFeature))
             {
                 if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
-                    if (level >= PLD.Levels.HolySpirit && HasMp(PLD.HolySpirit))
+                {
+                    if (level >= PLD.Levels.HolySpirit && this.HasMp(PLD.HolySpirit))
                         return PLD.HolySpirit;
+                }
             }
 
             if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityAtonementFeature))
@@ -131,8 +133,10 @@ internal class PaladinRoyalAuthority : PaladinCombo
                         if (IsEnabled(CustomComboPreset.PaladinRoyalAuthorityDivineMightFeature))
                         {
                             if (HasEffect(PLD.Buffs.DivineMight))
-                                if (level >= PLD.Levels.HolySpirit && HasMp(PLD.HolySpirit))
+                            {
+                                if (level >= PLD.Levels.HolySpirit && this.HasMp(PLD.HolySpirit))
                                     return PLD.HolySpirit;
+                            }
                         }
 
                         // Royal Authority
@@ -163,8 +167,10 @@ internal class PaladinProminence : PaladinCombo
             if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature))
             {
                 if (HasEffect(PLD.Buffs.FightOrFlight) && HasEffect(PLD.Buffs.DivineMight))
-                    if (level >= PLD.Levels.HolyCircle && HasMp(PLD.HolyCircle))
+                {
+                    if (level >= PLD.Levels.HolyCircle && this.HasMp(PLD.HolyCircle))
                         return PLD.HolyCircle;
+                }
             }
 
             if (comboTime > 0)
@@ -174,8 +180,10 @@ internal class PaladinProminence : PaladinCombo
                     if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature))
                     {
                         if (HasEffect(PLD.Buffs.DivineMight))
-                            if (level >= PLD.Levels.HolyCircle && HasMp(PLD.HolyCircle))
+                        {
+                            if (level >= PLD.Levels.HolyCircle && this.HasMp(PLD.HolyCircle))
                                 return PLD.HolyCircle;
+                        }
                     }
 
                     return PLD.Prominence;

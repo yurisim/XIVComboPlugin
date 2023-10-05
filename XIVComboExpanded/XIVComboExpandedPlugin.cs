@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+
 using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
@@ -23,6 +24,8 @@ public sealed partial class XIVComboExpandedPlugin : IDalamudPlugin
     /// Initializes a new instance of the <see cref="XIVComboExpandedPlugin"/> class.
     /// </summary>
     /// <param name="pluginInterface">Dalamud plugin interface.</param>
+    /// <param name="sigScanner">Dalamud signature scanner.</param>
+    /// <param name="gameInteropProvider">Dalamud game interop provider.</param>
     public XIVComboExpandedPlugin(
         DalamudPluginInterface pluginInterface,
         ISigScanner sigScanner,
@@ -32,7 +35,7 @@ public sealed partial class XIVComboExpandedPlugin : IDalamudPlugin
 
         Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
         Service.Address = new PluginAddressResolver();
-        Service.Address.Setup((SigScanner) sigScanner);
+        Service.Address.Setup((SigScanner)sigScanner);
 
         if (Service.Configuration.Version == 4)
             this.UpgradeConfig4();

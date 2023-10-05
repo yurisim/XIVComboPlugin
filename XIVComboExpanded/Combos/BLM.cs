@@ -393,7 +393,7 @@ internal class BlackThunder : CustomCombo
     {
         if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
         {
-            if (IsEnabled(CustomComboPreset.BlackThunderDelayOption) && IsThunderCastRecently(lastComboMove))
+            if (IsEnabled(CustomComboPreset.BlackThunderDelayOption) && this.IsThunderCastRecently(lastComboMove))
                 return actionID;
 
             if (level >= BLM.Levels.EnhancedSharpcast2)
