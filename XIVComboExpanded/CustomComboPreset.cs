@@ -511,11 +511,20 @@ public enum CustomComboPreset
     MonkFormlessSnakesOption = 2015,
 
     [ConflictingCombos(MonkTwinSnakesFeature)]
-    [CustomComboInfo("True Strike / Twin Snakes Feature", "Replace True Strike with Twin Snakes if Twin Snakes has less than 6s remaining.", MNK.JobID)]
+    [CustomComboInfo("True Strike / Twin Snakes Feature", "Replace True Strike with Twin Snakes if Twin Snakes has less than 6s remaining or isn't applied yet.", MNK.JobID)]
     MonkTrueStrikeFeature = 2016,
 
+    [ParentCombo(MonkTrueStrikeFeature)]
+    [CustomComboInfo("Formless Strike Option", "While Formless Fist is active, do not replace True Strike.", MNK.JobID)]
+    MonkFormlessStrikeOption = 2018,
+
+    [ConflictingCombos(MonkSnapPunchFeature)]
     [CustomComboInfo("Demolish / Snap Punch Feature", "Replace Demolish with Snap Punch if Demolish has more than 6s remaining on your current target.", MNK.JobID)]
     MonkDemolishFeature = 2014,
+
+    [ConflictingCombos(MonkDemolishFeature)]
+    [CustomComboInfo("Snap Punch / Demolish Feature", "Replace Snap Punch with Demolish if Demolish has less than 6s remaining on your current target or isn't applied yet.", MNK.JobID)]
+    MonkSnapPunchFeature = 2017,
 
     [CustomComboInfo("Dragon Balance Feature", "Replace Dragon Kick with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
     MonkDragonKickBalanceFeature = 2005,

@@ -231,6 +231,13 @@ internal class MonkTrueStrike : CustomCombo
     {
         if (actionID == MNK.TrueStrike && level >= MNK.Levels.TwinSnakes)
         {
+
+            if (IsEnabled(CustomComboPreset.MonkFormlessStrikeOption))
+            {
+                if (level >= MNK.Levels.FormShift && HasEffect(MNK.Buffs.FormlessFist))
+                    return MNK.TrueStrike;
+            }
+
             var buff = FindEffect(MNK.Buffs.DisciplinedFist);
             if (buff == null || buff.RemainingTime <= 6.0)
                 return MNK.TwinSnakes;
@@ -252,6 +259,25 @@ internal class MonkDemolish : CustomCombo
             {
                 if (level < MNK.Levels.Demolish || FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime > 6.0)
                     return MNK.SnapPunch;
+            }
+        }
+
+        return actionID;
+    }
+}
+
+internal class MonkSnapPunch : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == MNK.SnapPunch)
+        {
+            if (IsEnabled(CustomComboPreset.MonkSnapPunchFeature))
+            {
+                if (level < MNK.Levels.SnapPunch || FindTargetEffect(MNK.Debuffs.Demolish) == null || FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime < 6.0)
+                    return MNK.Demolish;
             }
         }
 
