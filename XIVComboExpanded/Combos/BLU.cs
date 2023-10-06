@@ -7,7 +7,7 @@ internal static class BLU
     public const byte JobID = 36;
 
     public const uint
-        AngelWhisper = 16550;
+        AngelWhisper = 18317;
 
     public static class Buffs
     {

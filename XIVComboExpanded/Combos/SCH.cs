@@ -10,7 +10,7 @@ internal static class SCH
     public const uint
         Aetherflow = 166,
         EnergyDrain = 167,
-        Ressurection = 173,
+        Resurrection = 173,
         Adloquium = 185,
         SacredSoil = 188,
         Lustrate = 189,
@@ -48,7 +48,7 @@ internal static class SCH
     public static class Levels
     {
         public const byte
-            Ressurection = 12,
+            Resurrection = 12,
             Adloquium = 30,
             Aetherflow = 45,
             Lustrate = 45,
