@@ -963,6 +963,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Indomitable Aetherflow", "Replace Indomitability with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
     ScholarIndomAetherflowFeature = 2804,
 
+    [CustomComboInfo("Sacred Soil Aetherflow", "Replace Sacred Soil with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+    ScholarSacredSoilAetherflowFeature = 2811,
+
     [CustomComboInfo("Summon Seraph Feature", "Replace Summon Eos and Selene with Summon Seraph when a summon is out.", SCH.JobID)]
     ScholarSeraphFeature = 2805,
 

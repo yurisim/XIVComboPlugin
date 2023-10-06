@@ -172,6 +172,24 @@ internal class ScholarIndomitability : CustomCombo
     }
 }
 
+internal class ScholarSacredSoil : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSacredSoilAetherflowFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SCH.SacredSoil)
+        {
+            var gauge = GetJobGauge<SCHGauge>();
+
+            if (level >= SCH.Levels.Aetherflow && gauge.Aetherflow == 0)
+                return SCH.Aetherflow;
+        }
+
+        return actionID;
+    }
+}
+
 internal class ScholarSummon : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSeraphFeature;
