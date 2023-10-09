@@ -651,6 +651,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinConfiteorFeature = 1907,
 
+    [CustomComboInfo("Holy Spirit Level Sync", "Replace Holy Spirit with Shield Lob when below level 64 in synced content.", PLD.JobID)]
+    PaladinHolySpiritLevelSyncFeature = 1916,
+
     [SecretCustomCombo]
     [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within/Expiacion and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
     PaladinScornfulSpiritsFeature = 1908,
