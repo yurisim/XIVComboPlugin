@@ -2,7 +2,12 @@
 
 [![Build](https://github.com/MKhayle/XIVComboPlugin/actions/workflows/build.yml/badge.svg)](https://github.com/daemitus/XIVComboPlugin/actions/workflows/build.yml)
 
-This plugin condenses combos and mutually exclusive abilities onto a single button. Thanks to Meli for the initial start, and obviously goat for making any of this possible.
+This plugin condenses combos and mutually exclusive abilities onto a single button. 
+Thanks to Meli for the initial start, and obviously goat for making any of this possible.
+
+## Note 
+This fork was initially [daemitus](https://github.com/daemitus)' work. I have been maintaining it in his stead since he stopped playing the game. 
+To ensure a seamless transition, the repository URL remains the same thanks to daemitus' cooperation.
 
 ## About
 XIVCombo is a plugin to allow for "one-button" combo chains, as well as implementing various other mutually-exclusive button consolidation and quality of life replacements. 
