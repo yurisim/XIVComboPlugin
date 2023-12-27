@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Dalamud.Hooking;
 using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.Game;
+using Dalamud.Plugin.Services;
 using XIVComboExpandedPlugin.Combos;
 
 namespace XIVComboExpandedPlugin;
@@ -25,21 +25,28 @@ internal sealed partial class IconReplacer : IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="IconReplacer"/> class.
     /// </summary>
-    public unsafe IconReplacer()
+    public unsafe IconReplacer(IGameInteropProvider gameInteropProvider)
     {
         this.clientStructActionManager = ActionManager.Instance();
 
         this.customCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
-            .Where(t => !t.IsAbstract && t.BaseType == typeof(CustomCombo))
+            .Where(t => !t.IsAbstract && IsDescendant(t, typeof(CustomCombo)))
             .Select(t => Activator.CreateInstance(t))
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook = Hook<GetIconDelegate>.FromAddress(Service.Address.GetAdjustedActionId, this.GetIconDetour);
-        this.isIconReplaceableHook = Hook<IsIconReplaceableDelegate>.FromAddress(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
+        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(Service.Address.GetAdjustedActionId, this.GetIconDetour);
+        this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
+    }
+
+    private static bool IsDescendant(Type clazz, Type ancestor)
+    {
+        if (clazz.BaseType == null) return false;
+        if (clazz.BaseType == ancestor) return true;
+        return IsDescendant(clazz.BaseType, ancestor);
     }
 
     private delegate ulong IsIconReplaceableDelegate(uint actionID);

@@ -345,6 +345,25 @@ internal class MonkAoECombo : CustomCombo
     }
 }
 
+internal class MonkSnapPunch : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == MNK.SnapPunch)
+        {
+            if (IsEnabled(CustomComboPreset.MonkSnapPunchFeature))
+            {
+                if (level < MNK.Levels.SnapPunch || FindTargetEffect(MNK.Debuffs.Demolish) == null || FindTargetEffect(MNK.Debuffs.Demolish)?.RemainingTime < 6.0)
+                    return MNK.Demolish;
+            }
+        }
+
+        return actionID;
+    }
+}
+
 internal class MonkPerfectBalance : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MonkPerfectBalanceFeature;

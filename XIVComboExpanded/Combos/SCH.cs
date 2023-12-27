@@ -11,9 +11,11 @@ internal static class SCH
         Adloquium = 185,
         Aetherflow = 166,
         EnergyDrain = 167,
-        Ressurection = 173,
+        Resurrection = 173,
+        Adloquium = 185,
         SacredSoil = 188,
         Lustrate = 189,
+        Physick = 190,
         Indomitability = 3583,
         DeploymentTactics = 3585,
         EmergencyTactics = 3586,
@@ -57,7 +59,8 @@ internal static class SCH
     public static class Levels
     {
         public const byte
-            Ressurection = 12,
+            Resurrection = 12,
+            Adloquium = 30,
             WhisperingDawn = 20,
             FeyIllumination = 40,
             Aetherflow = 45,
@@ -370,6 +373,22 @@ internal class ScholarSummon : CustomCombo
             if (gauge.SeraphTimer != 0 || HasPetPresent())
                 // Consolation
                 return OriginalHook(SCH.SummonSeraph);
+        }
+
+        return actionID;
+    }
+}
+
+internal class ScholarAdloquium : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarAdloquiumSyncFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SCH.Adloquium)
+        {
+            if (level < SCH.Levels.Adloquium)
+                return SCH.Physick;
         }
 
         return actionID;

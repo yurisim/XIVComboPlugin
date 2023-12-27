@@ -228,6 +228,12 @@ internal abstract partial class CustomCombo
     }
     
     /// <summary>
+    /// Gets the current territory type.
+    /// </summary>
+    protected static ushort CurrentTerritory
+        => Service.ClientState.TerritoryType;
+
+    /// <summary>
     /// Calls the original hook.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
@@ -409,7 +415,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>A value indicating whether the player has a pet present.</returns>
     protected static bool HasPetPresent()
-        => Service.BuddyList.PetBuddyPresent;
+        => Service.BuddyList.PetBuddy != null;
 
     /// <summary>
     /// Find if an effect on the player exists.

@@ -42,6 +42,7 @@ internal static class BLM
         public const ushort
             Thundercloud = 164,
             Firestarter = 165,
+            Swiftcast = 167,
             LeyLines = 737,
             Sharpcast = 867,
             Triplecast = 1211,
@@ -80,7 +81,15 @@ internal static class BLM
             Xenoglossy = 80,
             HighFire2 = 82,
             HighBlizzard2 = 82,
+            EnhancedSharpcast2 = 88,
             Paradox = 90;
+    }
+
+    public static class MpCosts
+    {
+        public const ushort
+            Fire2 = 3000,
+            Flare = 800;
     }
 }
 
@@ -292,7 +301,7 @@ internal class BlackFireBlizzard2 : CustomCombo
 
 internal class BlackTranspose : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackManaFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackTransposeUmbralSoulFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -302,6 +311,24 @@ internal class BlackTranspose : CustomCombo
 
             if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
                 return BLM.UmbralSoul;
+        }
+
+        return actionID;
+    }
+}
+
+internal class BlackUmbralSoul : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackUmbralSoulTransposeFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BLM.UmbralSoul)
+        {
+            var gauge = GetJobGauge<BLMGauge>();
+
+            if (level < BLM.Levels.UmbralSoul || (gauge.IsEnochianActive && gauge.InAstralFire))
+                return BLM.Transpose;
         }
 
         return actionID;
@@ -370,7 +397,7 @@ internal class BlackBlizzard : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -378,8 +405,11 @@ internal class BlackBlizzard : CustomCombo
 
             if (IsEnabled(CustomComboPreset.BlackBlizzardFeature))
             {
-                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && (gauge.InUmbralIce || LocalPlayer?.CurrentMp >= 1600))
-                    return BLM.Paradox;
+                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                {
+                    if (gauge.InUmbralIce || (!IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption) && LocalPlayer?.CurrentMp >= 1600))
+                        return BLM.Paradox;
+                }
 
                 if (level >= BLM.Levels.Blizzard3)
                     return BLM.Blizzard3;
@@ -402,7 +432,7 @@ internal class BlackFreezeFlare : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -443,8 +473,28 @@ internal class BlackFire2 : CustomCombo
                     return actionID;
             }
 
-            if (level >= BLM.Levels.Flare && gauge.InAstralFire && (gauge.UmbralHearts == 1 || LocalPlayer?.CurrentMp < 3800 || HasEffect(BLM.Buffs.EnhancedFlare)))
-                return BLM.Flare;
+            if (level >= BLM.Levels.Flare && gauge.InAstralFire)
+            {
+                // Lv 50 rotation without Umbral Hearts
+                if (LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare)
+                    return BLM.Flare;
+
+                // Standard AoE rotation Fire2 until 1 Umbral Heart, followed by 2 Flare
+                if (gauge.UmbralHearts == 1 || (gauge.UmbralHearts == 0 && HasEffect(BLM.Buffs.EnhancedFlare)))
+                    return BLM.Flare;
+
+                if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
+                {
+                    int triplecasts = FindEffect(BLM.Buffs.Triplecast)?.StackCount ?? 0;
+
+                    // (Umbral Ice) Fire2 -> Triplecast -> Fire2 -> Swiftcast -> Flare -> Flare -> Manafont -> Flare
+                    if (gauge.UmbralHearts > 0 && triplecasts == 2)
+                        return BLM.Flare;
+
+                    if (triplecasts == 1)
+                        return BLM.Flare;
+                }
+            }
         }
 
         return actionID;
@@ -461,7 +511,7 @@ internal class BlackBlizzard2 : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
+            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
             {
                 if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
                     return BLM.UmbralSoul;
@@ -499,5 +549,38 @@ internal class BlackScathe : CustomCombo
         }
 
         return actionID;
+    }
+}
+
+internal class BlackThunder : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackThunderFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
+        {
+            if (IsEnabled(CustomComboPreset.BlackThunderDelayOption) && this.IsThunderCastRecently(lastComboMove))
+                return actionID;
+
+            if (level >= BLM.Levels.EnhancedSharpcast2)
+            {
+                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
+                    return BLM.Sharpcast;
+            }
+            else if (level >= BLM.Levels.Sharpcast)
+            {
+                if (IsOffCooldown(BLM.Sharpcast))
+                    return BLM.Sharpcast;
+            }
+        }
+
+        return actionID;
+    }
+
+    private bool IsThunderCastRecently(uint lastComboMove)
+    {
+        bool isGcdOnCooldown = IsOnCooldown(BLM.Thunder3); // shared with Thunder4
+        return isGcdOnCooldown && (lastComboMove == BLM.Thunder3 || lastComboMove == BLM.Thunder4);
     }
 }

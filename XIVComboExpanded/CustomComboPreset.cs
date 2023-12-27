@@ -85,7 +85,10 @@ public enum CustomComboPreset
     #region ADV
 
     [CustomComboInfo("Swift Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, Verraise, and Angel Whisper with Swiftcast when it is off cooldown (and Dualcast isn't up).", ADV.JobID)]
-    AllSwiftcastFeature = 1000,
+    AdvSwiftcastFeature = 1000,
+
+    [CustomComboInfo("Variant Raise Feature", "Replace Ascend, Ressurection, Egeiro, Raise, Verraise, and Angel Whisper with Variant Raise II when in a variant dungeon.", ADV.JobID)]
+    AdvVariantRaiseFeature = 1001,
 
     #endregion
     // ====================================================================================
@@ -101,8 +104,11 @@ public enum CustomComboPreset
     AstrologianPlayDrawFeature = 3301,
 
     [ParentCombo(AstrologianPlayDrawFeature)]
-    [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on Cooldown.", AST.JobID)]
+    [CustomComboInfo("Play to Draw to Astrodyne", "Replace Play with Astrodyne when seals are full and Draw is on cooldown or a card is drawn.", AST.JobID)]
     AstrologianPlayDrawAstrodyneFeature = 3307,
+
+    [CustomComboInfo("Play to Redraw", "Replace Play with Redraw if a card is drawn and would grant a seal you already have.", AST.JobID)]
+    AstrologianPlayRedrawFeature = 3311,
 
     [CustomComboInfo("Play to Astrodyne", "Replace Play with Astrodyne when seals are full.", AST.JobID)]
     AstrologianPlayAstrodyneFeature = 3304,
@@ -110,20 +116,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Draw Lockout", "Replace Draw (not Play to Draw) with Malefic when a card is drawn.", AST.JobID)]
     AstrologianDrawLockoutFeature = 3306,
 
-    [CustomComboInfo("Minor Arcana to Crown Play Feature", "Replace Minor Arcana with Crown Play when a card drawn.", AST.JobID)]
-    AstrologianMinorArcanaCrownPlayFeature = 3302,
-
-    [ParentCombo(AstrologianMinorArcanaCrownPlayFeature)]
-    [CustomComboInfo("Crown Play Delay Feature", "Delay Crown Play by 1s after using Minor Arcnaa.", AST.JobID)]
-    AstrologianCrownPlayDelayFeature = 3311,
-
-    [CustomComboInfo("Crown Play to Minor Arcana Feature", "Replace Crown Play with Minor Arcana when no card is drawn.", AST.JobID)]
-    AstrologianCrownPlayMinorArcanaFeature = 3308,
-
     [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Replace Benefic 2 with Benefic when below level 26 in synced content.", AST.JobID)]
-    AstrologianBeneficSyncFeature = 3303,
-
-    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", AST.JobID)]
+    AstrologianBeneficSyncFeature = 3303,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", AST.JobID)]
     AstrologianLucidFeature = 3305,
 
     #endregion
@@ -142,8 +138,11 @@ public enum CustomComboPreset
     [CustomComboInfo("Enochian No Sync Feature", "Fire 4 and Blizzard 4 will not sync to Fire 1 and Blizzard 1.", BLM.JobID)]
     BlackEnochianNoSyncFeature = 2518,
 
-    [CustomComboInfo("Umbral Soul/Transpose Switcher", "Replace Transpose with Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
-    BlackManaFeature = 2502,
+    [CustomComboInfo("Transpose into Umbral Soul", "Replace Transpose with Umbral Soul when Umbral Soul is usable.", BLM.JobID)]
+    BlackTransposeUmbralSoulFeature = 2502,
+
+    [CustomComboInfo("Umbral Soul into Transpose", "Replace Umbral Soul with Transpose when Umbral Soul is not usable.", BLM.JobID)]
+    BlackUmbralSoulTransposeFeature = 2522,
 
     [CustomComboInfo("(Between the) Ley Lines", "Replace Ley Lines with BTL when Ley Lines is active.", BLM.JobID)]
     BlackLeyLinesFeature = 2503,
@@ -162,11 +161,19 @@ public enum CustomComboPreset
     [CustomComboInfo("Blizzard 1/3 Feature", "Replace Blizzard 1 with Blizzard 3 when unlocked and becomes Paradox when available.", BLM.JobID)]
     BlackBlizzardFeature = 2505,
 
+    [ParentCombo(BlackBlizzardFeature)]
+    [CustomComboInfo("Paradox only during Umbral Ice", "Only replace Blizzard with Paradox during Umbral Ice.", BLM.JobID)]
+    BlackBlizzardParadoxOption = 2521,
+
     [CustomComboInfo("Freeze/Flare Feature", "Freeze and Flare become whichever action you can currently use.", BLM.JobID)]
     BlackFreezeFlareFeature = 2506,
 
     [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire when only 1 Umbral Heart is active, less than 3000 mp, or during Enhanced Flare.", BLM.JobID)]
     BlackFire2Feature = 2508,
+
+    [ParentCombo(BlackFire2Feature)]
+    [CustomComboInfo("Fire 2 Triplecast Option", "Shorten rotation when Triplecast is active to make both Flare casts instant.", BLM.JobID)]
+    BlackFire2TriplecastOption = 2523,
 
     [CustomComboInfo("Ice 2 Feature", "(High) Blizzard 2 becomes Freeze in Umbral Ice.", BLM.JobID)]
     BlackBlizzard2Feature = 2509,
@@ -175,18 +182,25 @@ public enum CustomComboPreset
     BlackFireBlizzard2Option = 2514,
 
     [CustomComboInfo("Umbral Soul Feature", "Replace your ice spells with Umbral Soul, while in Umbral Ice and having no target.", BLM.JobID)]
-    BlackUmbralSoulFeature = 2517,
+    BlackSpellsUmbralSoulFeature = 2517,
 
     [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
-    BlackScatheFeature = 2507,
-
+    BlackScatheFeature = 2507,
+
     [CustomComboInfo("One Button Black Mage", "Automates your Black Mage", BLM.JobID)]
     OneButtonAOEBlackMageFeature = 2525,
 
-    #endregion
-// ====================================================================================
-    #region BARD
+    [CustomComboInfo("Thunder 3/4 to Sharpcast", "Thunder 3 and Thunder 4 become Sharpcast when available.", BLM.JobID)]
+    BlackThunderFeature = 2519,
 
+    [ParentCombo(BlackThunderFeature)]
+    [CustomComboInfo("Delay replacement after casting Thunder", "Delay changing Thunder into Sharpcast immediately after casting Thunder.", BLM.JobID)]
+    BlackThunderDelayOption = 2520,
+
+    #endregion
+// ====================================================================================
+    #region BARD
+
 [CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
     BardStraightShotUpgradeFeature = 2302,
 
@@ -389,6 +403,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Geirskogul to Wyrmwind Thrust", "Replace Geirskogul with Wyrmwind Thrust when available and Geirskogul or Nastrond are on cooldown.", DRG.JobID)]
     DragoonGeirskogulWyrmwindFeature = 2212,
 
+    [CustomComboInfo("Lance Charge to Dragon Sight and Battle Litany", "Replace Lance Charge with Dragon Sight and Battle Litany when available and Lance Charge is on cooldown.", DRG.JobID)]
+    DragoonLanceChargeFeature = 2213,
+
     #endregion
     // ====================================================================================
     #region GUNBREAKER
@@ -491,6 +508,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Dragon Kick / Bootshine Feature", "Replace Dragon Kick with Bootshine if Leaden Fist is up.", MNK.JobID)]
     MonkBootshineFeature = 2011,
 
+    [ConflictingCombos(MonkTrueStrikeFeature)]
     [CustomComboInfo("Twin Snakes / True Strike Feature", "Replace Twin Snakes with True Strike if Twin Snakes has more than 6s remaining.", MNK.JobID)]
     MonkTwinSnakesFeature = 2013,
 
@@ -498,8 +516,21 @@ public enum CustomComboPreset
     [CustomComboInfo("Formless Snakes Option", "While Formless Fist is active, do not replace Twin Snakes.", MNK.JobID)]
     MonkFormlessSnakesOption = 2015,
 
+    [ConflictingCombos(MonkTwinSnakesFeature)]
+    [CustomComboInfo("True Strike / Twin Snakes Feature", "Replace True Strike with Twin Snakes if Twin Snakes has less than 6s remaining or isn't applied yet.", MNK.JobID)]
+    MonkTrueStrikeFeature = 2016,
+
+    [ParentCombo(MonkTrueStrikeFeature)]
+    [CustomComboInfo("Formless Strike Option", "While Formless Fist is active, do not replace True Strike.", MNK.JobID)]
+    MonkFormlessStrikeOption = 2018,
+
+    [ConflictingCombos(MonkSnapPunchFeature)]
     [CustomComboInfo("Demolish / Snap Punch Feature", "Replace Demolish with Snap Punch if Demolish has more than 6s remaining on your current target.", MNK.JobID)]
     MonkDemolishFeature = 2014,
+
+    [ConflictingCombos(MonkDemolishFeature)]
+    [CustomComboInfo("Snap Punch / Demolish Feature", "Replace Snap Punch with Demolish if Demolish has less than 6s remaining on your current target or isn't applied yet.", MNK.JobID)]
+    MonkSnapPunchFeature = 2017,
 
     [CustomComboInfo("Dragon Balance Feature", "Replace Dragon Kick with Masterful Blitz if you have 3 Beast Chakra.", MNK.JobID)]
     MonkDragonKickBalanceFeature = 2005,
@@ -585,36 +616,52 @@ public enum CustomComboPreset
     [CustomComboInfo("Hide to Mug", "Replace Hide with Mug while in combat.", NIN.JobID)]
     NinjaHideMugFeature = 3007,
 
+    [CustomComboInfo("Hide to Ninjutsu", "Replace Hide with Ninjutsu if any Mudra are active.", NIN.JobID)]
+    NinjaHideNinjutsuFeature = 3020,
+
     #endregion
     // ====================================================================================
     #region PALADIN
 
-    [CustomComboInfo("Goring Blade Combo", "Replace Goring Blade with its combo chain.", PLD.JobID)]
-    PaladinGoringBladeCombo = 1901,
-
-    [ConflictingCombos(PaladinRoyalAuthorityAtonementFeature)]
-    [CustomComboInfo("Goring Blade Atonement Feature", "Replace Goring Blade with Atonement when under the effect of Sword Oath.", PLD.JobID)]
-    PaladinGoringBladeAtonementFeature = 1909,
-
     [CustomComboInfo("Royal Authority Combo", "Replace Royal Authority with its combo chain.", PLD.JobID)]
     PaladinRoyalAuthorityCombo = 1902,
 
-    [ConflictingCombos(PaladinGoringBladeAtonementFeature)]
+    [ParentCombo(PaladinRoyalAuthorityCombo)]
+    [CustomComboInfo("Royal Authority Divine Might Feature", "Replace Royal Authority with Holy Spirit when Divine Might would overcap.", PLD.JobID)]
+    PaladinRoyalAuthorityDivineMightFeature = 1912,
+
+    [ParentCombo(PaladinRoyalAuthorityCombo)]
+    [CustomComboInfo("Royal Authority Fight or Flight Feature", "Replace Royal Authority with Holy Spirit during Fight or Flight when Divine Might is active.", PLD.JobID)]
+    PaladinRoyalAuthorityFightOrFlightFeature = 1915,
+
+    [ParentCombo(PaladinRoyalAuthorityCombo)]
     [CustomComboInfo("Royal Authority Atonement Feature", "Replace Royal Authority with Atonement when under the effect of Sword Oath.", PLD.JobID)]
     PaladinRoyalAuthorityAtonementFeature = 1903,
 
     [CustomComboInfo("Prominence Combo", "Replace Prominence with its combo chain.", PLD.JobID)]
     PaladinProminenceCombo = 1904,
 
-    [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiteor while under the effect of Requiescat.", PLD.JobID)]
+    [ParentCombo(PaladinProminenceCombo)]
+    [CustomComboInfo("Prominence Divine Might Feature", "Replace Prominence with Holy Circle when Divine Might is active.", PLD.JobID)]
+    PaladinProminenceDivineMightFeature = 1913,
+
+    [CustomComboInfo("Requiescat Fight or Flight Feature", "Replace Requiescat with Fight or Flight when off cooldown or if it will be ready sooner.", PLD.JobID)]
+    PaladinRequiescatFightOrFlightFeature = 1914,
+
+    [CustomComboInfo("Requiescat Confiteor", "Replace Requiescat with Confiteor and combo chain while under the effect of Requiescat, and then with Holy Spirit if there are remaining charges.", PLD.JobID)]
     PaladinRequiescatCombo = 1905,
 
-    [SecretCustomCombo]
-    [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor when Requiescat is up and MP is under 2000 or only one stack remains.", PLD.JobID)]
+    [CustomComboInfo("Fight or Flight Goring Blade Feature", "Replace Fight or Flight with Goring Blade while Fight or Flight is active.  Also applies to Requiescat if the Requiescat Fight or Flight Feature is enabled.", PLD.JobID)]
+    PaladinFightOrFlightGoringBladeFeature = 1911,
+
+    [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor while under the effect of Requiescat.", PLD.JobID)]
     PaladinConfiteorFeature = 1907,
 
+    [CustomComboInfo("Holy Spirit Level Sync", "Replace Holy Spirit with Shield Lob when below level 64 in synced content.", PLD.JobID)]
+    PaladinHolySpiritLevelSyncFeature = 1916,
+
     [SecretCustomCombo]
-    [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
+    [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within/Expiacion and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
     PaladinScornfulSpiritsFeature = 1908,
 
     [CustomComboInfo("Shields on your Feet Feature", "Replace Shield Bash with Low Blow when available.", PLD.JobID)]
@@ -934,8 +981,14 @@ public enum CustomComboPreset
     [CustomComboInfo("Indomitable Aetherflow", "Replace Indomitability with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
     ScholarIndomAetherflowFeature = 2804,
 
+    [CustomComboInfo("Sacred Soil Aetherflow", "Replace Sacred Soil with Aetherflow when you have no more Aetherflow stacks.", SCH.JobID)]
+    ScholarSacredSoilAetherflowFeature = 2811,
+
     [CustomComboInfo("Summon Seraph Feature", "Replace Summon Eos and Selene with Summon Seraph when a summon is out.", SCH.JobID)]
     ScholarSeraphFeature = 2805,
+
+    [CustomComboInfo("Adloquium Level Sync", "Replace Adloquium with Physick when below level 30 in synced content.", SCH.JobID)]
+    ScholarAdloquiumSyncFeature = 2810,
 
     #endregion
     // ====================================================================================
@@ -983,6 +1036,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Radiant Carbuncle Feature", "Change Radiant Aegis into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
     SummonerRadiantCarbuncleFeature = 2711,
 
+    [CustomComboInfo("Demi Carbuncle Feature", "Change Summon Bahamut into Summon Carbuncle when no pet has been summoned.", SMN.JobID)]
+    SummonerDemiCarbuncleFeature = 2716,
+
     #endregion
     // ====================================================================================
     #region WARRIOR
@@ -1018,7 +1074,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Nascent Flash Level Sync", "Replace Nascent Flash with Raw intuition when Synced.", WAR.JobID)]
     WarriorNascentFlashSyncFeature = 2106,
 
-    [CustomComboInfo("Healthy Balanaced Diet Feature", "Replace Bloodwhetting with Thrill of Battle, and then Equilibrium when the preceding is on cooldown.", WAR.JobID)]
+    [CustomComboInfo("Healthy Balanced Diet Feature", "Replace Bloodwhetting with Thrill of Battle, and then Equilibrium when the preceding is on cooldown.", WAR.JobID)]
     WarriorHealthyBalancedDietFeature = 2112,
 
     [CustomComboInfo("Primal Beast Feature", "Replace Inner Beast and Steel Cyclone with Primal Rend when available", WAR.JobID)]
@@ -1047,12 +1103,12 @@ public enum CustomComboPreset
     WhiteMageCureFeature = 2403,
 
     [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace and Medica with Afflatus Rapture when a Lily is available.", WHM.JobID)]
-    WhiteMageAfflatusFeature = 2404,
-
-    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", WHM.JobID)]
-    WhiteMageLucidFeature = 2408,
-
-    [CustomComboInfo("Dia Auto Cast", "Automatically cast Dia if it doesn't exist on the target", WHM.JobID)]
+    WhiteMageAfflatusFeature = 2404,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", WHM.JobID)]
+    WhiteMageLucidFeature = 2408,
+
+    [CustomComboInfo("Dia Auto Cast", "Automatically cast Dia if it doesn't exist on the target", WHM.JobID)]
     WhiteMageDiaFeature = 2410,
 
     #endregion

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -50,6 +52,7 @@ internal static class AST
     public static class Buffs
     {
         public const ushort
+            ClarifyingDraw = 2713;
             Divination = 1878,
             AspectedHelios = 836,
             BalanceDrawn = 913,
@@ -203,6 +206,16 @@ internal class AstrologianGravity : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
+    private Dictionary<CardType, SealType> CardSeals { get; } = new Dictionary<CardType, SealType>
+    {
+        { CardType.BALANCE, SealType.SUN },
+        { CardType.BOLE, SealType.SUN },
+        { CardType.ARROW, SealType.MOON },
+        { CardType.EWER, SealType.MOON },
+        { CardType.SPEAR, SealType.CELESTIAL },
+        { CardType.SPIRE, SealType.CELESTIAL },
+    };
+
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == AST.Gravity || actionID == AST.Gravity2)
@@ -259,7 +272,6 @@ internal class AstrologianGravity : CustomCombo
 
                 }
             }
-        }
 
         return actionID;
     }
