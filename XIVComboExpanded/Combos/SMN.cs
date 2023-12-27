@@ -125,9 +125,9 @@ internal class SummonerRuin : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SMN.Ruin 
-            || actionID == SMN.Ruin2 
-            || actionID == SMN.Outburst 
+        if (actionID == SMN.Ruin
+            || actionID == SMN.Ruin2
+            || actionID == SMN.Outburst
             || actionID == SMN.TriDisaster)
         {
             var gauge = GetJobGauge<SMNGauge>();
@@ -166,9 +166,9 @@ internal class SummonerRuin : CustomCombo
 
                 if (gauge.HasAetherflowStacks)
                 {
-                    return level >= SMN.Levels.Painflare 
-                        && (actionID == SMN.Outburst || actionID == SMN.TriDisaster) 
-                            ? SMN.Painflare 
+                    return level >= SMN.Levels.Painflare
+                        && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                            ? SMN.Painflare
                             : SMN.Fester;
                 }
 
@@ -177,12 +177,12 @@ internal class SummonerRuin : CustomCombo
                     && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
-                //if (HasCharges(SMN.RadiantAegis) 
+                // if (HasCharges(SMN.RadiantAegis)
                 //    && CanUseAction(SMN.RadiantAegis)
                 //    && !HasEffect(SMN.Buffs.RadiantAegis))
-                //{
+                // {
                 //    return SMN.RadiantAegis;
-                //}
+                // }
             }
 
             // Bahamut & Pheonix Summmon
@@ -195,7 +195,7 @@ internal class SummonerRuin : CustomCombo
             {
                 if (HasEffect(SMN.Buffs.TitansFavor)
                     || (HasEffect(SMN.Buffs.GarudasFavor)
-                        && (!IsMoving || HasEffect(ADV.Buffs.Swiftcast))))
+                        && (!this.IsMoving || HasEffect(ADV.Buffs.Swiftcast))))
                 {
                     return OriginalHook(SMN.AstralFlow);
                 }
@@ -236,7 +236,8 @@ internal class SummonerRuin : CustomCombo
 
             if (gauge.IsIfritReady)
             {
-                if (HasEffect(SMN.Buffs.GarudasFavor) && IsOffCooldown(ADV.Swiftcast)) {
+                if (HasEffect(SMN.Buffs.GarudasFavor) && IsOffCooldown(ADV.Swiftcast))
+                {
                     return ADV.Swiftcast;
                 }
 

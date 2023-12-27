@@ -99,7 +99,6 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-
                 if (level >= RDM.Levels.Manafication
                     && gauge.BlackMana <= 50
                     && gauge.WhiteMana <= 50
@@ -145,7 +144,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                     ? OriginalHook(RDM.Verflare)
                     : OriginalHook(RDM.Verholy);
             }
-            
+
             var hasSpeedy = HasEffect(RDM.Buffs.Dualcast)
                 || HasEffect(RDM.Buffs.Acceleration)
                 || HasEffect(ADV.Buffs.Swiftcast);
@@ -246,7 +245,7 @@ internal class RedMageVeraeroVerthunder2 : CustomCombo
                 || HasEffect(RDM.Buffs.Acceleration)
                 || HasEffect(ADV.Buffs.Swiftcast);
 
-            if (level >= RDM.Levels.Moulinent 
+            if (level >= RDM.Levels.Moulinent
                 && ((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
                     || (gauge.WhiteMana >= 60 && gauge.BlackMana >= 60 && HasEffect(RDM.Buffs.Embolden))
                     || (gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy)))
@@ -336,6 +335,7 @@ internal class RedMageVeraeroVerthunder2 : CustomCombo
             return actionID;
         }
     }
+
     // i really want the sim sauce, ya bopi feeliung saucy0
     // i saw sim portn
     // i wish it wz

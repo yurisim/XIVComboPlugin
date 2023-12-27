@@ -103,7 +103,7 @@ internal class BardHeavyShot : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (level >= BRD.Levels.PitchPerfect // Be the right level
-                    && gauge.Song == Song.WANDERER // be the right song 
+                    && gauge.Song == Song.WANDERER // be the right song
                     && (gauge.Repertoire == 3
                         || (gauge.Repertoire >= 1
                             && gauge.SongTimer <= 3000))) // You either have all stacks or you have 1 stack and the song timer is under 2500ms
@@ -136,23 +136,24 @@ internal class BardHeavyShot : CustomCombo
                     return BRD.BattleVoice;
                 }
 
-                if (IsOffCooldown(BRD.Barrage) 
+                if (IsOffCooldown(BRD.Barrage)
+
                     && (HasEffect(BRD.Buffs.RagingStrikes) || ragingStrikesCD >= 18))
                 {
                     return BRD.Barrage;
                 }
 
-                if (level >= BRD.Levels.Sidewinder 
+                if (level >= BRD.Levels.Sidewinder
+
                     && IsOffCooldown(BRD.Sidewinder)
-                    && ragingStrikesCD >= 9
-                    )
+                    && ragingStrikesCD >= 9)
                 {
                     return BRD.Sidewinder;
                 }
 
-                if (level >= BRD.Levels.EmpyrealArrow 
-                    && IsOffCooldown(BRD.EmpyrealArrow)
-                    )
+                if (level >= BRD.Levels.EmpyrealArrow
+
+                    && IsOffCooldown(BRD.EmpyrealArrow))
                 {
                     return BRD.EmpyrealArrow;
                 }
@@ -211,7 +212,7 @@ internal class BardHeavyShot : CustomCombo
                 return BRD.BlastArrow;
 
             if (level >= BRD.Levels.ApexArrow
-                && (gauge.SoulVoice >= 80 && HasEffect(BRD.Buffs.RagingStrikes) && HasEffect(BRD.Buffs.BattleVoice)
+                && ((gauge.SoulVoice >= 80 && HasEffect(BRD.Buffs.RagingStrikes) && HasEffect(BRD.Buffs.BattleVoice))
                     || (gauge.SoulVoice == 100 && ragingStrikesCD >= 12)))
                 return BRD.ApexArrow;
 
@@ -321,7 +322,7 @@ internal class BardQuickNock : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (level >= BRD.Levels.PitchPerfect // Be the right level
-                && gauge.Song == Song.WANDERER // be the right song 
+                && gauge.Song == Song.WANDERER // be the right song
                 && (gauge.Repertoire == 3
                     || (gauge.Repertoire >= 1
                         && gauge.SongTimer <= 2500))) // You either have all stacks or you have 1 stack and the song timer is under 2500ms
@@ -371,7 +372,6 @@ internal class BardQuickNock : CustomCombo
 
             if (level >= BRD.Levels.Shadowbite && HasEffect(BRD.Buffs.ShadowbiteReady))
             {
-
                 if (level >= BRD.Levels.Barrage && IsOffCooldown(BRD.Barrage) && HasEffect(BRD.Buffs.RagingStrikes))
                     return BRD.Barrage;
 

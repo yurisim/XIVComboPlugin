@@ -12,7 +12,6 @@ internal static class SCH
         Aetherflow = 166,
         EnergyDrain = 167,
         Resurrection = 173,
-        Adloquium = 185,
         SacredSoil = 188,
         Lustrate = 189,
         Physick = 190,
@@ -91,11 +90,9 @@ internal class ScholarSacredSoil : CustomCombo
     {
         if (actionID == SCH.SacredSoil)
         {
-
             if (level >= SCH.Levels.FeyIllumination
                 && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
-                && !HasEffect(SCH.Buffs.Dissipation)
-                )
+                && !HasEffect(SCH.Buffs.Dissipation))
                 return OriginalHook(SCH.FeyIllumination);
 
             return actionID;
@@ -123,7 +120,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 var isThereRaidDamage = LocalPlayerPercentage() <= 0.90;
 
-                if (level >= SCH.Levels.ChainStratagem 
+                if (level >= SCH.Levels.ChainStratagem
                     && IsOffCooldown(SCH.ChainStratagem)
                     && HasRaidBuffs())
                 {
@@ -133,10 +130,9 @@ internal class ScholarEnergyDrain : CustomCombo
                 if (level >= SCH.Levels.Consolation
                     && gauge.SeraphTimer > 0
                     && HasCharges(SCH.Consolation)
-                    && (GetRemainingCharges(SCH.Consolation) >= 2 
-                        || LocalPlayerPercentage() < 0.80 
-                        || gauge.SeraphTimer <= 5 )
-                    )
+                    && (GetRemainingCharges(SCH.Consolation) >= 2
+                        || LocalPlayerPercentage() < 0.80
+                        || gauge.SeraphTimer <= 5))
                 {
                     return OriginalHook(SCH.SummonSeraph);
                 }
@@ -177,12 +173,10 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 if (level >= SCH.Levels.Aetherflow
                     && gauge.Aetherflow >= 1
-                    && (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3
+                    && ((aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3)
                         || IsOffCooldown(SCH.Aetherflow)
                         || (HasRaidBuffs() && gauge.Aetherflow >= 3)
-                        || doDissipation
-                        )
-                    )
+                        || doDissipation))
                 {
                     return SCH.EnergyDrain;
                 }
@@ -235,14 +229,15 @@ internal class ScholarEnergyDrain : CustomCombo
                 && actionID != SCH.ArtOfWar2
                 && InCombat()
                 && TargetIsEnemy()
-                && ((bio is not null 
-                        && (bio.RemainingTime <= 3 
-                            || (bio.RemainingTime <= 6 && IsMoving)))
+                && ((bio is not null
+                        && (bio.RemainingTime <= 3
+                            || (bio.RemainingTime <= 6 && this.IsMoving)))
                         || (bio is null && ShouldRefreshDots())))
             {
                 return SCH.Biolysis;
             }
         }
+
         return actionID;
     }
 }
@@ -314,7 +309,6 @@ internal class ScholarExcog : CustomCombo
     }
 }
 
-
 internal class ScholarAdloCrit : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
@@ -323,11 +317,9 @@ internal class ScholarAdloCrit : CustomCombo
     {
         if (actionID == SCH.Adloquium)
         {
-
             if (level >= SCH.Levels.FeyIllumination
                 && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
-                && !HasEffect(SCH.Buffs.Dissipation)
-                )
+                && !HasEffect(SCH.Buffs.Dissipation))
             {
                 return OriginalHook(SCH.FeyIllumination);
             }
@@ -356,7 +348,6 @@ internal class ScholarAdloCrit : CustomCombo
         return actionID;
     }
 }
-
 
 internal class ScholarSummon : CustomCombo
 {

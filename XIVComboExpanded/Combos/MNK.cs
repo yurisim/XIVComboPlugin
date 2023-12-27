@@ -26,7 +26,6 @@ internal static class MNK
         FlintStrike = 25882,
         TornadoKick = 3543,
 
-
         Meditation = 3546,
         TheForbiddenChakra = 3547,
         FormShift = 4262,
@@ -115,8 +114,6 @@ internal class MonkDragonKick : CustomCombo
 
             var medicatedGood = medicated is not null && medicated.RemainingTime >= 8;
 
-
-
             // NO GCDs
             if (GCDClipCheck(actionID))
             {
@@ -136,7 +133,7 @@ internal class MonkDragonKick : CustomCombo
                     && (demolish is not null || doesNotHaveSolar || hasSolarLunar)
                     && !HasEffect(MNK.Buffs.FormlessFist)
                     && disciplinedFist is not null
-                    && (disciplinedFist.RemainingTime >= 8 
+                    && (disciplinedFist.RemainingTime >= 8
                         || doesNotHaveSolar
                         || hasSolarLunar)
                     && (OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz)
@@ -194,7 +191,7 @@ internal class MonkDragonKick : CustomCombo
                 && disciplinedFist != null
                 && (riddleOfFire != null
                     || gauge.BlitzTimeRemaining <= 4
-                    || GetCooldown(MNK.RiddleOfFire).CooldownRemaining >= 15 
+                    || GetCooldown(MNK.RiddleOfFire).CooldownRemaining >= 15
                     || level < MNK.Levels.RiddleOfFire)
                 && (OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz))
             {
@@ -267,7 +264,7 @@ internal class MonkAoECombo : CustomCombo
                     && InCombat()
                     && HasTarget()
                     && !HasEffect(MNK.Buffs.FormlessFist)
-                    && disciplinedFist is not null 
+                    && disciplinedFist is not null
                     && (OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz)
                     && (riddleOfFire?.RemainingTime >= 8
                          || (GetCooldown(MNK.PerfectBalance).ChargeCooldownRemaining <= 6)

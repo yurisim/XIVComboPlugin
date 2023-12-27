@@ -80,7 +80,7 @@ internal static class WAR
 internal class WarriorStormsPathCombo : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarAny;
-    
+
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == WAR.HeavySwing)
@@ -89,15 +89,14 @@ internal class WarriorStormsPathCombo : CustomCombo
 
             var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
 
-
-            if (GCDClipCheck(actionID)) {
-
+            if (GCDClipCheck(actionID))
+            {
                 var localPlayerPercentage = LocalPlayerPercentage();
 
                 if (level >= WAR.Levels.Infuriate
                    && gauge.BeastGauge <= 50
                    && HasCharges(WAR.Infuriate)
-                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos)) 
+                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
                    && (GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasRaidBuffs()
@@ -114,7 +113,6 @@ internal class WarriorStormsPathCombo : CustomCombo
                     return WAR.Upheaval;
                 }
 
-
                 if (IsOffCooldown(OriginalHook(WAR.Berserk))
                     && (level < WAR.Levels.StormsEye || surgingTempest is not null)
                     && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.InnerChaos)))
@@ -129,7 +127,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                     return WAR.Equilibrium;
                 }
             }
-           
+
             if (level >= WAR.Levels.InnerBeast
                 && (surgingTempest is not null || level < WAR.Levels.StormsEye)
                 && (gauge.BeastGauge >= 90
@@ -145,20 +143,18 @@ internal class WarriorStormsPathCombo : CustomCombo
 
             if (comboTime > 0)
             {
-
-                if (lastComboMove == WAR.Maim 
+                if (lastComboMove == WAR.Maim
                     && level >= WAR.Levels.StormsPath)
                 {
-                    
-                    if (level >= WAR.Levels.StormsEye 
-                        && (surgingTempest is null 
+                    if (level >= WAR.Levels.StormsEye
+                        && (surgingTempest is null
                             || surgingTempest?.RemainingTime < 30))
                         return WAR.StormsEye;
 
                     return WAR.StormsPath;
                 }
 
-                if (lastComboMove == WAR.HeavySwing 
+                if (lastComboMove == WAR.HeavySwing
                     && level >= WAR.Levels.Maim)
                 {
                     return WAR.Maim;
@@ -209,7 +205,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                 {
                     return OriginalHook(WAR.Berserk);
                 }
-                
+
                 if (level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
                     && localPlayerPercentage <= 0.70)
@@ -219,7 +215,6 @@ internal class WarriorMythrilTempestCombo : CustomCombo
             }
 
             var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
-
 
             if (level >= WAR.Levels.SteelCyclone
                 && (surgingTempest is not null || level < WAR.Levels.MythrilTempest)

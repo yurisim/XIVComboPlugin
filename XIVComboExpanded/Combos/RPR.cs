@@ -8,15 +8,21 @@ internal static class RPR
 
     public const uint
         // Single Target
+
+
         Slice = 24373,
         WaxingSlice = 24374,
         InfernalSlice = 24375,
         // AoE
+
+
         SpinningScythe = 24376,
         NightmareScythe = 24377,
         WhorlOfDeath = 24379,
         GrimReaping = 24397,
         // Soul Reaver
+
+
         Gibbet = 24382,
         Gallows = 24383,
         Guillotine = 24384,
@@ -28,17 +34,25 @@ internal static class RPR
         VoidReaping = 24395,
         CrossReaping = 24396,
         // Generators
+
+
         SoulSlice = 24380,
         SoulScythe = 24381,
         // Sacrifice
+
+
         ArcaneCircle = 24405,
         PlentifulHarvest = 24385,
         // Shroud
+
+
         Enshroud = 24394,
         Communio = 24398,
         LemuresSlice = 24399,
         LemuresScythe = 24400,
         // Misc
+
+
         ShadowOfDeath = 24378,
         Harpe = 24386,
         Soulsow = 24387,
@@ -154,9 +168,11 @@ internal class ReaperSlice : CustomCombo
                     && ((gauge.Soul >= 50
                         && gauge.Shroud <= 90
                         && (gauge.Soul >= 90
-                            || needSoulSlice 
+                            || needSoulSlice
+
                             || HasEffect(RPR.Buffs.ArcaneCircle)
-                            || HasRaidBuffs())) 
+                            || HasRaidBuffs()))
+
                     || gauge.VoidShroud >= 2))
                 {
                     return OriginalHook(RPR.BloodStalk);
@@ -192,13 +208,13 @@ internal class ReaperSlice : CustomCombo
                 && gauge.EnshroudedTimeRemaining == 0
                 && !HasEffect(RPR.Buffs.SoulReaver)
                 && !HasEffect(RPR.Buffs.BloodsownCircle)
-                && HasEffect(RPR.Buffs.ImmortalSacrifice)
-                )
+                && HasEffect(RPR.Buffs.ImmortalSacrifice))
             {
                 return RPR.PlentifulHarvest;
             }
 
-            if ((deathsDesign is null && ShouldRefreshDots()) 
+            if ((deathsDesign is null && ShouldRefreshDots())
+
                     || (deathsDesign is not null && deathsDesign.RemainingTime <= 15))
             {
                 return RPR.ShadowOfDeath;
@@ -268,13 +284,13 @@ internal class ReaperScythe : CustomCombo
                     return RPR.Enshroud;
                 }
             }
+
             if (level >= RPR.Levels.PlentifulHarvest
                 && gauge.Shroud <= 50
                 && gauge.EnshroudedTimeRemaining == 0
                 && !HasEffect(RPR.Buffs.SoulReaver)
                 && !HasEffect(RPR.Buffs.BloodsownCircle)
-                && HasEffect(RPR.Buffs.ImmortalSacrifice)
-                )
+                && HasEffect(RPR.Buffs.ImmortalSacrifice))
             {
                 return RPR.PlentifulHarvest;
             }

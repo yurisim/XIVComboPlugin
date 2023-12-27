@@ -77,15 +77,17 @@ internal static class PLD
 
 internal abstract class PaladinCombo : CustomCombo
 {
-    protected bool HasMp(uint spell)
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == PLD.FastBlade)
         {
-            //if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
-            //{
+            // if (IsEnabled(CustomComboPreset.PaladinGoringBladeAtonementFeature))
+            // {
             //    if (level >= PLD.Levels.Atonement && HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade)
             //        return PLD.Atonement;
-            //}
+            // }
 
             var goringBlade = FindTargetEffect(PLD.Debuffs.GoringBlade);
 
@@ -94,7 +96,7 @@ internal abstract class PaladinCombo : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (IsOffCooldown(PLD.FightOrFlight)
-                    && (level < PLD.Levels.GoringBlade 
+                    && (level < PLD.Levels.GoringBlade
                         || lastComboMove == PLD.RiotBlade
                         || TargetHasEffect(PLD.Debuffs.GoringBlade)))
                 {
@@ -125,7 +127,7 @@ internal abstract class PaladinCombo : CustomCombo
                 }
             }
 
-            if (HasEffect(PLD.Buffs.Requiescat) 
+            if (HasEffect(PLD.Buffs.Requiescat)
                 && goringBlade is not null)
             {
                 return PLD.HolySpirit;
@@ -133,7 +135,6 @@ internal abstract class PaladinCombo : CustomCombo
 
             if (comboTime > 0 && InMeleeRange())
             {
-
                 if (lastComboMove == PLD.RiotBlade
                     && level >= PLD.Levels.GoringBlade
                     && (goringBlade is null || (goringBlade is not null && goringBlade.RemainingTime <= 5)))
@@ -169,7 +170,7 @@ internal class PaladinProminence : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (IsOffCooldown(PLD.FightOrFlight)
-                    && (lastComboMove == PLD.TotalEclipse 
+                    && (lastComboMove == PLD.TotalEclipse
                         || HasEffect(PLD.Buffs.Requiescat)))
                 {
                     return PLD.FightOrFlight;
@@ -207,8 +208,8 @@ internal class PaladinProminence : CustomCombo
                 }
             }
 
-            if (HasEffect(PLD.Buffs.Requiescat) 
-                && level >= PLD.Levels.HolyCircle 
+            if (HasEffect(PLD.Buffs.Requiescat)
+                && level >= PLD.Levels.HolyCircle
                 && GetTargetDistance() <= 5)
             {
                 return PLD.HolyCircle;
@@ -217,18 +218,7 @@ internal class PaladinProminence : CustomCombo
             if (comboTime > 0)
             {
                 if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
-                {
-                    if (IsEnabled(CustomComboPreset.PaladinProminenceDivineMightFeature))
-                    {
-                        if (HasEffect(PLD.Buffs.DivineMight))
-                        {
-                            if (level >= PLD.Levels.HolyCircle && this.HasMp(PLD.HolyCircle))
-                                return PLD.HolyCircle;
-                        }
-                    }
-
                     return PLD.Prominence;
-                }
             }
 
             return PLD.TotalEclipse;
@@ -268,7 +258,7 @@ internal class PaladinHolySpirit : PaladinCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == PLD.HolySpirit && level < PLD.Levels.HolySpirit)
-          return PLD.ShieldLob;
+            return PLD.ShieldLob;
         return actionID;
     }
 }

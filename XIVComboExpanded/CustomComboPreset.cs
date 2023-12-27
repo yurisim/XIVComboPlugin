@@ -117,9 +117,10 @@ public enum CustomComboPreset
     AstrologianDrawLockoutFeature = 3306,
 
     [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Replace Benefic 2 with Benefic when below level 26 in synced content.", AST.JobID)]
-    AstrologianBeneficSyncFeature = 3303,
-
-    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", AST.JobID)]
+    AstrologianBeneficSyncFeature = 3303,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", AST.JobID)]
+
     AstrologianLucidFeature = 3305,
 
     #endregion
@@ -185,8 +186,8 @@ public enum CustomComboPreset
     BlackSpellsUmbralSoulFeature = 2517,
 
     [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID)]
-    BlackScatheFeature = 2507,
-
+    BlackScatheFeature = 2507,
+
     [CustomComboInfo("One Button Black Mage", "Automates your Black Mage", BLM.JobID)]
     OneButtonAOEBlackMageFeature = 2525,
 
@@ -198,10 +199,11 @@ public enum CustomComboPreset
     BlackThunderDelayOption = 2520,
 
     #endregion
-// ====================================================================================
+    // ====================================================================================
+
     #region BARD
-
-[CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
+
+    [CustomComboInfo("Heavy Shot into Straight Shot", "Replace Heavy Shot with Straight Shot/Refulgent Arrow when available.", BRD.JobID)]
     BardStraightShotUpgradeFeature = 2302,
 
     [CustomComboInfo("Iron Jaws Feature", "Replace Iron Jaws with Caustic Bite/Stormbite depending on which is not present on the target.", BRD.JobID)]
@@ -1103,12 +1105,14 @@ public enum CustomComboPreset
     WhiteMageCureFeature = 2403,
 
     [CustomComboInfo("Afflatus Feature", "Replace Cure 2 with Afflatus Solace and Medica with Afflatus Rapture when a Lily is available.", WHM.JobID)]
-    WhiteMageAfflatusFeature = 2404,
-
-    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", WHM.JobID)]
-    WhiteMageLucidFeature = 2408,
-
-    [CustomComboInfo("Dia Auto Cast", "Automatically cast Dia if it doesn't exist on the target", WHM.JobID)]
+    WhiteMageAfflatusFeature = 2404,
+
+    [CustomComboInfo("Lucid Dreaming Auto Cast", "Automatically cast lucid dreaming if you have less than 8000 MP", WHM.JobID)]
+
+    WhiteMageLucidFeature = 2408,
+
+    [CustomComboInfo("Dia Auto Cast", "Automatically cast Dia if it doesn't exist on the target", WHM.JobID)]
+
     WhiteMageDiaFeature = 2410,
 
     #endregion

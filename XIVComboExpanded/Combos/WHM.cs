@@ -185,13 +185,11 @@ internal class WhiteMageMedica : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
+            if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
+                return WHM.PlenaryIndulgence;
 
-                if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
-                    return WHM.PlenaryIndulgence;
-
-
-                if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
-                    return WHM.AfflatusRapture;
+            if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
+                return WHM.AfflatusRapture;
         }
 
         return actionID;
@@ -206,10 +204,10 @@ internal class WHiteMageBenison : CustomCombo
     {
         if (actionID == WHM.DivineBenison)
         {
-            if (level >= WHM.Levels.Aquaveil 
+            if (level >= WHM.Levels.Aquaveil
+
                 && IsOffCooldown(WHM.Aquaveil)
-                && GetRemainingCharges(WHM.DivineBenison) <= 1
-                )
+                && GetRemainingCharges(WHM.DivineBenison) <= 1)
             {
                 return WHM.Aquaveil;
             }
@@ -224,13 +222,18 @@ internal class WHiteMageBenison : CustomCombo
 internal class WhiteMageDiaFeature : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
-    
+
+
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Stone2 
-            || actionID == WHM.Stone3 
-            || actionID == WHM.Stone4 
-            || actionID == WHM.Glare 
+        if (actionID == WHM.Stone2
+
+            || actionID == WHM.Stone3
+
+            || actionID == WHM.Stone4
+
+            || actionID == WHM.Glare
+
             || actionID == WHM.Glare3)
         {
             var tarOfTarPercentage = TargetOfTargetHPercentage();
@@ -243,8 +246,7 @@ internal class WhiteMageDiaFeature : CustomCombo
             {
                 if (level >= WHM.Levels.PresenceOfMind
                     && IsOffCooldown(WHM.PresenceOfMind)
-                    && HasRaidBuffs()
-                    )
+                    && HasRaidBuffs())
                 {
                     return WHM.PresenceOfMind;
                 }
@@ -281,13 +283,16 @@ internal class WhiteMageDiaFeature : CustomCombo
                     && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
             }
-            
+
+
             var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
-            if (InCombat() 
-                && ((diaFound is not null 
-                        && (diaFound.RemainingTime <= 3 || (diaFound.RemainingTime <= 6 && IsMoving)))
+            if (InCombat()
+
+                && ((diaFound is not null
+
+                        && (diaFound.RemainingTime <= 3 || (diaFound.RemainingTime <= 6 && this.IsMoving)))
                     || (diaFound is null && ShouldRefreshDots())))
             {
                 return OriginalHook(WHM.Dia);
@@ -314,16 +319,23 @@ internal class WhiteMageDiaFeature : CustomCombo
             return actionID;
         }
 
-        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) 
-            && level >= WHM.Levels.ThinAir 
-            && !HasEffect(WHM.Buffs.ThinAir) 
+        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3)
+
+            && level >= WHM.Levels.ThinAir
+
+            && !HasEffect(WHM.Buffs.ThinAir)
+
             && GetRemainingCharges(WHM.ThinAir) >= 1)
             return WHM.ThinAir;
 
-        if (actionID == WHM.Raise 
+        if (actionID == WHM.Raise
+
             && level >= WHM.Levels.ThinAir
-            //&& IsOffCooldown(ADV.Swiftcast)
-            && !HasEffect(WHM.Buffs.ThinAir) 
+            // && IsOffCooldown(ADV.Swiftcast)
+
+
+            && !HasEffect(WHM.Buffs.ThinAir)
+
             && GetRemainingCharges(WHM.ThinAir) >= 1)
         {
             return WHM.ThinAir;

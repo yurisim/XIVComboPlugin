@@ -6,6 +6,7 @@ using System.Reflection;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using XIVComboExpandedPlugin.Combos;
 
 namespace XIVComboExpandedPlugin;
@@ -22,9 +23,6 @@ internal sealed partial class IconReplacer : IDisposable
 
     private IntPtr actionManager = IntPtr.Zero;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="IconReplacer"/> class.
-    /// </summary>
     public unsafe IconReplacer(IGameInteropProvider gameInteropProvider)
     {
         this.clientStructActionManager = ActionManager.Instance();
@@ -68,7 +66,7 @@ internal sealed partial class IconReplacer : IDisposable
     /// <returns>A bool value of whether the action can be used or not.</returns>
     internal unsafe bool CanUseAction(uint actionID, uint targetID = 0xE000_0000)
     {
-        return clientStructActionManager->GetActionStatus(ActionType.Spell, actionID, targetID, 0, 1) == 0;
+        return clientStructActionManager->GetActionStatus(ActionType.Action, actionID, targetID, false, true) == 0;
     }
 
     /// <summary>

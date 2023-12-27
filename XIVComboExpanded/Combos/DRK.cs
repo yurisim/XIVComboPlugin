@@ -77,15 +77,17 @@ internal class DarkSouleater : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 // Do a check for flood of darkness first since it is a lower level
-                if (level >= DRK.Levels.FloodOfDarkness
-                        && (LocalPlayer?.CurrentMp >= 9000 
-                            || gauge.HasDarkArts)
-                            || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs())
-                            )
+                if ((level >= DRK.Levels.FloodOfDarkness
+                        && (LocalPlayer?.CurrentMp >= 9000
+
+                            || gauge.HasDarkArts))
+                            || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs()))
                 {
                     // If you are high enough level for edge fo darkness then do that instead
-                    return level >= DRK.Levels.EdgeOfDarkness 
-                        ? OriginalHook(DRK.EdgeOfDarkness) 
+                    return level >= DRK.Levels.EdgeOfDarkness
+
+                        ? OriginalHook(DRK.EdgeOfDarkness)
+
                         : OriginalHook(DRK.FloodOfDarkness);
                 }
 
@@ -104,11 +106,14 @@ internal class DarkSouleater : CustomCombo
                 }
             }
 
-            if (level >= DRK.Levels.AbyssalDrain 
+            if (level >= DRK.Levels.AbyssalDrain
+
                 && IsOffCooldown(DRK.AbyssalDrain))
             {
-                return level >= DRK.Levels.CarveAndSpit 
-                    ? DRK.CarveAndSpit 
+                return level >= DRK.Levels.CarveAndSpit
+
+                    ? DRK.CarveAndSpit
+
                     : DRK.AbyssalDrain;
             }
 
@@ -117,8 +122,7 @@ internal class DarkSouleater : CustomCombo
                 && gauge.Blood >= 50
                 && (HasEffect(DRK.Buffs.Delirium)
                     || gauge.Blood >= 70
-                    || HasRaidBuffs()
-                    ))
+                    || HasRaidBuffs()))
             {
                 return DRK.Bloodspiller;
             }
@@ -183,21 +187,21 @@ internal class DarkStalwartSoul : CustomCombo
             }
 
             if (level >= DRK.Levels.Quietus
-                && (level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium)
+                && ((level >= DRK.Levels.Delirium && HasEffect(DRK.Buffs.Delirium))
                     || gauge.Blood >= 70))
             {
                 return DRK.Quietus;
             }
 
-                if (comboTime > 0)
+            if (comboTime > 0)
+            {
+                if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
                 {
-                    if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
-                    {
-                        return DRK.StalwartSoul;
-                    }
+                    return DRK.StalwartSoul;
                 }
+            }
 
-                return DRK.Unleash;
+            return DRK.Unleash;
         }
 
         return actionID;

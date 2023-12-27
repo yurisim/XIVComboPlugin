@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Numerics;
+
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -52,12 +53,12 @@ internal abstract partial class CustomCombo
     protected byte ClassID { get; }
 
     protected uint MovingCounter { get; set; }
+
     protected Vector2 Position { get; set; }
+
     protected float PlayerSpeed { get; set; }
 
     protected bool IsMoving { get; set; }
-
-
 
     /// <summary>
     /// Gets the job ID associated with this combo.
@@ -79,8 +80,10 @@ internal abstract partial class CustomCombo
 
         if (this.MovingCounter == 0)
         {
-            Vector2 newPosition = LocalPlayer is null 
-                ? Vector2.Zero 
+            Vector2 newPosition = LocalPlayer is null
+
+                ? Vector2.Zero
+
                 : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
             this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
@@ -226,7 +229,8 @@ internal abstract partial class CustomCombo
     {
         return Service.TargetManager?.Target?.TargetObject as BattleChara;
     }
-    
+
+
     /// <summary>
     /// Gets the current territory type.
     /// </summary>
@@ -288,7 +292,7 @@ internal abstract partial class CustomCombo
             {
                 hasRaidBuffs = true;
                 break;
-            };
+            }
         }
 
         foreach (var debuff in raidDebuffs)
@@ -299,7 +303,7 @@ internal abstract partial class CustomCombo
             {
                 hasRaidBuffs = true;
                 break;
-            };
+            }
         }
 
         return hasRaidBuffs;
@@ -319,7 +323,8 @@ internal abstract partial class CustomCombo
     protected static float TargetOfTargetHPercentage()
     {
         var target = GetTargetOfTarget();
-        
+
+
         return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
 
@@ -394,7 +399,6 @@ internal abstract partial class CustomCombo
         => CurrentTarget is not null;
 
 
-    
     /// <summary>
     /// Find if the player has no target.
     /// </summary>
@@ -616,7 +620,6 @@ internal abstract partial class CustomCombo
         return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
 
-    
 
     /// <summary>
     /// Checks to see if the GCD would not currently clip if you used a cooldown.

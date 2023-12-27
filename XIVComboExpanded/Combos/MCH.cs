@@ -106,9 +106,7 @@ internal class MachinistCleanShot : CustomCombo
                         || (gauge.Battery > 80
                             && ((level < MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot))
                                 || (level >= MCH.Levels.AirAnchor && IsOffCooldown(MCH.AirAnchor))
-                                || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))))
-                        )
-                    )
+                                || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))))))
                 {
                     return OriginalHook(MCH.RookAutoturret);
                 }
@@ -128,8 +126,7 @@ internal class MachinistCleanShot : CustomCombo
                 if (level >= MCH.Levels.Ricochet
                     && HasCharges(MCH.Ricochet)
                     && HasTarget()
-                    && ricochetCharges >= gaussRoundCharges
-                    )
+                    && ricochetCharges >= gaussRoundCharges)
                 {
                     return MCH.Ricochet;
                 }
@@ -298,8 +295,6 @@ internal class MachinistSpreadShot : CustomCombo
                 }
             }
 
-
-
             if (level >= MCH.Levels.Bioblaster && IsOffCooldown(MCH.Bioblaster))
                 return MCH.Bioblaster;
 
@@ -316,7 +311,6 @@ internal class MachinistSpreadShot : CustomCombo
 
             if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
             {
-
                 return level >= MCH.Levels.AutoCrossbow
                     ? MCH.AutoCrossbow
                     : MCH.HeatBlast;

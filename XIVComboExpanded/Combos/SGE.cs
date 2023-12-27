@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using Serilog.Events;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -105,7 +104,6 @@ internal class SageSoteria : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-
                 var targetHPPercent = TargetOfTargetHPercentage();
 
                 if (level >= SGE.Levels.Physis
@@ -177,12 +175,12 @@ internal class SageSoteria : CustomCombo
                 }
             }
 
-            //(ushort Debuff, ushort Level)[] EDosises = new[]
-            //{
+            // (ushort Debuff, ushort Level)[] EDosises = new[]
+            // {
             //    ( SGE.Debuffs.EDosis3, SGE.Levels.EDosis3 ),
             //    ( SGE.Debuffs.EDosis2, SGE.Levels.EDosis2 ),
             //    ( SGE.Debuffs.EDosis1, SGE.Levels.EDosis1 )
-            //};
+            // };
 
             if (InCombat())
             {
@@ -191,9 +189,9 @@ internal class SageSoteria : CustomCombo
                 var debuffTime = debuff?.RemainingTime;
 
                 if (level >= SGE.Levels.EDosis3
-                    && (debuff is not null
+                    && ((debuff is not null
                         && (debuffTime <= 3
-                            || (debuffTime <= 6 && IsMoving))
+                            || (debuffTime <= 6 && this.IsMoving)))
                         || (debuff is null && ShouldRefreshDots())))
                 {
                     if (!HasEffect(SGE.Buffs.Eukrasia))
@@ -210,7 +208,7 @@ internal class SageSoteria : CustomCombo
                         && !HasEffect(SGE.Buffs.Physis2)
                         && !HasEffect(SGE.Buffs.Kerakeia)) || myHP <= threshold - 0.4)
                     && IsOnCooldown(SGE.Ixochole)
-                    && !IsMoving
+                    && !this.IsMoving
                     && myHP <= threshold - 0.2)
                 {
                     return SGE.Pneuma;
@@ -221,15 +219,14 @@ internal class SageSoteria : CustomCombo
                 if (GetTargetDistance() <= 6
                     && HasCharges(plegma)
                     && (GetCooldown(plegma).ChargeCooldownRemaining <= 5
-                        //|| IsMoving
+                        // || IsMoving
                         || GetRemainingCharges(plegma) == 2
-                        || HasRaidBuffs()
-                        ))
+                        || HasRaidBuffs()))
                 {
                     return SGE.Phlegma3;
                 }
 
-                if (IsMoving)
+                if (this.IsMoving)
                 {
                     if (gauge.Addersting >= 1
                         && level >= SGE.Levels.Toxikon)
@@ -237,19 +234,21 @@ internal class SageSoteria : CustomCombo
                         return OriginalHook(SGE.Toxikon);
                     }
 
-                    //if (GetTargetDistance() <= 5
+                    // if (GetTargetDistance() <= 5
                     //    && HasTarget()
                     //    && level >= SGE.Levels.Dyskrasia
                     //    && TargetIsEnemy())
-                    //{
+                    // {
                     //    return level >= SGE.Levels.Phlegma3 ? SGE.Dyskrasia2 : SGE.Dyskrasia;
-                    //}
+                    // }
                 }
 
                 return actionID;
             }
+
             return actionID;
         }
+
         return actionID;
     }
 }
@@ -296,10 +295,10 @@ internal class SageZoe : CustomCombo
                 return SGE.Zoe;
             }
 
-            //if (actionID == SGE.Pneuma)
-            //{
+            // if (actionID == SGE.Pneuma)
+            // {
             //    return CalcBestAction(SGE.Pneuma, SGE.Zoe, SGE.Pneuma);
-            //}
+            // }
         }
 
         return actionID;

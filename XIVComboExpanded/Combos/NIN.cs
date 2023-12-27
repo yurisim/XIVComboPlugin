@@ -96,13 +96,13 @@ internal static class NIN
     }
 }
 
-//[StructLayout(LayoutKind.Explicit, Size = 0x10)]
-//public struct TmpNinjaGauge
-//{
+// [StructLayout(LayoutKind.Explicit, Size = 0x10)]
+// public struct TmpNinjaGauge
+// {
 //    [FieldOffset(0x08)] public ushort HutonTimer;
 //    [FieldOffset(0x0A)] public byte Ninki;
 //    [FieldOffset(0x0B)] public byte HutonManualCasts;
-//}
+// }
 
 internal class NinjaAeolianEdge : CustomCombo
 {
@@ -144,14 +144,13 @@ internal class NinjaAeolianEdge : CustomCombo
             if (GCDClipCheck(actionID)
                 && OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu
                 && !HasEffect(NIN.Buffs.Kassatsu)
-                && !HasEffect(NIN.Buffs.TenChiJin)
-                )
+                && !HasEffect(NIN.Buffs.TenChiJin))
             {
                 if (InMeleeRange())
                 {
-                    //if (level >= NIN.Levels.Mug
-                    //&& IsOffCooldown(NIN.Mug)
-                    //&& HasRaidBuffs()) return NIN.Mug;
+                    // if (level >= NIN.Levels.Mug
+                    // && IsOffCooldown(NIN.Mug)
+                    // && HasRaidBuffs()) return NIN.Mug;
 
                     if (level >= NIN.Levels.TrickAttack
                         && HasEffect(NIN.Buffs.Suiton)
@@ -168,7 +167,6 @@ internal class NinjaAeolianEdge : CustomCombo
                 {
                     return NIN.Kassatsu;
                 }
-
 
                 if (level >= NIN.Levels.Bunshin
                     && IsOffCooldown(NIN.Bunshin)
@@ -199,8 +197,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     && (ninki >= 80
                         || TargetHasEffect(NIN.Debuffs.TrickAttack)
                         || HasEffect(NIN.Buffs.Meisui)
-                        || (level >= NIN.Levels.EnhancedMug && GetCooldown(NIN.Mug).CooldownRemaining <= 5))
-                    )
+                        || (level >= NIN.Levels.EnhancedMug && GetCooldown(NIN.Mug).CooldownRemaining <= 5)))
                 {
                     return (level >= NIN.Levels.Bhavacakra)
                             ? NIN.Bhavacakra
@@ -221,8 +218,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     || phantomTime <= 10
                     || GetTargetDistance() >= 9
                     || trickAttackCD >= phantomTime
-                    || HasRaidBuffs())
-                )
+                    || HasRaidBuffs()))
             {
                 return OriginalHook(NIN.Bunshin);
             }
@@ -385,17 +381,17 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
         if (actionID == NIN.HakkeMujinsatsu)
         {
             var g = GetJobGauge<NINGauge>();
-            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            //var hutonDuration = gauge->HutonTimer;
-            //var ninki = gauge->Ninki;
-            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            //var hutonDuration = gauge->HutonTimer;
-            //var ninki = gauge->Ninki;
+            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            // var hutonDuration = gauge->HutonTimer;
+            // var ninki = gauge->Ninki;
+            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            // var hutonDuration = gauge->HutonTimer;
+            // var ninki = gauge->Ninki;
 
-            //TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
+            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
             var ninki = g.Ninki;
 
-            //var gauge = GetJobGauge<NINGauge>();
+            // var gauge = GetJobGauge<NINGauge>();
 
             if (HasEffect(NIN.Buffs.TenChiJin))
             {
@@ -437,10 +433,8 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             if (GCDClipCheck(actionID)
                 && InCombat()
                 && !HasEffect(NIN.Buffs.TenChiJin)
-                && !HasEffect(NIN.Buffs.Mudra)
-                )
+                && !HasEffect(NIN.Buffs.Mudra))
             {
-
                 if (level >= NIN.Levels.Kassatsu
                     && IsOffCooldown(NIN.Kassatsu))
                     return NIN.Kassatsu;
