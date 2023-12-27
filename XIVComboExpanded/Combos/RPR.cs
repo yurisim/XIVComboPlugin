@@ -8,21 +8,17 @@ internal static class RPR
 
     public const uint
         // Single Target
-
-
         Slice = 24373,
         WaxingSlice = 24374,
         InfernalSlice = 24375,
+
         // AoE
-
-
         SpinningScythe = 24376,
         NightmareScythe = 24377,
         WhorlOfDeath = 24379,
         GrimReaping = 24397,
+
         // Soul Reaver
-
-
         Gibbet = 24382,
         Gallows = 24383,
         Guillotine = 24384,
@@ -33,9 +29,8 @@ internal static class RPR
         Gluttony = 24393,
         VoidReaping = 24395,
         CrossReaping = 24396,
+
         // Generators
-
-
         SoulSlice = 24380,
         SoulScythe = 24381,
         // Sacrifice

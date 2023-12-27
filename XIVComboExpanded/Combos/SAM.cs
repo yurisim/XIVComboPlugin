@@ -12,6 +12,7 @@ internal static class SAM
     public const uint
         // Single target
 
+
         Hakaze = 7477,
         Jinpu = 7478,
         Shifu = 7479,
@@ -24,6 +25,7 @@ internal static class SAM
         KaeshiSetsugekka = 16486,
         // AoE
 
+
         Fuga = 7483,
         Mangetsu = 7484,
         Oka = 7485,
@@ -31,11 +33,13 @@ internal static class SAM
         Fuko = 25780,
         // Iaijutsu and Tsubame
 
+
         Iaijutsu = 7867,
         TsubameGaeshi = 16483,
         KaeshiHiganbana = 16484,
         Shoha = 16487,
         // Misc
+
 
         MeikyoShisui = 7499,
         HissatsuShinten = 7490,
