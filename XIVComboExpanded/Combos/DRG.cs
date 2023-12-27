@@ -191,7 +191,6 @@ internal class DragoonCoerthanTorment : CustomCombo
                 {
                     return DRG.DragonfireDive;
                 }
-
             }
 
 
@@ -207,7 +206,6 @@ internal class DragoonCoerthanTorment : CustomCombo
 
             // Draconian Fury
             return OriginalHook(DRG.DoomSpike);
-
         }
 
         return actionID;

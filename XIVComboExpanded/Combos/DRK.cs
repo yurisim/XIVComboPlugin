@@ -136,7 +136,6 @@ internal class DarkSouleater : CustomCombo
             }
 
             return DRK.HardSlash;
-
         }
 
         return actionID;
@@ -199,7 +198,6 @@ internal class DarkStalwartSoul : CustomCombo
                 }
 
                 return DRK.Unleash;
-            
         }
 
         return actionID;

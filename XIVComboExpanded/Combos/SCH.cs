@@ -242,7 +242,6 @@ internal class ScholarEnergyDrain : CustomCombo
             {
                 return SCH.Biolysis;
             }
-
         }
         return actionID;
     }
@@ -279,7 +278,6 @@ internal class ScholarIndomitability : CustomCombo
             }
 
             return CalcBestAction(actionID, SCH.FeyBlessing);
-
         }
 
         return actionID;

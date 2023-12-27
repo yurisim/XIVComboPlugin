@@ -220,7 +220,6 @@ internal class BardHeavyShot : CustomCombo
                 && HasEffect(BRD.Buffs.StraightShotReady))
                 // Refulgent Arrow
                 return OriginalHook(BRD.StraightShot);
-
         }
 
         return actionID;
@@ -303,7 +302,6 @@ internal class BardIronJaws : CustomCombo
                 return BRD.CausticBite;
 
             return BRD.Stormbite;
-
         }
 
         return actionID;
@@ -380,7 +378,6 @@ internal class BardQuickNock : CustomCombo
 
                 return BRD.Shadowbite;
             }
-
         }
 
         return actionID;

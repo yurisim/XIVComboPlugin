@@ -206,7 +206,6 @@ internal class NinjaAeolianEdge : CustomCombo
                             ? NIN.Bhavacakra
                             : NIN.HellfrogMedium;
                 }
-
             }
 
             var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);
@@ -299,7 +298,6 @@ internal class NinjaAeolianEdge : CustomCombo
             }
 
             return NIN.SpinningEdge;
-
         }
 
         return actionID;
@@ -481,7 +479,6 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             }
 
             return NIN.DeathBlossom;
-
         }
 
         return actionID;

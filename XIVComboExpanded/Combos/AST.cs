@@ -52,7 +52,7 @@ internal static class AST
     public static class Buffs
     {
         public const ushort
-            ClarifyingDraw = 2713;
+            ClarifyingDraw = 2713,
             Divination = 1878,
             AspectedHelios = 836,
             BalanceDrawn = 913,
@@ -95,11 +95,10 @@ internal class AstrologianMalefic : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-
-        if (actionID == AST.Malefic 
-            || actionID == AST.Malefic2 
-            || actionID == AST.Malefic3 
-            || actionID == AST.Malefic4 
+        if (actionID == AST.Malefic
+            || actionID == AST.Malefic2
+            || actionID == AST.Malefic3
+            || actionID == AST.Malefic4
             || actionID == AST.FallMalefic)
         {
             var gauge = GetJobGauge<ASTGauge>();
@@ -111,7 +110,7 @@ internal class AstrologianMalefic : CustomCombo
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (tarPercentage <= 0.75
-                    && (IsOffCooldown(AST.EssentialDignity) 
+                    && (IsOffCooldown(AST.EssentialDignity)
                         || HasCharges(AST.EssentialDignity)))
                     {
                         return AST.EssentialDignity;
@@ -127,8 +126,8 @@ internal class AstrologianMalefic : CustomCombo
                     }
                 }
 
-                if (level >= AST.Levels.Astrodyne 
-                    && IsOffCooldown(AST.Divination) 
+                if (level >= AST.Levels.Astrodyne
+                    && IsOffCooldown(AST.Divination)
                     && HasRaidBuffs()) return AST.Divination;
 
                 if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
@@ -138,28 +137,27 @@ internal class AstrologianMalefic : CustomCombo
 
                 if (OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
                     && LocalPlayerPercentage() <= 0.85
-                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
-                    )
+                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50)
                 {
                     return OriginalHook(AST.EarthlyStar);
                 }
 
-                if (level >= AST.Levels.Astrodyne 
-                    && CanUseAction(AST.Astrodyne)) 
+                if (level >= AST.Levels.Astrodyne
+                    && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
 
                 if (level >= AST.Levels.MinorArcana
                     && InCombat()
-                    && IsOffCooldown(AST.MinorArcana) 
-                    && gauge.DrawnCrownCard == CardType.NONE) 
+                    && IsOffCooldown(AST.MinorArcana)
+                    && gauge.DrawnCrownCard == CardType.NONE)
                     return AST.MinorArcana;
 
-                if (level >= AST.Levels.Draw 
-                    && gauge.DrawnCard == CardType.NONE 
+                if (level >= AST.Levels.Draw
+                    && gauge.DrawnCard == CardType.NONE
                     && HasCharges(AST.Draw))
                     return AST.Draw;
 
-                if (IsOffCooldown(ADV.LucidDreaming) 
+                if (IsOffCooldown(ADV.LucidDreaming)
                     && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
@@ -168,7 +166,6 @@ internal class AstrologianMalefic : CustomCombo
                     && CanUseAction(AST.Redraw)
                     && seals != null)
                 {
-
                     var drawnCard = gauge.DrawnCard;
 
                     switch (drawnCard)
@@ -187,12 +184,9 @@ internal class AstrologianMalefic : CustomCombo
                             break;
                         default:
                             break;
-
                     }
-
                 }
             }
-
 
             if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 4)
                 return AST.Combust3;
@@ -224,7 +218,6 @@ internal class AstrologianGravity : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-
                 if (level >= AST.Levels.Astrodyne
                     && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
@@ -248,7 +241,6 @@ internal class AstrologianGravity : CustomCombo
                     && CanUseAction(AST.Redraw)
                     && seals != null)
                 {
-
                     var drawnCard = gauge.DrawnCard;
 
                     switch (drawnCard)
@@ -267,11 +259,10 @@ internal class AstrologianGravity : CustomCombo
                             break;
                         default:
                             break;
-
                     }
-
                 }
             }
+        }
 
         return actionID;
     }
@@ -287,8 +278,7 @@ internal class AstroCelestial : CustomCombo
         {
             if (level >= AST.Levels.Exaltation
                 && IsOffCooldown(AST.Exaltation)
-                && GetRemainingCharges(AST.CelestialIntersection) <= 1
-                )
+                && GetRemainingCharges(AST.CelestialIntersection) <= 1)
             {
                 return AST.Exaltation;
             }
@@ -353,6 +343,7 @@ internal class AstrologianDraw : CustomCombo
         return actionID;
     }
 }
+
 internal class AstrologianBenefic2 : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficSyncFeature;

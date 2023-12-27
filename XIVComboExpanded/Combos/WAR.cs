@@ -164,7 +164,6 @@ internal class WarriorStormsPathCombo : CustomCombo
                     return WAR.Maim;
                 }
             }
-
         }
 
         return actionID;

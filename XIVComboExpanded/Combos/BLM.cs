@@ -194,7 +194,6 @@ internal class BlackMageFire : CustomCombo
             //{
             //    return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire3 : BLM.Blizzard3;
             //}
-
         }
 
         return actionID;
@@ -271,7 +270,6 @@ internal class BlackFireBlizzard2 : CustomCombo
                     }
 
                     return OriginalHook(BLM.Thunder2);
-
                 }
 
                 if (level >= BLM.Levels.Fire2
@@ -292,7 +290,6 @@ internal class BlackFireBlizzard2 : CustomCombo
             {
                 return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire2 : BLM.Blizzard2;
             }
-
         }
 
         return actionID;

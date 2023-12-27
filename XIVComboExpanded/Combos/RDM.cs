@@ -266,7 +266,6 @@ internal class RedMageVeraeroVerthunder2 : CustomCombo
                 return (gauge.BlackMana <= gauge.WhiteMana || level < RDM.Levels.Veraero2)
                     ? OriginalHook(RDM.Verthunder2)
                     : OriginalHook(RDM.Veraero2);
-
             }
         }
 

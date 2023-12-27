@@ -184,7 +184,6 @@ internal class ReaperSlice : CustomCombo
                         || (InCombat() && HasEffect(RPR.Buffs.Soulsow) && HasRaidBuffs()))
                 {
                     return OriginalHook(RPR.Soulsow);
-
                 }
             }
 
@@ -219,7 +218,6 @@ internal class ReaperSlice : CustomCombo
             }
 
             return RPR.Slice;
-
         }
 
         return actionID;
@@ -287,7 +285,6 @@ internal class ReaperScythe : CustomCombo
                         || (InCombat() && HasEffect(RPR.Buffs.Soulsow) && deathsDesign is not null))
                 {
                     return OriginalHook(RPR.Soulsow);
-
                 }
             }
 
@@ -314,7 +311,6 @@ internal class ReaperScythe : CustomCombo
             }
 
             return RPR.SpinningScythe;
-
         }
 
         return actionID;

@@ -192,7 +192,6 @@ internal class WhiteMageMedica : CustomCombo
 
                 if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                     return WHM.AfflatusRapture;
-            
         }
 
         return actionID;

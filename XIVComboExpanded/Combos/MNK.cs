@@ -170,7 +170,6 @@ internal class MonkDragonKick : CustomCombo
                 {
                     return MNK.RiddleOfWind;
                 }
-
             }
 
             // Ranged GCDs
@@ -324,7 +323,6 @@ internal class MonkAoECombo : CustomCombo
                 || (perfectBalance?.StackCount >= 3 && !gauge.Nadi.HasFlag(Nadi.SOLAR)))
             {
                 return (level >= MNK.Levels.FourPointFury) ? MNK.FourPointFury : MNK.TwinSnakes;
-
             }
 
             if (HasEffect(MNK.Buffs.CoerlForm)
@@ -338,7 +336,6 @@ internal class MonkAoECombo : CustomCombo
             {
                 return OriginalHook(MNK.ArmOfTheDestroyer);
             }
-
         }
 
         return actionID;

@@ -152,7 +152,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 {
                     return GNB.Aurora;
                 }
-
             }
 
             if (CanUseAction(GNB.SavageClaw)) return GNB.SavageClaw;
@@ -167,7 +166,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 && IsOffCooldown(GNB.SonicBreak))
             {
                 return GNB.SonicBreak;
-
             }
 
             if (level >= GNB.Levels.DoubleDown

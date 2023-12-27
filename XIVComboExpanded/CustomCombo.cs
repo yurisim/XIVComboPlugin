@@ -289,7 +289,6 @@ internal abstract partial class CustomCombo
                 hasRaidBuffs = true;
                 break;
             };
-
         }
 
         foreach (var debuff in raidDebuffs)

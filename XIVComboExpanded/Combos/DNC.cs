@@ -235,8 +235,6 @@ internal class DancerCascadeFountain : CustomCombo
                 if (gauge.Feathers == 4
                     || (HasEffect(DNC.Buffs.Devilment) && gauge.Feathers > 0))
                     return DNC.FanDance1;
-
-
             }
 
             if (level >= DNC.Levels.StandardStep 
