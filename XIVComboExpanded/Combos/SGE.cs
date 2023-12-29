@@ -282,6 +282,25 @@ internal class SageTaurochole : CustomCombo
     }
 }
 
+internal class SageShieldDiagnosis : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        // If the action is Diagnosis and we have eukrasia buff then do a zoe cast if it's off cooldown
+        if (actionID == SGE.Diagnosis)
+        {
+            if (IsOffCooldown(SGE.Zoe) && level >= SGE.Levels.Zoe && HasEffect(SGE.Buffs.Eukrasia))
+            {
+                return SGE.Zoe;
+            }
+        }
+
+        return actionID;
+    }
+}
+
 internal class SageZoe : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
@@ -340,7 +359,7 @@ internal class SagePhlegma : CustomCombo
 
                 if (level >= SGE.Levels.Krasis
                     && IsOffCooldown(SGE.Krasis)
-                    && (targetHPPercent <= threshold - 0.2))
+                    && (targetHPPercent <= threshold - 0.175))
                 {
                     return SGE.Krasis;
                 }
