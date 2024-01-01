@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using System.Linq;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -208,27 +209,30 @@ internal class SageDosis : CustomCombo
 
             if (InCombat())
             {
-                var debuff = FindTargetEffect(SGE.Debuffs.EDosis3);
 
-                var debuffTime = debuff?.RemainingTime;
-
-                if (
-                    level >= SGE.Levels.EDosis3
-                    && (
-                        (
-                            debuff is not null
-                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                        ) || (debuff is null && ShouldRefreshDots())
-                    )
-                )
+                if (level >= SGE.Levels.EDosis1)
                 {
-                    if (!HasEffect(SGE.Buffs.Eukrasia))
-                    {
-                        return SGE.Eukrasia;
-                    }
+                    var debuff = FindTargetEffect(EDosises.FirstOrDefault(x => x.Level <= level).Debuff);
 
-                    return OriginalHook(SGE.Dosis);
+                    var debuffTime = debuff?.RemainingTime;
+
+                    if (
+
+                            (
+                                debuff is not null
+                                && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
+                            ) || (debuff is null && ShouldRefreshDots())
+                    )
+                    {
+                        if (!HasEffect(SGE.Buffs.Eukrasia))
+                        {
+                            return SGE.Eukrasia;
+                        }
+
+                        return OriginalHook(SGE.Dosis);
+                    }
                 }
+
 
                 if (
                     level >= SGE.Levels.Pneuma
@@ -253,7 +257,8 @@ internal class SageDosis : CustomCombo
 
                 if (
                     GetTargetDistance() <= 6
-                    && HasCharges(plegma)
+                    && HasCharges(OriginalHook(SGE.Phlegma))
+                    && level >= SGE.Levels.Phlegma
                     && (
                         GetCooldown(plegma).ChargeCooldownRemaining <= 5
                         || GetRemainingCharges(plegma) == 2
@@ -270,14 +275,6 @@ internal class SageDosis : CustomCombo
                     {
                         return OriginalHook(SGE.Toxikon);
                     }
-
-                    // if (GetTargetDistance() <= 5
-                    //    && HasTarget()
-                    //    && level >= SGE.Levels.Dyskrasia
-                    //    && TargetIsEnemy())
-                    // {
-                    //    return level >= SGE.Levels.Phlegma3 ? SGE.Dyskrasia2 : SGE.Dyskrasia;
-                    // }
                 }
 
                 return actionID;
@@ -448,7 +445,7 @@ internal class SagePhlegma : CustomCombo
 
             var plegma = OriginalHook(SGE.Phlegma);
 
-            if (GetTargetDistance() <= 6 && HasCharges(plegma))
+            if (GetTargetDistance() <= 6 && HasCharges(plegma) && level >= SGE.Levels.Phlegma)
             {
                 return plegma;
             }

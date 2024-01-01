@@ -75,6 +75,7 @@ internal static class AST
             AspectedHelios = 42,
             Redraw = 40,
             Astrodyne = 50,
+            CelestialOpposition = 60,
             EarthlyStar = 62,
             MinorArcana = 70,
             CrownPlay = 70,
@@ -103,6 +104,8 @@ internal class AstrologianMalefic : CustomCombo
             var tarPercentage = TargetOfTargetHPercentage();
 
             var threshold = 0.80;
+
+            var myHP = LocalPlayerPercentage();
 
             if (GCDClipCheck(actionID))
             {
@@ -133,6 +136,15 @@ internal class AstrologianMalefic : CustomCombo
                     {
                         return AST.CelestialIntersection;
                     }
+                }
+
+                if (
+                    level >= AST.Levels.CelestialOpposition
+                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+                    && myHP <= threshold
+                )
+                {
+                    return OriginalHook(AST.CelestialOpposition);
                 }
 
                 if (
@@ -247,8 +259,55 @@ internal class AstrologianGravity : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
+            var threshold = 0.80;
+
+            var myHP = LocalPlayerPercentage();
+
+            var tarPercentage = TargetOfTargetHPercentage();
+
+
             if (GCDClipCheck(actionID))
             {
+                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+                {
+                    // Exaltation
+                    if (
+                        level >= AST.Levels.Exaltation
+                        && IsOffCooldown(AST.Exaltation)
+                        && tarPercentage <= threshold + 0.1
+                    )
+                    {
+                        return AST.Exaltation;
+                    }
+
+                    if (
+                        tarPercentage <= threshold
+                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
+                    )
+                    {
+                        return AST.EssentialDignity;
+                    }
+
+                    if (
+                        level >= AST.Levels.CelestialIntersection
+                        && (
+                            HasCharges(AST.CelestialIntersection)
+                            || IsOffCooldown(AST.CelestialIntersection)
+                        )
+                        && (
+                            (
+                                GetRemainingCharges(AST.CelestialIntersection) >= 2
+                                && tarPercentage <= threshold + 0.1
+                            )
+                            || tarPercentage <= threshold
+                        )
+                    )
+                    {
+                        return AST.CelestialIntersection;
+                    }
+                }
+
+
                 if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
 
@@ -271,6 +330,15 @@ internal class AstrologianGravity : CustomCombo
 
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
+
+                if (
+                    level >= AST.Levels.CelestialOpposition
+                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+                    && myHP <= threshold
+                )
+                {
+                    return OriginalHook(AST.CelestialOpposition);
+                }
 
                 var seals = gauge.Seals;
                 if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
