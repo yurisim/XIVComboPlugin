@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -9,8 +8,7 @@ internal static class AST
 {
     public const byte JobID = 33;
 
-    public const uint
-        Draw = 3590,
+    public const uint Draw = 3590,
         Redraw = 3593,
         Benefic = 3594,
         Malefic = 3596,
@@ -51,8 +49,7 @@ internal static class AST
 
     public static class Buffs
     {
-        public const ushort
-            ClarifyingDraw = 2713,
+        public const ushort ClarifyingDraw = 2713,
             Divination = 1878,
             AspectedHelios = 836,
             BalanceDrawn = 913,
@@ -67,14 +64,12 @@ internal static class AST
 
     public static class Debuffs
     {
-        public const ushort
-            CombustIII = 1881;
+        public const ushort CombustIII = 1881;
     }
 
     public static class Levels
     {
-        public const byte
-            Ascend = 12,
+        public const byte Ascend = 12,
             Benefic2 = 26,
             Draw = 30,
             AspectedHelios = 42,
@@ -95,76 +90,105 @@ internal class AstrologianMalefic : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == AST.Malefic
+        if (
+            actionID == AST.Malefic
             || actionID == AST.Malefic2
             || actionID == AST.Malefic3
             || actionID == AST.Malefic4
-            || actionID == AST.FallMalefic)
+            || actionID == AST.FallMalefic
+        )
         {
             var gauge = GetJobGauge<ASTGauge>();
 
             var tarPercentage = TargetOfTargetHPercentage();
 
+            var threshold = 0.80;
+
             if (GCDClipCheck(actionID))
             {
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
-                    if (tarPercentage <= 0.75
-                    && (IsOffCooldown(AST.EssentialDignity)
-                        || HasCharges(AST.EssentialDignity)))
+                    if (
+                        tarPercentage <= 0.75
+                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
+                    )
                     {
                         return AST.EssentialDignity;
                     }
 
-                    if (level >= AST.Levels.CelestialIntersection
-                    && HasCharges(AST.CelestialIntersection)
-                    && (GetRemainingCharges(AST.CelestialIntersection) >= 2
-                        || tarPercentage <= 0.5
-                        || GetCooldown(AST.CelestialIntersection).CooldownRemaining <= 5))
+                    if (
+                        level >= AST.Levels.CelestialIntersection
+                        && (
+                            HasCharges(AST.CelestialIntersection)
+                            || IsOffCooldown(AST.CelestialIntersection)
+                        )
+                        && (
+                            (
+                                GetRemainingCharges(AST.CelestialIntersection) >= 2
+                                && tarPercentage <= threshold + 0.1
+                            )
+                            || tarPercentage <= threshold
+                            || GetCooldown(AST.CelestialIntersection).CooldownRemaining <= 5
+                        )
+                    )
                     {
                         return AST.CelestialIntersection;
                     }
                 }
 
-                if (level >= AST.Levels.Astrodyne
+                if (
+                    level >= AST.Levels.Astrodyne
                     && IsOffCooldown(AST.Divination)
-                    && HasRaidBuffs()) return AST.Divination;
+                    && HasRaidBuffs()
+                )
+                    return AST.Divination;
 
-                if ((OriginalHook(AST.MinorArcana) != AST.MinorArcana)
-                    && ((GetCooldown(AST.MinorArcana).CooldownRemaining <= 5 && gauge.DrawnCrownCard != CardType.NONE)
-                        || (gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85)))
+                if (
+                    (OriginalHook(AST.MinorArcana) != AST.MinorArcana)
+                    && (
+                        (
+                            GetCooldown(AST.MinorArcana).CooldownRemaining <= 5
+                            && gauge.DrawnCrownCard != CardType.NONE
+                        )
+                        || (
+                            gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85
+                        )
+                    )
+                )
                     return OriginalHook(AST.MinorArcana);
 
-                if (OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
+                if (
+                    OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
                     && LocalPlayerPercentage() <= 0.85
-                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50)
+                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
+                )
                 {
                     return OriginalHook(AST.EarthlyStar);
                 }
 
-                if (level >= AST.Levels.Astrodyne
-                    && CanUseAction(AST.Astrodyne))
+                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
 
-                if (level >= AST.Levels.MinorArcana
+                if (
+                    level >= AST.Levels.MinorArcana
                     && InCombat()
                     && IsOffCooldown(AST.MinorArcana)
-                    && gauge.DrawnCrownCard == CardType.NONE)
+                    && gauge.DrawnCrownCard == CardType.NONE
+                )
                     return AST.MinorArcana;
 
-                if (level >= AST.Levels.Draw
+                if (
+                    level >= AST.Levels.Draw
                     && gauge.DrawnCard == CardType.NONE
-                    && HasCharges(AST.Draw))
+                    && HasCharges(AST.Draw)
+                )
                     return AST.Draw;
 
-                if (IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000)
+                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
                 var seals = gauge.Seals;
-                if (level >= AST.Levels.Redraw
-                    && CanUseAction(AST.Redraw)
-                    && seals != null)
+                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
                 {
                     var drawnCard = gauge.DrawnCard;
 
@@ -172,15 +196,18 @@ internal class AstrologianMalefic : CustomCombo
                     {
                         case CardType.BALANCE:
                         case CardType.BOLE:
-                            if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.SUN))
+                                return AST.Redraw;
                             break;
                         case CardType.EWER:
                         case CardType.ARROW:
-                            if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.MOON))
+                                return AST.Redraw;
                             break;
                         case CardType.SPIRE:
                         case CardType.SPEAR:
-                            if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.CELESTIAL))
+                                return AST.Redraw;
                             break;
                         default:
                             break;
@@ -200,15 +227,16 @@ internal class AstrologianGravity : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
-    private Dictionary<CardType, SealType> CardSeals { get; } = new Dictionary<CardType, SealType>
-    {
-        { CardType.BALANCE, SealType.SUN },
-        { CardType.BOLE, SealType.SUN },
-        { CardType.ARROW, SealType.MOON },
-        { CardType.EWER, SealType.MOON },
-        { CardType.SPEAR, SealType.CELESTIAL },
-        { CardType.SPIRE, SealType.CELESTIAL },
-    };
+    private Dictionary<CardType, SealType> CardSeals { get; } =
+        new Dictionary<CardType, SealType>
+        {
+            { CardType.BALANCE, SealType.SUN },
+            { CardType.BOLE, SealType.SUN },
+            { CardType.ARROW, SealType.MOON },
+            { CardType.EWER, SealType.MOON },
+            { CardType.SPEAR, SealType.CELESTIAL },
+            { CardType.SPIRE, SealType.CELESTIAL },
+        };
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -218,28 +246,31 @@ internal class AstrologianGravity : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (level >= AST.Levels.Astrodyne
-                    && CanUseAction(AST.Astrodyne))
+                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
                     return AST.Astrodyne;
 
-                if (level >= AST.Levels.MinorArcana
+                if (
+                    level >= AST.Levels.MinorArcana
                     && IsOffCooldown(AST.MinorArcana)
-                    && gauge.DrawnCrownCard == CardType.NONE)
+                    && (
+                        gauge.DrawnCrownCard == CardType.NONE
+                        || gauge.DrawnCrownCard == CardType.LORD
+                    )
+                )
                     return AST.MinorArcana;
 
-                if (level >= AST.Levels.Draw
+                if (
+                    level >= AST.Levels.Draw
                     && gauge.DrawnCard == CardType.NONE
-                    && HasCharges(AST.Draw))
+                    && HasCharges(AST.Draw)
+                )
                     return AST.Draw;
 
-                if (IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000)
+                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
                 var seals = gauge.Seals;
-                if (level >= AST.Levels.Redraw
-                    && CanUseAction(AST.Redraw)
-                    && seals != null)
+                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
                 {
                     var drawnCard = gauge.DrawnCard;
 
@@ -247,15 +278,18 @@ internal class AstrologianGravity : CustomCombo
                     {
                         case CardType.BALANCE:
                         case CardType.BOLE:
-                            if (gauge.ContainsSeal(SealType.SUN)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.SUN))
+                                return AST.Redraw;
                             break;
                         case CardType.EWER:
                         case CardType.ARROW:
-                            if (gauge.ContainsSeal(SealType.MOON)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.MOON))
+                                return AST.Redraw;
                             break;
                         case CardType.SPIRE:
                         case CardType.SPEAR:
-                            if (gauge.ContainsSeal(SealType.CELESTIAL)) return AST.Redraw;
+                            if (gauge.ContainsSeal(SealType.CELESTIAL))
+                                return AST.Redraw;
                             break;
                         default:
                             break;
@@ -276,9 +310,11 @@ internal class AstroCelestial : CustomCombo
     {
         if (actionID == AST.CelestialIntersection)
         {
-            if (level >= AST.Levels.Exaltation
+            if (
+                level >= AST.Levels.Exaltation
                 && IsOffCooldown(AST.Exaltation)
-                && GetRemainingCharges(AST.CelestialIntersection) <= 1)
+                && GetRemainingCharges(AST.CelestialIntersection) <= 1
+            )
             {
                 return AST.Exaltation;
             }
@@ -312,7 +348,11 @@ internal class AstrologianPlay : CustomCombo
                 {
                     var draw = GetCooldown(AST.Draw);
 
-                    if (level >= AST.Levels.Astrodyne && !gauge.ContainsSeal(SealType.NONE) && draw.RemainingCharges == 0)
+                    if (
+                        level >= AST.Levels.Astrodyne
+                        && !gauge.ContainsSeal(SealType.NONE)
+                        && draw.RemainingCharges == 0
+                    )
                         return AST.Astrodyne;
                 }
 
@@ -327,7 +367,8 @@ internal class AstrologianPlay : CustomCombo
 
 internal class AstrologianDraw : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianDrawLockoutFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.AstrologianDrawLockoutFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -346,7 +387,8 @@ internal class AstrologianDraw : CustomCombo
 
 internal class AstrologianBenefic2 : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianBeneficSyncFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.AstrologianBeneficSyncFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

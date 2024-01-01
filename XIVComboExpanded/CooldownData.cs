@@ -84,7 +84,8 @@ internal struct CooldownData
     /// <summary>
     /// Gets the cooldown time remaining.
     /// </summary>
-    public float CooldownRemaining => this.IsCooldown ? this.CooldownTotal - this.CooldownElapsed : 0;
+    public float CooldownRemaining =>
+        this.IsCooldown ? this.CooldownTotal - this.CooldownElapsed : 0;
 
     /// <summary>
     /// Gets the maximum number of charges for an action at the current level.

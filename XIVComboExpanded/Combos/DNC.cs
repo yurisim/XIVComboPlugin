@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -39,8 +38,7 @@ internal static class DNC
 
     public static class Buffs
     {
-        public const ushort
-            FlourishingSymmetry = 3017,
+        public const ushort FlourishingSymmetry = 3017,
             FlourishingFlow = 3018,
             FlourishingFinish = 2698,
             FlourishingStarfall = 2700,
@@ -56,14 +54,12 @@ internal static class DNC
 
     public static class Debuffs
     {
-        public const ushort
-            Placeholder = 0;
+        public const ushort Placeholder = 0;
     }
 
     public static class Levels
     {
-        public const byte
-            Cascade = 1,
+        public const byte Cascade = 1,
             Fountain = 2,
             Windmill = 15,
             StandardStep = 15,
@@ -85,7 +81,8 @@ internal static class DNC
 
 internal class DancerDanceComboCompatibility : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDanceComboCompatibility;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.DancerDanceComboCompatibility;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -152,7 +149,8 @@ internal class DancerFanDance12 : CustomCombo
 
 internal class DancerStandardStepTechnicalStep : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDanceStepCombo;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.DancerDanceStepCombo;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -160,7 +158,11 @@ internal class DancerStandardStepTechnicalStep : CustomCombo
         {
             var gauge = GetJobGauge<DNCGauge>();
 
-            if (level >= DNC.Levels.StandardStep && gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
+            if (
+                level >= DNC.Levels.StandardStep
+                && gauge.IsDancing
+                && HasEffect(DNC.Buffs.StandardStep)
+            )
             {
                 if (gauge.CompletedSteps < 2)
                     return gauge.NextStep;
@@ -175,7 +177,11 @@ internal class DancerStandardStepTechnicalStep : CustomCombo
         {
             var gauge = GetJobGauge<DNCGauge>();
 
-            if (level >= DNC.Levels.TechnicalStep && gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
+            if (
+                level >= DNC.Levels.TechnicalStep
+                && gauge.IsDancing
+                && HasEffect(DNC.Buffs.TechnicalStep)
+            )
             {
                 if (gauge.CompletedSteps < 4)
                     return gauge.NextStep;
@@ -199,9 +205,11 @@ internal class DancerCascadeFountain : CustomCombo
         {
             var gauge = GetJobGauge<DNCGauge>();
 
-            if (level >= DNC.Levels.StandardStep
+            if (
+                level >= DNC.Levels.StandardStep
                 && gauge.IsDancing
-                && HasEffect(DNC.Buffs.StandardStep))
+                && HasEffect(DNC.Buffs.StandardStep)
+            )
             {
                 if (gauge.CompletedSteps < 2)
                     return gauge.NextStep;
@@ -209,88 +217,108 @@ internal class DancerCascadeFountain : CustomCombo
                 return OriginalHook(DNC.StandardStep);
             }
 
-            if (level >= DNC.Levels.Devilment
-                    && IsOffCooldown(DNC.Devilment)
-                    && (HasEffect(DNC.Buffs.TechnicalFinish) || level < DNC.Levels.TechnicalStep))
+            if (
+                level >= DNC.Levels.Devilment
+                && IsOffCooldown(DNC.Devilment)
+                && (HasEffect(DNC.Buffs.TechnicalFinish) || level < DNC.Levels.TechnicalStep)
+            )
                 return DNC.Devilment;
 
             if (GCDClipCheck(actionID))
             {
-                if (level >= DNC.Levels.FanDance4
-                    && HasEffect(DNC.Buffs.FourfoldFanDance))
+                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
                     return DNC.FanDance4;
 
-                if (level >= DNC.Levels.FanDance3
-                    && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
                     return DNC.FanDance3;
 
-                if (level >= DNC.Levels.Flourish
+                if (
+                    level >= DNC.Levels.Flourish
                     && gauge.Feathers < 4
                     && IsOffCooldown(DNC.Flourish)
-                    && (HasEffect(DNC.Buffs.Devilment) || GetCooldown(DNC.Devilment).CooldownRemaining > 20))
+                    && (
+                        HasEffect(DNC.Buffs.Devilment)
+                        || GetCooldown(DNC.Devilment).CooldownRemaining > 20
+                    )
+                )
                     return DNC.Flourish;
 
                 // Only use feathers if full or you have the devilment buff
-                if (gauge.Feathers == 4
-                    || (HasEffect(DNC.Buffs.Devilment) && gauge.Feathers > 0))
+                if (gauge.Feathers == 4 || (HasEffect(DNC.Buffs.Devilment) && gauge.Feathers > 0))
                     return DNC.FanDance1;
             }
 
-            if (level >= DNC.Levels.StandardStep
-                && IsOffCooldown(DNC.StandardStep)) return DNC.StandardStep;
+            if (level >= DNC.Levels.StandardStep && IsOffCooldown(DNC.StandardStep))
+                return DNC.StandardStep;
 
-            if (level >= DNC.Levels.SaberDance
-                    // Use only if you are gonna soon cap the Esprit gauge
-                    && (gauge.Esprit >= 85
-                        // Of if the devilment buff is active and you have enough espirit buff.
-                        || (HasEffect(DNC.Buffs.Devilment) && gauge.Esprit >= 50)))
+            if (
+                level >= DNC.Levels.SaberDance
+                // Use only if you are gonna soon cap the Esprit gauge
+                && (
+                    gauge.Esprit >= 85
+                    // Of if the devilment buff is active and you have enough espirit buff.
+                    || (HasEffect(DNC.Buffs.Devilment) && gauge.Esprit >= 50)
+                )
+            )
                 return DNC.SaberDance;
 
             // From Devilment
-            if (level >= DNC.Levels.StarfallDance
-                    && HasEffect(DNC.Buffs.Devilment)
-                    && HasEffect(DNC.Buffs.FlourishingStarfall))
+            if (
+                level >= DNC.Levels.StarfallDance
+                && HasEffect(DNC.Buffs.Devilment)
+                && HasEffect(DNC.Buffs.FlourishingStarfall)
+            )
                 return DNC.StarfallDance;
 
-            if (level >= DNC.Levels.Tillana
-                    // Use only if you are gonna soon cap the Esprit gauge
-                    && HasEffect(DNC.Buffs.Devilment)
-                    && HasEffect(DNC.Buffs.FlourishingFinish))
+            if (
+                level >= DNC.Levels.Tillana
+                // Use only if you are gonna soon cap the Esprit gauge
+                && HasEffect(DNC.Buffs.Devilment)
+                && HasEffect(DNC.Buffs.FlourishingFinish)
+            )
                 return DNC.Tillana;
 
             // Single Target
             if (actionID == DNC.Cascade)
             {
-                if (level >= DNC.Levels.Fountainfall
-                        && (HasEffect(DNC.Buffs.FlourishingFlow)
-                            || HasEffect(DNC.Buffs.SilkenFlow)))
+                if (
+                    level >= DNC.Levels.Fountainfall
+                    && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow))
+                )
                     return DNC.Fountainfall;
 
-                if (level >= DNC.Levels.ReverseCascade
-                        && (HasEffect(DNC.Buffs.FlourishingSymmetry)
-                            || HasEffect(DNC.Buffs.SilkenSymmetry)))
+                if (
+                    level >= DNC.Levels.ReverseCascade
+                    && (
+                        HasEffect(DNC.Buffs.FlourishingSymmetry)
+                        || HasEffect(DNC.Buffs.SilkenSymmetry)
+                    )
+                )
                     return DNC.ReverseCascade;
 
-                if (lastComboMove == DNC.Cascade
-                    && level >= DNC.Levels.Fountain)
+                if (lastComboMove == DNC.Cascade && level >= DNC.Levels.Fountain)
                     return DNC.Fountain;
             }
 
             // Aoe
             if (actionID == DNC.Windmill)
             {
-                if (level >= DNC.Levels.Bloodshower
-                    && (HasEffect(DNC.Buffs.FlourishingFlow)
-                        || HasEffect(DNC.Buffs.SilkenFlow)))
+                if (
+                    level >= DNC.Levels.Bloodshower
+                    && (HasEffect(DNC.Buffs.FlourishingFlow) || HasEffect(DNC.Buffs.SilkenFlow))
+                )
                     return DNC.Bloodshower;
 
-                if (level >= DNC.Levels.RisingWindmill
-                    && (HasEffect(DNC.Buffs.FlourishingSymmetry)
-                        || HasEffect(DNC.Buffs.SilkenSymmetry)))
+                if (
+                    level >= DNC.Levels.RisingWindmill
+                    && (
+                        HasEffect(DNC.Buffs.FlourishingSymmetry)
+                        || HasEffect(DNC.Buffs.SilkenSymmetry)
+                    )
+                )
                     return DNC.RisingWindmill;
 
-                if (lastComboMove == DNC.Windmill
-                    && level >= DNC.Levels.Bladeshower)
+                if (lastComboMove == DNC.Windmill && level >= DNC.Levels.Bladeshower)
                     return DNC.Bladeshower;
             }
         }
@@ -301,7 +329,8 @@ internal class DancerCascadeFountain : CustomCombo
 
 internal class DancerDevilment : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDevilmentFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.DancerDevilmentFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

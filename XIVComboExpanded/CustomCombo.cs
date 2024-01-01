@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Numerics;
-
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -74,16 +73,20 @@ internal abstract partial class CustomCombo
     /// <param name="comboTime">Combo timer.</param>
     /// <param name="newActionID">Replacement action ID.</param>
     /// <returns>True if the action has changed, otherwise false.</returns>
-    public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
+    public bool TryInvoke(
+        uint actionID,
+        byte level,
+        uint lastComboMove,
+        float comboTime,
+        out uint newActionID
+    )
     {
         newActionID = 0;
 
         if (this.MovingCounter == 0)
         {
             Vector2 newPosition = LocalPlayer is null
-
                 ? Vector2.Zero
-
                 : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
             this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
@@ -112,8 +115,12 @@ internal abstract partial class CustomCombo
         if (classJobID >= 16 && classJobID <= 18)
             classJobID = DOL.JobID;
 
-        if (this.JobID != ADV.JobID && this.ClassID != ADV.ClassID &&
-            this.JobID != classJobID && this.ClassID != classJobID)
+        if (
+            this.JobID != ADV.JobID
+            && this.ClassID != ADV.ClassID
+            && this.JobID != classJobID
+            && this.ClassID != classJobID
+        )
             return false;
 
         var resultingActionID = this.Invoke(actionID, lastComboMove, comboTime, level);
@@ -137,14 +144,17 @@ internal abstract partial class CustomCombo
         static (uint ActionID, CooldownData Data) Compare(
             uint original,
             (uint ActionID, CooldownData Data) a1,
-            (uint ActionID, CooldownData Data) a2)
+            (uint ActionID, CooldownData Data) a2
+        )
         {
             // Neither, return the first parameter
             if (!a1.Data.IsCooldown && !a2.Data.IsCooldown)
             {
-                return original == a1.ActionID ? a1 :
-                       original == a2.ActionID ? a2 :
-                       a1;
+                return original == a1.ActionID
+                    ? a1
+                    : original == a2.ActionID
+                        ? a2
+                        : a1;
             }
 
             // Both, return soonest available
@@ -155,32 +165,29 @@ internal abstract partial class CustomCombo
                     if (a1.Data.RemainingCharges == a2.Data.RemainingCharges)
                     {
                         return a1.Data.ChargeCooldownRemaining < a2.Data.ChargeCooldownRemaining
-                            ? a1 : a2;
+                            ? a1
+                            : a2;
                     }
 
-                    return a1.Data.RemainingCharges > a2.Data.RemainingCharges
-                        ? a1 : a2;
+                    return a1.Data.RemainingCharges > a2.Data.RemainingCharges ? a1 : a2;
                 }
                 else if (a1.Data.HasCharges)
                 {
                     if (a1.Data.RemainingCharges > 0)
                         return a1;
 
-                    return a1.Data.ChargeCooldownRemaining < a2.Data.CooldownRemaining
-                        ? a1 : a2;
+                    return a1.Data.ChargeCooldownRemaining < a2.Data.CooldownRemaining ? a1 : a2;
                 }
                 else if (a2.Data.HasCharges)
                 {
                     if (a2.Data.RemainingCharges > 0)
                         return a2;
 
-                    return a2.Data.ChargeCooldownRemaining < a1.Data.CooldownRemaining
-                        ? a2 : a1;
+                    return a2.Data.ChargeCooldownRemaining < a1.Data.CooldownRemaining ? a2 : a1;
                 }
                 else
                 {
-                    return a1.Data.CooldownRemaining < a2.Data.CooldownRemaining
-                        ? a1 : a2;
+                    return a1.Data.CooldownRemaining < a2.Data.CooldownRemaining ? a1 : a2;
                 }
             }
 
@@ -188,13 +195,10 @@ internal abstract partial class CustomCombo
             return a1.Data.IsCooldown ? a2 : a1;
         }
 
-        static (uint ActionID, CooldownData Data) Selector(uint actionID)
-            => (actionID, GetCooldown(actionID));
+        static (uint ActionID, CooldownData Data) Selector(uint actionID) =>
+            (actionID, GetCooldown(actionID));
 
-        return actions
-            .Select(Selector)
-            .Aggregate((a1, a2) => Compare(original, a1, a2))
-            .ActionID;
+        return actions.Select(Selector).Aggregate((a1, a2) => Compare(original, a1, a2)).ActionID;
     }
 
     /// <summary>
@@ -205,7 +209,12 @@ internal abstract partial class CustomCombo
     /// <param name="comboTime">Current combo time.</param>
     /// <param name="level">Current player level.</param>
     /// <returns>The replacement action ID.</returns>
-    protected abstract uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level);
+    protected abstract uint Invoke(
+        uint actionID,
+        uint lastComboActionID,
+        float comboTime,
+        byte level
+    );
 }
 
 /// <summary>
@@ -216,41 +225,37 @@ internal abstract partial class CustomCombo
     /// <summary>
     /// Gets the player or null.
     /// </summary>
-    protected static PlayerCharacter? LocalPlayer
-        => Service.ClientState.LocalPlayer;
+    protected static PlayerCharacter? LocalPlayer => Service.ClientState.LocalPlayer;
 
     /// <summary>
     /// Gets the current target or null.
     /// </summary>
-    protected static GameObject? CurrentTarget
-        => Service.TargetManager.Target;
+    protected static GameObject? CurrentTarget => Service.TargetManager.Target;
 
     protected static BattleChara? GetTargetOfTarget()
     {
         return Service.TargetManager?.Target?.TargetObject as BattleChara;
     }
 
-
     /// <summary>
     /// Gets the current territory type.
     /// </summary>
-    protected static ushort CurrentTerritory
-        => Service.ClientState.TerritoryType;
+    protected static ushort CurrentTerritory => Service.ClientState.TerritoryType;
 
     /// <summary>
     /// Calls the original hook.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>The result from the hook.</returns>
-    protected static uint OriginalHook(uint actionID)
-        => Service.IconReplacer.OriginalHook(actionID);
+    protected static uint OriginalHook(uint actionID) =>
+        Service.IconReplacer.OriginalHook(actionID);
 
     /// <summary>
     /// Should refresh DoTs
     /// </summary>
     /// <returns>Whether or not the</returns>
-    protected static bool ShouldRefreshDots()
-        => (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 20;
+    protected static bool ShouldRefreshDots() =>
+        (CurrentTarget as BattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 20;
 
     /// <summary>
     /// Should return whether or not player has raid debuffs.
@@ -275,18 +280,14 @@ internal abstract partial class CustomCombo
             MNK.Buffs.Brotherhood,
         };
 
-        var raidDebuffs = new[]
-        {
-            SCH.Debuffs.ChainStrategem,
-            NIN.Debuffs.Mug
-        };
-
+        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
 
         var raidCDsFound = 0;
 
         foreach (var buff in raidBuffs)
         {
-            if (HasEffectAny(buff)) raidCDsFound++;
+            if (HasEffectAny(buff))
+                raidCDsFound++;
 
             if (raidCDsFound >= 2)
             {
@@ -297,7 +298,8 @@ internal abstract partial class CustomCombo
 
         foreach (var debuff in raidDebuffs)
         {
-            if (TargetHasEffectAny(debuff)) raidCDsFound++;
+            if (TargetHasEffectAny(debuff))
+                raidCDsFound++;
 
             if (raidCDsFound >= 2)
             {
@@ -314,7 +316,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>A bool value of whether the action can be used or not.</returns>
-    protected static bool CanUseAction(uint actionID) => Service.IconReplacer.CanUseAction(actionID);
+    protected static bool CanUseAction(uint actionID) =>
+        Service.IconReplacer.CanUseAction(actionID);
 
     /// <summary>
     /// Gets percentage of the target of target's health. If no target of target, returns 1.
@@ -323,7 +326,6 @@ internal abstract partial class CustomCombo
     protected static float TargetOfTargetHPercentage()
     {
         var target = GetTargetOfTarget();
-
 
         return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
@@ -344,81 +346,74 @@ internal abstract partial class CustomCombo
         return (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
     }
 
-
     /// <summary>
     /// Compare the original hook to the given action ID.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>A value indicating whether the action would be modified.</returns>
-    protected static bool IsOriginal(uint actionID)
-        => Service.IconReplacer.OriginalHook(actionID) == actionID;
+    protected static bool IsOriginal(uint actionID) =>
+        Service.IconReplacer.OriginalHook(actionID) == actionID;
 
     /// <summary>
     /// Determine if the given preset is enabled.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>A value indicating whether the preset is enabled.</returns>
-    protected static bool IsEnabled(CustomComboPreset preset)
-        => (int)preset < 100 || Service.Configuration.IsEnabled(preset);
+    protected static bool IsEnabled(CustomComboPreset preset) =>
+        (int)preset < 100 || Service.Configuration.IsEnabled(preset);
 
     /// <summary>
     /// Determine if the given preset is not enabled.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>A value indicating whether the preset is not enabled.</returns>
-    protected static bool IsNotEnabled(CustomComboPreset preset)
-        => !IsEnabled(preset);
+    protected static bool IsNotEnabled(CustomComboPreset preset) => !IsEnabled(preset);
 
     /// <summary>
     /// Find if the player has a certain condition.
     /// </summary>
     /// <param name="flag">Condition flag.</param>
     /// <returns>A value indicating whether the player is in the condition.</returns>
-    protected static bool HasCondition(ConditionFlag flag)
-        => Service.Condition[flag];
+    protected static bool HasCondition(ConditionFlag flag) => Service.Condition[flag];
 
     /// <summary>
     /// Find if the player is in combat.
     /// </summary>
     /// <returns>A value indicating whether the player is in combat.</returns>
-    protected static bool InCombat()
-        => Service.Condition[ConditionFlag.InCombat];
+    protected static bool InCombat() => Service.Condition[ConditionFlag.InCombat];
 
     /// <summary>
     /// Find if the player is not in combat.
     /// </summary>
     /// <returns>A value indicating whether the player is not in combat.</returns>
-    protected static bool OutOfCombat()
-        => !InCombat();
+    protected static bool OutOfCombat() => !InCombat();
 
     /// <summary>
     /// Find if the player has a target.
     /// </summary>
     /// <returns>A value indicating whether the player has a target.</returns>
-    protected static bool HasTarget()
-        => CurrentTarget is not null;
-
+    protected static bool HasTarget() => CurrentTarget is not null;
 
     /// <summary>
     /// Find if the player has no target.
     /// </summary>
     /// <returns>A value indicating whether the player has a target.</returns>
-    protected static bool HasNoTarget()
-        => CurrentTarget is null;
+    protected static bool HasNoTarget() => CurrentTarget is null;
 
     /// <summary>
     /// Find if the current target is an enemy.
     /// </summary>
     /// <returns>A value indicating whether the target is an enemy.</returns>
-    protected static bool TargetIsEnemy()
-        => HasTarget() && CurrentTarget?.ObjectKind == ObjectKind.BattleNpc && CurrentTarget?.SubKind == 5;
+    protected static bool TargetIsEnemy() =>
+        HasTarget()
+        && CurrentTarget?.ObjectKind == ObjectKind.BattleNpc
+        && CurrentTarget?.SubKind == 5;
 
     /// <summary>
     /// Find if the player has a pet present.
     /// </summary>
     /// <returns>A value indicating whether the player has a pet present.</returns>
-    protected static bool HasPetPresent()
-        => Service.BuddyList.PetBuddy != null;
+    protected static bool HasPetPresent() => Service.BuddyList.PetBuddy != null;
 
     /// <summary>
     /// Find if an effect on the player exists.
@@ -426,8 +421,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>A value indicating if the effect exists.</returns>
-    protected static bool HasEffect(ushort effectID)
-        => FindEffect(effectID) is not null;
+    protected static bool HasEffect(ushort effectID) => FindEffect(effectID) is not null;
 
     /// <summary>
     /// Finds an effect on the player.
@@ -435,8 +429,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffect(ushort effectID)
-        => FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
+    protected static Status? FindEffect(ushort effectID) =>
+        FindEffect(effectID, LocalPlayer, LocalPlayer?.ObjectId);
 
     /// <summary>
     /// Find if an effect on the target exists.
@@ -444,8 +438,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>A value indicating if the effect exists.</returns>
-    protected static bool TargetHasEffect(ushort effectID)
-        => FindTargetEffect(effectID) is not null;
+    protected static bool TargetHasEffect(ushort effectID) =>
+        FindTargetEffect(effectID) is not null;
 
     /// <summary>
     /// Finds an effect on the current target.
@@ -453,8 +447,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetEffect(ushort effectID)
-        => FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
+    protected static Status? FindTargetEffect(ushort effectID) =>
+        FindEffect(effectID, CurrentTarget, LocalPlayer?.ObjectId);
 
     /// <summary>
     /// Finds an effect on the current target of target.
@@ -462,8 +456,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetOfTargetEffect(ushort effectID)
-        => FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, LocalPlayer?.ObjectId);
+    protected static Status? FindTargetOfTargetEffect(ushort effectID) =>
+        FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, LocalPlayer?.ObjectId);
 
     /// <summary>
     /// Finds an effect on the current target of target.
@@ -471,8 +465,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetOfTargetEffectAny(ushort effectID)
-        => FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, null);
+    protected static Status? FindTargetOfTargetEffectAny(ushort effectID) =>
+        FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, null);
 
     /// <summary>
     /// Find if an effect on the player exists.
@@ -480,8 +474,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>A value indicating if the effect exists.</returns>
-    protected static bool HasEffectAny(ushort effectID)
-        => FindEffectAny(effectID) is not null;
+    protected static bool HasEffectAny(ushort effectID) => FindEffectAny(effectID) is not null;
 
     /// <summary>
     /// Finds an effect on the player.
@@ -489,8 +482,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffectAny(ushort effectID)
-        => FindEffect(effectID, LocalPlayer, null);
+    protected static Status? FindEffectAny(ushort effectID) =>
+        FindEffect(effectID, LocalPlayer, null);
 
     /// <summary>
     /// Find if an effect on the target exists.
@@ -498,8 +491,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>A value indicating if the effect exists.</returns>
-    protected static bool TargetHasEffectAny(ushort effectID)
-        => FindTargetEffectAny(effectID) is not null;
+    protected static bool TargetHasEffectAny(ushort effectID) =>
+        FindTargetEffectAny(effectID) is not null;
 
     /// <summary>
     /// Finds an effect on the current target.
@@ -507,8 +500,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetEffectAny(ushort effectID)
-        => FindEffect(effectID, CurrentTarget, null);
+    protected static Status? FindTargetEffectAny(ushort effectID) =>
+        FindEffect(effectID, CurrentTarget, null);
 
     /// <summary>
     /// Finds an effect on the given object.
@@ -517,72 +510,68 @@ internal abstract partial class CustomCombo
     /// <param name="obj">Object to look for effects on.</param>
     /// <param name="sourceID">Source object ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffect(ushort effectID, GameObject? obj, uint? sourceID)
-        => Service.ComboCache.GetStatus(effectID, obj, sourceID);
+    protected static Status? FindEffect(ushort effectID, GameObject? obj, uint? sourceID) =>
+        Service.ComboCache.GetStatus(effectID, obj, sourceID);
 
     /// <summary>
     /// Gets the cooldown data for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Cooldown data.</returns>
-    protected static CooldownData GetCooldown(uint actionID)
-        => Service.ComboCache.GetCooldown(actionID);
+    protected static CooldownData GetCooldown(uint actionID) =>
+        Service.ComboCache.GetCooldown(actionID);
 
     /// <summary>
     /// Gets a value indicating whether an action is on cooldown.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>True or false.</returns>
-    protected static bool IsOnCooldown(uint actionID)
-        => GetCooldown(actionID).IsCooldown;
+    protected static bool IsOnCooldown(uint actionID) => GetCooldown(actionID).IsCooldown;
 
     /// <summary>
     /// Gets a value indicating whether an action is off cooldown.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>True or false.</returns>
-    protected static bool IsOffCooldown(uint actionID)
-        => !GetCooldown(actionID).IsCooldown;
+    protected static bool IsOffCooldown(uint actionID) => !GetCooldown(actionID).IsCooldown;
 
     /// <summary>
     /// Gets a value indicating whether an action has any available charges.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>True or false.</returns>
-    protected static bool HasCharges(uint actionID)
-        => GetCooldown(actionID).RemainingCharges > 0;
+    protected static bool HasCharges(uint actionID) => GetCooldown(actionID).RemainingCharges > 0;
 
     /// <summary>
     /// Gets a value indicating whether an action has no available charges.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>True or false.</returns>
-    protected static bool HasNoCharges(uint actionID)
-        => GetCooldown(actionID).RemainingCharges == 0;
+    protected static bool HasNoCharges(uint actionID) =>
+        GetCooldown(actionID).RemainingCharges == 0;
 
     /// <summary>
     /// Get the current number of charges remaining for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Number of charges.</returns>
-    protected static ushort GetRemainingCharges(uint actionID)
-        => GetCooldown(actionID).RemainingCharges;
+    protected static ushort GetRemainingCharges(uint actionID) =>
+        GetCooldown(actionID).RemainingCharges;
 
     /// <summary>
     /// Get the maximum number of charges for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Number of charges.</returns>
-    protected static ushort GetMaxCharges(uint actionID)
-        => GetCooldown(actionID).MaxCharges;
+    protected static ushort GetMaxCharges(uint actionID) => GetCooldown(actionID).MaxCharges;
 
     /// <summary>
     /// Get a job gauge.
     /// </summary>
     /// <typeparam name="T">Type of job gauge.</typeparam>
     /// <returns>The job gauge.</returns>
-    protected static T GetJobGauge<T>() where T : JobGaugeBase
-        => Service.ComboCache.GetJobGauge<T>();
+    protected static T GetJobGauge<T>()
+        where T : JobGaugeBase => Service.ComboCache.GetJobGauge<T>();
 
     /// <summary>
     /// Gets the distance from the target.
@@ -620,12 +609,12 @@ internal abstract partial class CustomCombo
         return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
 
-
     /// <summary>
     /// Checks to see if the GCD would not currently clip if you used a cooldown.
     /// </summary>
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
-    protected static bool GCDClipCheck(uint actionID) => GetCooldown(actionID).CooldownRemaining >= 0.65;
+    protected static bool GCDClipCheck(uint actionID) =>
+        GetCooldown(actionID).CooldownRemaining >= 0.65;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.

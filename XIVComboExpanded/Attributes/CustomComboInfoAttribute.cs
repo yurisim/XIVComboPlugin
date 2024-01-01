@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-
 using XIVComboExpandedPlugin.Combos;
 
 namespace XIVComboExpandedPlugin.Attributes;
@@ -18,7 +17,12 @@ internal class CustomComboInfoAttribute : Attribute
     /// <param name="description">Combo description.</param>
     /// <param name="jobID">Associated job ID.</param>
     /// <param name="order">Display order.</param>
-    internal CustomComboInfoAttribute(string fancyName, string description, byte jobID, [CallerLineNumber] int order = 0)
+    internal CustomComboInfoAttribute(
+        string fancyName,
+        string description,
+        byte jobID,
+        [CallerLineNumber] int order = 0
+    )
     {
         this.FancyName = fancyName;
         this.Description = description;

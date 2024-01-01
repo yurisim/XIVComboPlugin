@@ -7,8 +7,7 @@ internal static class DOL
     public const byte ClassID = 0;
     public const byte JobID = 51;
 
-    public const uint
-        AgelessWords = 215,
+    public const uint AgelessWords = 215,
         SolidReason = 232,
         Cast = 289,
         Hook = 296,
@@ -26,20 +25,17 @@ internal static class DOL
 
     public static class Buffs
     {
-        public const ushort
-            EurekaMoment = 2765;
+        public const ushort EurekaMoment = 2765;
     }
 
     public static class Debuffs
     {
-        public const ushort
-            Placeholder = 0;
+        public const ushort Placeholder = 0;
     }
 
     public static class Levels
     {
-        public const byte
-            Cast = 1,
+        public const byte Cast = 1,
             Hook = 1,
             Snagging = 36,
             Gig = 61,
@@ -54,7 +50,8 @@ internal static class DOL
 
 internal class MinerEurekaFeature : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DolEurekaFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.DolEurekaFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

@@ -1,5 +1,4 @@
 using System;
-
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -9,8 +8,7 @@ internal static class WAR
     public const byte ClassID = 3;
     public const byte JobID = 21;
 
-    public const uint
-        HeavySwing = 31,
+    public const uint HeavySwing = 31,
         Maim = 37,
         Berserk = 38,
         ThrillOfBattle = 40,
@@ -35,8 +33,7 @@ internal static class WAR
 
     public static class Buffs
     {
-        public const ushort
-            Berserk = 86,
+        public const ushort Berserk = 86,
             Holmgang = 409,
             InnerRelease = 1177,
             NascentChaos = 1897,
@@ -46,14 +43,12 @@ internal static class WAR
 
     public static class Debuffs
     {
-        public const ushort
-            Placeholder = 0;
+        public const ushort Placeholder = 0;
     }
 
     public static class Levels
     {
-        public const byte
-            Maim = 4,
+        public const byte Maim = 4,
             Berserk = 6,
             StormsPath = 26,
             ThrillOfBattle = 30,
@@ -93,69 +88,86 @@ internal class WarriorStormsPathCombo : CustomCombo
             {
                 var localPlayerPercentage = LocalPlayerPercentage();
 
-                if (level >= WAR.Levels.Infuriate
-                   && gauge.BeastGauge <= 50
-                   && HasCharges(WAR.Infuriate)
-                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
-                   && (GetRemainingCharges(WAR.Infuriate) >= 2
+                if (
+                    level >= WAR.Levels.Infuriate
+                    && gauge.BeastGauge <= 50
+                    && HasCharges(WAR.Infuriate)
+                    && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
+                    && (
+                        GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasRaidBuffs()
-                        || HasEffect(WAR.Buffs.Berserk))
-                   && !HasEffect(WAR.Buffs.InnerRelease))
+                        || HasEffect(WAR.Buffs.Berserk)
+                    )
+                    && !HasEffect(WAR.Buffs.InnerRelease)
+                )
                 {
                     return WAR.Infuriate;
                 }
 
-                if (IsOffCooldown(WAR.Upheaval)
+                if (
+                    IsOffCooldown(WAR.Upheaval)
                     && surgingTempest is not null
-                    && level >= WAR.Levels.Upheaval)
+                    && level >= WAR.Levels.Upheaval
+                )
                 {
                     return WAR.Upheaval;
                 }
 
-                if (IsOffCooldown(OriginalHook(WAR.Berserk))
+                if (
+                    IsOffCooldown(OriginalHook(WAR.Berserk))
                     && (level < WAR.Levels.StormsEye || surgingTempest is not null)
-                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.InnerChaos)))
+                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.InnerChaos))
+                )
                 {
                     return OriginalHook(WAR.Berserk);
                 }
 
-                if (level >= WAR.Levels.Equilibrium
+                if (
+                    level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && (localPlayerPercentage <= 0.60))
+                    && (localPlayerPercentage <= 0.60)
+                )
                 {
                     return WAR.Equilibrium;
                 }
             }
 
-            if (level >= WAR.Levels.InnerBeast
+            if (
+                level >= WAR.Levels.InnerBeast
                 && (surgingTempest is not null || level < WAR.Levels.StormsEye)
-                && (gauge.BeastGauge >= 90
+                && (
+                    gauge.BeastGauge >= 90
                     || (HasEffect(WAR.Buffs.NascentChaos) && level >= WAR.Levels.InnerChaos)
-                    || (gauge.BeastGauge >= 50
-                        && (GetRemainingCharges(WAR.Infuriate) >= 2
+                    || (
+                        gauge.BeastGauge >= 50
+                        && (
+                            GetRemainingCharges(WAR.Infuriate) >= 2
                             || HasRaidBuffs()
-                            || HasEffect(WAR.Buffs.Berserk)))
-                    || HasEffect(WAR.Buffs.InnerRelease)))
+                            || HasEffect(WAR.Buffs.Berserk)
+                        )
+                    )
+                    || HasEffect(WAR.Buffs.InnerRelease)
+                )
+            )
             {
                 return OriginalHook(WAR.InnerBeast);
             }
 
             if (comboTime > 0)
             {
-                if (lastComboMove == WAR.Maim
-                    && level >= WAR.Levels.StormsPath)
+                if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
                 {
-                    if (level >= WAR.Levels.StormsEye
-                        && (surgingTempest is null
-                            || surgingTempest?.RemainingTime < 30))
+                    if (
+                        level >= WAR.Levels.StormsEye
+                        && (surgingTempest is null || surgingTempest?.RemainingTime < 30)
+                    )
                         return WAR.StormsEye;
 
                     return WAR.StormsPath;
                 }
 
-                if (lastComboMove == WAR.HeavySwing
-                    && level >= WAR.Levels.Maim)
+                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
                 {
                     return WAR.Maim;
                 }
@@ -178,37 +190,47 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                var localPlayerPercentage = (LocalPlayer is not null) ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp : 1;
+                var localPlayerPercentage =
+                    (LocalPlayer is not null)
+                        ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp
+                        : 1;
 
-                if (IsOffCooldown(WAR.Upheaval)
-                    && level >= WAR.Levels.Upheaval)
+                if (IsOffCooldown(WAR.Upheaval) && level >= WAR.Levels.Upheaval)
                 {
                     return WAR.Upheaval;
                 }
 
-                if (level >= WAR.Levels.Infuriate
+                if (
+                    level >= WAR.Levels.Infuriate
                     && InCombat()
-                   && gauge.BeastGauge <= 50
-                   && HasCharges(WAR.Infuriate)
-                   && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
-                   && (GetRemainingCharges(WAR.Infuriate) >= 2
+                    && gauge.BeastGauge <= 50
+                    && HasCharges(WAR.Infuriate)
+                    && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
+                    && (
+                        GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
                         || HasRaidBuffs()
-                        || HasEffect(WAR.Buffs.Berserk))
-                   && !HasEffect(WAR.Buffs.InnerRelease))
+                        || HasEffect(WAR.Buffs.Berserk)
+                    )
+                    && !HasEffect(WAR.Buffs.InnerRelease)
+                )
                 {
                     return WAR.Infuriate;
                 }
 
-                if (IsOffCooldown(OriginalHook(WAR.Berserk))
-                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.ChaoticCyclone)))
+                if (
+                    IsOffCooldown(OriginalHook(WAR.Berserk))
+                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.ChaoticCyclone))
+                )
                 {
                     return OriginalHook(WAR.Berserk);
                 }
 
-                if (level >= WAR.Levels.Equilibrium
+                if (
+                    level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && localPlayerPercentage <= 0.70)
+                    && localPlayerPercentage <= 0.70
+                )
                 {
                     return WAR.Equilibrium;
                 }
@@ -216,12 +238,19 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
             var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
 
-            if (level >= WAR.Levels.SteelCyclone
+            if (
+                level >= WAR.Levels.SteelCyclone
                 && (surgingTempest is not null || level < WAR.Levels.MythrilTempest)
-                && (gauge.BeastGauge >= 80
+                && (
+                    gauge.BeastGauge >= 80
                     || (HasEffect(WAR.Buffs.NascentChaos) && level >= WAR.Levels.ChaoticCyclone)
-                    || (gauge.BeastGauge >= 50 && (GetRemainingCharges(WAR.Infuriate) >= 2 || HasEffect(WAR.Buffs.Berserk)))
-                    || HasEffect(WAR.Buffs.InnerRelease)))
+                    || (
+                        gauge.BeastGauge >= 50
+                        && (GetRemainingCharges(WAR.Infuriate) >= 2 || HasEffect(WAR.Buffs.Berserk))
+                    )
+                    || HasEffect(WAR.Buffs.InnerRelease)
+                )
+            )
             {
                 return OriginalHook(WAR.SteelCyclone);
             }
@@ -247,7 +276,12 @@ internal class WarriorFellCleaveDecimate : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WAR.InnerBeast || actionID == WAR.FellCleave || actionID == WAR.SteelCyclone || actionID == WAR.Decimate)
+        if (
+            actionID == WAR.InnerBeast
+            || actionID == WAR.FellCleave
+            || actionID == WAR.SteelCyclone
+            || actionID == WAR.Decimate
+        )
         {
             if (IsEnabled(CustomComboPreset.WarriorPrimalBeastFeature))
             {
@@ -259,7 +293,11 @@ internal class WarriorFellCleaveDecimate : CustomCombo
             {
                 var gauge = GetJobGauge<WARGauge>();
 
-                if (level >= WAR.Levels.Infuriate && gauge.BeastGauge < 50 && !HasEffect(WAR.Buffs.InnerRelease))
+                if (
+                    level >= WAR.Levels.Infuriate
+                    && gauge.BeastGauge < 50
+                    && !HasEffect(WAR.Buffs.InnerRelease)
+                )
                     return WAR.Infuriate;
             }
         }
@@ -270,7 +308,8 @@ internal class WarriorFellCleaveDecimate : CustomCombo
 
 internal class WarriorBerserkInnerRelease : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorPrimalReleaseFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.WarriorPrimalReleaseFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -286,7 +325,8 @@ internal class WarriorBerserkInnerRelease : CustomCombo
 
 internal class WarriorNascentFlashFeature : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorNascentFlashSyncFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.WarriorNascentFlashSyncFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

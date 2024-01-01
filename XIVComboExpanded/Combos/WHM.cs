@@ -8,8 +8,7 @@ internal static class WHM
     public const byte ClassID = 6;
     public const byte JobID = 24;
 
-    public const uint
-        Cure = 120,
+    public const uint Cure = 120,
         Medica = 124,
         Stone2 = 127,
         Raise = 125,
@@ -40,20 +39,17 @@ internal static class WHM
 
     public static class Buffs
     {
-        public const ushort
-            ThinAir = 1217;
+        public const ushort ThinAir = 1217;
     }
 
     public static class Debuffs
     {
-        public const ushort
-            Dia = 1871;
+        public const ushort Dia = 1871;
     }
 
     public static class Levels
     {
-        public const byte
-            Raise = 12,
+        public const byte Raise = 12,
             Cure2 = 30,
             PresenceOfMind = 30,
             AfflatusSolace = 52,
@@ -70,7 +66,8 @@ internal static class WHM
 
 internal class WhiteMageAfflatusSolace : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageSolaceMiseryFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.WhiteMageSolaceMiseryFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -98,7 +95,8 @@ internal class WhiteMageAfflatusSolace : CustomCombo
 
 internal class WhiteMageAfflatusRapture : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageRaptureMiseryFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.WhiteMageRaptureMiseryFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -116,7 +114,8 @@ internal class WhiteMageAfflatusRapture : CustomCombo
 
 internal class WhiteMageHoly : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhiteMageHolyMiseryFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.WhiteMageHolyMiseryFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -204,10 +203,11 @@ internal class WHiteMageBenison : CustomCombo
     {
         if (actionID == WHM.DivineBenison)
         {
-            if (level >= WHM.Levels.Aquaveil
-
+            if (
+                level >= WHM.Levels.Aquaveil
                 && IsOffCooldown(WHM.Aquaveil)
-                && GetRemainingCharges(WHM.DivineBenison) <= 1)
+                && GetRemainingCharges(WHM.DivineBenison) <= 1
+            )
             {
                 return WHM.Aquaveil;
             }
@@ -223,18 +223,15 @@ internal class WhiteMageDiaFeature : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
-
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Stone2
-
+        if (
+            actionID == WHM.Stone2
             || actionID == WHM.Stone3
-
             || actionID == WHM.Stone4
-
             || actionID == WHM.Glare
-
-            || actionID == WHM.Glare3)
+            || actionID == WHM.Glare3
+        )
         {
             var tarOfTarPercentage = TargetOfTargetHPercentage();
 
@@ -244,56 +241,76 @@ internal class WhiteMageDiaFeature : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (level >= WHM.Levels.PresenceOfMind
+                if (
+                    level >= WHM.Levels.PresenceOfMind
                     && IsOffCooldown(WHM.PresenceOfMind)
-                    && HasRaidBuffs())
+                    && HasRaidBuffs()
+                )
                 {
                     return WHM.PresenceOfMind;
                 }
 
-                if (level >= WHM.Levels.Assize
+                if (
+                    level >= WHM.Levels.Assize
                     && IsOffCooldown(WHM.Assize)
                     && GetTargetDistance() <= 15
                     && (playerPercentage < 1 || TargetHPercentage() <= 0.95)
-                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs()))
+                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
+                )
                 {
                     return WHM.Assize;
                 }
 
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
-                    if (level >= WHM.Levels.Tetragrammaton
-                    && tarOfTarPercentage <= 0.75
-                    && IsOffCooldown(WHM.Tetragrammaton))
+                    if (
+                        level >= WHM.Levels.Tetragrammaton
+                        && tarOfTarPercentage <= 0.75
+                        && IsOffCooldown(WHM.Tetragrammaton)
+                    )
                     {
                         return WHM.Tetragrammaton;
                     }
 
-                    if (level >= WHM.Levels.EnhancedBenison
-                    && HasCharges(WHM.DivineBenison)
-                    && ((GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5 && tarOfTarPercentage <= 0.75)
-                        || tarOfTarPercentage <= 0.5))
+                    if (
+                        level >= WHM.Levels.EnhancedBenison
+                        && HasCharges(WHM.DivineBenison)
+                        && (
+                            (
+                                GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5
+                                && tarOfTarPercentage <= 0.75
+                            )
+                            || tarOfTarPercentage <= 0.5
+                        )
+                    )
                     {
                         return WHM.DivineBenison;
                     }
                 }
 
-                if (HasCondition(ConditionFlag.InCombat)
+                if (
+                    HasCondition(ConditionFlag.InCombat)
                     && IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000)
+                    && LocalPlayer?.CurrentMp <= 8000
+                )
                     return ADV.LucidDreaming;
             }
-
 
             var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
 
             // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
-            if (InCombat()
-
-                && ((diaFound is not null
-
-                        && (diaFound.RemainingTime <= 3 || (diaFound.RemainingTime <= 6 && this.IsMoving)))
-                    || (diaFound is null && ShouldRefreshDots())))
+            if (
+                InCombat()
+                && (
+                    (
+                        diaFound is not null
+                        && (
+                            diaFound.RemainingTime <= 3
+                            || (diaFound.RemainingTime <= 6 && this.IsMoving)
+                        )
+                    ) || (diaFound is null && ShouldRefreshDots())
+                )
+            )
             {
                 return OriginalHook(WHM.Dia);
             }
@@ -319,24 +336,23 @@ internal class WhiteMageDiaFeature : CustomCombo
             return actionID;
         }
 
-        if ((actionID == WHM.Medica2 || actionID == WHM.Cure3)
-
+        if (
+            (actionID == WHM.Medica2 || actionID == WHM.Cure3)
             && level >= WHM.Levels.ThinAir
-
             && !HasEffect(WHM.Buffs.ThinAir)
-
-            && GetRemainingCharges(WHM.ThinAir) >= 1)
+            && GetRemainingCharges(WHM.ThinAir) >= 1
+        )
             return WHM.ThinAir;
 
-        if (actionID == WHM.Raise
-
+        if (
+            actionID == WHM.Raise
             && level >= WHM.Levels.ThinAir
             // && IsOffCooldown(ADV.Swiftcast)
 
 
             && !HasEffect(WHM.Buffs.ThinAir)
-
-            && GetRemainingCharges(WHM.ThinAir) >= 1)
+            && GetRemainingCharges(WHM.ThinAir) >= 1
+        )
         {
             return WHM.ThinAir;
         }

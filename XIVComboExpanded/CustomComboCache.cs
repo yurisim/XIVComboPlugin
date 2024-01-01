@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Dalamud.Game;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -17,13 +16,19 @@ internal partial class CustomComboCache : IDisposable
     private const uint InvalidObjectID = 0xE000_0000;
 
     // Invalidate these
-    private readonly Dictionary<(uint StatusID, uint? TargetID, uint? SourceID), Status?> statusCache = new();
+    private readonly Dictionary<
+        (uint StatusID, uint? TargetID, uint? SourceID),
+        Status?
+    > statusCache = new();
     private readonly Dictionary<uint, CooldownData> cooldownCache = new();
 
     // Do not invalidate these
     private readonly Dictionary<uint, byte> cooldownGroupCache = new();
     private readonly Dictionary<Type, JobGaugeBase> jobGaugeCache = new();
-    private readonly Dictionary<(uint ActionID, uint ClassJobID, byte Level), (ushort CurrentMax, ushort Max)> chargesCache = new();
+    private readonly Dictionary<
+        (uint ActionID, uint ClassJobID, byte Level),
+        (ushort CurrentMax, ushort Max)
+    > chargesCache = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CustomComboCache"/> class.
@@ -46,7 +51,8 @@ internal partial class CustomComboCache : IDisposable
     /// </summary>
     /// <typeparam name="T">Type of job gauge.</typeparam>
     /// <returns>The job gauge.</returns>
-    internal T GetJobGauge<T>() where T : JobGaugeBase
+    internal T GetJobGauge<T>()
+        where T : JobGaugeBase
     {
         if (!this.jobGaugeCache.TryGetValue(typeof(T), out var gauge))
             gauge = this.jobGaugeCache[typeof(T)] = Service.JobGauges.Get<T>();
@@ -75,7 +81,15 @@ internal partial class CustomComboCache : IDisposable
 
         foreach (var status in chara.StatusList)
         {
-            if (status.StatusId == statusID && (!sourceID.HasValue || status.SourceId == 0 || status.SourceId == InvalidObjectID || status.SourceId == sourceID))
+            if (
+                status.StatusId == statusID
+                && (
+                    !sourceID.HasValue
+                    || status.SourceId == 0
+                    || status.SourceId == InvalidObjectID
+                    || status.SourceId == sourceID
+                )
+            )
                 return this.statusCache[key] = status;
         }
 

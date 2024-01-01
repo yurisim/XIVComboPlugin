@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Windowing;
@@ -17,8 +16,14 @@ namespace XIVComboExpandedPlugin.Interface;
 /// </summary>
 internal class ConfigWindow : Window
 {
-    private readonly Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> groupedPresets;
-    private readonly Dictionary<CustomComboPreset, (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]> presetChildren;
+    private readonly Dictionary<
+        string,
+        List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>
+    > groupedPresets;
+    private readonly Dictionary<
+        CustomComboPreset,
+        (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]
+    > presetChildren;
     private readonly Vector4 shadedColor = new(0.68f, 0.68f, 0.68f, 1.0f);
 
     /// <summary>
@@ -29,21 +34,19 @@ internal class ConfigWindow : Window
     {
         this.RespectCloseHotkey = true;
 
-        this.groupedPresets = Enum
-            .GetValues<CustomComboPreset>()
+        this.groupedPresets = Enum.GetValues<CustomComboPreset>()
             .Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled)
-            .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
+            .Select(
+                preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
+            )
             .Where(tpl => tpl.Info != null && Service.Configuration.GetParent(tpl.Preset) == null)
             .OrderBy(tpl => tpl.Info.JobName)
             .ThenBy(tpl => tpl.Info.Order)
             .GroupBy(tpl => tpl.Info.JobName)
-            .ToDictionary(
-                tpl => tpl.Key,
-                tpl => tpl.ToList());
+            .ToDictionary(tpl => tpl.Key, tpl => tpl.ToList());
 
-        var childCombos = Enum.GetValues<CustomComboPreset>().ToDictionary(
-            tpl => tpl,
-            tpl => new List<CustomComboPreset>());
+        var childCombos = Enum.GetValues<CustomComboPreset>()
+            .ToDictionary(tpl => tpl, tpl => new List<CustomComboPreset>());
 
         foreach (var preset in Enum.GetValues<CustomComboPreset>())
         {
@@ -54,9 +57,14 @@ internal class ConfigWindow : Window
 
         this.presetChildren = childCombos.ToDictionary(
             kvp => kvp.Key,
-            kvp => kvp.Value
-                .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
-                .OrderBy(tpl => tpl.Info.Order).ToArray());
+            kvp =>
+                kvp.Value.Select(
+                    preset =>
+                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
+                )
+                    .OrderBy(tpl => tpl.Info.Order)
+                    .ToArray()
+        );
 
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.Size = new Vector2(740, 490);
@@ -174,14 +182,16 @@ internal class ConfigWindow : Window
 
         if (conflicts.Length > 0)
         {
-            var conflictText = conflicts.Select(conflict =>
-            {
-                if (!showSecrets && Service.Configuration.IsSecret(conflict))
-                    return string.Empty;
+            var conflictText = conflicts
+                .Select(conflict =>
+                {
+                    if (!showSecrets && Service.Configuration.IsSecret(conflict))
+                        return string.Empty;
 
-                var conflictInfo = conflict.GetAttribute<CustomComboInfoAttribute>();
-                return $"\n - {conflictInfo.FancyName}";
-            }).Aggregate((t1, t2) => $"{t1}{t2}");
+                    var conflictInfo = conflict.GetAttribute<CustomComboInfoAttribute>();
+                    return $"\n - {conflictInfo.FancyName}";
+                })
+                .Aggregate((t1, t2) => $"{t1}{t2}");
 
             if (conflictText.Length > 0)
             {

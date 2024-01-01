@@ -7,8 +7,7 @@ internal static class BLM
     public const byte ClassID = 7;
     public const byte JobID = 25;
 
-    public const uint
-        Fire = 141,
+    public const uint Fire = 141,
         Blizzard = 142,
         Thunder = 144,
         Fire2 = 147,
@@ -39,8 +38,7 @@ internal static class BLM
 
     public static class Buffs
     {
-        public const ushort
-            Thundercloud = 164,
+        public const ushort Thundercloud = 164,
             Firestarter = 165,
             Swiftcast = 167,
             LeyLines = 737,
@@ -51,8 +49,7 @@ internal static class BLM
 
     public static class Debuffs
     {
-        public const ushort
-            Thunder = 161,
+        public const ushort Thunder = 161,
             Thunder2 = 162,
             Thunder3 = 163,
             Thunder4 = 1210;
@@ -60,8 +57,7 @@ internal static class BLM
 
     public static class Levels
     {
-        public const byte
-            Fire2 = 18,
+        public const byte Fire2 = 18,
             Thunder2 = 26,
             Manafont = 30,
             Fire3 = 35,
@@ -87,8 +83,7 @@ internal static class BLM
 
     public static class MpCosts
     {
-        public const ushort
-            Fire2 = 3000,
+        public const ushort Fire2 = 3000,
             Flare = 800;
     }
 }
@@ -212,11 +207,14 @@ internal class BlackFireBlizzard2 : CustomCombo
 
             if (gauge.InAstralFire)
             {
-                if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul) return BLM.Foul;
+                if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul)
+                    return BLM.Foul;
 
-                if (IsOffCooldown(BLM.Manafont)
+                if (
+                    IsOffCooldown(BLM.Manafont)
                     && LocalPlayer?.CurrentMp < 100
-                    && level >= BLM.Levels.Manafont)
+                    && level >= BLM.Levels.Manafont
+                )
                 {
                     return BLM.Manafont;
                 }
@@ -226,15 +224,21 @@ internal class BlackFireBlizzard2 : CustomCombo
                 if (level >= BLM.Levels.Flare && LocalPlayer?.CurrentMp <= 3000)
                 {
                     // Flare block
-                    if (!HasEffect(ADV.Buffs.Swiftcast)
+                    if (
+                        !HasEffect(ADV.Buffs.Swiftcast)
                         && !HasEffect(BLM.Buffs.Triplecast)
-                        && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont)))
+                        && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont))
+                    )
                     {
-                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
+                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
+                            return ADV.Swiftcast;
 
-                        if (HasCharges(BLM.Triplecast)
+                        if (
+                            HasCharges(BLM.Triplecast)
                             && level >= BLM.Levels.Triplecast
-                            && !HasEffect(ADV.Buffs.Swiftcast)) return BLM.Triplecast;
+                            && !HasEffect(ADV.Buffs.Swiftcast)
+                        )
+                            return BLM.Triplecast;
                     }
                     else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
                     {
@@ -249,22 +253,30 @@ internal class BlackFireBlizzard2 : CustomCombo
                     }
                 }
 
-                return LocalPlayer?.CurrentMp < 3000 && GetCooldown(BLM.Manafont).CooldownRemaining <= 179
+                return
+                    LocalPlayer?.CurrentMp < 3000
+                    && GetCooldown(BLM.Manafont).CooldownRemaining <= 179
                     ? BLM.Blizzard2
                     : BLM.Fire2;
             }
 
             if (gauge.InUmbralIce)
             {
-                if ((HasEffect(BLM.Buffs.Thundercloud)
+                if (
+                    (
+                        HasEffect(BLM.Buffs.Thundercloud)
                         || IsOffCooldown(BLM.Sharpcast)
-                        || HasEffect(BLM.Buffs.Sharpcast))
-                    && gauge.ElementTimeRemaining >= 13000)
+                        || HasEffect(BLM.Buffs.Sharpcast)
+                    )
+                    && gauge.ElementTimeRemaining >= 13000
+                )
                 {
-                    if (level >= BLM.Levels.Sharpcast
+                    if (
+                        level >= BLM.Levels.Sharpcast
                         && !HasEffect(BLM.Buffs.Thundercloud)
                         && !HasEffect(BLM.Buffs.Sharpcast)
-                        && IsOffCooldown(BLM.Sharpcast))
+                        && IsOffCooldown(BLM.Sharpcast)
+                    )
                     {
                         return BLM.Sharpcast;
                     }
@@ -272,15 +284,20 @@ internal class BlackFireBlizzard2 : CustomCombo
                     return OriginalHook(BLM.Thunder2);
                 }
 
-                if (level >= BLM.Levels.Fire2
-                    && (gauge.UmbralHearts >= 3
+                if (
+                    level >= BLM.Levels.Fire2
+                    && (
+                        gauge.UmbralHearts >= 3
                         || gauge.ElementTimeRemaining <= 5000
-                        || (LocalPlayer?.CurrentMp >= 9000 && level < BLM.Levels.Blizzard4)))
+                        || (LocalPlayer?.CurrentMp >= 9000 && level < BLM.Levels.Blizzard4)
+                    )
+                )
                     return BLM.Fire2;
 
-                if (level >= BLM.Levels.Freeze
-                    && (gauge.UmbralHearts == 0
-                        || (level < BLM.Levels.Blizzard4)))
+                if (
+                    level >= BLM.Levels.Freeze
+                    && (gauge.UmbralHearts == 0 || (level < BLM.Levels.Blizzard4))
+                )
                     return BLM.Freeze;
 
                 return BLM.Blizzard2;
@@ -298,7 +315,8 @@ internal class BlackFireBlizzard2 : CustomCombo
 
 internal class BlackTranspose : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackTransposeUmbralSoulFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackTransposeUmbralSoulFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -316,7 +334,8 @@ internal class BlackTranspose : CustomCombo
 
 internal class BlackUmbralSoul : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackUmbralSoulTransposeFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackUmbralSoulTransposeFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -334,7 +353,8 @@ internal class BlackUmbralSoul : CustomCombo
 
 internal class BlackLeyLines : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackLeyLinesFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackLeyLinesFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -350,7 +370,8 @@ internal class BlackLeyLines : CustomCombo
 
 internal class BlackFire : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackFireFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackFireFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -404,7 +425,13 @@ internal class BlackBlizzard : CustomCombo
             {
                 if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 {
-                    if (gauge.InUmbralIce || (!IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption) && LocalPlayer?.CurrentMp >= 1600))
+                    if (
+                        gauge.InUmbralIce
+                        || (
+                            !IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption)
+                            && LocalPlayer?.CurrentMp >= 1600
+                        )
+                    )
                         return BLM.Paradox;
                 }
 
@@ -456,7 +483,8 @@ internal class BlackFreezeFlare : CustomCombo
 
 internal class BlackFire2 : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackFire2Feature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackFire2Feature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -477,7 +505,10 @@ internal class BlackFire2 : CustomCombo
                     return BLM.Flare;
 
                 // Standard AoE rotation Fire2 until 1 Umbral Heart, followed by 2 Flare
-                if (gauge.UmbralHearts == 1 || (gauge.UmbralHearts == 0 && HasEffect(BLM.Buffs.EnhancedFlare)))
+                if (
+                    gauge.UmbralHearts == 1
+                    || (gauge.UmbralHearts == 0 && HasEffect(BLM.Buffs.EnhancedFlare))
+                )
                     return BLM.Flare;
 
                 if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
@@ -533,7 +564,8 @@ internal class BlackBlizzard2 : CustomCombo
 
 internal class BlackScathe : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackScatheFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackScatheFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -551,13 +583,17 @@ internal class BlackScathe : CustomCombo
 
 internal class BlackThunder : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlackThunderFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.BlackThunderFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
         {
-            if (IsEnabled(CustomComboPreset.BlackThunderDelayOption) && this.IsThunderCastRecently(lastComboMove))
+            if (
+                IsEnabled(CustomComboPreset.BlackThunderDelayOption)
+                && this.IsThunderCastRecently(lastComboMove)
+            )
                 return actionID;
 
             if (level >= BLM.Levels.EnhancedSharpcast2)

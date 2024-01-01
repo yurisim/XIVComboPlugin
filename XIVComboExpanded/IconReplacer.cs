@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Plugin.Services;
@@ -27,14 +26,22 @@ internal sealed partial class IconReplacer : IDisposable
     {
         this.clientStructActionManager = ActionManager.Instance();
 
-        this.customCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
+        this.customCombos = Assembly
+            .GetAssembly(typeof(CustomCombo))!
+            .GetTypes()
             .Where(t => !t.IsAbstract && IsDescendant(t, typeof(CustomCombo)))
             .Select(t => Activator.CreateInstance(t))
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(Service.Address.GetAdjustedActionId, this.GetIconDetour);
-        this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
+        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(
+            Service.Address.GetAdjustedActionId,
+            this.GetIconDetour
+        );
+        this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(
+            Service.Address.IsActionIdReplaceable,
+            this.IsIconReplaceableDetour
+        );
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
@@ -42,8 +49,10 @@ internal sealed partial class IconReplacer : IDisposable
 
     private static bool IsDescendant(Type clazz, Type ancestor)
     {
-        if (clazz.BaseType == null) return false;
-        if (clazz.BaseType == ancestor) return true;
+        if (clazz.BaseType == null)
+            return false;
+        if (clazz.BaseType == ancestor)
+            return true;
         return IsDescendant(clazz.BaseType, ancestor);
     }
 
@@ -66,7 +75,13 @@ internal sealed partial class IconReplacer : IDisposable
     /// <returns>A bool value of whether the action can be used or not.</returns>
     internal unsafe bool CanUseAction(uint actionID, uint targetID = 0xE000_0000)
     {
-        return clientStructActionManager->GetActionStatus(ActionType.Action, actionID, targetID, false, true) == 0;
+        return clientStructActionManager->GetActionStatus(
+                ActionType.Action,
+                actionID,
+                targetID,
+                false,
+                true
+            ) == 0;
     }
 
     /// <summary>
@@ -74,8 +89,8 @@ internal sealed partial class IconReplacer : IDisposable
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>The result from the hook.</returns>
-    internal uint OriginalHook(uint actionID)
-        => this.getIconHook.Original(this.actionManager, actionID);
+    internal uint OriginalHook(uint actionID) =>
+        this.getIconHook.Original(this.actionManager, actionID);
 
     private unsafe uint GetIconDetour(IntPtr actionManager, uint actionID)
     {
