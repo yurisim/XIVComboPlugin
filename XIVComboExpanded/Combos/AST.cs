@@ -109,7 +109,7 @@ internal class AstrologianMalefic : CustomCombo
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (
-                        tarPercentage <= 0.75
+                        tarPercentage <= threshold - 0.1
                         && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
                     )
                     {
@@ -128,7 +128,6 @@ internal class AstrologianMalefic : CustomCombo
                                 && tarPercentage <= threshold + 0.1
                             )
                             || tarPercentage <= threshold
-                            || GetCooldown(AST.CelestialIntersection).CooldownRemaining <= 5
                         )
                     )
                     {
@@ -141,7 +140,9 @@ internal class AstrologianMalefic : CustomCombo
                     && IsOffCooldown(AST.Divination)
                     && HasRaidBuffs()
                 )
+                {
                     return AST.Divination;
+                }
 
                 if (
                     (OriginalHook(AST.MinorArcana) != AST.MinorArcana)
@@ -167,7 +168,9 @@ internal class AstrologianMalefic : CustomCombo
                 }
 
                 if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
+                {
                     return AST.Astrodyne;
+                }
 
                 if (
                     level >= AST.Levels.MinorArcana
@@ -227,16 +230,16 @@ internal class AstrologianGravity : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
-    private Dictionary<CardType, SealType> CardSeals { get; } =
-        new Dictionary<CardType, SealType>
-        {
-            { CardType.BALANCE, SealType.SUN },
-            { CardType.BOLE, SealType.SUN },
-            { CardType.ARROW, SealType.MOON },
-            { CardType.EWER, SealType.MOON },
-            { CardType.SPEAR, SealType.CELESTIAL },
-            { CardType.SPIRE, SealType.CELESTIAL },
-        };
+    // private Dictionary<CardType, SealType> CardSeals { get; } =
+    //     new Dictionary<CardType, SealType>
+    //     {
+    //         { CardType.BALANCE, SealType.SUN },
+    //         { CardType.BOLE, SealType.SUN },
+    //         { CardType.ARROW, SealType.MOON },
+    //         { CardType.EWER, SealType.MOON },
+    //         { CardType.SPEAR, SealType.CELESTIAL },
+    //         { CardType.SPIRE, SealType.CELESTIAL },
+    //     };
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -336,49 +339,8 @@ internal class AstrologianPlay : CustomCombo
         {
             var gauge = GetJobGauge<ASTGauge>();
 
-            if (IsEnabled(CustomComboPreset.AstrologianPlayAstrodyneFeature))
-            {
-                if (level >= AST.Levels.Astrodyne && !gauge.ContainsSeal(SealType.NONE))
-                    return AST.Astrodyne;
-            }
-
-            if (IsEnabled(CustomComboPreset.AstrologianPlayDrawFeature))
-            {
-                if (IsEnabled(CustomComboPreset.AstrologianPlayDrawAstrodyneFeature))
-                {
-                    var draw = GetCooldown(AST.Draw);
-
-                    if (
-                        level >= AST.Levels.Astrodyne
-                        && !gauge.ContainsSeal(SealType.NONE)
-                        && draw.RemainingCharges == 0
-                    )
-                        return AST.Astrodyne;
-                }
-
-                if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
-                    return AST.Draw;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class AstrologianDraw : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.AstrologianDrawLockoutFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.Draw)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
-
-            if (gauge.DrawnCard != CardType.NONE)
-                // Malefic4
-                return OriginalHook(AST.Malefic);
+            if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
+                return AST.Draw;
         }
 
         return actionID;
