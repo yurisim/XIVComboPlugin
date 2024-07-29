@@ -49,7 +49,8 @@ internal static class SGE
     {
         public const ushort EDosis1 = 2614,
             EDosis2 = 2615,
-            EDosis3 = 2616;
+            EDosis3 = 2616,
+            EDyskrasia = 3897;
     }
 
     public static class Levels
@@ -210,29 +211,17 @@ internal class SageDosis : CustomCombo
             if (InCombat())
             {
 
-                if (level >= SGE.Levels.EDosis1)
+                var currentEDosis = EDosises.FirstOrDefault(x => x.Level <= level);
+                var debuff = FindTargetEffect(currentEDosis.Debuff);
+
+                bool shouldRefresh = debuff == null
+                    ? ShouldRefreshDots()
+                    : debuff.RemainingTime <= 3 || (debuff.RemainingTime <= 6 && IsMoving);
+
+                if (shouldRefresh)
                 {
-                    var debuff = FindTargetEffect(EDosises.FirstOrDefault(x => x.Level <= level).Debuff);
-
-                    var debuffTime = debuff?.RemainingTime;
-
-                    if (
-
-                            (
-                                debuff is not null
-                                && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                            ) || (debuff is null && ShouldRefreshDots())
-                    )
-                    {
-                        if (!HasEffect(SGE.Buffs.Eukrasia))
-                        {
-                            return SGE.Eukrasia;
-                        }
-
-                        return OriginalHook(SGE.Dosis);
-                    }
+                    return HasEffect(SGE.Buffs.Eukrasia) ? OriginalHook(SGE.Dosis) : SGE.Eukrasia;
                 }
-
 
                 if (
                     level >= SGE.Levels.Pneuma
@@ -442,6 +431,21 @@ internal class SagePhlegma : CustomCombo
                     return ADV.LucidDreaming;
                 }
             }
+
+            if (level >= SGE.Levels.EDosis3)
+            {
+                var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
+
+                var shouldRefresh = (debuff == null) && targetHPPercent >= 0.05
+                    ? ShouldRefreshDots()
+                    : debuff.RemainingTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving);
+
+                if (shouldRefresh)
+                {
+                    return HasEffect(SGE.Buffs.Eukrasia) ? OriginalHook(SGE.Dyskrasia) : SGE.Eukrasia;
+                }
+            }
+
 
             var plegma = OriginalHook(SGE.Phlegma);
 
