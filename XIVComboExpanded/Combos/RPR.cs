@@ -42,6 +42,8 @@ internal static class RPR
         Communio = 24398,
         LemuresSlice = 24399,
         LemuresScythe = 24400,
+        Sacrificium = 36969,
+        Perfectio = 36973,
         // Misc
 
 
@@ -57,6 +59,7 @@ internal static class RPR
     {
         public const ushort EnhancedHarpe = 2845,
             SoulReaver = 2587,
+            Executioner = 3858,
             EnhancedGibbet = 2588,
             EnhancedGallows = 2589,
             EnhancedVoidReaping = 2590,
@@ -66,7 +69,10 @@ internal static class RPR
             Soulsow = 2594,
             ArcaneCircle = 2599,
             BloodsownCircle = 2972,
-            Threshold = 2595;
+            Threshold = 2595,
+            Oblatio = 3857,          // Sacrificium ready to use
+            PerfectioOcculta = 3859, // Turns into Perfectio Parata when Communio is used
+            PerfectioParata = 3860;  // Perfectio ready to use
     }
 
     public static class Debuffs
@@ -97,7 +103,10 @@ internal static class RPR
             EnhancedShroud = 86,
             LemuresScythe = 86,
             PlentifulHarvest = 88,
-            Communio = 90;
+            Communio = 90,
+            Sacrificium = 92,
+            Executioner = 96,
+            Perfectio = 100;
     }
 }
 
@@ -527,8 +536,14 @@ internal class ReaperBloodStalk : CustomCombo
 
             if (IsEnabled(CustomComboPreset.ReaperBloodStalkGluttonyFeature))
             {
-                if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsOffCooldown(RPR.Gluttony))
+                if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsCooldownUsable(RPR.Gluttony) && gauge.EnshroudedTimeRemaining == 0)
                     return RPR.Gluttony;
+            }
+
+            if (IsEnabled(CustomComboPreset.ReaperLemuresSacrificiumFeature))
+            {
+                if (level >= RPR.Levels.Sacrificium && HasEffect(RPR.Buffs.Oblatio) && gauge.EnshroudedTimeRemaining > 0 && (gauge.VoidShroud < 2 || IsEnabled(CustomComboPreset.ReaperLemuresSacrificiumPriorityFeature)))
+                    return RPR.Sacrificium;
             }
         }
 
@@ -548,8 +563,14 @@ internal class ReaperGrimSwathe : CustomCombo
 
             if (IsEnabled(CustomComboPreset.ReaperGrimSwatheGluttonyFeature))
             {
-                if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsOffCooldown(RPR.Gluttony))
+                if (level >= RPR.Levels.Gluttony && gauge.Soul >= 50 && IsCooldownUsable(RPR.Gluttony) && gauge.EnshroudedTimeRemaining == 0)
                     return RPR.Gluttony;
+            }
+
+            if (IsEnabled(CustomComboPreset.ReaperLemuresSacrificiumFeature))
+            {
+                if (level >= RPR.Levels.Sacrificium && HasEffect(RPR.Buffs.Oblatio) && gauge.EnshroudedTimeRemaining > 0 && (gauge.VoidShroud < 2 || IsEnabled(CustomComboPreset.ReaperLemuresSacrificiumPriorityFeature)))
+                    return RPR.Sacrificium;
             }
         }
 
@@ -718,6 +739,12 @@ internal class ReaperHarpe : CustomCombo
                     && (!InCombat() || !HasTarget())
                 )
                     return RPR.Soulsow;
+            }
+
+            if (IsEnabled(CustomComboPreset.ReaperHarpePerfectioFeature))
+            {
+                if (level >= RPR.Levels.Perfectio && HasEffect(RPR.Buffs.PerfectioParata))
+                    return RPR.Perfectio;
             }
 
             if (IsEnabled(CustomComboPreset.ReaperHarpeHarvestMoonFeature))

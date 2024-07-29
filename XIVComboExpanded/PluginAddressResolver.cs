@@ -1,6 +1,8 @@
 using System;
 using Dalamud.Game;
 using Dalamud.Logging;
+using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace XIVComboExpandedPlugin;
 
@@ -20,28 +22,20 @@ internal class PluginAddressResolver : BaseAddressResolver
     public IntPtr LastComboMove => this.ComboTimer + 0x4;
 
     /// <summary>
-    /// Gets the address of fpGetAdjustedActionId.
-    /// </summary>
-    public IntPtr GetAdjustedActionId { get; private set; }
-
-    /// <summary>
     /// Gets the address of fpIsIconReplacable.
     /// </summary>
     public IntPtr IsActionIdReplaceable { get; private set; }
 
     /// <inheritdoc/>
-    protected override void Setup64Bit(ISigScanner scanner)
+    protected unsafe override void Setup64Bit(ISigScanner scanner)
     {
-        this.ComboTimer = scanner.GetStaticAddressFromSig("F3 0F 11 05 ?? ?? ?? ?? 48 83 C7 08");
+        this.ComboTimer = new IntPtr(&ActionManager.Instance()->Combo.Timer);
 
-        this.GetAdjustedActionId = scanner.ScanText("E8 ?? ?? ?? ?? 89 03 8B 03"); // Client::Game::ActionManager.GetAdjustedActionId
+        this.IsActionIdReplaceable = scanner.ScanText("E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 5C 24");
 
-        this.IsActionIdReplaceable = scanner.ScanText("E8 ?? ?? ?? ?? 84 C0 74 4C 8B D3");
-
-        PluginLog.Verbose("===== X I V C O M B O =====");
-        PluginLog.Verbose($"{nameof(this.GetAdjustedActionId)}   0x{this.GetAdjustedActionId:X}");
-        PluginLog.Verbose($"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}");
-        PluginLog.Verbose($"{nameof(this.ComboTimer)}            0x{this.ComboTimer:X}");
-        PluginLog.Verbose($"{nameof(this.LastComboMove)}         0x{this.LastComboMove:X}");
+        Service.PluginLog.Verbose("===== X I V C O M B O =====");
+        Service.PluginLog.Verbose($"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}");
+        Service.PluginLog.Verbose($"{nameof(this.ComboTimer)}            0x{this.ComboTimer:X}");
+        Service.PluginLog.Verbose($"{nameof(this.LastComboMove)}         0x{this.LastComboMove:X}");
     }
 }

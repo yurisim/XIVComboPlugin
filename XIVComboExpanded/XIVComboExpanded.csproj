@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Authors>attick, daemitus</Authors>
+    <Authors>attick, daemitus, Khayle</Authors>
     <Company>-</Company>
-    <Version>1.4.0.25</Version>
+    <Version>1.5.1.11</Version>
     <Description>This plugin condenses combos and mutually exclusive abilities onto a single button.</Description>
     <Copyright>Copyleft attick 2020 baybeeee</Copyright>
     <PackageProjectUrl>https://github.com/daemitus/XIVComboPlugin</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.12" />
+    <PackageReference Include="DalamudPackager" Version="2.1.13" />
     <PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true" />
     <Reference Include="Dalamud" Private="False" />
     <Reference Include="FFXIVClientStructs" Private="False" />
@@ -55,6 +55,10 @@
     <Reference Include="Lumina" Private="False" />
     <Reference Include="Lumina.Excel" Private="False" />
     <Reference Include="Newtonsoft.Json" Private="False" />
+	  <Reference Include="InteropGenerator.Runtime">
+		  <HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
+		  <Private>false</Private>
+	  </Reference>
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">

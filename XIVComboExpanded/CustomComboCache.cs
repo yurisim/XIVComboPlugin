@@ -67,16 +67,16 @@ internal partial class CustomComboCache : IDisposable
     /// <param name="obj">Object to look for effects on.</param>
     /// <param name="sourceID">Source object ID.</param>
     /// <returns>Status object or null.</returns>
-    internal Status? GetStatus(uint statusID, GameObject? obj, uint? sourceID)
+    internal Status? GetStatus(uint statusID, IGameObject? obj, uint? sourceID)
     {
-        var key = (statusID, obj?.ObjectId, sourceID);
+        var key = (statusID, obj?.EntityId, sourceID);
         if (this.statusCache.TryGetValue(key, out var found))
             return found;
 
         if (obj is null)
             return this.statusCache[key] = null;
 
-        if (obj is not BattleChara chara)
+        if (obj is not IBattleChara chara)
             return this.statusCache[key] = null;
 
         foreach (var status in chara.StatusList)
@@ -113,7 +113,7 @@ internal partial class CustomComboCache : IDisposable
         var cooldownGroup = this.GetCooldownGroup(actionID);
 
         var cooldownPtr = actionManager->GetRecastGroupDetail(cooldownGroup - 1);
-        cooldownPtr->ActionID = actionID;
+        cooldownPtr->ActionId = actionID;
 
         return this.cooldownCache[actionID] = *(CooldownData*)cooldownPtr;
     }
@@ -139,7 +139,7 @@ internal partial class CustomComboCache : IDisposable
             return found;
 
         var cur = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 0);
-        var max = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 90);
+        var max = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 100);
         return this.chargesCache[key] = (cur, max);
     }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -23,13 +25,17 @@ internal static class DNC
         StandardStep = 15997,
         TechnicalStep = 15998,
         Tillana = 25790,
+        LastDance = 36983,
+        FinishingMove = 36984,
         // Fans
         FanDance1 = 16007,
         FanDance2 = 16008,
         FanDance3 = 16009,
         FanDance4 = 25791,
         // Other
+
         SaberDance = 16005,
+        ClosedPosition = 16006,
         EnAvant = 16010,
         Devilment = 16011,
         Flourish = 16013,
@@ -38,16 +44,22 @@ internal static class DNC
 
     public static class Buffs
     {
-        public const ushort FlourishingSymmetry = 3017,
+        public const ushort
+            ClosedPosition = 1823,
+            FlourishingSymmetry = 3017,
             FlourishingFlow = 3018,
             FlourishingFinish = 2698,
             FlourishingStarfall = 2700,
             SilkenSymmetry = 2693,
             SilkenFlow = 2694,
             StandardStep = 1818,
+            StandardFinish = 1821,
             TechnicalStep = 1819,
             TechnicalFinish = 1822,
             ThreefoldFanDance = 1820,
+            LastDanceReady = 3867,
+            FinishingMoveReady = 3868,
+            DanceOfTheDawnReady = 3869,
             Devilment = 1825,
             FourfoldFanDance = 2699;
     }
@@ -69,13 +81,17 @@ internal static class DNC
             Fountainfall = 40,
             Bloodshower = 45,
             Devilment = 62,
+            ClosedPosition = 60,
             FanDance3 = 66,
             TechnicalStep = 70,
             Flourish = 72,
             SaberDance = 76,
             Tillana = 82,
             FanDance4 = 86,
-            StarfallDance = 90;
+            StarfallDance = 90,
+            LastDance = 92,
+            FinishingMove = 96,
+            DanceOfTheDawn = 100;
     }
 }
 
@@ -323,6 +339,25 @@ internal class DancerCascadeFountain : CustomCombo
             }
         }
 
+        if (actionID == DNC.RisingWindmill || actionID == DNC.Bloodshower)
+        {
+            var gauge = GetJobGauge<DNCGauge>();
+
+            if (level >= DNC.Levels.SaberDance && !HasEffect(DNC.Buffs.StandardStep) && !HasEffect(DNC.Buffs.TechnicalStep))
+            {
+                if (IsEnabled(CustomComboPreset.DancerAoeDanceOfTheDawn) &&
+                    gauge.Esprit >= 50 && HasEffect(DNC.Buffs.DanceOfTheDawnReady))
+                    return OriginalHook(DNC.SaberDance);
+
+                if (IsEnabled(CustomComboPreset.DancerAoeSabreDance) && gauge.Esprit >= 85)
+                    return OriginalHook(DNC.SaberDance);
+
+                if (IsEnabled(CustomComboPreset.DancerAoeSabreDanceTech) &&
+                    gauge.Esprit >= 50 && HasEffect(DNC.Buffs.TechnicalFinish))
+                    return OriginalHook(DNC.SaberDance);
+            }
+        }
+
         return actionID;
     }
 }
@@ -336,8 +371,42 @@ internal class DancerDevilment : CustomCombo
     {
         if (actionID == DNC.Devilment)
         {
+            if (IsEnabled(CustomComboPreset.DancerPartnerFeature) && level >= DNC.Levels.ClosedPosition && (!HasEffect(DNC.Buffs.ClosedPosition)))
+            {
+                if (IsEnabled(CustomComboPreset.DancerChocoboPartnerFeature) && HasCompanionPresent())
+                {
+                    return DNC.ClosedPosition;
+                }
+
+                if (IsInParty() && IsInInstance())
+                    return DNC.ClosedPosition;
+            }
+
             if (level >= DNC.Levels.StarfallDance && HasEffect(DNC.Buffs.FlourishingStarfall))
                 return DNC.StarfallDance;
+        }
+
+        return actionID;
+    }
+}
+
+internal class DancerLastDanceFeature : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerLastDanceFeature;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == DNC.StandardStep)
+        {
+            if (level >= DNC.Levels.LastDance && HasEffect(DNC.Buffs.LastDanceReady))
+            {
+                if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) && HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
+                {
+                    return DNC.FinishingMove;
+                }
+
+                return DNC.LastDance;
+            }
         }
 
         return actionID;

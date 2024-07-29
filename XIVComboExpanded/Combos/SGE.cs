@@ -260,7 +260,7 @@ internal class SageDosis : CustomCombo
                     && HasCharges(OriginalHook(SGE.Phlegma))
                     && level >= SGE.Levels.Phlegma
                     && (
-                        GetCooldown(plegma).ChargeCooldownRemaining <= 5
+                        GetCooldown(plegma).CooldownElapsed <= 5
                         || GetRemainingCharges(plegma) == 2
                         || HasRaidBuffs()
                     )

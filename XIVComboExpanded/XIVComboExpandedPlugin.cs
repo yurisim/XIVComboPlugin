@@ -26,7 +26,7 @@ public sealed partial class XIVComboExpandedPlugin : IDalamudPlugin
     /// <param name="sigScanner">Dalamud signature scanner.</param>
     /// <param name="gameInteropProvider">Dalamud game interop provider.</param>
     public XIVComboExpandedPlugin(
-        DalamudPluginInterface pluginInterface,
+        IDalamudPluginInterface pluginInterface,
         ISigScanner sigScanner,
         IGameInteropProvider gameInteropProvider
     )
@@ -61,7 +61,6 @@ public sealed partial class XIVComboExpandedPlugin : IDalamudPlugin
         );
     }
 
-    /// <inheritdoc/>
     public string Name => "XIV Combo Expanded";
 
     /// <inheritdoc/>

@@ -1,9 +1,13 @@
-# XIVComboPlugin
+# XIVCombo Expanded [![Build](https://github.com/MKhayle/XIVComboPlugin/actions/workflows/build.yml/badge.svg)](https://github.com/daemitus/XIVComboPlugin/actions/workflows/build.yml) 
 
-[![Build](https://github.com/MKhayle/XIVComboPlugin/actions/workflows/build.yml/badge.svg)](https://github.com/daemitus/XIVComboPlugin/actions/workflows/build.yml)
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R2F1EYP)
 
 This plugin condenses combos and mutually exclusive abilities onto a single button. 
 Thanks to Meli for the initial start, and obviously goat for making any of this possible.
+
+## [Dawntrail Status](https://github.com/MKhayle/XIVComboExpanded/discussions/250)
+Every job should be working correctly at lvl 90 and below. Nothing is guaranteed above 90 and some features can break. Please report issues here!
 
 ## Note 
 This fork was initially [daemitus](https://github.com/daemitus)' work. I have been maintaining it in his stead since he stopped playing the game. 
@@ -15,7 +19,8 @@ XIVCombo is a plugin to allow for "one-button" combo chains, as well as implemen
 For some jobs, this frees a massive amount of hotbar space (looking at you, DRG). For most, it removes a lot of mindless tedium associated with having to press various buttons that have little logical reason to be separate.
 
 ## Installation
-* Type `/xlplugins` in-game to access the plugin installer and updater. Any releases on this github page have been removed to facilitate proper installation going forward.
+* Place `https://github.com/daemitus/MyDalamudPlugins/raw/master/pluginmaster.json` in your /xlsettings 3rd party repo list to access this plugin.
+* Type `/xlplugins` in-game to access the plugin installer and updater.
 ## In-game usage
 * Type `/pcombo` to pull up a GUI for editing active combo replacements.
 * Drag the named ability from your ability list onto your hotbar to use.
@@ -32,4 +37,3 @@ For some jobs, this frees a massive amount of hotbar space (looking at you, DRG)
 ## Full list of supported combos
 There used to be a list here, but it got annoying to update. You should install it and check out what's available!
 
-Place `https://github.com/daemitus/MyDalamudPlugins/raw/master/pluginmaster.json` in your /xlsettings 3rd party repo list to access this plugin.

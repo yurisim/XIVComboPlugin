@@ -42,7 +42,13 @@ internal class Service
     /// Gets the Dalamud plugin interface.
     /// </summary>
     [PluginService]
-    internal static DalamudPluginInterface Interface { get; private set; } = null!;
+    internal static IDalamudPluginInterface Interface { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the Dalamud party list.
+    /// </summary>
+    [PluginService]
+    internal static IPartyList PartyList { get; private set; } = null!;
 
     /// <summary>
     /// Gets the Dalamud buddy list.
@@ -81,6 +87,12 @@ internal class Service
     internal static IDataManager DataManager { get; private set; } = null!;
 
     /// <summary>
+    /// Gets the Dalamud duty state.
+    /// </summary>
+    [PluginService]
+    internal static IDutyState DutyState { get; private set; } = null!;
+
+    /// <summary>
     /// Gets the Dalamud framework manager.
     /// </summary>
     [PluginService]
@@ -103,4 +115,10 @@ internal class Service
     /// </summary>
     [PluginService]
     internal static ITargetManager TargetManager { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the Dalamud plugin log.
+    /// </summary>
+    [PluginService]
+    internal static IPluginLog PluginLog { get; private set; } = null!;
 }

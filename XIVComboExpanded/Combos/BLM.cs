@@ -34,7 +34,8 @@ internal static class BLM
         Blizzard2 = 25793,
         HighFire2 = 25794,
         HighBlizzard2 = 25795,
-        Paradox = 25797;
+        Paradox = 25797,
+        FlareStar = 36989;
 
     public static class Buffs
     {
@@ -73,12 +74,13 @@ internal static class BLM
             Triplecast = 66,
             Foul = 70,
             Despair = 72,
-            UmbralSoul = 76,
+            UmbralSoul = 35,
             Xenoglossy = 80,
             HighFire2 = 82,
             HighBlizzard2 = 82,
             EnhancedSharpcast2 = 88,
-            Paradox = 90;
+            Paradox = 90,
+            FlareStar = 100;
     }
 
     public static class MpCosts
@@ -204,6 +206,7 @@ internal class BlackFireBlizzard2 : CustomCombo
         if (actionID == BLM.Blizzard2)
         {
             var gauge = GetJobGauge<BLMGauge>();
+            var fire4 = GetCooldown(BLM.Fire4);
 
             if (gauge.InAstralFire)
             {
@@ -323,7 +326,6 @@ internal class BlackTranspose : CustomCombo
         if (actionID == BLM.Transpose)
         {
             var gauge = GetJobGauge<BLMGauge>();
-
             if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
                 return BLM.UmbralSoul;
         }
@@ -425,14 +427,14 @@ internal class BlackBlizzard : CustomCombo
             {
                 if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 {
-                    if (
-                        gauge.InUmbralIce
-                        || (
-                            !IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption)
-                            && LocalPlayer?.CurrentMp >= 1600
-                        )
-                    )
-                        return BLM.Paradox;
+                    //if (
+                    //    gauge.InUmbralIce
+                    //    || (
+                    //        !IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption)
+                    //        && LocalPlayer?.CurrentMp >= 1600
+                    //    )
+                    //)
+                    //    return BLM.Paradox;
                 }
 
                 if (level >= BLM.Levels.Blizzard3)
@@ -511,17 +513,19 @@ internal class BlackFire2 : CustomCombo
                 )
                     return BLM.Flare;
 
-                if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
-                {
-                    int triplecasts = FindEffect(BLM.Buffs.Triplecast)?.StackCount ?? 0;
+                //if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
+                //{
+                //    if (gauge.AstralSoulStacks >= 6)
+                //        return BLM.FlareStar;
 
-                    // (Umbral Ice) Fire2 -> Triplecast -> Fire2 -> Swiftcast -> Flare -> Flare -> Manafont -> Flare
-                    if (gauge.UmbralHearts > 0 && triplecasts == 2)
-                        return BLM.Flare;
+                //    return BLM.Flare;
+                //}
 
-                    if (triplecasts == 1)
-                        return BLM.Flare;
-                }
+                // At level 50, Fire II is used until under 3800 mana (the combined cost of Fire II and Flare),
+                // and then Flare is cast once.
+                // At level 58, Fire II is used until 1 Umbral Heart is remaining, and then Flare is cast twice.
+                if (LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare || gauge.UmbralHearts == 1)
+                    return BLM.Flare;
             }
         }
 
@@ -581,39 +585,33 @@ internal class BlackScathe : CustomCombo
     }
 }
 
-internal class BlackThunder : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackThunderFeature;
+//internal class BlackThunder : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } =
+//        CustomComboPreset.BlackThunderFeature;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
-        {
-            if (
-                IsEnabled(CustomComboPreset.BlackThunderDelayOption)
-                && this.IsThunderCastRecently(lastComboMove)
-            )
-                return actionID;
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
+//        {
+//            if (
+//                IsEnabled(CustomComboPreset.BlackThunderDelayOption)
+//                && this.IsThunderCastRecently(lastComboMove)
+//            )
+//                return actionID;
 
-            if (level >= BLM.Levels.EnhancedSharpcast2)
-            {
-                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
-                    return BLM.Sharpcast;
-            }
-            else if (level >= BLM.Levels.Sharpcast)
-            {
-                if (IsOffCooldown(BLM.Sharpcast))
-                    return BLM.Sharpcast;
-            }
-        }
+//            if (level >= BLM.Levels.EnhancedSharpcast2)
+//            {
+//                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
+//                    return BLM.Sharpcast;
+//            }
+//            else if (level >= BLM.Levels.Sharpcast)
+//            {
+//                if (IsOffCooldown(BLM.Sharpcast))
+//                    return BLM.Sharpcast;
+//            }
+//        }
 
-        return actionID;
-    }
-
-    private bool IsThunderCastRecently(uint lastComboMove)
-    {
-        bool isGcdOnCooldown = IsOnCooldown(BLM.Thunder3); // shared with Thunder4
-        return isGcdOnCooldown && (lastComboMove == BLM.Thunder3 || lastComboMove == BLM.Thunder4);
-    }
-}
+//        return actionID;
+//    }
+//}

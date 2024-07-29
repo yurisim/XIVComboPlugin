@@ -15,6 +15,7 @@ internal static class RDM
         Verstone = 7511,
         Zwerchhau = 7512,
         Moulinet = 7513,
+        Vercure = 7514,
         Redoublement = 7516,
         Fleche = 7517,
         Acceleration = 7518,
@@ -35,7 +36,10 @@ internal static class RDM
         Scorch = 16530,
         Verthunder3 = 25855,
         Veraero3 = 25856,
-        Resolution = 25858;
+        Resolution = 25858,
+        ViceOfThorns = 37005,
+        GrandImpact = 37006,
+        Prefulgence = 37007;
 
     public static class Buffs
     {
@@ -45,7 +49,10 @@ internal static class RDM
             Acceleration = 1238,
             Embolden = 1239,
             Dualcast = 1249,
-            LostChainspell = 2560;
+            LostChainspell = 2560,
+            ThornedFlourish = 3876,
+            GrandImpactReady = 3877,
+            PrefulgenceReady = 3878;
     }
 
     public static class Debuffs
@@ -79,7 +86,10 @@ internal static class RDM
             Scorch = 80,
             Veraero3 = 82,
             Verthunder3 = 82,
-            Resolution = 90;
+            Resolution = 90,
+            ViceOfThorns = 92,
+            GrandImpact = 96,
+            Prefulgence = 100;
     }
 }
 

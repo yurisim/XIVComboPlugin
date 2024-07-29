@@ -45,7 +45,14 @@ internal static class AST
         FallMalefic = 25871,
         Gravity2 = 25872,
         Exaltation = 25873,
-        Macrocosmos = 25874;
+        Macrocosmos = 25874,
+        UmbralDraw = 37018,
+        AstralDraw = 37017,
+        Play1 = 37019,
+        Play2 = 37020,
+        Play3 = 37021,
+        MinorArcanaDT = 37022,
+        CombinedHelios = 37030;
 
     public static class Buffs
     {
@@ -71,8 +78,7 @@ internal static class AST
     {
         public const byte Ascend = 12,
             Benefic2 = 26,
-            Draw = 30,
-            AspectedHelios = 42,
+            AstralDraw = 30,
             Redraw = 40,
             Astrodyne = 50,
             CelestialOpposition = 60,
@@ -85,293 +91,293 @@ internal static class AST
     }
 }
 
-internal class AstrologianMalefic : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
+//internal class AstrologianMalefic : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (
-            actionID == AST.Malefic
-            || actionID == AST.Malefic2
-            || actionID == AST.Malefic3
-            || actionID == AST.Malefic4
-            || actionID == AST.FallMalefic
-        )
-        {
-            var gauge = GetJobGauge<ASTGauge>();
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        if (
+//            actionID == AST.Malefic
+//            || actionID == AST.Malefic2
+//            || actionID == AST.Malefic3
+//            || actionID == AST.Malefic4
+//            || actionID == AST.FallMalefic
+//        )
+//        {
+//            var gauge = GetJobGauge<ASTGauge>();
 
-            var tarPercentage = TargetOfTargetHPercentage();
+//            var tarPercentage = TargetOfTargetHPercentage();
 
-            var threshold = 0.80;
+//            var threshold = 0.80;
 
-            var myHP = LocalPlayerPercentage();
+//            var myHP = LocalPlayerPercentage();
 
-            if (GCDClipCheck(actionID))
-            {
-                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
-                {
-                    if (
-                        tarPercentage <= threshold - 0.1
-                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
-                    )
-                    {
-                        return AST.EssentialDignity;
-                    }
+//            if (GCDClipCheck(actionID))
+//            {
+//                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+//                {
+//                    if (
+//                        tarPercentage <= threshold - 0.1
+//                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
+//                    )
+//                    {
+//                        return AST.EssentialDignity;
+//                    }
 
-                    if (
-                        level >= AST.Levels.CelestialIntersection
-                        && (
-                            HasCharges(AST.CelestialIntersection)
-                            || IsOffCooldown(AST.CelestialIntersection)
-                        )
-                        && (
-                            (
-                                GetRemainingCharges(AST.CelestialIntersection) >= 2
-                                && tarPercentage <= threshold + 0.1
-                            )
-                            || tarPercentage <= threshold
-                        )
-                    )
-                    {
-                        return AST.CelestialIntersection;
-                    }
-                }
+//                    if (
+//                        level >= AST.Levels.CelestialIntersection
+//                        && (
+//                            HasCharges(AST.CelestialIntersection)
+//                            || IsOffCooldown(AST.CelestialIntersection)
+//                        )
+//                        && (
+//                            (
+//                                GetRemainingCharges(AST.CelestialIntersection) >= 2
+//                                && tarPercentage <= threshold + 0.1
+//                            )
+//                            || tarPercentage <= threshold
+//                        )
+//                    )
+//                    {
+//                        return AST.CelestialIntersection;
+//                    }
+//                }
 
-                if (
-                    level >= AST.Levels.CelestialOpposition
-                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
-                    && myHP <= threshold
-                )
-                {
-                    return OriginalHook(AST.CelestialOpposition);
-                }
+//                if (
+//                    level >= AST.Levels.CelestialOpposition
+//                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+//                    && myHP <= threshold
+//                )
+//                {
+//                    return OriginalHook(AST.CelestialOpposition);
+//                }
 
-                if (
-                    level >= AST.Levels.Astrodyne
-                    && IsOffCooldown(AST.Divination)
-                    && HasRaidBuffs()
-                )
-                {
-                    return AST.Divination;
-                }
+//                if (
+//                    level >= AST.Levels.Astrodyne
+//                    && IsOffCooldown(AST.Divination)
+//                    && HasRaidBuffs()
+//                )
+//                {
+//                    return AST.Divination;
+//                }
 
-                if (
-                    (OriginalHook(AST.MinorArcana) != AST.MinorArcana)
-                    && (
-                        (
-                            GetCooldown(AST.MinorArcana).CooldownRemaining <= 5
-                            && gauge.DrawnCrownCard != CardType.NONE
-                        )
-                        || (
-                            gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85
-                        )
-                    )
-                )
-                    return OriginalHook(AST.MinorArcana);
+//                if (
+//                    (OriginalHook(AST.MinorArcana) != AST.MinorArcana)
+//                    && (
+//                        (
+//                            GetCooldown(AST.MinorArcana).CooldownRemaining <= 5
+//                            && gauge.DrawnCrownCard != CardType.NONE
+//                        )
+//                        || (
+//                            gauge.DrawnCrownCard == CardType.LADY && LocalPlayerPercentage() <= 0.85
+//                        )
+//                    )
+//                )
+//                    return OriginalHook(AST.MinorArcana);
 
-                if (
-                    OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
-                    && LocalPlayerPercentage() <= 0.85
-                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
-                )
-                {
-                    return OriginalHook(AST.EarthlyStar);
-                }
+//                if (
+//                    OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
+//                    && LocalPlayerPercentage() <= 0.85
+//                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
+//                )
+//                {
+//                    return OriginalHook(AST.EarthlyStar);
+//                }
 
-                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
-                {
-                    return AST.Astrodyne;
-                }
+//                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
+//                {
+//                    return AST.Astrodyne;
+//                }
 
-                if (
-                    level >= AST.Levels.MinorArcana
-                    && InCombat()
-                    && IsOffCooldown(AST.MinorArcana)
-                    && gauge.DrawnCrownCard == CardType.NONE
-                )
-                    return AST.MinorArcana;
+//                if (
+//                    level >= AST.Levels.MinorArcana
+//                    && InCombat()
+//                    && IsOffCooldown(AST.MinorArcana)
+//                    && gauge.DrawnCrownCard == CardType.NONE
+//                )
+//                    return AST.MinorArcana;
 
-                if (
-                    level >= AST.Levels.Draw
-                    && gauge.DrawnCard == CardType.NONE
-                    && HasCharges(AST.Draw)
-                )
-                    return AST.Draw;
+//                if (
+//                    level >= AST.Levels.Draw
+//                    && gauge.DrawnCard == CardType.NONE
+//                    && HasCharges(AST.Draw)
+//                )
+//                    return AST.Draw;
 
-                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
-                    return ADV.LucidDreaming;
+//                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
+//                    return ADV.LucidDreaming;
 
-                var seals = gauge.Seals;
-                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
-                {
-                    var drawnCard = gauge.DrawnCard;
+//                var seals = gauge.Seals;
+//                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
+//                {
+//                    var drawnCard = gauge.DrawnCard;
 
-                    switch (drawnCard)
-                    {
-                        case CardType.BALANCE:
-                        case CardType.BOLE:
-                            if (gauge.ContainsSeal(SealType.SUN))
-                                return AST.Redraw;
-                            break;
-                        case CardType.EWER:
-                        case CardType.ARROW:
-                            if (gauge.ContainsSeal(SealType.MOON))
-                                return AST.Redraw;
-                            break;
-                        case CardType.SPIRE:
-                        case CardType.SPEAR:
-                            if (gauge.ContainsSeal(SealType.CELESTIAL))
-                                return AST.Redraw;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
+//                    switch (drawnCard)
+//                    {
+//                        case CardType.BALANCE:
+//                        case CardType.BOLE:
+//                            if (gauge.ContainsSeal(SealType.SUN))
+//                                return AST.Redraw;
+//                            break;
+//                        case CardType.EWER:
+//                        case CardType.ARROW:
+//                            if (gauge.ContainsSeal(SealType.MOON))
+//                                return AST.Redraw;
+//                            break;
+//                        case CardType.SPIRE:
+//                        case CardType.SPEAR:
+//                            if (gauge.ContainsSeal(SealType.CELESTIAL))
+//                                return AST.Redraw;
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//            }
 
-            if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 4)
-                return AST.Combust3;
-        }
+//            if (FindTargetEffect(AST.Debuffs.CombustIII)?.RemainingTime <= 4)
+//                return AST.Combust3;
+//        }
 
-        return actionID;
-    }
-}
+//        return actionID;
+//    }
+//}
 
-internal class AstrologianGravity : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
+//internal class AstrologianGravity : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstrologianPlayDrawFeature;
 
-    // private Dictionary<CardType, SealType> CardSeals { get; } =
-    //     new Dictionary<CardType, SealType>
-    //     {
-    //         { CardType.BALANCE, SealType.SUN },
-    //         { CardType.BOLE, SealType.SUN },
-    //         { CardType.ARROW, SealType.MOON },
-    //         { CardType.EWER, SealType.MOON },
-    //         { CardType.SPEAR, SealType.CELESTIAL },
-    //         { CardType.SPIRE, SealType.CELESTIAL },
-    //     };
+//    // private Dictionary<CardType, SealType> CardSeals { get; } =
+//    //     new Dictionary<CardType, SealType>
+//    //     {
+//    //         { CardType.BALANCE, SealType.SUN },
+//    //         { CardType.BOLE, SealType.SUN },
+//    //         { CardType.ARROW, SealType.MOON },
+//    //         { CardType.EWER, SealType.MOON },
+//    //         { CardType.SPEAR, SealType.CELESTIAL },
+//    //         { CardType.SPIRE, SealType.CELESTIAL },
+//    //     };
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.Gravity || actionID == AST.Gravity2)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        if (actionID == AST.Gravity || actionID == AST.Gravity2)
+//        {
+//            var gauge = GetJobGauge<ASTGauge>();
 
-            var threshold = 0.80;
+//            var threshold = 0.80;
 
-            var myHP = LocalPlayerPercentage();
+//            var myHP = LocalPlayerPercentage();
 
-            var tarPercentage = TargetOfTargetHPercentage();
-
-
-            if (GCDClipCheck(actionID))
-            {
-                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
-                {
-                    // Exaltation
-                    if (
-                        level >= AST.Levels.Exaltation
-                        && IsOffCooldown(AST.Exaltation)
-                        && tarPercentage <= threshold + 0.1
-                    )
-                    {
-                        return AST.Exaltation;
-                    }
-
-                    if (
-                        tarPercentage <= threshold
-                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
-                    )
-                    {
-                        return AST.EssentialDignity;
-                    }
-
-                    if (
-                        level >= AST.Levels.CelestialIntersection
-                        && (
-                            HasCharges(AST.CelestialIntersection)
-                            || IsOffCooldown(AST.CelestialIntersection)
-                        )
-                        && (
-                            (
-                                GetRemainingCharges(AST.CelestialIntersection) >= 2
-                                && tarPercentage <= threshold + 0.1
-                            )
-                            || tarPercentage <= threshold
-                        )
-                    )
-                    {
-                        return AST.CelestialIntersection;
-                    }
-                }
+//            var tarPercentage = TargetOfTargetHPercentage();
 
 
-                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
-                    return AST.Astrodyne;
+//            if (GCDClipCheck(actionID))
+//            {
+//                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+//                {
+//                    // Exaltation
+//                    if (
+//                        level >= AST.Levels.Exaltation
+//                        && IsOffCooldown(AST.Exaltation)
+//                        && tarPercentage <= threshold + 0.1
+//                    )
+//                    {
+//                        return AST.Exaltation;
+//                    }
 
-                if (
-                    level >= AST.Levels.MinorArcana
-                    && IsOffCooldown(AST.MinorArcana)
-                    && (
-                        gauge.DrawnCrownCard == CardType.NONE
-                        || gauge.DrawnCrownCard == CardType.LORD
-                    )
-                )
-                    return AST.MinorArcana;
+//                    if (
+//                        tarPercentage <= threshold
+//                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
+//                    )
+//                    {
+//                        return AST.EssentialDignity;
+//                    }
 
-                if (
-                    level >= AST.Levels.Draw
-                    && gauge.DrawnCard == CardType.NONE
-                    && HasCharges(AST.Draw)
-                )
-                    return AST.Draw;
+//                    if (
+//                        level >= AST.Levels.CelestialIntersection
+//                        && (
+//                            HasCharges(AST.CelestialIntersection)
+//                            || IsOffCooldown(AST.CelestialIntersection)
+//                        )
+//                        && (
+//                            (
+//                                GetRemainingCharges(AST.CelestialIntersection) >= 2
+//                                && tarPercentage <= threshold + 0.1
+//                            )
+//                            || tarPercentage <= threshold
+//                        )
+//                    )
+//                    {
+//                        return AST.CelestialIntersection;
+//                    }
+//                }
 
-                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
-                    return ADV.LucidDreaming;
 
-                if (
-                    level >= AST.Levels.CelestialOpposition
-                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
-                    && myHP <= threshold
-                )
-                {
-                    return OriginalHook(AST.CelestialOpposition);
-                }
+//                if (level >= AST.Levels.Astrodyne && CanUseAction(AST.Astrodyne))
+//                    return AST.Astrodyne;
 
-                var seals = gauge.Seals;
-                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
-                {
-                    var drawnCard = gauge.DrawnCard;
+//                if (
+//                    level >= AST.Levels.MinorArcana
+//                    && IsOffCooldown(AST.MinorArcana)
+//                    && (
+//                        gauge.DrawnCrownCard == CardType.NONE
+//                        || gauge.DrawnCrownCard == CardType.LORD
+//                    )
+//                )
+//                    return AST.MinorArcana;
 
-                    switch (drawnCard)
-                    {
-                        case CardType.BALANCE:
-                        case CardType.BOLE:
-                            if (gauge.ContainsSeal(SealType.SUN))
-                                return AST.Redraw;
-                            break;
-                        case CardType.EWER:
-                        case CardType.ARROW:
-                            if (gauge.ContainsSeal(SealType.MOON))
-                                return AST.Redraw;
-                            break;
-                        case CardType.SPIRE:
-                        case CardType.SPEAR:
-                            if (gauge.ContainsSeal(SealType.CELESTIAL))
-                                return AST.Redraw;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
+//                if (
+//                    level >= AST.Levels.Draw
+//                    && gauge.DrawnCard == CardType.NONE
+//                    && HasCharges(AST.Draw)
+//                )
+//                    return AST.Draw;
 
-        return actionID;
-    }
-}
+//                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
+//                    return ADV.LucidDreaming;
+
+//                if (
+//                    level >= AST.Levels.CelestialOpposition
+//                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+//                    && myHP <= threshold
+//                )
+//                {
+//                    return OriginalHook(AST.CelestialOpposition);
+//                }
+
+//                var seals = gauge.Seals;
+//                if (level >= AST.Levels.Redraw && CanUseAction(AST.Redraw) && seals != null)
+//                {
+//                    var drawnCard = gauge.DrawnCard;
+
+//                    switch (drawnCard)
+//                    {
+//                        case CardType.BALANCE:
+//                        case CardType.BOLE:
+//                            if (gauge.ContainsSeal(SealType.SUN))
+//                                return AST.Redraw;
+//                            break;
+//                        case CardType.EWER:
+//                        case CardType.ARROW:
+//                            if (gauge.ContainsSeal(SealType.MOON))
+//                                return AST.Redraw;
+//                            break;
+//                        case CardType.SPIRE:
+//                        case CardType.SPEAR:
+//                            if (gauge.ContainsSeal(SealType.CELESTIAL))
+//                                return AST.Redraw;
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//            }
+//        }
+
+//        return actionID;
+//    }
+//}
 
 internal class AstroCelestial : CustomCombo
 {
@@ -397,37 +403,39 @@ internal class AstroCelestial : CustomCombo
     }
 }
 
-internal class AstrologianPlay : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
+//internal class AstrologianPlay : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AstAny;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.Play)
-        {
-            var gauge = GetJobGauge<ASTGauge>();
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        if (actionID == AST.Play)
+//        {
+//            var gauge = GetJobGauge<ASTGauge>();
 
-            if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
-                return AST.Draw;
-        }
+//            if (level >= AST.Levels.Draw && gauge.DrawnCard == CardType.NONE)
+//                return AST.Draw;
+//        }
 
-        return actionID;
-    }
-}
+//        return actionID;
+//    }
+//}
 
-internal class AstrologianBenefic2 : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.AstrologianBeneficSyncFeature;
+//internal class AstrologianArcana : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } =
+//        CustomComboPreset.AstrologianBeneficSyncFeature;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == AST.Benefic2)
-        {
-            if (level < AST.Levels.Benefic2)
-                return AST.Benefic;
-        }
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        var gauge = GetJobGauge<ASTGauge>();
 
-        return actionID;
-    }
-}
+//        if (actionID == AST.Helios)
+//        {
+//            if (IsEnabled(CustomComboPreset.AstrologianHeliosArcanaFeature) && gauge.DrawnCrownCard == CardType.LADY && level >= AST.Levels.MinorArcana)
+//                return OriginalHook(AST.MinorArcanaDT);
+//        }
+
+//        return actionID;
+//    }
+//}

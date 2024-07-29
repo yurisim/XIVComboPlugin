@@ -35,11 +35,16 @@ internal static class WHM
         Glare3 = 25859,
         Holy3 = 25860,
         Aquaveil = 25861,
-        LiturgyOfTheBell = 25862;
+        LiturgyOfTheBell = 25862,
+        Glare4 = 37009,
+        Medica3 = 37010;
 
     public static class Buffs
     {
-        public const ushort ThinAir = 1217;
+        public const ushort
+
+            Glare4Ready = 3879,
+        ThinAir = 1217;
     }
 
     public static class Debuffs
@@ -58,9 +63,10 @@ internal static class WHM
             Tetragrammaton = 60,
             PlenaryIndulgence = 70,
             AfflatusMisery = 74,
-            AfflatusRapture = 76,
             Aquaveil = 86,
-            EnhancedBenison = 88;
+            EnhancedBenison = 88,
+            AfflatusRapture = 76,
+            Glare4 = 92;
     }
 }
 
@@ -180,7 +186,9 @@ internal class WhiteMageMedica : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Medica)
+        if (actionID == WHM.Medica ||
+            (IsEnabled(CustomComboPreset.WhiteMageAfflatusMedicaPlusFeature) &&
+                (actionID == WHM.Medica2 || actionID == WHM.Medica3)))
         {
             var gauge = GetJobGauge<WHMGauge>();
 
@@ -360,3 +368,22 @@ internal class WhiteMageDiaFeature : CustomCombo
         return actionID;
     }
 }
+
+//internal class WhiteMageGlare4Feature : CustomCombo
+//{
+//    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
+
+//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//    {
+//        if (actionID == WHM.Stone)
+//        {
+//            if (IsEnabled(CustomComboPreset.WhiteMageGlare4Feature))
+//            {
+//                if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
+//                    return WHM.Glare4;
+//            }
+//        }
+
+//        return actionID;
+//    }
+//}

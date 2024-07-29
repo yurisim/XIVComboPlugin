@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Lumina.Data.Parsing.Layer;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -21,6 +22,11 @@ internal static class DRG
         WheelingThrust = 3556,
         FangAndClaw = 3554,
         RaidenThrust = 16479,
+        BarrageThrust = 36954,
+        ExplosiveThrust = 36955,
+        Drakesbane = 36952,
+        BarrageThrust2 = 36954,
+        ExplosiveThrust2 = 36955,
         // AoE
         DoomSpike = 86,
         SonicThrust = 7397,
@@ -55,8 +61,12 @@ internal static class DRG
             LeftEye = 1184,
             FangAndClawBared = 802,
             WheelInMotion = 803,
+            LanceCharge = 1864,
+        //public const ushort
+            //SharperFangAndClaw = 802,
+            EnhancedWheelingThrust = 803,
             DiveReady = 1243,
-            LanceCharge = 1864;
+            DraconianFire = 1863;
     }
 
     public static class Debuffs
@@ -83,6 +93,7 @@ internal static class DRG
             Geirskogul = 60,
             SonicThrust = 62,
             LanceMastery = 64,
+            Drakesbane = 64,
             DragonSight = 66,
             MirageDive = 68,
             LifeOfTheDragon = 70,
@@ -226,7 +237,7 @@ internal class DragoonCoerthanTorment : CustomCombo
     }
 }
 
-internal class DragoonChaosThrust : CustomCombo
+internal class DragoonSingleTargetThrust : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DrgAny;
 
@@ -474,7 +485,7 @@ internal class DragoonStardiver : CustomCombo
 internal class DragoonDives : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DragoonDiveFeature;
+        CustomComboPreset.DrgAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -527,7 +538,7 @@ internal class DragoonGierskogul : CustomCombo
                 {
                     var action = gauge.IsLOTDActive ? DRG.Nastrond : DRG.Geirskogul;
 
-                    if (IsOnCooldown(action))
+                    if (!IsCooldownUsable(action))
                         return DRG.WyrmwindThrust;
                 }
             }
@@ -546,13 +557,10 @@ internal class DragoonLanceCharge : CustomCombo
     {
         if (actionID == DRG.LanceCharge)
         {
-            if (!IsOnCooldown(DRG.LanceCharge))
+            if (!!IsCooldownUsable(DRG.LanceCharge))
                 return DRG.LanceCharge;
 
-            if (level >= DRG.Levels.DragonSight && !IsOnCooldown(DRG.DragonSight))
-                return DRG.DragonSight;
-
-            if (level >= DRG.Levels.BattleLitany && !IsOnCooldown(DRG.BattleLitany))
+            if (level >= DRG.Levels.BattleLitany && !!IsCooldownUsable(DRG.BattleLitany))
                 return DRG.BattleLitany;
         }
 

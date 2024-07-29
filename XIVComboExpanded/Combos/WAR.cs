@@ -15,6 +15,7 @@ internal static class WAR
         Overpower = 41,
         StormsPath = 42,
         StormsEye = 45,
+        Defiance = 48,
         InnerBeast = 49,
         SteelCyclone = 51,
         Infuriate = 52,
@@ -29,16 +30,23 @@ internal static class WAR
         NascentFlash = 16464,
         InnerChaos = 16465,
         Bloodwhetting = 25751,
-        PrimalRend = 25753;
+        PrimalRend = 25753,
+        DefianceRemoval = 32066,
+        PrimalWrath = 36924,
+        PrimalRuination = 36925;
 
     public static class Buffs
     {
-        public const ushort Berserk = 86,
+        public const ushort
+            Berserk = 86,
+            Defiance = 91,
             Holmgang = 409,
             InnerRelease = 1177,
             NascentChaos = 1897,
             PrimalRendReady = 2624,
-            SurgingTempest = 2677;
+            SurgingTempest = 2677,
+            Wrathful = 3901,
+            PrimalRuinationReady = 3834;
     }
 
     public static class Debuffs
@@ -50,6 +58,7 @@ internal static class WAR
     {
         public const byte Maim = 4,
             Berserk = 6,
+            Defiance = 10,
             StormsPath = 26,
             ThrillOfBattle = 30,
             InnerBeast = 35,
@@ -68,7 +77,9 @@ internal static class WAR
             NascentFlash = 76,
             InnerChaos = 80,
             Bloodwhetting = 82,
-            PrimalRend = 90;
+            PrimalRend = 90,
+            PrimalWrath = 96,
+            PrimalRuination = 100;
     }
 }
 
@@ -315,6 +326,12 @@ internal class WarriorBerserkInnerRelease : CustomCombo
     {
         if (actionID == WAR.Berserk || actionID == WAR.InnerRelease)
         {
+            if (level >= WAR.Levels.PrimalWrath && HasEffect(WAR.Buffs.Wrathful))
+                return WAR.PrimalWrath;
+
+            if (level >= WAR.Levels.PrimalRuination && HasEffect(WAR.Buffs.PrimalRuinationReady))
+                return WAR.PrimalRuination;
+
             if (level >= WAR.Levels.PrimalRend && HasEffect(WAR.Buffs.PrimalRendReady))
                 return WAR.PrimalRend;
         }
@@ -355,19 +372,19 @@ internal class WarriorBloodwhetting : CustomCombo
             {
                 if (level >= WAR.Levels.Bloodwhetting)
                 {
-                    if (IsOffCooldown(WAR.Bloodwhetting))
+                    if (IsCooldownUsable(WAR.Bloodwhetting))
                         return WAR.Bloodwhetting;
                 }
                 else if (level >= WAR.Levels.RawIntuition)
                 {
-                    if (IsOffCooldown(WAR.RawIntuition))
+                    if (IsCooldownUsable(WAR.RawIntuition))
                         return WAR.RawIntuition;
                 }
 
-                if (level >= WAR.Levels.ThrillOfBattle && IsOffCooldown(WAR.ThrillOfBattle))
+                if (level >= WAR.Levels.ThrillOfBattle && IsCooldownUsable(WAR.ThrillOfBattle))
                     return WAR.ThrillOfBattle;
 
-                if (level >= WAR.Levels.Equilibrium && IsOffCooldown(WAR.Equilibrium))
+                if (level >= WAR.Levels.Equilibrium && IsCooldownUsable(WAR.Equilibrium))
                     return WAR.Equilibrium;
             }
         }
