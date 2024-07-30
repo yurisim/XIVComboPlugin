@@ -6,7 +6,7 @@ internal static class ADV
     public const byte JobID = 0;
 
     public const uint
-        LucidDreaming = 1204,
+        LucidDreaming = 7562,
         Provoke = 7533,
         Shirk = 7537,
         Peloton = 7557,

@@ -34,6 +34,7 @@ internal static class SGE
         Panhaima = 24311,
         Phlegma3 = 24313,
         Krasis = 24317,
+        Psyche = 37033,
         Pneuma = 24318;
 
     public static class Buffs
@@ -82,7 +83,8 @@ internal static class SGE
             EDosis3 = 82,
             Dosis3 = 82,
             Krasis = 86,
-            Pneuma = 90;
+            Pneuma = 90,
+            Psyche = 92;
     }
 }
 
@@ -194,6 +196,11 @@ internal class SageDosis : CustomCombo
                     return SGE.Rhizomata;
                 }
 
+                if (level >= SGE.Levels.Psyche && HasRaidBuffs())
+                {
+                    return SGE.Psyche;
+                }
+
                 // Use Lucid Dreaming if low enough mana
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                 {
@@ -211,17 +218,27 @@ internal class SageDosis : CustomCombo
             if (InCombat())
             {
 
-                var currentEDosis = EDosises.FirstOrDefault(x => x.Level <= level);
-                var debuff = FindTargetEffect(currentEDosis.Debuff);
-
-                bool shouldRefresh = debuff == null
-                    ? ShouldRefreshDots()
-                    : debuff.RemainingTime <= 3 || (debuff.RemainingTime <= 6 && IsMoving);
-
-                if (shouldRefresh)
+                if (level >= SGE.Levels.EDosis1)
                 {
-                    return HasEffect(SGE.Buffs.Eukrasia) ? OriginalHook(SGE.Dosis) : SGE.Eukrasia;
+                    var debuff = FindTargetEffect(EDosises.FirstOrDefault(x => x.Level <= level).Debuff);
+
+                    var debuffTime = debuff?.RemainingTime;
+
+                    if (
+                            ( debuff is not null 
+                                && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
+                            ) || (debuff is null && ShouldRefreshDots())
+                    )
+                    {
+                        if (!HasEffect(SGE.Buffs.Eukrasia))
+                        {
+                            return SGE.Eukrasia;
+                        }
+
+                        return OriginalHook(SGE.Dosis);
+                    }
                 }
+
 
                 if (
                     level >= SGE.Levels.Pneuma
@@ -249,7 +266,7 @@ internal class SageDosis : CustomCombo
                     && HasCharges(OriginalHook(SGE.Phlegma))
                     && level >= SGE.Levels.Phlegma
                     && (
-                        GetCooldown(plegma).CooldownElapsed <= 5
+                        GetCooldown(plegma).TotalCooldownRemaining <= 3
                         || GetRemainingCharges(plegma) == 2
                         || HasRaidBuffs()
                     )
@@ -425,6 +442,11 @@ internal class SagePhlegma : CustomCombo
                     return SGE.Rhizomata;
                 }
 
+                if (level >= SGE.Levels.Psyche)
+                {
+                    return SGE.Psyche;
+                }
+
                 // Use Lucid Dreaming if low enough mana
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                 {
@@ -435,14 +457,19 @@ internal class SagePhlegma : CustomCombo
             if (level >= SGE.Levels.EDosis3)
             {
                 var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
-
-                var shouldRefresh = (debuff == null) && targetHPPercent >= 0.05
-                    ? ShouldRefreshDots()
-                    : debuff.RemainingTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving);
-
-                if (shouldRefresh)
+                var debuffTime = debuff?.RemainingTime;
+                if (
+                        (debuff is not null
+                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
+                        ) || (debuff is null && ShouldRefreshDots())
+                )
                 {
-                    return HasEffect(SGE.Buffs.Eukrasia) ? OriginalHook(SGE.Dyskrasia) : SGE.Eukrasia;
+                    if (!HasEffect(SGE.Buffs.Eukrasia))
+                    {
+                        return SGE.Eukrasia;
+                    }
+
+                    return OriginalHook(SGE.Dyskrasia);
                 }
             }
 

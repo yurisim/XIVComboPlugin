@@ -56,6 +56,7 @@ internal static class PCT
     {
         public const ushort
             SubstractivePalette = 3674,
+            StarryMuse = 3685,
             Chroma2Ready = 3675,
             Chroma3Ready = 3676,
             RainbowReady = 3679,

@@ -239,51 +239,25 @@ internal abstract partial class CustomCombo
     /// <returns>Whether or not the</returns>
     protected static bool HasRaidBuffs()
     {
-        var hasRaidBuffs = false;
+    var raidBuffs = new[]
+    {
+        PCT.Buffs.StarryMuse,
+        DNC.Buffs.TechnicalFinish,
+        SMN.Buffs.SearingLight,
+        RPR.Buffs.ArcaneCircle,
+        AST.Buffs.Divination,
+        RDM.Buffs.Embolden,
+        BRD.Buffs.BattleVoice,
+        DRG.Buffs.BattleLitany,
+        DRG.Buffs.LeftEye,
+        MNK.Buffs.Brotherhood,
+    };
 
-        var raidBuffs = new[]
-        {
-            DNC.Buffs.TechnicalFinish,
-            SMN.Buffs.SearingLight,
-            RPR.Buffs.ArcaneCircle,
-            AST.Buffs.Divination,
-            RDM.Buffs.Embolden,
-            BRD.Buffs.BattleVoice,
-            DRG.Buffs.BattleLitany,
-            DRG.Buffs.LeftEye,
-            RDM.Buffs.Embolden,
-            MNK.Buffs.Brotherhood,
-        };
+    var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
 
-        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
+    int raidCDsFound = raidBuffs.Count(HasEffectAny) + raidDebuffs.Count(TargetHasEffectAny);
 
-        var raidCDsFound = 0;
-
-        foreach (var buff in raidBuffs)
-        {
-            if (HasEffectAny(buff))
-                raidCDsFound++;
-
-            if (raidCDsFound >= 2)
-            {
-                hasRaidBuffs = true;
-                break;
-            }
-        }
-
-        foreach (var debuff in raidDebuffs)
-        {
-            if (TargetHasEffectAny(debuff))
-                raidCDsFound++;
-
-            if (raidCDsFound >= 2)
-            {
-                hasRaidBuffs = true;
-                break;
-            }
-        }
-
-        return hasRaidBuffs;
+    return raidCDsFound >= 2;
     }
 
     /// <summary>
