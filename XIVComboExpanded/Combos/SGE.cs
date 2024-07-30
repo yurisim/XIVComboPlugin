@@ -208,12 +208,12 @@ internal class SageDosis : CustomCombo
                 }
             }
 
-            (ushort Debuff, ushort Level)[] EDosises = new[]
-            {
+            (ushort Debuff, ushort Level)[] EDosises =
+            [
                 (SGE.Debuffs.EDosis3, SGE.Levels.EDosis3),
                 (SGE.Debuffs.EDosis2, SGE.Levels.EDosis2),
                 (SGE.Debuffs.EDosis1, SGE.Levels.EDosis1)
-            };
+            ];
 
             if (InCombat())
             {
@@ -454,7 +454,7 @@ internal class SagePhlegma : CustomCombo
                 }
             }
 
-            if (level >= SGE.Levels.EDosis3)
+            if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6)
             {
                 var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
                 var debuffTime = debuff?.RemainingTime;
