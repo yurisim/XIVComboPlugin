@@ -9,6 +9,7 @@ internal static class DRK
     public const uint HardSlash = 3617,
         Unleash = 3621,
         SyphonStrike = 3623,
+        Grit = 3629,
         Unmend = 3624,
         Souleater = 3632,
         BloodWeapon = 3625,
@@ -25,13 +26,21 @@ internal static class DRK
         EdgeOfShadow = 16470,
         LivingShadow = 16472,
         SaltAndDarkness = 25755,
-        Shadowbringer = 25757;
+        Shadowbringer = 25757,
+        GritRemoval = 32067,
+        ScarletDelirium = 36928,
+        Comeuppance = 36929,
+        Torcleaver = 36930,
+        Impalement = 36931;
 
     public static class Buffs
     {
-        public const ushort BloodWeapon = 742,
+        public const ushort
+            BloodWeapon = 742,
+            Grit = 743,
             Darkside = 751,
-            Delirium = 1972;
+            Delirium = 1972,
+            ScarletDelirium = 3836;
     }
 
     public static class Debuffs
@@ -41,7 +50,9 @@ internal static class DRK
 
     public static class Levels
     {
-        public const byte SyphonStrike = 2,
+        public const byte
+            SyphonStrike = 2,
+            Grit = 10,
             Souleater = 26,
             FloodOfDarkness = 30,
             BloodWeapon = 35,
@@ -56,7 +67,11 @@ internal static class DRK
             Shadow = 74,
             LivingShadow = 80,
             SaltAndDarkness = 86,
-            Shadowbringer = 90;
+            Shadowbringer = 90,
+            ScarletDelirium = 96,
+            Comeuppance = 96,
+            Torcleaver = 96,
+            Impalement = 96;
     }
 }
 
@@ -220,13 +235,13 @@ internal class DarkCarveAndSpitAbyssalDrain : CustomCombo
             if (IsEnabled(CustomComboPreset.DarkBloodWeaponFeature))
             {
                 if (actionID == DRK.AbyssalDrain && level < DRK.Levels.AbyssalDrain)
-                    return DRK.BloodWeapon;
+                    return OriginalHook(DRK.BloodWeapon);
 
                 if (actionID == DRK.CarveAndSpit && level < DRK.Levels.CarveAndSpit)
-                    return DRK.BloodWeapon;
+                    return OriginalHook(DRK.BloodWeapon);
 
-                if (level >= DRK.Levels.BloodWeapon && IsOffCooldown(DRK.BloodWeapon))
-                    return DRK.BloodWeapon;
+                if (level >= DRK.Levels.BloodWeapon && IsCooldownUsable(DRK.BloodWeapon))
+                    return OriginalHook(DRK.BloodWeapon);
             }
         }
 

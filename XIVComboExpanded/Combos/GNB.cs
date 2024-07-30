@@ -11,6 +11,7 @@ internal static class GNB
         NoMercy = 16138,
         BrutalShell = 16139,
         DemonSlice = 16141,
+        RoyalGuard = 16142,
         SolidBarrel = 16145,
         GnashingFang = 16146,
         SavageClaw = 16147,
@@ -29,17 +30,22 @@ internal static class GNB
         Bloodfest = 16164,
         Hypervelocity = 25759,
         HeartOfCorundum = 25758,
-        DoubleDown = 25760;
+        DoubleDown = 25760,
+        RoyalGuardRemoval = 32068,
+        FatedBrand = 36936;
 
     public static class Buffs
     {
-        public const ushort NoMercy = 1831,
+        public const ushort
+            NoMercy = 1831,
+            RoyalGuard = 1833,
             Aurora = 1835,
             Superbolide = 1836,
             ReadyToRip = 1842,
             ReadyToTear = 1843,
             ReadyToGouge = 1844,
-            ReadyToBlast = 2686;
+            ReadyToBlast = 2686,
+            ReadyToFated = 3839;
     }
 
     public static class Debuffs
@@ -52,6 +58,7 @@ internal static class GNB
         public const byte NoMercy = 2,
             BrutalShell = 4,
             DangerZone = 18,
+            RoyalGuard = 10,
             SolidBarrel = 26,
             BurstStrike = 30,
             DemonSlaughter = 40,

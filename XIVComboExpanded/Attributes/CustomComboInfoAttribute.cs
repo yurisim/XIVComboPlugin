@@ -100,6 +100,8 @@ internal class CustomComboInfoAttribute : Attribute
             38 => "Dancer",
             39 => "Reaper",
             40 => "Sage",
+            41 => "Viper",
+            42 => "Pictomancer",
             DOH.JobID => "Disciples of the Hand",
             DOL.JobID => "Disciples of the Land",
             _ => "Unknown",

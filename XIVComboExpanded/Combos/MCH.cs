@@ -18,6 +18,8 @@ internal static class MCH
         // Charges
         GaussRound = 2874,
         Ricochet = 2890,
+        DoubleCheck = 36979,
+        Checkmate = 36980,
         // AoE
         SpreadShot = 2870,
         AutoCrossbow = 16497,
@@ -28,20 +30,27 @@ internal static class MCH
         AutomatonQueen = 16501,
         QueenOverdrive = 16502,
         // Other
-        BarrelStabilizer = 7414,
         Wildfire = 2878,
         Detonator = 16766,
         Hypercharge = 17209,
+        BarrelStabilizer = 7414,
         HeatBlast = 7410,
+        BlazingShot = 36978,
         HotShot = 2872,
         Drill = 16498,
         Bioblaster = 16499,
         AirAnchor = 16500,
-        Chainsaw = 25788;
+        Chainsaw = 25788,
+        Excavator = 36981,
+        FullMetal = 36982;
 
     public static class Buffs
     {
-        public const ushort Reassemble = 851;
+        public const ushort
+            HyperchargeReady = 3864,
+            ExcavatorReady = 3865,
+            FullMetalPrepared = 3866,
+         Reassemble = 851;
     }
 
     public static class Debuffs
@@ -66,10 +75,15 @@ internal static class MCH
             HeatedCleanShot = 64,
             BarrelStabilizer = 66,
             Bioblaster = 72,
+            BlazingShot = 68,
             ChargedActionMastery = 74,
             AirAnchor = 76,
             QueenOverdrive = 80,
-            Chainsaw = 90;
+            Chainsaw = 90,
+            DoubleCheck = 92,
+            CheckMate = 92,
+            Excavator = 96,
+            FullMetal = 100;
     }
 }
 

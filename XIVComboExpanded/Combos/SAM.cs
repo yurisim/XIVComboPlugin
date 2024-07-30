@@ -22,6 +22,7 @@ internal static class SAM
         MidareSetsugekka = 7487,
         Higanbana = 7489,
         KaeshiSetsugekka = 16486,
+        Gyofu = 36963,
         // AoE
 
 
@@ -46,9 +47,10 @@ internal static class SAM
         HissatsuSenei = 16481,
         HissatsuGuren = 7496,
         Ikishoten = 16482,
-        Shoha2 = 25779,
+        // Shoha2 = 25779,
         OgiNamikiri = 25781,
-        KaeshiNamikiri = 25782;
+        KaeshiNamikiri = 25782,
+        Zanshin = 36964;
 
     public static class Buffs
     {
@@ -56,7 +58,8 @@ internal static class SAM
             EyesOpen = 1252,
             Jinpu = 1298,
             Shifu = 1299,
-            OgiNamikiriReady = 2959;
+            OgiNamikiriReady = 2959,
+            ZanshinReady = 3855;
     }
 
     public static class Debuffs
@@ -84,11 +87,12 @@ internal static class SAM
             HissatsuSenei = 72,
             TsubameGaeshi = 76,
             Shoha = 80,
-            Shoha2 = 82,
+            // Shoha2 = 82,
             Hyosetsu = 86,
             Fuko = 86,
             DoubleMeikyoShisui = 88,
-            OgiNamikiri = 90;
+            OgiNamikiri = 90,
+            Zanshin = 96;
     }
 }
 
@@ -307,10 +311,10 @@ internal class SamuraiMangetsu : CustomCombo
                 // var higanbanaTime = ((higanabana is null && ShouldRefreshDots())
                 //            || (higanabana is not null && higanabana.RemainingTime <= 6));
 
-                if (gauge.MeditationStacks == 3 && (HasRaidBuffs() || (gaugeSen.Sum() >= 2)))
-                {
-                    return level >= SAM.Levels.Shoha2 ? SAM.Shoha2 : SAM.Shoha;
-                }
+                //if (gauge.MeditationStacks == 3 && (HasRaidBuffs() || (gaugeSen.Sum() >= 2)))
+                //{
+                //    return level >= SAM.Levels.Shoha2 ? SAM.Shoha2 : SAM.Shoha;
+                //}
 
                 var canUseIkishoten =
                     level >= SAM.Levels.Ikishoten && IsOffCooldown(SAM.Ikishoten) && InCombat();
@@ -482,6 +486,12 @@ internal class SamuraiShinten : CustomCombo
         {
             var gauge = GetJobGauge<SAMGauge>();
 
+            if (IsEnabled(CustomComboPreset.SamuraiShintenZanshinFeature))
+            {
+                if (level >= SAM.Levels.Zanshin && HasEffect(SAM.Buffs.ZanshinReady))
+                    return SAM.Zanshin;
+            }
+
             if (IsEnabled(CustomComboPreset.SamuraiShintenShohaFeature))
             {
                 if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
@@ -490,7 +500,7 @@ internal class SamuraiShinten : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SamuraiShintenSeneiFeature))
             {
-                if (level >= SAM.Levels.HissatsuSenei && IsOffCooldown(SAM.HissatsuSenei))
+                if (level >= SAM.Levels.HissatsuSenei && IsCooldownUsable(SAM.HissatsuSenei))
                     return SAM.HissatsuSenei;
 
                 if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
@@ -538,15 +548,21 @@ internal class SamuraiKyuten : CustomCombo
         {
             var gauge = GetJobGauge<SAMGauge>();
 
-            if (IsEnabled(CustomComboPreset.SamuraiKyutenShoha2Feature))
+            if (IsEnabled(CustomComboPreset.SamuraiKyutenZanshinFeature))
             {
-                if (level >= SAM.Levels.Shoha2 && gauge.MeditationStacks >= 3)
-                    return SAM.Shoha2;
+                if (level >= SAM.Levels.Zanshin && HasEffect(SAM.Buffs.ZanshinReady))
+                    return SAM.Zanshin;
+            }
+
+            if (IsEnabled(CustomComboPreset.SamuraiKyutenShohaFeature))
+            {
+                if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
+                    return SAM.Shoha;
             }
 
             if (IsEnabled(CustomComboPreset.SamuraiKyutenGurenFeature))
             {
-                if (level >= SAM.Levels.HissatsuGuren && IsOffCooldown(SAM.HissatsuGuren))
+                if (level >= SAM.Levels.HissatsuGuren && IsCooldownUsable(SAM.HissatsuGuren))
                     return SAM.HissatsuGuren;
             }
         }

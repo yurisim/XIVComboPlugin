@@ -21,7 +21,8 @@ internal static class DOL
         MinWiseToTheWorld = 26521,
         BtnWiseToTheWorld = 26522,
         ElectricCurrent = 26872,
-        PrizeCatch = 26806;
+        PrizeCatch = 26806,
+        Rest = 37047;
 
     public static class Buffs
     {
@@ -83,6 +84,12 @@ internal class FisherCast : CustomCombo
             {
                 if (HasCondition(ConditionFlag.Fishing))
                     return DOL.Hook;
+            }
+
+            if (IsEnabled(CustomComboPreset.DolCastRestFeature))
+            {
+                if (HasCondition(ConditionFlag.Fishing))
+                    return DOL.Rest;
             }
 
             if (IsEnabled(CustomComboPreset.DolCastGigFeature))

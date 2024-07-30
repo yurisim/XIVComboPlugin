@@ -34,6 +34,7 @@ internal static class SGE
         Panhaima = 24311,
         Phlegma3 = 24313,
         Krasis = 24317,
+        Psyche = 37033,
         Pneuma = 24318;
 
     public static class Buffs
@@ -49,7 +50,8 @@ internal static class SGE
     {
         public const ushort EDosis1 = 2614,
             EDosis2 = 2615,
-            EDosis3 = 2616;
+            EDosis3 = 2616,
+            EDyskrasia = 3897;
     }
 
     public static class Levels
@@ -81,7 +83,8 @@ internal static class SGE
             EDosis3 = 82,
             Dosis3 = 82,
             Krasis = 86,
-            Pneuma = 90;
+            Pneuma = 90,
+            Psyche = 92;
     }
 }
 
@@ -193,6 +196,11 @@ internal class SageDosis : CustomCombo
                     return SGE.Rhizomata;
                 }
 
+                if (level >= SGE.Levels.Psyche && HasRaidBuffs())
+                {
+                    return SGE.Psyche;
+                }
+
                 // Use Lucid Dreaming if low enough mana
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                 {
@@ -200,12 +208,12 @@ internal class SageDosis : CustomCombo
                 }
             }
 
-            (ushort Debuff, ushort Level)[] EDosises = new[]
-            {
+            (ushort Debuff, ushort Level)[] EDosises =
+            [
                 (SGE.Debuffs.EDosis3, SGE.Levels.EDosis3),
                 (SGE.Debuffs.EDosis2, SGE.Levels.EDosis2),
                 (SGE.Debuffs.EDosis1, SGE.Levels.EDosis1)
-            };
+            ];
 
             if (InCombat())
             {
@@ -217,9 +225,7 @@ internal class SageDosis : CustomCombo
                     var debuffTime = debuff?.RemainingTime;
 
                     if (
-
-                            (
-                                debuff is not null
+                            ( debuff is not null 
                                 && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
                             ) || (debuff is null && ShouldRefreshDots())
                     )
@@ -260,7 +266,7 @@ internal class SageDosis : CustomCombo
                     && HasCharges(OriginalHook(SGE.Phlegma))
                     && level >= SGE.Levels.Phlegma
                     && (
-                        GetCooldown(plegma).ChargeCooldownRemaining <= 5
+                        GetCooldown(plegma).TotalCooldownRemaining <= 3
                         || GetRemainingCharges(plegma) == 2
                         || HasRaidBuffs()
                     )
@@ -436,12 +442,37 @@ internal class SagePhlegma : CustomCombo
                     return SGE.Rhizomata;
                 }
 
+                if (level >= SGE.Levels.Psyche)
+                {
+                    return SGE.Psyche;
+                }
+
                 // Use Lucid Dreaming if low enough mana
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
                 {
                     return ADV.LucidDreaming;
                 }
             }
+
+            if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6)
+            {
+                var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
+                var debuffTime = debuff?.RemainingTime;
+                if (
+                        (debuff is not null
+                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
+                        ) || (debuff is null && ShouldRefreshDots())
+                )
+                {
+                    if (!HasEffect(SGE.Buffs.Eukrasia))
+                    {
+                        return SGE.Eukrasia;
+                    }
+
+                    return OriginalHook(SGE.Dyskrasia);
+                }
+            }
+
 
             var plegma = OriginalHook(SGE.Phlegma);
 

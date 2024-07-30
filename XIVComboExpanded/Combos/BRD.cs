@@ -28,23 +28,29 @@ internal static class BRD
         CausticBite = 7406,
         Stormbite = 7407,
         RefulgentArrow = 7409,
-        Peloton = 7557,
         BurstShot = 16495,
         ApexArrow = 16496,
         Shadowbite = 16494,
         Ladonsbite = 25783,
         BlastArrow = 25784,
-        RadiantFinale = 25785;
+        RadiantFinale = 25785,
+        WideVolley = 36974,
+        HeartbreakShot = 36975,
+        ResonantArrow = 36976,
+        RadiantEncore = 36977;
 
     public static class Buffs
     {
         public const ushort RagingStrikes = 125,
-            Barrage = 128,
             StraightShotReady = 122,
+            Barrage = 128,
             BattleVoice = 141,
             WanderersMinuet = 2009,
             BlastShotReady = 2692,
-            ShadowbiteReady = 3002;
+            ShadowbiteReady = 3002,
+            HawksEye = 3861,
+            ResonantArrowReady = 3862,
+            RadiantEncoreReady = 3863;
     }
 
     public static class Debuffs
@@ -61,6 +67,7 @@ internal static class BRD
             RagingStrikes = 4,
             VenomousBite = 6,
             Bloodletter = 12,
+            WideVolley = 25,
             MagesBallad = 30,
             Windbite = 30,
             Barrage = 38,
@@ -80,7 +87,10 @@ internal static class BRD
             Ladonsbite = 82,
             EnhancedBloodLetter = 84,
             BlastShot = 86,
-            RadiantFinale = 90;
+            RadiantFinale = 90,
+            HeartbreakShot = 92,
+            ResonantArrow = 96,
+            RadiantEncore = 100;
     }
 }
 
@@ -607,13 +617,13 @@ internal class BardRadiantFinale : CustomCombo
         {
             if (IsEnabled(CustomComboPreset.BardRadiantStrikesFeature))
             {
-                if (level >= BRD.Levels.RagingStrikes && IsOffCooldown(BRD.RagingStrikes))
+                if (level >= BRD.Levels.RagingStrikes && IsCooldownUsable(BRD.RagingStrikes))
                     return BRD.RagingStrikes;
             }
 
             if (IsEnabled(CustomComboPreset.BardRadiantVoiceFeature))
             {
-                if (level >= BRD.Levels.BattleVoice && IsOffCooldown(BRD.BattleVoice))
+                if (level >= BRD.Levels.BattleVoice && IsCooldownUsable(BRD.BattleVoice))
                     return BRD.BattleVoice;
             }
 
@@ -628,27 +638,6 @@ internal class BardRadiantFinale : CustomCombo
                 if (level < BRD.Levels.RadiantFinale)
                     return BRD.BattleVoice;
             }
-        }
-
-        return actionID;
-    }
-}
-
-internal class BardPeloton : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BardWanderersPitchPerfectFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BRD.Peloton)
-        {
-            var gauge = GetJobGauge<BRDGauge>();
-
-            if (level >= BRD.Levels.PitchPerfect && gauge.Song == Song.WANDERER && HasTarget())
-                return BRD.PitchPerfect;
-
-            return BRD.WanderersMinuet;
         }
 
         return actionID;
@@ -672,7 +661,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.WANDERER && gauge.SongTimer >= remaining)
                     return BRD.WanderersMinuet;
 
-                if (IsOffCooldown(BRD.WanderersMinuet))
+                if (IsCooldownUsable(BRD.WanderersMinuet))
                     return BRD.WanderersMinuet;
             }
 
@@ -681,7 +670,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.MAGE && gauge.SongTimer >= remaining)
                     return BRD.MagesBallad;
 
-                if (IsOffCooldown(BRD.MagesBallad))
+                if (IsCooldownUsable(BRD.MagesBallad))
                     return BRD.MagesBallad;
             }
 
@@ -690,7 +679,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.ARMY && gauge.SongTimer >= remaining)
                     return BRD.ArmysPaeon;
 
-                if (IsOffCooldown(BRD.ArmysPaeon))
+                if (IsCooldownUsable(BRD.ArmysPaeon))
                     return BRD.ArmysPaeon;
             }
 
