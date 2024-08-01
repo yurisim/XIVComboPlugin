@@ -196,7 +196,7 @@ internal class SageDosis : CustomCombo
                     return SGE.Rhizomata;
                 }
 
-                if (level >= SGE.Levels.Psyche && HasRaidBuffs())
+                if (level >= SGE.Levels.Psyche && HasRaidBuffs() && IsOffCooldown(SGE.Psyche))
                 {
                     return SGE.Psyche;
                 }
@@ -442,7 +442,7 @@ internal class SagePhlegma : CustomCombo
                     return SGE.Rhizomata;
                 }
 
-                if (level >= SGE.Levels.Psyche)
+                if (level >= SGE.Levels.Psyche && IsOffCooldown(SGE.Psyche))
                 {
                     return SGE.Psyche;
                 }

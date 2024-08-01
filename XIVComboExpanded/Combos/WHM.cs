@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -9,8 +11,9 @@ internal static class WHM
     public const byte JobID = 24;
 
     public const uint Cure = 120,
+        Aero = 121,
         Medica = 124,
-        Stone2 = 127,
+        Stone = 119,
         Raise = 125,
         Cure3 = 131,
         Medica2 = 133,
@@ -41,20 +44,23 @@ internal static class WHM
 
     public static class Buffs
     {
-        public const ushort
-
-            Glare4Ready = 3879,
-        ThinAir = 1217;
+        public const ushort Glare4Ready = 3879,
+            ThinAir = 1217;
     }
 
     public static class Debuffs
     {
-        public const ushort Dia = 1871;
+        public const ushort Dia = 1871,
+            Aero = 143,
+            Aero2 = 144;
     }
 
     public static class Levels
     {
-        public const byte Raise = 12,
+        public const byte Aero = 4,
+            Aero2 = 46,
+            Dia = 72,
+            Raise = 12,
             Cure2 = 30,
             PresenceOfMind = 30,
             AfflatusSolace = 52,
@@ -70,39 +76,9 @@ internal static class WHM
     }
 }
 
-internal class WhiteMageAfflatusSolace : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.WhiteMageSolaceMiseryFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == WHM.AfflatusSolace)
-        {
-            var gauge = GetJobGauge<WHMGauge>();
-
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
-            {
-                if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryTargetFeature))
-                {
-                    if (TargetIsEnemy())
-                        return WHM.AfflatusMisery;
-                }
-                else
-                {
-                    return WHM.AfflatusMisery;
-                }
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class WhiteMageAfflatusRapture : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.WhiteMageRaptureMiseryFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -120,8 +96,7 @@ internal class WhiteMageAfflatusRapture : CustomCombo
 
 internal class WhiteMageHoly : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.WhiteMageHolyMiseryFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -186,14 +161,17 @@ internal class WhiteMageMedica : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Medica ||
-            (IsEnabled(CustomComboPreset.WhiteMageAfflatusMedicaPlusFeature) &&
-                (actionID == WHM.Medica2 || actionID == WHM.Medica3)))
+        if (actionID == WHM.Medica || actionID == WHM.Medica2 || actionID == WHM.Medica3)
         {
             var gauge = GetJobGauge<WHMGauge>();
 
             if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
                 return WHM.PlenaryIndulgence;
+
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+            {
+                return WHM.AfflatusMisery;
+            }
 
             if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                 return WHM.AfflatusRapture;
@@ -203,7 +181,7 @@ internal class WhiteMageMedica : CustomCombo
     }
 }
 
-internal class WHiteMageBenison : CustomCombo
+internal class WhiteMageBenison : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
@@ -233,13 +211,7 @@ internal class WhiteMageDiaFeature : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (
-            actionID == WHM.Stone2
-            || actionID == WHM.Stone3
-            || actionID == WHM.Stone4
-            || actionID == WHM.Glare
-            || actionID == WHM.Glare3
-        )
+        if (actionID == WHM.Stone)
         {
             var tarOfTarPercentage = TargetOfTargetHPercentage();
 
@@ -272,15 +244,6 @@ internal class WhiteMageDiaFeature : CustomCombo
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
                     if (
-                        level >= WHM.Levels.Tetragrammaton
-                        && tarOfTarPercentage <= 0.75
-                        && IsOffCooldown(WHM.Tetragrammaton)
-                    )
-                    {
-                        return WHM.Tetragrammaton;
-                    }
-
-                    if (
                         level >= WHM.Levels.EnhancedBenison
                         && HasCharges(WHM.DivineBenison)
                         && (
@@ -288,11 +251,20 @@ internal class WhiteMageDiaFeature : CustomCombo
                                 GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5
                                 && tarOfTarPercentage <= 0.75
                             )
-                            || tarOfTarPercentage <= 0.5
+                            || tarOfTarPercentage <= 0.6
                         )
                     )
                     {
                         return WHM.DivineBenison;
+                    }
+
+                    if (
+                        level >= WHM.Levels.Tetragrammaton
+                        && tarOfTarPercentage <= 0.70
+                        && IsOffCooldown(WHM.Tetragrammaton)
+                    )
+                    {
+                        return WHM.Tetragrammaton;
                     }
                 }
 
@@ -304,23 +276,28 @@ internal class WhiteMageDiaFeature : CustomCombo
                     return ADV.LucidDreaming;
             }
 
-            var diaFound = FindTargetEffect(WHM.Debuffs.Dia);
+            (ushort Debuff, ushort Level)[] aeroDOT =
+            [
+                (WHM.Debuffs.Dia, WHM.Levels.Dia),
+                (WHM.Debuffs.Aero2, WHM.Levels.Aero2),
+                (WHM.Debuffs.Aero, WHM.Levels.Aero),
+            ];
 
-            // If I'm in combat and the target is an enemy and doesn't have dia, use dia.p
+            var debuff = FindTargetEffect(aeroDOT.FirstOrDefault(x => x.Level <= level).Debuff);
+
+            var debuffTime = debuff?.RemainingTime;
+
             if (
                 InCombat()
                 && (
                     (
-                        diaFound is not null
-                        && (
-                            diaFound.RemainingTime <= 3
-                            || (diaFound.RemainingTime <= 6 && this.IsMoving)
-                        )
-                    ) || (diaFound is null && ShouldRefreshDots())
+                        debuff is not null
+                        && (debuffTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving))
+                    ) || (debuff is null && ShouldRefreshDots())
                 )
             )
             {
-                return OriginalHook(WHM.Dia);
+                return OriginalHook(WHM.Aero);
             }
 
             if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
@@ -341,7 +318,7 @@ internal class WhiteMageDiaFeature : CustomCombo
                 }
             }
 
-            return actionID;
+            return OriginalHook(actionID);
         }
 
         if (
@@ -368,22 +345,3 @@ internal class WhiteMageDiaFeature : CustomCombo
         return actionID;
     }
 }
-
-//internal class WhiteMageGlare4Feature : CustomCombo
-//{
-//    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
-
-//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//    {
-//        if (actionID == WHM.Stone)
-//        {
-//            if (IsEnabled(CustomComboPreset.WhiteMageGlare4Feature))
-//            {
-//                if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
-//                    return WHM.Glare4;
-//            }
-//        }
-
-//        return actionID;
-//    }
-//}
