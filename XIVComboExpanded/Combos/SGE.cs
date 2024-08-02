@@ -217,17 +217,19 @@ internal class SageDosis : CustomCombo
 
             if (InCombat())
             {
-
                 if (level >= SGE.Levels.EDosis1)
                 {
-                    var debuff = FindTargetEffect(EDosises.FirstOrDefault(x => x.Level <= level).Debuff);
+                    var debuff = FindTargetEffect(
+                        EDosises.FirstOrDefault(x => x.Level <= level).Debuff
+                    );
 
                     var debuffTime = debuff?.RemainingTime;
 
                     if (
-                            ( debuff is not null 
-                                && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                            ) || (debuff is null && ShouldRefreshDots())
+                        (
+                            debuff is not null
+                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
+                        ) || (debuff is null && ShouldRefreshDots())
                     )
                     {
                         if (!HasEffect(SGE.Buffs.Eukrasia))
@@ -238,7 +240,6 @@ internal class SageDosis : CustomCombo
                         return OriginalHook(SGE.Dosis);
                     }
                 }
-
 
                 if (
                     level >= SGE.Levels.Pneuma
@@ -261,13 +262,15 @@ internal class SageDosis : CustomCombo
 
                 var plegma = OriginalHook(SGE.Phlegma);
 
+                var charges = GetRemainingCharges(plegma);
+
                 if (
-                    GetTargetDistance() <= 6
-                    && HasCharges(OriginalHook(SGE.Phlegma))
-                    && level >= SGE.Levels.Phlegma
+                    level >= SGE.Levels.Phlegma
+                    && GetTargetDistance() <= 6
+                    && charges >= 1
                     && (
                         GetCooldown(plegma).TotalCooldownRemaining <= 3
-                        || GetRemainingCharges(plegma) == 2
+                        || charges == 2
                         || HasRaidBuffs()
                     )
                 )
@@ -459,9 +462,8 @@ internal class SagePhlegma : CustomCombo
                 var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
                 var debuffTime = debuff?.RemainingTime;
                 if (
-                        (debuff is not null
-                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                        ) || (debuff is null && ShouldRefreshDots())
+                    (debuff is not null && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving)))
+                    || (debuff is null && ShouldRefreshDots())
                 )
                 {
                     if (!HasEffect(SGE.Buffs.Eukrasia))
@@ -472,7 +474,6 @@ internal class SagePhlegma : CustomCombo
                     return OriginalHook(SGE.Dyskrasia);
                 }
             }
-
 
             var plegma = OriginalHook(SGE.Phlegma);
 
