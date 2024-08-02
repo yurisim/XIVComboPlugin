@@ -19,7 +19,6 @@ internal static class GNB
         DemonSlaughter = 16149,
         Aurora = 16151,
         SonicBreak = 16153,
-        RoughDivide = 16154,
         Continuation = 16155,
         JugularRip = 16156,
         AbdomenTear = 16157,
@@ -36,8 +35,7 @@ internal static class GNB
 
     public static class Buffs
     {
-        public const ushort
-            NoMercy = 1831,
+        public const ushort NoMercy = 1831,
             RoyalGuard = 1833,
             Aurora = 1835,
             Superbolide = 1836,
@@ -45,6 +43,7 @@ internal static class GNB
             ReadyToTear = 1843,
             ReadyToGouge = 1844,
             ReadyToBlast = 2686,
+            ReadyToBreak = 3886,
             ReadyToFated = 3839;
     }
 
@@ -64,7 +63,6 @@ internal static class GNB
             DemonSlaughter = 40,
             Aurora = 45,
             SonicBreak = 54,
-            RoughDivide = 56,
             GnashingFang = 60,
             BowShock = 62,
             Continuation = 70,
@@ -83,7 +81,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == GNB.SolidBarrel)
+        if (actionID == GNB.KeenEdge)
         {
             var noMercyCD = GetCooldown(GNB.NoMercy).CooldownRemaining;
             var gauge = GetJobGauge<GNBGauge>();
@@ -155,16 +153,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 }
 
                 if (
-                    level >= GNB.Levels.RoughDivide
-                    && HasEffect(GNB.Buffs.NoMercy)
-                    && HasCharges(GNB.RoughDivide)
-                    && GetTargetDistance() <= 1
-                )
-                {
-                    return GNB.RoughDivide;
-                }
-
-                if (
                     level >= GNB.Levels.Aurora
                     && (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
                     && !HasEffect(GNB.Buffs.Aurora)
@@ -184,11 +172,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
             var oneMinCD = 58.80 * 0.2;
 
             // Weaponskills
-            if (
-                level >= GNB.Levels.SonicBreak
-                && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= oneMinCD)
-                && IsOffCooldown(GNB.SonicBreak)
-            )
+            if (level >= GNB.Levels.SonicBreak && HasEffect(GNB.Buffs.ReadyToBreak))
             {
                 return GNB.SonicBreak;
             }
@@ -264,35 +248,6 @@ internal class GunbreakerSolidBarrel : CustomCombo
             }
 
             return GNB.KeenEdge;
-        }
-
-        return actionID;
-    }
-}
-
-internal class GunbreakerGnashingFang : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.GunbreakerGnashingFangCont;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == GNB.GnashingFang)
-        {
-            if (level >= GNB.Levels.Continuation)
-            {
-                if (HasEffect(GNB.Buffs.ReadyToGouge))
-                    return GNB.EyeGouge;
-
-                if (HasEffect(GNB.Buffs.ReadyToTear))
-                    return GNB.AbdomenTear;
-
-                if (HasEffect(GNB.Buffs.ReadyToRip))
-                    return GNB.JugularRip;
-            }
-
-            // Gnashing Fang > Savage Claw > Wicked Talon
-            return OriginalHook(GNB.GnashingFang);
         }
 
         return actionID;
@@ -403,55 +358,6 @@ internal class GunbreakerDemonSlaughter : CustomCombo
             }
 
             return GNB.DemonSlice;
-        }
-
-        return actionID;
-    }
-}
-
-internal class GunbreakerNoMercy : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GnbAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == GNB.NoMercy)
-        {
-            var gauge = GetJobGauge<GNBGauge>();
-
-            if (IsEnabled(CustomComboPreset.GunbreakerNoMercyDoubleDownFeature))
-            {
-                if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
-                {
-                    if (
-                        level >= GNB.Levels.DoubleDown
-                        && gauge.Ammo >= 2
-                        && IsOffCooldown(GNB.DoubleDown)
-                    )
-                        return GNB.DoubleDown;
-                }
-            }
-
-            if (IsEnabled(CustomComboPreset.GunbreakerNoMercyAlwaysDoubleDownFeature))
-            {
-                if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
-                {
-                    if (level >= GNB.Levels.DoubleDown)
-                        return GNB.DoubleDown;
-                }
-            }
-
-            if (IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
-            {
-                if (level >= GNB.Levels.NoMercy && HasEffect(GNB.Buffs.NoMercy))
-                {
-                    if (level >= GNB.Levels.BowShock)
-                        return CalcBestAction(GNB.SonicBreak, GNB.SonicBreak, GNB.BowShock);
-
-                    if (level >= GNB.Levels.SonicBreak)
-                        return GNB.SonicBreak;
-                }
-            }
         }
 
         return actionID;
