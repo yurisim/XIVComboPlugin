@@ -93,6 +93,7 @@ internal class AstrologianMalefic : CustomCombo
                 {
                     if (
                         gauge.DrawnCrownCard == CardType.LADY
+                        && level >= AST.Levels.MinorArcana
                         && (myHP <= 0.95 || tarPercentage <= 0.75 || needToUseCards)
                     )
                     {
@@ -100,7 +101,7 @@ internal class AstrologianMalefic : CustomCombo
                     }
 
                     if (
-                        tarPercentage <= threshold - 0.1
+                        tarPercentage <= threshold - 0.2
                         && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
                     )
                     {
@@ -126,14 +127,14 @@ internal class AstrologianMalefic : CustomCombo
                     }
                 }
 
-                if (
-                    level >= AST.Levels.CelestialOpposition
-                    && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
-                    && myHP <= threshold
-                )
-                {
-                    return OriginalHook(AST.CelestialOpposition);
-                }
+                // if (
+                //     level >= AST.Levels.CelestialOpposition
+                //     && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+                //     && myHP <= threshold
+                // )
+                // {
+                //     return OriginalHook(AST.CelestialOpposition);
+                // }
 
                 if (
                     level >= AST.Levels.Astrodyne
@@ -146,6 +147,7 @@ internal class AstrologianMalefic : CustomCombo
 
                 if (
                     gauge.DrawnCrownCard == CardType.LORD
+                    && level >= AST.Levels.MinorArcana
                     && (HasRaidBuffs() || needToUseCards)
                     && InCombat()
                 )
@@ -162,20 +164,12 @@ internal class AstrologianMalefic : CustomCombo
                     return OriginalHook(AST.EarthlyStar);
                 }
 
-                if (
-                    (
-                        OriginalHook(AST.Play3) == AST.TheEwer
-                        || (!IsOriginal(AST.Play3) && needToUseCards)
-                    ) && (tarPercentage <= 0.95 || needToUseCards)
-                )
+                if ((!IsOriginal(AST.Play3)) && (tarPercentage <= 0.95 || needToUseCards))
                 {
                     return OriginalHook(AST.Play3);
                 }
 
-                if (
-                    OriginalHook(AST.Play2) == AST.TheArrow
-                    && (tarPercentage <= 0.95 || needToUseCards)
-                )
+                if (!IsOriginal(AST.Play2) && (tarPercentage <= 0.95 || needToUseCards))
                 {
                     return OriginalHook(AST.Play2);
                 }
@@ -348,7 +342,7 @@ internal class AstroCelestial : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == AST.Play2)
+        if (actionID == AST.CelestialIntersection)
         {
             if (OriginalHook(AST.Play2) == AST.TheBole)
             {
