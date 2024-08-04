@@ -166,17 +166,17 @@ internal class AstrologianMalefic : CustomCombo
 
                 if ((!IsOriginal(AST.Play3)) && (tarPercentage <= 0.95 || needToUseCards))
                 {
-                    return OriginalHook(AST.Play3);
+                    return OriginalHook(AST.Play3) == AST.TheEwer ? AST.TheEwer : AST.TheSpire;
                 }
 
-                if (!IsOriginal(AST.Play2) && (tarPercentage <= 0.95 || needToUseCards))
+                if ((!IsOriginal(AST.Play2)) && (tarPercentage <= 0.95 || needToUseCards))
                 {
-                    return OriginalHook(AST.Play2);
+                    return OriginalHook(AST.Play2) == AST.TheArrow ? AST.TheArrow : AST.TheBole;
                 }
 
                 if (!IsOriginal(AST.Play1))
                 {
-                    return OriginalHook(AST.Play1);
+                    return AST.Play1;
                 }
 
                 if (level >= AST.Levels.AstralDraw && IsOffCooldown(OriginalHook(AST.AstralDraw)))
@@ -369,23 +369,3 @@ internal class AstroCelestial : CustomCombo
         return actionID;
     }
 }
-
-
-//internal class AstrologianArcana : CustomCombo
-//{
-//    protected internal override CustomComboPreset Preset { get; } =
-//        CustomComboPreset.AstrologianBeneficSyncFeature;
-
-//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//    {
-//        var gauge = GetJobGauge<ASTGauge>();
-
-//        if (actionID == AST.Helios)
-//        {
-//            if (IsEnabled(CustomComboPreset.AstrologianHeliosArcanaFeature) && gauge.DrawnCrownCard == CardType.LADY && level >= AST.Levels.MinorArcana)
-//                return OriginalHook(AST.MinorArcanaDT);
-//        }
-
-//        return actionID;
-//    }
-//}
