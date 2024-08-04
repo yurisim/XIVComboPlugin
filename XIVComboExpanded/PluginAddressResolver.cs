@@ -1,7 +1,5 @@
 using System;
 using Dalamud.Game;
-using Dalamud.Logging;
-using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace XIVComboExpandedPlugin;

@@ -8,7 +8,6 @@ using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Utility;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using XIVComboExpandedPlugin.Attributes;
 
 namespace XIVComboExpandedPlugin.Combos;

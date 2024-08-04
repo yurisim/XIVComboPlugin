@@ -1,5 +1,4 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Lumina.Data.Parsing.Layer;
 
 namespace XIVComboExpandedPlugin.Combos;
 

@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace XIVComboExpandedPlugin.Combos;
 

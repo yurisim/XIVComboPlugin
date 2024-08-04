@@ -30,10 +30,11 @@ internal static class SCH
         Consolation = 16546,
         SummonEos = 17215,
         SummonSelene = 17216,
-        ArtOfWar2 = 25866,
+        ArtOfWar = 16539,
         Broil4 = 25865,
         Protraction = 25867,
         Expedient = 25868,
+        Ruin = 17869,
         Ruin2 = 17870,
         Seraphism = 37014;
 
@@ -63,6 +64,7 @@ internal static class SCH
             FeyIllumination = 40,
             Aetherflow = 45,
             Lustrate = 45,
+            ArtOfWar = 46,
             SacredSoil = 50,
             Indomitability = 52,
             DeploymentTactics = 56,
@@ -81,27 +83,27 @@ internal static class SCH
     }
 }
 
-internal class ScholarSacredSoil : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
+// internal class ScholarSacredSoil : CustomCombo
+// {
+//     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == SCH.SacredSoil)
-        {
-            if (
-                level >= SCH.Levels.FeyIllumination
-                && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
-                && !HasEffect(SCH.Buffs.Dissipation)
-            )
-                return OriginalHook(SCH.FeyIllumination);
+//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//     {
+//         if (actionID == SCH.SacredSoil)
+//         {
+//             if (
+//                 level >= SCH.Levels.FeyIllumination
+//                 && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
+//                 && !HasEffect(SCH.Buffs.Dissipation)
+//             )
+//                 return OriginalHook(SCH.FeyIllumination);
 
-            return actionID;
-        }
+//             return actionID;
+//         }
 
-        return actionID;
-    }
-}
+//         return actionID;
+//     }
+// }
 
 internal class ScholarEnergyDrain : CustomCombo
 {
@@ -109,7 +111,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == SCH.Broil4 || actionID == SCH.ArtOfWar2 || actionID == SCH.Ruin2)
+        if (actionID == SCH.Ruin || actionID == SCH.ArtOfWar || actionID == SCH.Ruin2)
         {
             var gauge = GetJobGauge<SCHGauge>();
 
@@ -231,14 +233,14 @@ internal class ScholarEnergyDrain : CustomCombo
                 if (level >= SCH.Levels.Aetherpact)
                 {
                     if (
-                        gauge.FairyGauge >= 20
-                        && TargetOfTargetHPercentage() <= 0.75
+                        gauge.FairyGauge >= 30
+                        && TargetOfTargetHPercentage() <= 0.80
                         && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
                         && !HasEffect(SCH.Buffs.Dissipation)
                         && gauge.SeraphTimer == 0
                     )
                     {
-                        return SCH.Aetherpact;
+                        return OriginalHook(SCH.Aetherpact);
                     }
 
                     if (
@@ -253,10 +255,11 @@ internal class ScholarEnergyDrain : CustomCombo
 
             var bio = FindTargetEffect(SCH.Debuffs.Biolysis);
 
+
+
             if (
                 InCombat()
-                && actionID != SCH.ArtOfWar2
-                && InCombat()
+                && actionID != SCH.ArtOfWar
                 && TargetIsEnemy()
                 && (
                     (

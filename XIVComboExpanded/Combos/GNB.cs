@@ -156,7 +156,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                     level >= GNB.Levels.Aurora
                     && (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
                     && !HasEffect(GNB.Buffs.Aurora)
-                    && (TargetOfTargetHPercentage() <= 0.7)
+                    && (TargetOfTargetHPercentage() <= 0.8)
                 )
                 {
                     return GNB.Aurora;
@@ -253,6 +253,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
         return actionID;
     }
 }
+
 
 internal class GunbreakerDemonSlaughter : CustomCombo
 {
