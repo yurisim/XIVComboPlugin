@@ -261,7 +261,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == GNB.DemonSlaughter)
+        if (actionID == GNB.DemonSlice)
         {
             var noMercyCD = GetCooldown(GNB.NoMercy).CooldownRemaining;
             var gauge = GetJobGauge<GNBGauge>();
