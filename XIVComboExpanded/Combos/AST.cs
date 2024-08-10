@@ -37,6 +37,8 @@ internal static class AST
         TheBole = 37027,
         TheEwer = 37028,
         TheSpire = 37025,
+        TheBalance = 37023,
+        TheSpear = 37026,
         UmbralDraw = 37018;
 
     public static class Buffs
@@ -89,17 +91,17 @@ internal class AstrologianMalefic : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
+                if (
+                    gauge.DrawnCrownCard == CardType.LADY
+                    && level >= AST.Levels.MinorArcana
+                    && (myHP <= 0.95 || needToUseCards)
+                )
+                {
+                    return OriginalHook(AST.MinorArcanaDT);
+                }
+
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
-                    if (
-                        gauge.DrawnCrownCard == CardType.LADY
-                        && level >= AST.Levels.MinorArcana
-                        && (myHP <= 0.95 || tarPercentage <= 0.75 || needToUseCards)
-                    )
-                    {
-                        return OriginalHook(AST.MinorArcanaDT);
-                    }
-
                     if (
                         tarPercentage <= threshold - 0.2
                         && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
@@ -126,15 +128,6 @@ internal class AstrologianMalefic : CustomCombo
                         return AST.CelestialIntersection;
                     }
                 }
-
-                // if (
-                //     level >= AST.Levels.CelestialOpposition
-                //     && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
-                //     && myHP <= threshold
-                // )
-                // {
-                //     return OriginalHook(AST.CelestialOpposition);
-                // }
 
                 if (
                     level >= AST.Levels.Astrodyne
@@ -164,22 +157,13 @@ internal class AstrologianMalefic : CustomCombo
                     return OriginalHook(AST.EarthlyStar);
                 }
 
-                if ((!IsOriginal(AST.Play3)) && (tarPercentage <= 0.95 || needToUseCards))
-                {
-                    return OriginalHook(AST.Play3) == AST.TheEwer ? AST.TheEwer : AST.TheSpire;
-                }
-
-                if ((!IsOriginal(AST.Play2)) && (tarPercentage <= 0.95 || needToUseCards))
-                {
-                    return OriginalHook(AST.Play2) == AST.TheArrow ? AST.TheArrow : AST.TheBole;
-                }
-
-                if (!IsOriginal(AST.Play1))
-                {
-                    return AST.Play1;
-                }
-
-                if (level >= AST.Levels.AstralDraw && IsOffCooldown(OriginalHook(AST.AstralDraw)))
+                if (
+                    level >= AST.Levels.AstralDraw
+                    && IsOffCooldown(OriginalHook(AST.AstralDraw))
+                    && IsOriginal(AST.Play1)
+                    && IsOriginal(AST.Play2)
+                    && IsOriginal(AST.Play3)
+                )
                 {
                     return OriginalHook(AST.AstralDraw);
                 }
@@ -287,30 +271,10 @@ internal class AstrologianGravity : CustomCombo
                     }
 
                     if (
-                        (
-                            OriginalHook(AST.Play3) == AST.TheEwer
-                            || (!IsOriginal(AST.Play3) && needToUseCards)
-                        ) && (tarPercentage <= 0.95 || needToUseCards)
-                    )
-                    {
-                        return OriginalHook(AST.Play3);
-                    }
-
-                    if (
-                        OriginalHook(AST.Play2) == AST.TheArrow
-                        && (tarPercentage <= 0.95 || needToUseCards)
-                    )
-                    {
-                        return OriginalHook(AST.Play2);
-                    }
-
-                    if (!IsOriginal(AST.Play1))
-                    {
-                        return OriginalHook(AST.Play1);
-                    }
-
-                    if (
                         level >= AST.Levels.AstralDraw
+                        && IsOriginal(AST.Play1)
+                        && IsOriginal(AST.Play2)
+                        && IsOriginal(AST.Play3)
                         && IsOffCooldown(OriginalHook(AST.AstralDraw))
                     )
                     {
@@ -344,15 +308,15 @@ internal class AstroCelestial : CustomCombo
     {
         if (actionID == AST.CelestialIntersection)
         {
-            if (OriginalHook(AST.Play2) == AST.TheBole)
-            {
-                return OriginalHook(AST.Play2);
-            }
+            // if (OriginalHook(AST.Play2) == AST.TheBole)
+            // {
+            //     return AST.Play2;
+            // }
 
-            if (OriginalHook(AST.Play3) == AST.TheSpire)
-            {
-                return OriginalHook(AST.Play3);
-            }
+            // if (OriginalHook(AST.Play3) == AST.TheSpire)
+            // {
+            //     return AST.Play3;
+            // }
 
             if (
                 level >= AST.Levels.Exaltation

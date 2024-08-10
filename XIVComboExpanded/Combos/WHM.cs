@@ -317,6 +317,9 @@ internal class WhiteMageDiaFeature : CustomCombo
                 }
             }
 
+            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
+                return WHM.Glare4;
+
             return OriginalHook(actionID);
         }
 
@@ -331,7 +334,6 @@ internal class WhiteMageDiaFeature : CustomCombo
         if (
             actionID == WHM.Raise
             && level >= WHM.Levels.ThinAir
-            // && IsOffCooldown(ADV.Swiftcast)
 
 
             && !HasEffect(WHM.Buffs.ThinAir)
