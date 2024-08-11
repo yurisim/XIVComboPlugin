@@ -85,27 +85,28 @@ internal static class SCH
     }
 }
 
-// internal class ScholarSacredSoil : CustomCombo
-// {
-//     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
+internal class ScholarSacredSoil : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SchAny;
 
-//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//     {
-//         if (actionID == SCH.SacredSoil)
-//         {
-//             if (
-//                 level >= SCH.Levels.FeyIllumination
-//                 && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
-//                 && !HasEffect(SCH.Buffs.Dissipation)
-//             )
-//                 return OriginalHook(SCH.FeyIllumination);
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SCH.SacredSoil)
+        {
+            if (
+                level >= SCH.Levels.FeyIllumination
+                && IsOnCooldown(SCH.SacredSoil)
+                && IsOffCooldown(OriginalHook(SCH.FeyIllumination))
+                && !HasEffect(SCH.Buffs.Dissipation)
+            )
+            {
+                return OriginalHook(SCH.FeyIllumination);
+            }
+        }
 
-//             return actionID;
-//         }
-
-//         return actionID;
-//     }
-// }
+        return actionID;
+    }
+}
 
 internal class ScholarEnergyDrain : CustomCombo
 {
@@ -255,7 +256,7 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
             }
 
-            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar)
+            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar && ShouldRefreshDots())
             {
                 var combustEffects = new[]
                 {
