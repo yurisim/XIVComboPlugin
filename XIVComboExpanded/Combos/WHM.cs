@@ -99,12 +99,19 @@ internal class WhiteMageHoly : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Holy || actionID == WHM.Holy3)
+        if (actionID == WHM.Holy)
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3 && TargetIsEnemy())
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+            {
                 return WHM.AfflatusMisery;
+            }
+
+            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
+            {
+                return WHM.Glare4;
+            }
         }
 
         return actionID;
@@ -160,14 +167,18 @@ internal class WhiteMageMedica : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == WHM.Medica || actionID == WHM.Medica2 || actionID == WHM.Medica3)
+        if (actionID == WHM.Medica || actionID == WHM.Medica2)
         {
             var gauge = GetJobGauge<WHMGauge>();
 
             if (level >= WHM.Levels.PlenaryIndulgence && IsOffCooldown(WHM.PlenaryIndulgence))
                 return WHM.PlenaryIndulgence;
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+            if (
+                level >= WHM.Levels.AfflatusMisery
+                && gauge.BloodLily == 3
+                && LocalPlayerPercentage() > 0.90
+            )
             {
                 return WHM.AfflatusMisery;
             }
@@ -204,7 +215,7 @@ internal class WhiteMageBenison : CustomCombo
     }
 }
 
-internal class WhiteMageDiaFeature : CustomCombo
+internal class WhiteMageStoneFeature : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
 
@@ -334,8 +345,6 @@ internal class WhiteMageDiaFeature : CustomCombo
         if (
             actionID == WHM.Raise
             && level >= WHM.Levels.ThinAir
-
-
             && !HasEffect(WHM.Buffs.ThinAir)
             && GetRemainingCharges(WHM.ThinAir) >= 1
         )

@@ -87,7 +87,7 @@ internal class AstrologianMalefic : CustomCombo
 
             var myHP = LocalPlayerPercentage();
 
-            var needToUseCards = GetCooldown(OriginalHook(AST.AstralDraw)).CooldownRemaining <= 10;
+            var needToUseCards = GetCooldown(OriginalHook(AST.AstralDraw)).CooldownRemaining <= 15;
 
             if (GCDClipCheck(actionID))
             {
@@ -211,7 +211,7 @@ internal class AstrologianGravity : CustomCombo
 
             var tarPercentage = TargetOfTargetHPercentage();
 
-            var needToUseCards = GetCooldown(OriginalHook(AST.AstralDraw)).CooldownRemaining <= 10;
+            var needToUseCards = GetCooldown(OriginalHook(AST.AstralDraw)).CooldownRemaining <= 15;
 
             if (GCDClipCheck(actionID))
             {
@@ -308,16 +308,6 @@ internal class AstroCelestial : CustomCombo
     {
         if (actionID == AST.CelestialIntersection)
         {
-            // if (OriginalHook(AST.Play2) == AST.TheBole)
-            // {
-            //     return AST.Play2;
-            // }
-
-            // if (OriginalHook(AST.Play3) == AST.TheSpire)
-            // {
-            //     return AST.Play3;
-            // }
-
             if (
                 level >= AST.Levels.Exaltation
                 && IsOffCooldown(AST.Exaltation)
@@ -327,7 +317,10 @@ internal class AstroCelestial : CustomCombo
                 return AST.Exaltation;
             }
 
-            return CalcBestAction(actionID, AST.CelestialIntersection, AST.Exaltation);
+            if (level >= AST.Levels.Exaltation)
+            {
+                return CalcBestAction(actionID, AST.CelestialIntersection, AST.Exaltation);
+            }
         }
 
         return actionID;

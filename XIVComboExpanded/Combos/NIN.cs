@@ -97,14 +97,6 @@ internal static class NIN
     }
 }
 
-// [StructLayout(LayoutKind.Explicit, Size = 0x10)]
-// public struct TmpNinjaGauge
-// {
-//    [FieldOffset(0x08)] public ushort HutonTimer;
-//    [FieldOffset(0x0A)] public byte Ninki;
-//    [FieldOffset(0x0B)] public byte HutonManualCasts;
-// }
-
 internal class NinjaAeolianEdge : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
@@ -116,10 +108,11 @@ internal class NinjaAeolianEdge : CustomCombo
         byte level
     )
     {
-        if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush)
+        if (actionID == NIN.SpinningEdge || actionID == NIN.ArmorCrush)
         {
-            var g = GetJobGauge<NINGauge>();
+            var gauge = GetJobGauge<NINGauge>();
 
+            // Ten Chi Jin block
             if (HasEffect(NIN.Buffs.TenChiJin))
             {
                 if (OriginalHook(NIN.TenNormal) != NIN.TenNormal)
@@ -140,12 +133,12 @@ internal class NinjaAeolianEdge : CustomCombo
 
             var trickThreshold = 15;
 
-            var trickAttackCD = GetCooldown(NIN.TrickAttack).CooldownRemaining;
+            var trickAttackCD = GetCooldown(OriginalHook(NIN.TrickAttack)).CooldownRemaining;
 
             var upcomingTrickAttack =
                 trickAttackCD <= trickThreshold || IsOffCooldown(NIN.TrickAttack);
 
-            var ninki = g.Ninki;
+            var ninki = gauge.Ninki;
 
             // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
             if (
@@ -157,18 +150,14 @@ internal class NinjaAeolianEdge : CustomCombo
             {
                 if (InMeleeRange())
                 {
-                    // if (level >= NIN.Levels.Mug
-                    // && IsOffCooldown(NIN.Mug)
-                    // && HasRaidBuffs()) return NIN.Mug;
-
                     if (
                         level >= NIN.Levels.TrickAttack
                         && HasEffect(NIN.Buffs.Suiton)
-                        && IsOffCooldown(NIN.TrickAttack)
-                        && (GetCooldown(NIN.Mug).CooldownRemaining >= 10)
+                        && IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                        && (GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10)
                     )
                     {
-                        return NIN.TrickAttack;
+                        return OriginalHook(NIN.TrickAttack);
                     }
                 }
 
