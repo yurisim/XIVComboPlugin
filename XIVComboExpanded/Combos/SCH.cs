@@ -1,3 +1,4 @@
+using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -8,6 +9,7 @@ internal static class SCH
     public const byte JobID = 28;
 
     public const uint Adloquium = 185,
+        Bio = 17864,
         Aetherflow = 166,
         EnergyDrain = 167,
         Resurrection = 173,
@@ -31,7 +33,6 @@ internal static class SCH
         SummonEos = 17215,
         SummonSelene = 17216,
         ArtOfWar = 16539,
-        Broil4 = 25865,
         Protraction = 25867,
         Expedient = 25868,
         Ruin = 17869,
@@ -52,7 +53,9 @@ internal static class SCH
 
     public static class Debuffs
     {
-        public const ushort ChainStrategem = 1221,
+        public const ushort Bio = 179,
+            Bio2 = 189,
+            ChainStrategem = 1221,
             Biolysis = 1895;
     }
 
@@ -77,7 +80,6 @@ internal static class SCH
             FeyBlessing = 76,
             Consolation = 80,
             SummonSeraph = 80,
-            Broil4 = 82,
             Protraction = 86,
             Expedient = 90;
     }
@@ -253,23 +255,29 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
             }
 
-            var bio = FindTargetEffect(SCH.Debuffs.Biolysis);
-
-
-
-            if (
-                InCombat()
-                && actionID != SCH.ArtOfWar
-                && TargetIsEnemy()
-                && (
-                    (
-                        bio is not null
-                        && (bio.RemainingTime <= 3 || (bio.RemainingTime <= 6 && this.IsMoving))
-                    ) || (bio is null && ShouldRefreshDots())
-                )
-            )
+            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar)
             {
-                return SCH.Biolysis;
+                var combustEffects = new[]
+                {
+                    FindTargetEffect(SCH.Debuffs.Bio),
+                    FindTargetEffect(SCH.Debuffs.Bio2),
+                    FindTargetEffect(SCH.Debuffs.Biolysis)
+                };
+
+                if (
+                    !combustEffects.Any(
+                        effect =>
+                            effect?.RemainingTime > 2.8
+                            || (
+                                effect?.RemainingTime is not null
+                                && effect.RemainingTime <= 6
+                                && this.IsMoving
+                            )
+                    )
+                )
+                {
+                    return OriginalHook(SCH.Bio);
+                }
             }
         }
 
@@ -386,7 +394,7 @@ internal class ScholarAdloCrit : CustomCombo
 
             if (cd.IsCooldown && cd.CooldownElapsed <= 1)
             {
-                return OriginalHook(SCH.Broil4);
+                return OriginalHook(SCH.Ruin);
             }
         }
 
@@ -416,7 +424,8 @@ internal class ScholarSummon : CustomCombo
 
 internal class ScholarSeraphism : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ScholarSeraphismFeature;
+    protected internal override CustomComboPreset Preset { get; } =
+        CustomComboPreset.ScholarSeraphismFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
