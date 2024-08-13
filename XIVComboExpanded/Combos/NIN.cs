@@ -402,9 +402,15 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             var upcomingTrickAttack =
                 trickAttackCD <= trickThreshold || IsOffCooldown(OriginalHook(NIN.TrickAttack));
 
-
             if (
                 level >= NIN.Levels.Ninjitsu
+                && (
+                    level < NIN.Levels.KunaisBane
+                    || !(
+                        IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                        && HasEffect(NIN.Buffs.ShadowWalker)
+                    )
+                )
                 && (
                     OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                     || HasEffect(NIN.Buffs.Kassatsu)
@@ -420,6 +426,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
                 if (
                     upcomingTrickAttack
+                    && !HasEffect(NIN.Buffs.Kassatsu)
                     && !HasEffect(NIN.Buffs.ShadowWalker)
                     && OriginalHook(NIN.Ninjutsu) == NIN.Fuma
                 )
