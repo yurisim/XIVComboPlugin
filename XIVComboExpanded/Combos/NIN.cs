@@ -404,8 +404,11 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool CanUseNinjutsu()
             {
+
+                // shouldn't use Ninjitsus if I can KunaisBane
                 return (level < NIN.Levels.KunaisBane || !CanUseKunai())
                     && (
+                        // Otherwise, check that I can use Ninjitsu chain
                         OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                         || HasEffect(NIN.Buffs.Kassatsu)
                         || HasCharges(NIN.ChiNormal)
