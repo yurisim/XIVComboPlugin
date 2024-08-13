@@ -402,42 +402,50 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             var upcomingTrickAttack =
                 trickAttackCD <= trickThreshold || IsOffCooldown(OriginalHook(NIN.TrickAttack));
 
-            if (
-                level >= NIN.Levels.Ninjitsu
-                && (
-                    level < NIN.Levels.KunaisBane
-                    || !(
-                        IsOffCooldown(OriginalHook(NIN.TrickAttack))
-                        && HasEffect(NIN.Buffs.ShadowWalker)
-                    )
-                )
-                && (
-                    OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
-                    || HasEffect(NIN.Buffs.Kassatsu)
-                    || HasCharges(NIN.ChiNormal)
-                    || HasEffect(NIN.Buffs.Mudra)
-                )
-            )
+            bool CanUseNinjutsu()
+            {
+                return (level < NIN.Levels.KunaisBane || !CanUseKunai())
+                    && (
+                        OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
+                        || HasEffect(NIN.Buffs.Kassatsu)
+                        || HasCharges(NIN.ChiNormal)
+                        || HasEffect(NIN.Buffs.Mudra)
+                    );
+            }
+
+            bool CanUseKunai()
+            {
+                return IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                    && HasEffect(NIN.Buffs.ShadowWalker);
+            }
+
+            bool ShouldUseChi()
+            {
+                return upcomingTrickAttack
+                    && !HasEffect(NIN.Buffs.Kassatsu)
+                    && !HasEffect(NIN.Buffs.ShadowWalker)
+                    && OriginalHook(NIN.Ninjutsu) == NIN.Fuma;
+            }
+
+            bool ShouldUseTen()
+            {
+                return OriginalHook(NIN.Ninjutsu) == NIN.Fuma
+                    || OriginalHook(NIN.Ninjutsu) == NIN.Raiton;
+            }
+
+            if (level >= NIN.Levels.Ninjitsu && CanUseNinjutsu())
             {
                 if (OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu)
                 {
                     return OriginalHook(NIN.JinNormal);
                 }
 
-                if (
-                    upcomingTrickAttack
-                    && !HasEffect(NIN.Buffs.Kassatsu)
-                    && !HasEffect(NIN.Buffs.ShadowWalker)
-                    && OriginalHook(NIN.Ninjutsu) == NIN.Fuma
-                )
+                if (ShouldUseChi())
                 {
                     return OriginalHook(NIN.ChiNormal);
                 }
 
-                if (
-                    OriginalHook(NIN.Ninjutsu) == NIN.Fuma
-                    || OriginalHook(NIN.Ninjutsu) == NIN.Raiton
-                )
+                if (ShouldUseTen())
                 {
                     return OriginalHook(NIN.TenNormal);
                 }
