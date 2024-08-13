@@ -174,16 +174,26 @@ internal class AstrologianMalefic : CustomCombo
                 }
             }
 
-            if (InCombat() && TargetIsEnemy())
+            if (InCombat() && TargetIsEnemy() && ShouldRefreshDots())
             {
-                var combustEffects = new[]
+                var debuffs = new[]
                 {
                     FindTargetEffect(AST.Debuffs.Combust),
                     FindTargetEffect(AST.Debuffs.Combust2),
                     FindTargetEffect(AST.Debuffs.Combust3)
                 };
 
-                if (!combustEffects.Any(effect => effect?.RemainingTime > 2.8))
+                if (
+                    !debuffs.Any(
+                        effect =>
+                            effect?.RemainingTime > 2.8
+                            || (
+                                effect?.RemainingTime is not null
+                                && effect.RemainingTime <= 6
+                                && this.IsMoving
+                            )
+                    )
+                )
                 {
                     return OriginalHook(AST.Combust);
                 }

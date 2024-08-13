@@ -47,8 +47,6 @@ internal static class NIN
         public const ushort Mudra = 496,
             Kassatsu = 497,
             Doton = 501,
-            Suiton = 507,
-            Hidden = 614,
             TenChiJin = 1186,
             Bunshin = 1954,
             ShadowWalker = 3848,
@@ -61,6 +59,8 @@ internal static class NIN
     public static class Debuffs
     {
         public const ushort Mug = 638,
+            Dokumori = 3849,
+            KunaisBane = 3906,
             TrickAttack = 3254;
     }
 
@@ -108,7 +108,7 @@ internal class NinjaAeolianEdge : CustomCombo
         byte level
     )
     {
-        if (actionID == NIN.SpinningEdge || actionID == NIN.ArmorCrush)
+        if (actionID == NIN.AeolianEdge || actionID == NIN.ArmorCrush)
         {
             var gauge = GetJobGauge<NINGauge>();
 
@@ -136,7 +136,7 @@ internal class NinjaAeolianEdge : CustomCombo
             var trickAttackCD = GetCooldown(OriginalHook(NIN.TrickAttack)).CooldownRemaining;
 
             var upcomingTrickAttack =
-                trickAttackCD <= trickThreshold || IsOffCooldown(NIN.TrickAttack);
+                trickAttackCD <= trickThreshold || IsOffCooldown(OriginalHook(NIN.TrickAttack));
 
             var ninki = gauge.Ninki;
 
@@ -152,7 +152,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 {
                     if (
                         level >= NIN.Levels.TrickAttack
-                        && HasEffect(NIN.Buffs.Suiton)
+                        && HasEffect(NIN.Buffs.ShadowWalker)
                         && IsOffCooldown(OriginalHook(NIN.TrickAttack))
                         && (GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10)
                     )
@@ -164,7 +164,11 @@ internal class NinjaAeolianEdge : CustomCombo
                 if (
                     level >= NIN.Levels.Kassatsu
                     && IsOffCooldown(NIN.Kassatsu)
-                    && (TargetHasEffect(NIN.Debuffs.TrickAttack) || trickAttackCD >= 6)
+                    && (
+                        TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                        || trickAttackCD >= 6
+                    )
                 )
                 {
                     return NIN.Kassatsu;
@@ -173,7 +177,11 @@ internal class NinjaAeolianEdge : CustomCombo
                 if (
                     level >= NIN.Levels.Bunshin
                     && IsOffCooldown(NIN.Bunshin)
-                    && (TargetHasEffect(NIN.Debuffs.TrickAttack) || trickAttackCD >= 9)
+                    && (
+                        TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                        || trickAttackCD >= 9
+                    )
                     && ninki >= 50
                 )
                 {
@@ -183,7 +191,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 if (
                     level >= NIN.Levels.Meisui
                     && IsOffCooldown(NIN.Meisui)
-                    && HasEffect(NIN.Buffs.Suiton)
+                    && HasEffect(NIN.Buffs.ShadowWalker)
                     && ninki <= 50
                     && trickAttackCD >= 20
                 )
@@ -206,6 +214,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     && (
                         ninki >= 80
                         || TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
                         || HasEffect(NIN.Buffs.Meisui)
                         || (
                             level >= NIN.Levels.EnhancedMug
@@ -230,6 +239,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 && !HasEffect(NIN.Buffs.RaijuReady)
                 && (
                     TargetHasEffect(NIN.Debuffs.TrickAttack)
+                    || TargetHasEffect(NIN.Debuffs.KunaisBane)
                     || phantomTime <= 10
                     || GetTargetDistance() >= 9
                     || trickAttackCD >= phantomTime
@@ -244,18 +254,24 @@ internal class NinjaAeolianEdge : CustomCombo
 
             var startMudra =
                 TargetHasEffect(NIN.Debuffs.TrickAttack)
-                || (TargetHasEffect(NIN.Debuffs.Mug) && IsOnCooldown(NIN.TrickAttack));
+                || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                || (
+                    (TargetHasEffect(NIN.Debuffs.Mug) || TargetHasEffect(NIN.Debuffs.Dokumori))
+                    && IsOnCooldown(OriginalHook(NIN.TrickAttack))
+                );
 
             var continueMudra = HasCharges(NIN.ChiNormal);
 
-            // DOes not handle just kassatsu
             if (
                 level >= NIN.Levels.Ninjitsu
                 && (
                     OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
-                    || (upcomingTrickAttack && !HasEffect(NIN.Buffs.Suiton) && continueMudra)
                     || HasEffect(NIN.Buffs.Kassatsu)
-                    || (continueMudra && startMudra)
+                    || GetRemainingCharges(NIN.ChiNormal) == 2
+                    || (
+                        continueMudra
+                        && (startMudra || upcomingTrickAttack && !HasEffect(NIN.Buffs.ShadowWalker))
+                    )
                 )
             )
             {
@@ -263,10 +279,8 @@ internal class NinjaAeolianEdge : CustomCombo
                 {
                     if (OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu)
                         return OriginalHook(NIN.ChiNormal);
-
                     if (OriginalHook(NIN.Ninjutsu) == NIN.Fuma)
                         return OriginalHook(NIN.JinNormal);
-
                     return OriginalHook(NIN.Ninjutsu);
                 }
 
@@ -278,24 +292,17 @@ internal class NinjaAeolianEdge : CustomCombo
 
                 if (
                     upcomingTrickAttack
-                    && !HasEffect(NIN.Buffs.Suiton)
+                    && !HasEffect(NIN.Buffs.ShadowWalker)
                     && level >= NIN.Levels.Suiton
                     && OriginalHook(NIN.Ninjutsu) == NIN.Raiton
                 )
-                {
                     return OriginalHook(NIN.JinNormal);
-                }
 
                 return OriginalHook(NIN.Ninjutsu);
             }
 
             if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
                 return NIN.FleetingRaiju;
-
-            //var hutonDuration = g.HutonTimer;
-
-            //if (level >= NIN.Levels.Huraijin && hutonDuration == 0)
-            //    return NIN.Huraijin;
 
             if (GetTargetDistance() >= 9)
             {
@@ -304,13 +311,6 @@ internal class NinjaAeolianEdge : CustomCombo
 
             if (comboTime > 0)
             {
-                //if (
-                //    lastComboMove == NIN.GustSlash
-                //    && level >= NIN.Levels.ArmorCrush
-                //    && hutonDuration <= 15000
-                //)
-                //    return NIN.ArmorCrush;
-
                 if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
                     return actionID;
 
@@ -369,18 +369,11 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
         byte level
     )
     {
-        if (actionID == NIN.HakkeMujinsatsu)
+        if (actionID == NIN.DeathBlossom)
         {
-            var g = GetJobGauge<NINGauge>();
-            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            // var hutonDuration = gauge->HutonTimer;
-            // var ninki = gauge->Ninki;
-            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            // var hutonDuration = gauge->HutonTimer;
-            // var ninki = gauge->Ninki;
+            var gauge = GetJobGauge<NINGauge>();
 
-            // TmpNinjaGauge* gauge = (TmpNinjaGauge*)g.Address;
-            var ninki = g.Ninki;
+            var ninki = gauge.Ninki;
 
             // var gauge = GetJobGauge<NINGauge>();
 
@@ -402,24 +395,45 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 }
             }
 
-            var continueMudra = HasEffect(NIN.Buffs.Mudra) || HasCharges(NIN.ChiNormal);
+            var trickThreshold = 15;
 
-            var startMudra = GetCooldown(NIN.ChiNormal).CooldownRemaining <= 5;
+            var trickAttackCD = GetCooldown(OriginalHook(NIN.TrickAttack)).CooldownRemaining;
+
+            var upcomingTrickAttack =
+                trickAttackCD <= trickThreshold || IsOffCooldown(OriginalHook(NIN.TrickAttack));
+
 
             if (
                 level >= NIN.Levels.Ninjitsu
                 && (
                     OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                     || HasEffect(NIN.Buffs.Kassatsu)
-                    || (continueMudra && startMudra)
+                    || HasCharges(NIN.ChiNormal)
+                    || HasEffect(NIN.Buffs.Mudra)
                 )
             )
             {
                 if (OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu)
+                {
                     return OriginalHook(NIN.JinNormal);
+                }
 
-                if (OriginalHook(NIN.Ninjutsu) == NIN.Fuma)
+                if (
+                    upcomingTrickAttack
+                    && !HasEffect(NIN.Buffs.ShadowWalker)
+                    && OriginalHook(NIN.Ninjutsu) == NIN.Fuma
+                )
+                {
+                    return OriginalHook(NIN.ChiNormal);
+                }
+
+                if (
+                    OriginalHook(NIN.Ninjutsu) == NIN.Fuma
+                    || OriginalHook(NIN.Ninjutsu) == NIN.Raiton
+                )
+                {
                     return OriginalHook(NIN.TenNormal);
+                }
 
                 return OriginalHook(NIN.Ninjutsu);
             }
@@ -431,7 +445,23 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 && !HasEffect(NIN.Buffs.Mudra)
             )
             {
-                if (level >= NIN.Levels.Kassatsu && IsOffCooldown(NIN.Kassatsu))
+                if (level >= NIN.Levels.KunaisBane)
+                {
+                    if (
+                        level >= NIN.Levels.TrickAttack
+                        && HasEffect(NIN.Buffs.ShadowWalker)
+                        && IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                    )
+                    {
+                        return OriginalHook(NIN.TrickAttack);
+                    }
+                }
+
+                if (
+                    level >= NIN.Levels.Kassatsu
+                    && IsOffCooldown(NIN.Kassatsu)
+                    && (level < NIN.Levels.KunaisBane || TargetHasEffect(NIN.Debuffs.KunaisBane))
+                )
                     return NIN.Kassatsu;
 
                 if (level >= NIN.Levels.Bunshin && IsOffCooldown(NIN.Bunshin) && (ninki >= 50))
@@ -450,7 +480,6 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 }
             }
 
-            // FIX
             if (level >= NIN.Levels.PhantomKamaitachi && OriginalHook(NIN.Bunshin) != NIN.Bunshin)
             {
                 return OriginalHook(NIN.Bunshin);
@@ -461,8 +490,6 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 if (lastComboMove == NIN.DeathBlossom && level >= NIN.Levels.HakkeMujinsatsu)
                     return NIN.HakkeMujinsatsu;
             }
-
-            return NIN.DeathBlossom;
         }
 
         return actionID;
