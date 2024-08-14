@@ -230,7 +230,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>Whether or not the</returns>
     protected static bool ShouldRefreshDots() =>
-        (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 20;
+        (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 15;
 
     /// <summary>
     /// Should return whether or not player has raid debuffs.
