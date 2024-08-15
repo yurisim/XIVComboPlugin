@@ -223,7 +223,7 @@ internal class NinjaAeolianEdge : CustomCombo
                     )
                 )
                 {
-                    return (level >= NIN.Levels.Bhavacakra) ? NIN.Bhavacakra : NIN.HellfrogMedium;
+                    return (level >= NIN.Levels.Bhavacakra) ? OriginalHook(NIN.Bhavacakra) : OriginalHook(NIN.HellfrogMedium);
                 }
             }
 
@@ -358,6 +358,29 @@ internal class TenChiJin : CustomCombo
     }
 }
 
+internal class MugTrick : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == NIN.Mug)
+        {
+            if (IsOffCooldown(OriginalHook(NIN.Mug)))
+            {
+                return OriginalHook(NIN.Mug);
+            }
+
+            if (CanUseAction(OriginalHook(NIN.TrickAttack)))
+            {
+                return OriginalHook(NIN.TrickAttack);
+            }
+        }
+
+        return actionID;
+    }
+}
+
 internal class NinjaHakkeMujinsatsu : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
@@ -411,7 +434,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                         // Otherwise, check that I can use Ninjitsu chain
                         OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                         || HasEffect(NIN.Buffs.Kassatsu)
-                        || HasCharges(NIN.ChiNormal)
+                        || GetRemainingCharges(NIN.ChiNormal) >= 2
                         || HasEffect(NIN.Buffs.Mudra)
                     );
             }
@@ -419,6 +442,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
             bool CanUseKunai()
             {
                 return IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                    && level >= NIN.Levels.KunaisBane
                     && HasEffect(NIN.Buffs.ShadowWalker);
             }
 
@@ -432,8 +456,11 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool ShouldUseTen()
             {
-                return OriginalHook(NIN.Ninjutsu) == NIN.Fuma
-                    || OriginalHook(NIN.Ninjutsu) == NIN.Raiton;
+                bool hasKassatsu = HasEffect(NIN.Buffs.Kassatsu);
+                bool hasKunai = level >= NIN.Levels.KunaisBane && IsOffCooldown(OriginalHook(NIN.TrickAttack));
+                bool isNinjutsuFumaOrRaiton = OriginalHook(NIN.Ninjutsu) == NIN.Fuma || OriginalHook(NIN.Ninjutsu) == NIN.Raiton;
+
+                return (hasKassatsu || hasKunai) && isNinjutsuFumaOrRaiton;
             }
 
             if (level >= NIN.Levels.Ninjitsu && CanUseNinjutsu())
@@ -489,7 +516,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
                 if (level >= NIN.Levels.HellfrogMedium && ninki >= 95)
                 {
-                    return NIN.HellfrogMedium;
+                    return OriginalHook(NIN.HellfrogMedium);
                 }
 
                 if (level >= NIN.Levels.Assassinate && IsOffCooldown(OriginalHook(NIN.Assassinate)))
