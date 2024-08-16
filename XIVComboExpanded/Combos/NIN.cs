@@ -448,7 +448,8 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool ShouldUseChi()
             {
-                return upcomingTrickAttack
+                return IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                    && level >= NIN.Levels.KunaisBane
                     && !HasEffect(NIN.Buffs.Kassatsu)
                     && !HasEffect(NIN.Buffs.ShadowWalker)
                     && OriginalHook(NIN.Ninjutsu) == NIN.Fuma;
@@ -456,11 +457,12 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool ShouldUseTen()
             {
-                bool hasKassatsu = HasEffect(NIN.Buffs.Kassatsu);
-                bool hasKunai = level >= NIN.Levels.KunaisBane && IsOffCooldown(OriginalHook(NIN.TrickAttack));
+                // bool hasKassatsu = HasEffect(NIN.Buffs.Kassatsu);
+                // bool hasKunai = level >= NIN.Levels.KunaisBane && IsOffCooldown(OriginalHook(NIN.TrickAttack));
                 bool isNinjutsuFumaOrRaiton = OriginalHook(NIN.Ninjutsu) == NIN.Fuma || OriginalHook(NIN.Ninjutsu) == NIN.Raiton;
 
-                return (hasKassatsu || hasKunai) && isNinjutsuFumaOrRaiton;
+                return isNinjutsuFumaOrRaiton;
+                // return (hasKassatsu || hasKunai) && isNinjutsuFumaOrRaiton;
             }
 
             if (level >= NIN.Levels.Ninjitsu && CanUseNinjutsu())
