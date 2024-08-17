@@ -61,7 +61,7 @@ internal static class DRG
             FangAndClawBared = 802,
             WheelInMotion = 803,
             LanceCharge = 1864,
-        //public const ushort
+            //public const ushort
             //SharperFangAndClaw = 802,
             EnhancedWheelingThrust = 803,
             DiveReady = 1243,

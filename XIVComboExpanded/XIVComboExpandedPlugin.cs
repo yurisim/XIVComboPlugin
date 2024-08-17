@@ -84,140 +84,140 @@ public sealed partial class XIVComboExpandedPlugin : IDalamudPlugin
         switch (argumentsParts[0])
         {
             case "setall":
-            {
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
-                    Service.Configuration.EnabledActions.Add(preset);
-                }
-
-                Service.ChatGui.Print("All SET");
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "unsetall":
-            {
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
-                    Service.Configuration.EnabledActions.Remove(preset);
-                }
-
-                Service.ChatGui.Print("All UNSET");
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "set":
-            {
-                var targetPreset = argumentsParts[1].ToLowerInvariant();
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
-                    if (preset.ToString().ToLowerInvariant() != targetPreset)
-                        continue;
-
-                    Service.Configuration.EnabledActions.Add(preset);
-                    Service.ChatGui.Print($"{preset} SET");
-                }
-
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "secrets":
-            {
-                Service.Configuration.EnableSecretCombos = !Service
-                    .Configuration
-                    .EnableSecretCombos;
-
-                Service.ChatGui.Print(
-                    Service.Configuration.EnableSecretCombos
-                        ? $"Secret combos are now shown"
-                        : $"Secret combos are now hidden"
-                );
-
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "toggle":
-            {
-                var targetPreset = argumentsParts[1].ToLowerInvariant();
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
-                    if (preset.ToString().ToLowerInvariant() != targetPreset)
-                        continue;
-
-                    if (Service.Configuration.EnabledActions.Contains(preset))
-                    {
-                        Service.Configuration.EnabledActions.Remove(preset);
-                        Service.ChatGui.Print($"{preset} UNSET");
-                    }
-                    else
-                    {
-                        Service.Configuration.EnabledActions.Add(preset);
-                        Service.ChatGui.Print($"{preset} SET");
-                    }
-                }
-
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "unset":
-            {
-                var targetPreset = argumentsParts[1].ToLowerInvariant();
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
-                    if (preset.ToString().ToLowerInvariant() != targetPreset)
-                        continue;
-
-                    Service.Configuration.EnabledActions.Remove(preset);
-                    Service.ChatGui.Print($"{preset} UNSET");
-                }
-
-                Service.Configuration.Save();
-                break;
-            }
-
-            case "list":
-            {
-                var filter =
-                    argumentsParts.Length > 1 ? argumentsParts[1].ToLowerInvariant() : "all";
-
-                if (filter == "set")
-                {
-                    foreach (
-                        var preset in Enum.GetValues<CustomComboPreset>()
-                            .Select(preset => Service.Configuration.IsEnabled(preset))
-                    )
-                    {
-                        Service.ChatGui.Print(preset.ToString());
-                    }
-                }
-                else if (filter == "unset")
-                {
-                    foreach (
-                        var preset in Enum.GetValues<CustomComboPreset>()
-                            .Select(preset => !Service.Configuration.IsEnabled(preset))
-                    )
-                    {
-                        Service.ChatGui.Print(preset.ToString());
-                    }
-                }
-                else if (filter == "all")
                 {
                     foreach (var preset in Enum.GetValues<CustomComboPreset>())
                     {
-                        Service.ChatGui.Print(preset.ToString());
+                        Service.Configuration.EnabledActions.Add(preset);
                     }
-                }
-                else
-                {
-                    Service.ChatGui.PrintError("Available list filters: set, unset, all");
+
+                    Service.ChatGui.Print("All SET");
+                    Service.Configuration.Save();
+                    break;
                 }
 
-                break;
-            }
+            case "unsetall":
+                {
+                    foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                    {
+                        Service.Configuration.EnabledActions.Remove(preset);
+                    }
+
+                    Service.ChatGui.Print("All UNSET");
+                    Service.Configuration.Save();
+                    break;
+                }
+
+            case "set":
+                {
+                    var targetPreset = argumentsParts[1].ToLowerInvariant();
+                    foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                    {
+                        if (preset.ToString().ToLowerInvariant() != targetPreset)
+                            continue;
+
+                        Service.Configuration.EnabledActions.Add(preset);
+                        Service.ChatGui.Print($"{preset} SET");
+                    }
+
+                    Service.Configuration.Save();
+                    break;
+                }
+
+            case "secrets":
+                {
+                    Service.Configuration.EnableSecretCombos = !Service
+                        .Configuration
+                        .EnableSecretCombos;
+
+                    Service.ChatGui.Print(
+                        Service.Configuration.EnableSecretCombos
+                            ? $"Secret combos are now shown"
+                            : $"Secret combos are now hidden"
+                    );
+
+                    Service.Configuration.Save();
+                    break;
+                }
+
+            case "toggle":
+                {
+                    var targetPreset = argumentsParts[1].ToLowerInvariant();
+                    foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                    {
+                        if (preset.ToString().ToLowerInvariant() != targetPreset)
+                            continue;
+
+                        if (Service.Configuration.EnabledActions.Contains(preset))
+                        {
+                            Service.Configuration.EnabledActions.Remove(preset);
+                            Service.ChatGui.Print($"{preset} UNSET");
+                        }
+                        else
+                        {
+                            Service.Configuration.EnabledActions.Add(preset);
+                            Service.ChatGui.Print($"{preset} SET");
+                        }
+                    }
+
+                    Service.Configuration.Save();
+                    break;
+                }
+
+            case "unset":
+                {
+                    var targetPreset = argumentsParts[1].ToLowerInvariant();
+                    foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                    {
+                        if (preset.ToString().ToLowerInvariant() != targetPreset)
+                            continue;
+
+                        Service.Configuration.EnabledActions.Remove(preset);
+                        Service.ChatGui.Print($"{preset} UNSET");
+                    }
+
+                    Service.Configuration.Save();
+                    break;
+                }
+
+            case "list":
+                {
+                    var filter =
+                        argumentsParts.Length > 1 ? argumentsParts[1].ToLowerInvariant() : "all";
+
+                    if (filter == "set")
+                    {
+                        foreach (
+                            var preset in Enum.GetValues<CustomComboPreset>()
+                                .Select(preset => Service.Configuration.IsEnabled(preset))
+                        )
+                        {
+                            Service.ChatGui.Print(preset.ToString());
+                        }
+                    }
+                    else if (filter == "unset")
+                    {
+                        foreach (
+                            var preset in Enum.GetValues<CustomComboPreset>()
+                                .Select(preset => !Service.Configuration.IsEnabled(preset))
+                        )
+                        {
+                            Service.ChatGui.Print(preset.ToString());
+                        }
+                    }
+                    else if (filter == "all")
+                    {
+                        foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                        {
+                            Service.ChatGui.Print(preset.ToString());
+                        }
+                    }
+                    else
+                    {
+                        Service.ChatGui.PrintError("Available list filters: set, unset, all");
+                    }
+
+                    break;
+                }
 
             default:
                 this.configWindow.Toggle();

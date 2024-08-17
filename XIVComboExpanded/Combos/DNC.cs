@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -31,7 +30,6 @@ internal static class DNC
         FanDance3 = 16009,
         FanDance4 = 25791,
         // Other
-
         SaberDance = 16005,
         ClosedPosition = 16006,
         EnAvant = 16010,
@@ -51,7 +49,6 @@ internal static class DNC
             SilkenSymmetry = 2693,
             SilkenFlow = 2694,
             StandardStep = 1818,
-            StandardFinish = 1821,
             TechnicalStep = 1819,
             TechnicalFinish = 1822,
             ThreefoldFanDance = 1820,
@@ -95,8 +92,7 @@ internal static class DNC
 
 internal class DancerDanceComboCompatibility : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DancerDanceComboCompatibility;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDanceComboCompatibility;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -164,7 +160,7 @@ internal class DancerFanDance12 : CustomCombo
 internal class DancerStandardStepTechnicalStep : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DancerDanceStepCombo;
+        CustomComboPreset.DncAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -341,7 +337,8 @@ internal class DancerCascadeFountain : CustomCombo
         {
             var gauge = GetJobGauge<DNCGauge>();
 
-            if (level >= DNC.Levels.SaberDance && !HasEffect(DNC.Buffs.StandardStep) && !HasEffect(DNC.Buffs.TechnicalStep))
+            if (level >= DNC.Levels.SaberDance && !HasEffect(DNC.Buffs.StandardStep) &&
+                !HasEffect(DNC.Buffs.TechnicalStep))
             {
                 if (IsEnabled(CustomComboPreset.DancerAoeDanceOfTheDawn) &&
                     gauge.Esprit >= 50 && HasEffect(DNC.Buffs.DanceOfTheDawnReady))
@@ -369,7 +366,8 @@ internal class DancerDevilment : CustomCombo
     {
         if (actionID == DNC.Devilment)
         {
-            if (IsEnabled(CustomComboPreset.DancerPartnerFeature) && level >= DNC.Levels.ClosedPosition && (!HasEffect(DNC.Buffs.ClosedPosition)))
+            if (IsEnabled(CustomComboPreset.DancerPartnerFeature) && level >= DNC.Levels.ClosedPosition &&
+                !HasEffect(DNC.Buffs.ClosedPosition))
             {
                 if (IsEnabled(CustomComboPreset.DancerChocoboPartnerFeature) && HasCompanionPresent())
                 {
@@ -398,7 +396,8 @@ internal class DancerLastDanceFeature : CustomCombo
         {
             if (level >= DNC.Levels.LastDance && HasEffect(DNC.Buffs.LastDanceReady))
             {
-                if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) && HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
+                if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
+                    HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
                 {
                     return DNC.FinishingMove;
                 }
