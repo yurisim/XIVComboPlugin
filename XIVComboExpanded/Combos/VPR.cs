@@ -263,7 +263,7 @@ internal class AutoGenerationLegacies : CustomCombo
                 return VPR.FourthGeneration;
             if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
                 return VPR.Ouroboros;
-            }
+        }
 
         return actionID;
     }

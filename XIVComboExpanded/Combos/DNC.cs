@@ -95,8 +95,7 @@ internal static class DNC
 
 internal class DancerDanceComboCompatibility : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DancerDanceComboCompatibility;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerDanceComboCompatibility;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -164,7 +163,7 @@ internal class DancerFanDance12 : CustomCombo
 internal class DancerStandardStepTechnicalStep : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DancerDanceStepCombo;
+        CustomComboPreset.DncAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

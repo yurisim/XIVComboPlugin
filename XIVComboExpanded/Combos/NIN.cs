@@ -358,28 +358,6 @@ internal class TenChiJin : CustomCombo
     }
 }
 
-internal class MugTrick : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NinAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == NIN.Mug)
-        {
-            if (IsOffCooldown(OriginalHook(NIN.Mug)))
-            {
-                return OriginalHook(NIN.Mug);
-            }
-
-            if (CanUseAction(OriginalHook(NIN.TrickAttack)))
-            {
-                return OriginalHook(NIN.TrickAttack);
-            }
-        }
-
-        return actionID;
-    }
-}
 
 internal class NinjaHakkeMujinsatsu : CustomCombo
 {
@@ -516,7 +494,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                     return NIN.Bunshin;
                 }
 
-                if (level >= NIN.Levels.HellfrogMedium && ninki >= 95)
+                if (level >= NIN.Levels.HellfrogMedium && (ninki >= 95 || (ninki >= 50 && !HasEffect(NIN.Buffs.Higi))))
                 {
                     return OriginalHook(NIN.HellfrogMedium);
                 }

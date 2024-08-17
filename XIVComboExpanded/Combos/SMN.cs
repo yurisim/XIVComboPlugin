@@ -282,7 +282,7 @@ internal class SummonerRuin : CustomCombo
             if (gauge.IsTitanReady)
             {
                 if (level >= SMN.Levels.Gemshine)
-                return OriginalHook(SMN.SummonTopaz);
+                    return OriginalHook(SMN.SummonTopaz);
             }
 
             if (gauge.IsGarudaReady)
@@ -296,20 +296,20 @@ internal class SummonerRuin : CustomCombo
                 {
                     return ADV.Swiftcast;
                 }
-            return OriginalHook(SMN.SummonRuby);
-        }
+                return OriginalHook(SMN.SummonRuby);
+            }
 
-        if (HasEffect(SMN.Buffs.FurtherRuin))
-        {
-            return SMN.Ruin4;
-        }
+            if (HasEffect(SMN.Buffs.FurtherRuin))
+            {
+                return SMN.Ruin4;
+            }
 
-        return
-            level >= SMN.Levels.PreciousBrilliance
-            && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-            ? OriginalHook(SMN.Outburst)
-            : OriginalHook(SMN.Ruin);
-    }
+            return
+                level >= SMN.Levels.PreciousBrilliance
+                && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
+                ? OriginalHook(SMN.Outburst)
+                : OriginalHook(SMN.Ruin);
+        }
 
         return actionID;
     }
@@ -375,14 +375,14 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
             if (IsEnabled(CustomComboPreset.SummonerShinyEnkindleFeature))
             {
                 if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
-                if (
-                    level >= SMN.Levels.EnkindleBahamut
-                    && !gauge.IsIfritAttuned
-                    && !gauge.IsTitanAttuned
-                    && !gauge.IsGarudaAttuned
-                    && gauge.SummonTimerRemaining > 0
-                )
-                    return OriginalHook(SMN.EnkindleBahamut);
+                    if (
+                        level >= SMN.Levels.EnkindleBahamut
+                        && !gauge.IsIfritAttuned
+                        && !gauge.IsTitanAttuned
+                        && !gauge.IsGarudaAttuned
+                        && gauge.SummonTimerRemaining > 0
+                    )
+                        return OriginalHook(SMN.EnkindleBahamut);
             }
 
             if (IsEnabled(CustomComboPreset.SummonerFurtherShinyFeature))

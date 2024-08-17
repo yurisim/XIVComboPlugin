@@ -42,7 +42,6 @@ internal static class BRD
     public static class Buffs
     {
         public const ushort RagingStrikes = 125,
-            StraightShotReady = 122,
             Barrage = 128,
             BattleVoice = 141,
             WanderersMinuet = 2009,
@@ -117,32 +116,43 @@ internal class BardHeavyShot : CustomCombo
                     return BRD.PitchPerfect;
                 }
 
-                if (
-                    level >= BRD.Levels.WanderersMinuet
-                    && IsOffCooldown(BRD.WanderersMinuet)
-                    && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
-                    && gauge.SongTimer <= 3000
-                )
-                    return BRD.WanderersMinuet;
-
-                if (
-                    level >= BRD.Levels.MagesBallad
-                    && IsOffCooldown(BRD.MagesBallad)
-                    && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
-                    && gauge.SongTimer <= 3000
-                )
-                    return BRD.MagesBallad;
-
-                if (
-                    level >= BRD.Levels.ArmysPaeon
-                    && IsOffCooldown(BRD.ArmysPaeon)
-                    && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
-                    && (
-                        (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
-                        || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
+                if (InCombat())
+                {
+                    if (
+                        level >= BRD.Levels.WanderersMinuet
+                        && IsOffCooldown(BRD.WanderersMinuet)
+                        && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000
                     )
-                )
-                    return BRD.ArmysPaeon;
+                        return BRD.WanderersMinuet;
+
+                    if (
+                        level >= BRD.Levels.MagesBallad
+                        && IsOffCooldown(BRD.MagesBallad)
+                        && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000
+                    )
+                        return BRD.MagesBallad;
+
+                    if (
+                        level >= BRD.Levels.ArmysPaeon
+                        && IsOffCooldown(BRD.ArmysPaeon)
+                        && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                        && (
+                            (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
+                            || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
+                        )
+                    )
+                        return BRD.ArmysPaeon;
+                }
+
+                if (level >= BRD.Levels.RadiantFinale
+                    && IsOffCooldown(BRD.RadiantFinale)
+                    && gauge.Coda.Length >= 1
+                    && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)))
+                {
+                    return BRD.RadiantFinale;
+                }
 
                 if (HasEffect(BRD.Buffs.RagingStrikes) && IsOffCooldown(BRD.BattleVoice))
                 {
@@ -244,7 +254,7 @@ internal class BardHeavyShot : CustomCombo
             )
                 return BRD.ApexArrow;
 
-            if (level >= BRD.Levels.StraightShot && HasEffect(BRD.Buffs.StraightShotReady))
+            if (level >= BRD.Levels.StraightShot && HasEffect(BRD.Buffs.HawksEye))
                 // Refulgent Arrow
                 return OriginalHook(BRD.StraightShot);
         }
@@ -596,48 +606,11 @@ internal class BardBarrage : CustomCombo
         {
             if (
                 level >= BRD.Levels.StraightShot
-                && HasEffect(BRD.Buffs.StraightShotReady)
+                && HasEffect(BRD.Buffs.HawksEye)
                 && !HasEffect(BRD.Buffs.ShadowbiteReady)
             )
                 // Refulgent Arrow
                 return OriginalHook(BRD.StraightShot);
-        }
-
-        return actionID;
-    }
-}
-
-internal class BardRadiantFinale : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BrdAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BRD.RadiantFinale)
-        {
-            if (IsEnabled(CustomComboPreset.BardRadiantStrikesFeature))
-            {
-                if (level >= BRD.Levels.RagingStrikes && IsCooldownUsable(BRD.RagingStrikes))
-                    return BRD.RagingStrikes;
-            }
-
-            if (IsEnabled(CustomComboPreset.BardRadiantVoiceFeature))
-            {
-                if (level >= BRD.Levels.BattleVoice && IsCooldownUsable(BRD.BattleVoice))
-                    return BRD.BattleVoice;
-            }
-
-            if (IsEnabled(CustomComboPreset.BardRadiantStrikesFeature))
-            {
-                if (level < BRD.Levels.RadiantFinale)
-                    return BRD.RagingStrikes;
-            }
-
-            if (IsEnabled(CustomComboPreset.BardRadiantVoiceFeature))
-            {
-                if (level < BRD.Levels.RadiantFinale)
-                    return BRD.BattleVoice;
-            }
         }
 
         return actionID;
