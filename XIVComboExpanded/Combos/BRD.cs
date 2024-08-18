@@ -183,13 +183,13 @@ internal class BardHeavyShot : CustomCombo
 
                 var bloodLetterCharges = GetRemainingCharges(BRD.Bloodletter);
                 var thresholdCharge = level >= BRD.Levels.EnhancedBloodLetter ? 3 : 2;
-                var BLCDtotal = GetCooldown(BRD.Bloodletter).CooldownRemaining;
 
                 if (
                     bloodLetterCharges >= 1
                     && (
                         HasEffect(BRD.Buffs.RagingStrikes)
-                        || (thresholdCharge >= (bloodLetterCharges - 1) && BLCDtotal <= 9)
+                        || HasRaidBuffs()
+                        || (bloodLetterCharges > thresholdCharge - 1)
                     )
                 )
                 {
