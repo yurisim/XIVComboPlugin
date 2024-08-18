@@ -140,6 +140,7 @@ internal static class PCT
                         case >= Levels.WeaponMotif
                             when gauge.WeaponMotifDrawn
                                  && IsCooldownUsable(StrikingMuse)
+                                 && InCombat()
                                  && StarryMuseCD(60):
                             return StrikingMuse;
                         case >= Levels.MogOftheAges
@@ -282,6 +283,7 @@ internal static class PCT
                             return MogOftheAges;
                         case >= Levels.WeaponMotif
                             when gauge.WeaponMotifDrawn
+                                 && InCombat()
                                  && IsCooldownUsable(StrikingMuse):
                             return StrikingMuse;
                         case >= Levels.CreatureMotif
@@ -396,13 +398,13 @@ internal static class PCT
                     .Where(s => s.Level <= level)
                     .Where(s => s.Motif)
                     .OrderBy(s => s.Cooldown.CooldownRemaining)
-                    .ThenBy(s => s.Cooldown.RemainingCharges > 0 ? 1 : 0)
+                    .ThenByDescending(s => s.Cooldown.Available)
                     .Select(s => s.Skill)
                     .ToArray();
 
                 if (availableSkills.Length > 0)
                 {
-                    return OriginalHook(availableSkills[0]);
+                    return OriginalHook(availableSkills.First());
                 }
             }
 
