@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Render;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -48,6 +47,7 @@ internal static class PCT
         Smudge = 34684,
         TemperaCoat = 34685,
         TemperaGrassa = 34686,
+        ScenicMuse = 35349,
         RainbowDrip = 34688,
         CreatureMotif = 34689,
         WeaponMotif = 34690,
@@ -59,12 +59,12 @@ internal static class PCT
     public static class Buffs
     {
         public const ushort
-            SubstractivePalette = 3674,
+            SubtractivePalette = 3674,
             StarryMuse = 3685,
             Chroma2Ready = 3675,
             Chroma3Ready = 3676,
             RainbowReady = 3679,
-            HammerReady = 3680,
+            HammerTime = 3680,
             StarPrismReady = 3681,
             Installation = 3688,
             ArtisticInstallation = 3689,
@@ -137,6 +137,11 @@ internal static class PCT
                         case >= Levels.StarryMuse
                             when HasRaidBuffs() && gauge.LandscapeMotifDrawn && IsCooldownUsable(StarryMuse):
                             return StarryMuse;
+                        case >= Levels.SubtractivePalette
+                            when gauge.PalleteGauge >= 50
+                                 && !HasEffect(Buffs.SubtractivePalette)
+                                 && (StarryMuseCD(1000) || gauge.PalleteGauge >= 100):
+                            return SubtractivePalette;
                         case >= Levels.WeaponMotif
                             when gauge.WeaponMotifDrawn
                                  && IsCooldownUsable(StrikingMuse)
@@ -152,28 +157,24 @@ internal static class PCT
                                  && gauge.CreatureMotifDrawn
                                  && StarryMuseCD(40):
                             return OriginalHook(LivingMuse);
-                        case >= Levels.SubtractivePalette
-                            when gauge.PalleteGauge >= 50
-                                 && CanUseAction(SubtractivePalette)
-                                 && (
-                                     StarryMuseCD(1000)
-                                     ||
-                                     gauge.PalleteGauge >= 100
-                                 ):
-                            return SubtractivePalette;
+                        case >= 15
+                            when InCombat()
+                                 && IsOffCooldown(ADV.LucidDreaming)
+                                 && LocalPlayer?.CurrentMp <= 8000:
+                            return ADV.LucidDreaming;
                     }
                 }
 
                 if (
                     level >= Levels.HammerStamp
                     && CanUseAction(HammerStamp)
-                    && (StarryMuseCD(60) || FindEffect(Buffs.HammerReady)?.RemainingTime <= 10)
+                    && (StarryMuseCD(60) || FindEffect(Buffs.HammerTime)?.RemainingTime <= 10)
                 )
                 {
                     return HammerStamp;
                 }
 
-                if (HasEffect(Buffs.SubstractivePalette) && actionID is not HolyWhite)
+                if (HasEffect(Buffs.SubtractivePalette) && actionID is not HolyWhite)
                 {
                     return OriginalHook(BlizzardCyan);
                 }
@@ -183,7 +184,7 @@ internal static class PCT
                 bool StarryMuseCD(float coolDownOfSkill)
                 {
                     return HasEffect(Buffs.StarryMuse) || level < Levels.StarryMuse || HasRaidBuffs() ||
-                           GetCooldown(StarryMuse).CooldownRemaining > coolDownOfSkill * 0.05;
+                           GetCooldown(StarryMuse).CooldownRemaining > coolDownOfSkill * 0.1;
                 }
             }
 
@@ -220,7 +221,7 @@ internal static class PCT
                 }
 
                 if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAutoCombo) &&
-                    !HasEffect(Buffs.SubstractivePalette))
+                    !HasEffect(Buffs.SubtractivePalette))
                 {
                     if (IsEnabled(CustomComboPreset.PictomancerSubtractiveEarlyAutoCombo)
                         && (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubstractivePaletteReady)))
@@ -243,7 +244,7 @@ internal static class PCT
 
                 if (IsEnabled(CustomComboPreset.PictomancerSubtractiveSTCombo))
                 {
-                    if (!HasEffect(Buffs.SubstractivePalette))
+                    if (!HasEffect(Buffs.SubtractivePalette))
                     {
                         if (HasEffect(Buffs.Chroma2Ready))
                         {
@@ -305,7 +306,7 @@ internal static class PCT
                     return HammerStamp;
                 }
 
-                if (HasEffect(Buffs.SubstractivePalette))
+                if (HasEffect(Buffs.SubtractivePalette))
                 {
                     return OriginalHook(ExtraBlizzardCyan);
                 }
@@ -323,7 +324,7 @@ internal static class PCT
             if (actionID == ExtraBlizzardCyan)
             {
                 if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAutoCombo) &&
-                    !HasEffect(Buffs.SubstractivePalette))
+                    !HasEffect(Buffs.SubtractivePalette))
                 {
                     if (IsEnabled(CustomComboPreset.PictomancerSubtractiveEarlyAutoCombo)
                         && (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubstractivePaletteReady)))
@@ -335,7 +336,7 @@ internal static class PCT
 
                 if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAoECombo))
                 {
-                    if (!HasEffect(Buffs.SubstractivePalette))
+                    if (!HasEffect(Buffs.SubtractivePalette))
                     {
                         if (actionID == ExtraBlizzardCyan)
                         {
@@ -366,39 +367,22 @@ internal static class PCT
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            // if (actionID is CreatureMotif)
-            // {
-            //     var gauge = GetJobGauge<PCTGauge>();
-
-            //     if (level >= Levels.LandscapeMotif && !gauge.LandscapeMotifDrawn && CanUseAction(StarrySkyMotif))
-            //     {
-            //         return OriginalHook(LandscapeMotif);
-            //     }
-
-            //     if (level >= Levels.WeaponMotif && !gauge.WeaponMotifDrawn && !IsOriginal(WeaponMotif))
-            //     {
-            //         return OriginalHook(WeaponMotif);
-            //     }
-            // }
-
-            // return actionID;
-
             if (actionID is CreatureMotif)
             {
                 var gauge = GetJobGauge<PCTGauge>();
 
-                var skills = new (uint Level, CooldownData Cooldown, bool Motif, uint Skill)[]
+                var skills = new (uint Level, CooldownData CD, bool MotifNeeded, uint Skill)[]
                 {
-                    (Levels.CreatureMotif, GetCooldown(CreatureMotif), !gauge.CreatureMotifDrawn, CreatureMotif),
-                    (Levels.WeaponMotif, GetCooldown(WeaponMotif), !gauge.WeaponMotifDrawn, WeaponMotif),
-                    (Levels.LandscapeMotif, GetCooldown(LandscapeMotif), !gauge.LandscapeMotifDrawn, LandscapeMotif)
+                    (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)), !gauge.CreatureMotifDrawn, CreatureMotif),
+                    (Levels.WeaponMotif, GetCooldown(StrikingMuse), !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
+                    (Levels.LandscapeMotif, GetCooldown(StarryMuse), !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
                 };
 
                 var availableSkills = skills
                     .Where(s => s.Level <= level)
-                    .Where(s => s.Motif)
-                    .OrderBy(s => s.Cooldown.CooldownRemaining)
-                    .ThenByDescending(s => s.Cooldown.Available)
+                    .Where(s => s.MotifNeeded)
+                    .OrderBy(s => s.CD.CooldownRemaining)
+                    .ThenByDescending(s => s.CD.Available)
                     .Select(s => s.Skill)
                     .ToArray();
 
@@ -422,7 +406,7 @@ internal static class PCT
             var gauge = GetJobGauge<PCTGauge>();
             if (actionID == WaterBlue || actionID == ExtraWaterBlue)
             {
-                if (HasEffect(Buffs.Chroma3Ready) && !HasEffect(Buffs.SubstractivePalette) &&
+                if (HasEffect(Buffs.Chroma3Ready) && !HasEffect(Buffs.SubtractivePalette) &&
                     gauge.PalleteGauge == 100)
                 {
                     return SubtractivePalette;
@@ -505,7 +489,7 @@ internal static class PCT
 
                 if (IsEnabled(CustomComboPreset.PictomancerWeaponHammerCombo))
                 {
-                    if (HasEffect(Buffs.HammerReady))
+                    if (HasEffect(Buffs.HammerTime))
                     {
                         return OriginalHook(HammerStamp);
                     }
