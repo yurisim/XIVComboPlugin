@@ -256,7 +256,7 @@ internal abstract partial class CustomCombo
 
         var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
 
-        int raidCDsFound = 0;
+        var raidCDsFound = 0;
 
         foreach (var buff in raidBuffs)
         {
@@ -295,16 +295,16 @@ internal abstract partial class CustomCombo
     /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
     protected static float TargetOfTargetHPercentage()
     {
-        var target = GetTargetOfTarget as IBattleChara;
-
-        return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
+        return (GetTargetOfTarget is IBattleChara target) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
 
+    /// <summary>
+    /// Gets percentage of the target's health. If no target of target, returns 1.
+    /// </summary>
+    /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
     protected static float TargetHPercentage()
     {
-        var target = CurrentTarget as IBattleChara;
-
-        return (target is not null) ? (float)target.CurrentHp / target.MaxHp : 1;
+        return (CurrentTarget is IBattleChara target) ? (float)target.CurrentHp / target.MaxHp : 1;
     }
 
     /// <summary>
@@ -565,7 +565,7 @@ internal abstract partial class CustomCombo
         if (
             CurrentTarget is not IBattleChara chara
             || CurrentTarget.ObjectKind
-                != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc
+                != ObjectKind.BattleNpc
         )
             return 0;
 
@@ -599,7 +599,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
     protected static bool GCDClipCheck(uint actionID) =>
-        GetCooldown(actionID).CooldownRemaining >= 0.65;
+        GetCooldown(actionID).CooldownRemaining >= 0.5;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.

@@ -33,7 +33,7 @@ internal sealed partial class IconReplacer : IDisposable
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(FFXIVClientStructs.FFXIV.Client.Game.ActionManager.Addresses.GetAdjustedActionId.Value, this.GetIconDetour);
+        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(ActionManager.Addresses.GetAdjustedActionId.Value, this.GetIconDetour);
         this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
