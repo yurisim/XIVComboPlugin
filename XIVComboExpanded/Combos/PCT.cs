@@ -128,7 +128,7 @@ internal static class PCT
         {
             var gauge = GetJobGauge<PCTGauge>();
 
-            if (actionID is FireRed or HolyWhite)
+            if (actionID is BlizzardCyan or FireRed or HolyWhite)
             {
                 if (GCDClipCheck(actionID))
                 {
@@ -185,7 +185,28 @@ internal static class PCT
                     return OriginalHook(BlizzardCyan);
                 }
 
-                return actionID;
+                if (actionID is BlizzardCyan && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs()))
+                {
+                    var skills = new (uint Level, float CD, bool MotifNeeded, uint Skill)[]
+                    {
+                    (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining, !gauge.CreatureMotifDrawn, CreatureMotif),
+                    (Levels.WeaponMotif, GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining, !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
+                    (Levels.LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining, !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
+                    };
+
+                    var availableSkills = skills
+                        .Where(s => s.Level <= level)
+                        .Where(s => s.MotifNeeded)
+                        .Where(s => s.CD <= 15)
+                        .Select(s => s.Skill);
+
+                    if (availableSkills.Any())
+                    {
+                        return OriginalHook(availableSkills.First());
+                    }
+                }
+
+                return OriginalHook(FireRed);
 
                 bool StarryMuseCD()
                 {
@@ -317,6 +338,25 @@ internal static class PCT
                     return OriginalHook(ExtraBlizzardCyan);
                 }
 
+
+                var skills = new (uint Level, float CD, bool MotifNeeded, uint Skill)[]
+                {
+                    (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining, !gauge.CreatureMotifDrawn, CreatureMotif),
+                    (Levels.WeaponMotif, GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining, !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
+                    (Levels.LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining, !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
+                };
+
+                var availableSkills = skills
+                    .Where(s => s.Level <= level)
+                    .Where(s => s.MotifNeeded)
+                    .Where(s => s.CD <= 15)
+                    .Select(s => s.Skill);
+
+                if (availableSkills.Any())
+                {
+                    return OriginalHook(availableSkills.First());
+                }
+
                 return actionID;
             }
 
@@ -370,20 +410,20 @@ internal static class PCT
     // {
     //     protected internal override CustomComboPreset Preset { get; } =
     //         CustomComboPreset.PctAny;
-    //
+
     //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     //     {
     //         if (actionID is CreatureMotif)
     //         {
     //             var gauge = GetJobGauge<PCTGauge>();
-    //
+
     //             var skills = new (uint Level, CooldownData CD, bool MotifNeeded, uint Skill)[]
     //             {
     //                 (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)), !gauge.CreatureMotifDrawn, CreatureMotif),
-    //                 (Levels.WeaponMotif, GetCooldown(SteelMuse), !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
-    //                 (Levels.LandscapeMotif, GetCooldown(ScenicMuse), !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
+    //                 (Levels.WeaponMotif, GetCooldown(OriginalHook(SteelMuse)), !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
+    //                 (Levels.LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)), !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
     //             };
-    //
+
     //             var availableSkills = skills
     //                 .Where(s => s.Level <= level)
     //                 .Where(s => s.MotifNeeded)
@@ -391,13 +431,13 @@ internal static class PCT
     //                 .ThenByDescending(s => s.CD.Available)
     //                 .Select(s => s.Skill)
     //                 .ToArray();
-    //
+
     //             if (availableSkills.Length > 0)
     //             {
     //                 return OriginalHook(availableSkills.First());
     //             }
     //         }
-    //
+
     //         return actionID;
     //     }
     // }
