@@ -297,9 +297,10 @@ internal static class PCT
                                  && gauge.CreatureMotifDrawn:
                             return OriginalHook(LivingMuse);
                         case >= Levels.SubtractivePalette
-                            when gauge.PalleteGauge >= 50
-                                 && CanUseAction(SubtractivePalette):
+                            when (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum))
+                                 && !HasEffect(Buffs.SubtractivePalette):
                             return SubtractivePalette;
+
                     }
                 }
 
