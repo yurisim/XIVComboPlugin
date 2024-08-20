@@ -240,7 +240,7 @@ internal class DarkCarveAndSpitAbyssalDrain : CustomCombo
                 if (actionID == DRK.CarveAndSpit && level < DRK.Levels.CarveAndSpit)
                     return OriginalHook(DRK.BloodWeapon);
 
-                if (level >= DRK.Levels.BloodWeapon && IsCooldownUsable(DRK.BloodWeapon))
+                if (level >= DRK.Levels.BloodWeapon && IsAvailable(DRK.BloodWeapon))
                     return OriginalHook(DRK.BloodWeapon);
             }
         }

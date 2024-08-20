@@ -634,7 +634,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.WANDERER && gauge.SongTimer >= remaining)
                     return BRD.WanderersMinuet;
 
-                if (IsCooldownUsable(BRD.WanderersMinuet))
+                if (IsAvailable(BRD.WanderersMinuet))
                     return BRD.WanderersMinuet;
             }
 
@@ -643,7 +643,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.MAGE && gauge.SongTimer >= remaining)
                     return BRD.MagesBallad;
 
-                if (IsCooldownUsable(BRD.MagesBallad))
+                if (IsAvailable(BRD.MagesBallad))
                     return BRD.MagesBallad;
             }
 
@@ -652,7 +652,7 @@ internal class BardMagesBallad : CustomCombo
                 if (gauge.Song == Song.ARMY && gauge.SongTimer >= remaining)
                     return BRD.ArmysPaeon;
 
-                if (IsCooldownUsable(BRD.ArmysPaeon))
+                if (IsAvailable(BRD.ArmysPaeon))
                     return BRD.ArmysPaeon;
             }
 

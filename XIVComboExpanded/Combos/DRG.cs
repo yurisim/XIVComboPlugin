@@ -537,7 +537,7 @@ internal class DragoonGierskogul : CustomCombo
                 {
                     var action = gauge.IsLOTDActive ? DRG.Nastrond : DRG.Geirskogul;
 
-                    if (!IsCooldownUsable(action))
+                    if (!IsAvailable(action))
                         return DRG.WyrmwindThrust;
                 }
             }
@@ -556,10 +556,10 @@ internal class DragoonLanceCharge : CustomCombo
     {
         if (actionID == DRG.LanceCharge)
         {
-            if (!!IsCooldownUsable(DRG.LanceCharge))
+            if (!!IsAvailable(DRG.LanceCharge))
                 return DRG.LanceCharge;
 
-            if (level >= DRG.Levels.BattleLitany && !!IsCooldownUsable(DRG.BattleLitany))
+            if (level >= DRG.Levels.BattleLitany && !!IsAvailable(DRG.BattleLitany))
                 return DRG.BattleLitany;
         }
 

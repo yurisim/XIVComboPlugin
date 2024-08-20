@@ -270,7 +270,6 @@ internal class SageDosis : CustomCombo
                     && charges >= 1
                     && (
                         GetCooldown(plegma).TotalCooldownRemaining <= 3
-                        || charges == 2
                         || HasRaidBuffs()
                     )
                 )

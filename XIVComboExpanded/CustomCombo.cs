@@ -513,7 +513,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>True or false.</returns>
-    protected static bool IsCooldownUsable(uint actionID) => GetCooldown(actionID).Available;
+    protected static bool IsAvailable(uint actionID) => GetCooldown(actionID).Available;
 
     protected static bool HasCharges(uint actionID) => GetCooldown(actionID).RemainingCharges > 0;
 

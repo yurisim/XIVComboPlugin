@@ -500,7 +500,7 @@ internal class SamuraiShinten : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SamuraiShintenSeneiFeature))
             {
-                if (level >= SAM.Levels.HissatsuSenei && IsCooldownUsable(SAM.HissatsuSenei))
+                if (level >= SAM.Levels.HissatsuSenei && IsAvailable(SAM.HissatsuSenei))
                     return SAM.HissatsuSenei;
 
                 if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
@@ -562,7 +562,7 @@ internal class SamuraiKyuten : CustomCombo
 
             if (IsEnabled(CustomComboPreset.SamuraiKyutenGurenFeature))
             {
-                if (level >= SAM.Levels.HissatsuGuren && IsCooldownUsable(SAM.HissatsuGuren))
+                if (level >= SAM.Levels.HissatsuGuren && IsAvailable(SAM.HissatsuGuren))
                     return SAM.HissatsuGuren;
             }
         }

@@ -51,7 +51,7 @@ internal class SwiftRaiseFeature : CustomCombo
             || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper)
         )
         {
-            if (level >= ADV.Levels.Swiftcast && IsCooldownUsable(ADV.Swiftcast))
+            if (level >= ADV.Levels.Swiftcast && IsAvailable(ADV.Swiftcast))
                 return ADV.Swiftcast;
         }
 
@@ -116,7 +116,7 @@ internal class StanceProvokeFeature : CustomCombo
                     return GNB.RoyalGuard;
             }
 
-            if (IsEnabled(CustomComboPreset.AdvStanceBackProvokeFeature) && !IsCooldownUsable(ADV.Provoke))
+            if (IsEnabled(CustomComboPreset.AdvStanceBackProvokeFeature) && !IsAvailable(ADV.Provoke))
             {
                 if (job == PLD.JobID && level >= PLD.Levels.IronWill)
                     return PLD.IronWillRemoval;
@@ -139,7 +139,7 @@ internal class ShirkStanceFeature : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == ADV.Shirk && !IsCooldownUsable(ADV.Shirk))
+        if (actionID == ADV.Shirk && !IsAvailable(ADV.Shirk))
         {
             var job = LocalPlayer?.ClassJob.Id;
 

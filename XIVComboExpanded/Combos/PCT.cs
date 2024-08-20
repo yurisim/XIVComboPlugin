@@ -143,7 +143,7 @@ internal static class PCT
                                  && (StarryMuseCD() || gauge.PalleteGauge >= 100):
                             return SubtractivePalette;
                         case >= Levels.WeaponMotif
-                            when IsCooldownUsable(OriginalHook(SteelMuse))
+                            when IsAvailable(OriginalHook(SteelMuse))
                                  && gauge.WeaponMotifDrawn
                                  && InCombat()
                                  && (level >= Levels.StarryMuse && IsOnCooldown(StarryMuse) ||
@@ -156,7 +156,7 @@ internal static class PCT
                                  && IsOffCooldown(MogOftheAges):
                             return MogOftheAges;
                         case >= Levels.CreatureMotif
-                            when IsCooldownUsable(OriginalHook(LivingMuse))
+                            when IsAvailable(OriginalHook(LivingMuse))
                                  && gauge.CreatureMotifDrawn
                                  && InCombat()
                                  && (level >= Levels.StarryMuse && IsOnCooldown(StarryMuse) ||
@@ -170,6 +170,11 @@ internal static class PCT
                                  && LocalPlayer?.CurrentMp <= 8000:
                             return ADV.LucidDreaming;
                     }
+                }
+
+                if (CanUseAction(OriginalHook(CometBlack)))
+                {
+                    return OriginalHook(CometBlack);
                 }
 
                 if (
@@ -206,7 +211,9 @@ internal static class PCT
                     }
                 }
 
-                return OriginalHook(FireRed);
+                return actionID is BlizzardCyan or FireRed
+                    ? OriginalHook(FireRed)
+                    : HolyWhite;
 
                 bool StarryMuseCD()
                 {
@@ -311,10 +318,10 @@ internal static class PCT
                         case >= Levels.WeaponMotif
                             when gauge.WeaponMotifDrawn
                                  && InCombat()
-                                 && IsCooldownUsable(OriginalHook(SteelMuse)):
+                                 && IsAvailable(OriginalHook(SteelMuse)):
                             return OriginalHook(SteelMuse);
                         case >= Levels.CreatureMotif
-                            when IsCooldownUsable(OriginalHook(LivingMuse))
+                            when IsAvailable(OriginalHook(LivingMuse))
                                  && gauge.CreatureMotifDrawn:
                             return OriginalHook(LivingMuse);
                         case >= Levels.SubtractivePalette
@@ -325,7 +332,11 @@ internal static class PCT
                     }
                 }
 
-                // Hammer Stamp
+                if (CanUseAction(OriginalHook(CometBlack)))
+                {
+                    return OriginalHook(CometBlack);
+                }
+
                 if (
                     level >= Levels.HammerStamp
                     && CanUseAction(OriginalHook(HammerStamp)))
@@ -514,7 +525,7 @@ internal static class PCT
                 {
                     if (gauge.MooglePortraitReady || gauge.MadeenPortraitReady)
                     {
-                        if (IsCooldownUsable(MogOftheAges))
+                        if (IsAvailable(MogOftheAges))
                             return OriginalHook(MogOftheAges);
                     }
                 }
