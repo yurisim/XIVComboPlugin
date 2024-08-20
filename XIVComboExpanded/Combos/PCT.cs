@@ -211,6 +211,11 @@ internal static class PCT
                     }
                 }
 
+                if (gauge.Paint == 5)
+                {
+                    return HolyWhite;
+                }
+
                 return actionID is BlizzardCyan or FireRed
                     ? OriginalHook(FireRed)
                     : HolyWhite;
@@ -241,55 +246,6 @@ internal static class PCT
                     if (HasEffect(Buffs.RainbowReady))
                     {
                         return RainbowDrip;
-                    }
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerAutoMogCombo))
-                {
-                    if ((gauge.MooglePortraitReady || gauge.MadeenPortraitReady) &&
-                        GetRemainingCharges(MogOftheAges) > 0)
-                    {
-                        return OriginalHook(MogOftheAges);
-                    }
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAutoCombo) &&
-                    !HasEffect(Buffs.SubtractivePalette))
-                {
-                    if (IsEnabled(CustomComboPreset.PictomancerSubtractiveEarlyAutoCombo)
-                        && (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum)))
-                        return SubtractivePalette;
-
-                    if (HasEffect(Buffs.SubtractiveSpectrum) ||
-                        (HasEffect(Buffs.Chroma3Ready) && gauge.PalleteGauge == 100))
-                        return SubtractivePalette;
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerHolyAutoCombo))
-                {
-                    if (gauge.Paint == 5)
-                    {
-                        if (HasEffect(Buffs.InvertedColors))
-                            return CometBlack;
-                        return HolyWhite;
-                    }
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerSubtractiveSTCombo))
-                {
-                    if (!HasEffect(Buffs.SubtractivePalette))
-                    {
-                        if (HasEffect(Buffs.Chroma2Ready))
-                        {
-                            return AeroGreen;
-                        }
-
-                        if (HasEffect(Buffs.Chroma3Ready))
-                        {
-                            return WaterBlue;
-                        }
-
-                        return FireRed;
                     }
                 }
             }
@@ -368,90 +324,19 @@ internal static class PCT
                     return OriginalHook(availableSkills.First());
                 }
 
+                if (gauge.Paint == 5)
+                {
+                    return HolyWhite;
+                }
+
+
                 return actionID;
             }
 
 
-            if ((actionID == ExtraFireRed || actionID == ExtraBlizzardCyan) &&
-                IsEnabled(CustomComboPreset.PictomancerRainbowStarter) && !InCombat())
-            {
-                return RainbowDrip;
-            }
-
-            if (actionID == ExtraBlizzardCyan)
-            {
-                if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAutoCombo) &&
-                    !HasEffect(Buffs.SubtractivePalette))
-                {
-                    if (IsEnabled(CustomComboPreset.PictomancerSubtractiveEarlyAutoCombo)
-                        && (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum)))
-                        return SubtractivePalette;
-
-                    if (HasEffect(Buffs.Chroma3Ready) && gauge.PalleteGauge == 100)
-                        return SubtractivePalette;
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerSubtractiveAoECombo))
-                {
-                    if (!HasEffect(Buffs.SubtractivePalette))
-                    {
-                        if (actionID == ExtraBlizzardCyan)
-                        {
-                            if (HasEffect(Buffs.Chroma2Ready) && level >= Levels.ExtraAeroGreen)
-                            {
-                                return ExtraAeroGreen;
-                            }
-
-                            if (HasEffect(Buffs.Chroma3Ready) && level >= Levels.ExtraWaterBlue)
-                            {
-                                return ExtraWaterBlue;
-                            }
-
-                            return OriginalHook(ExtraFireRed);
-                        }
-                    }
-                }
-            }
-
             return actionID;
         }
     }
-
-    // internal class PictomancerMotifs : CustomCombo
-    // {
-    //     protected internal override CustomComboPreset Preset { get; } =
-    //         CustomComboPreset.PctAny;
-
-    //     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    //     {
-    //         if (actionID is CreatureMotif)
-    //         {
-    //             var gauge = GetJobGauge<PCTGauge>();
-
-    //             var skills = new (uint Level, CooldownData CD, bool MotifNeeded, uint Skill)[]
-    //             {
-    //                 (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)), !gauge.CreatureMotifDrawn, CreatureMotif),
-    //                 (Levels.WeaponMotif, GetCooldown(OriginalHook(SteelMuse)), !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
-    //                 (Levels.LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)), !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
-    //             };
-
-    //             var availableSkills = skills
-    //                 .Where(s => s.Level <= level)
-    //                 .Where(s => s.MotifNeeded)
-    //                 .OrderBy(s => s.CD.CooldownRemaining)
-    //                 .ThenByDescending(s => s.CD.Available)
-    //                 .Select(s => s.Skill)
-    //                 .ToArray();
-
-    //             if (availableSkills.Length > 0)
-    //             {
-    //                 return OriginalHook(availableSkills.First());
-    //             }
-    //         }
-
-    //         return actionID;
-    //     }
-    // }
 
     internal class PictMotifFeature : CustomCombo
     {
@@ -466,27 +351,6 @@ internal static class PCT
                 LandscapeMotif when OriginalHook(ScenicMuse) != ScenicMuse => OriginalHook(ScenicMuse),
                 _ => actionID
             };
-        }
-    }
-
-    internal class PictomancerSubtractiveAutoCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } =
-            CustomComboPreset.PictomancerSubtractiveAutoCombo;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            var gauge = GetJobGauge<PCTGauge>();
-            if (actionID == WaterBlue || actionID == ExtraWaterBlue)
-            {
-                if (HasEffect(Buffs.Chroma3Ready) && !HasEffect(Buffs.SubtractivePalette) &&
-                    gauge.PalleteGauge == 100)
-                {
-                    return SubtractivePalette;
-                }
-            }
-
-            return actionID;
         }
     }
 
@@ -536,64 +400,6 @@ internal static class PCT
                     {
                         if (OriginalHook(CreatureMotifDrawn) != CreatureMotifDrawn)
                             return OriginalHook(CreatureMotifDrawn);
-                    }
-                }
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class PictomancerWeaponMotifCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PctAny;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            var gauge = GetJobGauge<PCTGauge>();
-
-            if (actionID == WeaponMotif)
-            {
-                if (IsEnabled(CustomComboPreset.PictomancerWeaponMotifCombo))
-                {
-                    if (gauge.WeaponMotifDrawn)
-                        return StrikingMuse;
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerWeaponHammerCombo))
-                {
-                    if (HasEffect(Buffs.HammerTime))
-                    {
-                        return OriginalHook(HammerStamp);
-                    }
-                }
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class PictomancerLandscapeMotifCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PctAny;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            var gauge = GetJobGauge<PCTGauge>();
-
-            if (actionID == LandscapeMotif)
-            {
-                if (IsEnabled(CustomComboPreset.PictomancerLandscapeMotifCombo))
-                {
-                    if (gauge.LandscapeMotifDrawn)
-                        return StarryMuse;
-                }
-
-                if (IsEnabled(CustomComboPreset.PictomancerLandscapePrismCombo))
-                {
-                    if (HasEffect(Buffs.StarPrismReady))
-                    {
-                        return OriginalHook(StarPrism1);
                     }
                 }
             }
