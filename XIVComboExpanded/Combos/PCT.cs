@@ -148,7 +148,7 @@ internal static class PCT
                                  && InCombat()
                                  && (level >= Levels.StarryMuse && IsOnCooldown(StarryMuse) ||
                                      level < Levels.StarryMuse)
-                                 && (GetCooldown(OriginalHook(SteelMuse)).RemainingCharges >= 2 || HasRaidBuffs() ||
+                                 && ((GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 5) || HasRaidBuffs() ||
                                      HasEffect(Buffs.StarryMuse) || level < Levels.HammerBrush):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
@@ -161,8 +161,8 @@ internal static class PCT
                                  && InCombat()
                                  && (level >= Levels.StarryMuse && IsOnCooldown(StarryMuse) ||
                                      level < Levels.StarryMuse)
-                                 && (GetCooldown(OriginalHook(LivingMuse)).RemainingCharges >= 2 || HasRaidBuffs() ||
-                                     HasEffect(Buffs.StarryMuse)):
+                                 && (HasRaidBuffs() || (GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining <= 5)
+                                 || HasEffect(Buffs.StarryMuse)):
                             return OriginalHook(LivingMuse);
                         case >= 15
                             when InCombat()
@@ -410,7 +410,7 @@ internal static class PCT
         {
             return actionID switch
             {
-                CreatureMotif when OriginalHook(LivingMuse) != LivingMuse => OriginalHook(LivingMuse),
+                CreatureMotif when OriginalHook(LivingMuse) != LivingMuse && InCombat() => OriginalHook(LivingMuse),
                 WeaponMotif when OriginalHook(SteelMuse) != SteelMuse => OriginalHook(SteelMuse),
                 LandscapeMotif when OriginalHook(ScenicMuse) != ScenicMuse => OriginalHook(ScenicMuse),
                 _ => actionID

@@ -78,7 +78,7 @@ internal struct CooldownData
     /// are currently recharging.  IsCooldown being true is NOT the same as the action being unavailable, as a
     /// charged-based action can be both currently recovering a charge and also available for use.
     /// </summary>
-    public bool IsCooldown => this.isCooldown;
+    public readonly bool IsCooldown => this.isCooldown;
 
     /// <summary>
     /// Gets the cooldown time remaining until all charges are replenished.
@@ -108,6 +108,10 @@ internal struct CooldownData
     /// </summary>
     public float CooldownElapsed => this.TotalCooldownElapsed % this.BaseCooldown;
 
+    /// <summary>
+    /// Gets the elapsed time on the recharge of only the currently recharging charge.  For actions that are not
+    /// charge-based, this is mechanically equivalent to TotalCooldownElapsed. THIS DOES NOT SEEM TO WORK PROPERLY. REMOVE SOON
+    /// </summary>
     public float ChargeCooldownRemaining
     {
         get
