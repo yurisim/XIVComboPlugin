@@ -243,6 +243,7 @@ internal abstract partial class CustomCombo
         {
             PCT.Buffs.StarryMuse,
             DNC.Buffs.TechnicalFinish,
+            DNC.Buffs.Devilment,
             SMN.Buffs.SearingLight,
             RPR.Buffs.ArcaneCircle,
             AST.Buffs.Divination,
