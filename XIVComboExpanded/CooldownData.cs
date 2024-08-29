@@ -86,12 +86,6 @@ internal struct CooldownData
     public float TotalCooldownRemaining => !this.isCooldown ? 0 : this.TotalBaseCooldown - this.cooldownElapsed;
 
     /// <summary>
-    /// Gets the cooldown time remaining until the currently recharging charge is replenished.  For actions that are
-    /// not charge-based, this is mechanically equivalent to TotalCooldownRemaining.
-    /// </summary>
-    // public float CooldownRemaining => this.TotalCooldownRemaining % this.BaseCooldown;
-
-    /// <summary>
     /// Gets the overall elapsed cooldown.  The value will range from 0, immediately after all charges are used,
     /// up to the TotalBaseCooldown.  It is not known at this time if a return value of exactly 0 is possible.
     /// For abilities with charges, this will equal the time elapsed on the current charge's recharge, plus the

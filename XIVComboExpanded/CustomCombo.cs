@@ -600,7 +600,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
     protected static bool GCDClipCheck(uint actionID) =>
-        GetCooldown(actionID).CooldownRemaining >= 0.5;
+        GetCooldown(actionID).CooldownRemaining >= 0.55;
 
     /// <summary>
     /// Gets a value indicating whether you are in melee range from the current target.
