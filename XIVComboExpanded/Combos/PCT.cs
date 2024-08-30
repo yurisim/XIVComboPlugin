@@ -130,31 +130,28 @@ internal static class PCT
             if (actionID is FireRed or HolyWhite)
             {
                 var canUsePalette = (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum))
-                             && !HasEffect(Buffs.SubtractivePalette)
-                             && (StarryMuseCD() || gauge.PalleteGauge >= 100);
+                                    && (StarryMuseCD() || gauge.PalleteGauge >= 100);
 
                 if (GCDClipCheck(actionID))
-                {
                     switch (level)
                     {
                         case >= Levels.StarryMuse
                             when HasRaidBuffs() && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
                             return StarryMuse;
                         case >= Levels.SubtractivePalette
-                            when canUsePalette && !CanUseAction(OriginalHook(CometBlack)):
+                            when canUsePalette && CanUseAction(SubtractivePalette) &&
+                                 !CanUseAction(OriginalHook(CometBlack)):
                             return SubtractivePalette;
                         case >= Levels.WeaponMotif
                             when IsAvailable(OriginalHook(SteelMuse))
                                  && gauge.WeaponMotifDrawn
                                  && InCombat()
-                                 && ((
-                                         level >= Levels.StarryMuse
-                                         && (GetCooldown(StarryMuse).TotalCooldownRemaining >= 10
-                                         )) ||
-                                     level < Levels.StarryMuse)
-                                 && ((GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10) ||
-                                     HasRaidBuffs() ||
-                                     HasEffect(Buffs.StarryMuse) || level < Levels.HammerBrush):
+                                 && !(HasEffect(Buffs.StarryMuse) && CanUseAction(OriginalHook(CometBlack)))
+                                 && (level < Levels.StarryMuse || GetCooldown(StarryMuse).TotalCooldownRemaining >= 10)
+                                 && (GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10
+                                     || HasRaidBuffs()
+                                     || HasEffect(Buffs.StarryMuse)
+                                     || level < Levels.HammerBrush):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))
@@ -171,9 +168,10 @@ internal static class PCT
                                  && gauge.CreatureMotifDrawn
                                  && InCombat()
                                  && (StarryMuseCD()
-                                    || GetCooldown(StarryMuse).TotalCooldownRemaining > 10
-                                    || ((!gauge.CreatureFlags.HasFlag(CreatureFlags.Pom) || gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
-                                            && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
+                                     || GetCooldown(StarryMuse).TotalCooldownRemaining > 10
+                                     || ((!gauge.CreatureFlags.HasFlag(CreatureFlags.Pom) ||
+                                          gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
+                                         && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
                                  && (StarryMuseCD() ||
                                      GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining <= 10):
                             return OriginalHook(LivingMuse);
@@ -183,33 +181,26 @@ internal static class PCT
                                  && LocalPlayer?.CurrentMp <= 7000:
                             return ADV.LucidDreaming;
                     }
-                }
 
-                if (HasEffect(Buffs.Monochrome) && (canUsePalette || StarryMuseCD()))
-                {
+                if (
+                    CanUseAction(OriginalHook(CometBlack))
+                    && (canUsePalette || StarryMuseCD() || actionID is HolyWhite)
+                )
                     return OriginalHook(CometBlack);
-                }
 
-                if (HasEffect(Buffs.RainbowReady))
-                {
-                    return RainbowDrip;
-                }
+                if (HasEffect(Buffs.RainbowReady)) return RainbowDrip;
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
                     && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 10)
                 )
-                {
                     return StarPrism;
-                }
 
                 if (
                     level >= Levels.HammerStamp
                     && CanUseAction(OriginalHook(HammerStamp))
                     && !HasEffect(Buffs.Hyperphantasia))
-                {
                     return OriginalHook(HammerStamp);
-                }
 
                 if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs()))
                 {
@@ -230,10 +221,7 @@ internal static class PCT
                         return OriginalHook(availableSkill);
                 }
 
-                if (HasEffect(Buffs.SubtractivePalette) && actionID is not HolyWhite)
-                {
-                    return OriginalHook(BlizzardCyan);
-                }
+                if (HasEffect(Buffs.SubtractivePalette) && actionID is not HolyWhite) return OriginalHook(BlizzardCyan);
 
                 return actionID is FireRed
                     ? OriginalHook(FireRed)
@@ -260,7 +248,6 @@ internal static class PCT
             if (actionID == ExtraFireRed)
             {
                 if (GCDClipCheck(actionID))
-                {
                     switch (level)
                     {
                         case >= Levels.MogOftheAges
@@ -285,37 +272,23 @@ internal static class PCT
                                  && LocalPlayer?.CurrentMp <= 8000:
                             return ADV.LucidDreaming;
                     }
-                }
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
                 )
-                {
                     return StarPrism;
-                }
 
-                if (CanUseAction(OriginalHook(CometBlack)))
-                {
-                    return OriginalHook(CometBlack);
-                }
+                if (CanUseAction(OriginalHook(CometBlack))) return OriginalHook(CometBlack);
 
-                if (HasEffect(Buffs.RainbowReady))
-                {
-                    return RainbowDrip;
-                }
+                if (HasEffect(Buffs.RainbowReady)) return RainbowDrip;
 
                 if (
                     level >= Levels.HammerStamp
                     && CanUseAction(OriginalHook(HammerStamp))
                 )
-                {
                     return OriginalHook(HammerStamp);
-                }
 
-                if (HasEffect(Buffs.SubtractivePalette))
-                {
-                    return OriginalHook(ExtraBlizzardCyan);
-                }
+                if (HasEffect(Buffs.SubtractivePalette)) return OriginalHook(ExtraBlizzardCyan);
 
 
                 var skills = new (uint Level, bool hasCharges, bool MotifNeeded, uint Skill)[]
@@ -333,10 +306,7 @@ internal static class PCT
 
                 if (skills != default) return OriginalHook(skills);
 
-                if (gauge.Paint >= 3)
-                {
-                    return HolyWhite;
-                }
+                if (gauge.Paint >= 3) return HolyWhite;
 
 
                 return actionID;
@@ -372,9 +342,7 @@ internal static class PCT
             if (actionID == HolyWhite)
             {
                 if (IsEnabled(CustomComboPreset.PictomancerRainbowHolyCombo) && HasEffect(Buffs.RainbowReady))
-                {
                     return RainbowDrip;
-                }
 
                 if (HasEffect(Buffs.Monochrome))
                     return CometBlack;
@@ -395,22 +363,14 @@ internal static class PCT
             if (actionID == CreatureMotif)
             {
                 if (IsEnabled(CustomComboPreset.PictomancerCreatureMogCombo))
-                {
                     if (gauge.MooglePortraitReady || gauge.MadeenPortraitReady)
-                    {
                         if (IsAvailable(MogOftheAges))
                             return OriginalHook(MogOftheAges);
-                    }
-                }
 
                 if (IsEnabled(CustomComboPreset.PictomancerCreatureMotifCombo))
-                {
                     if (actionID == CreatureMotif)
-                    {
                         if (OriginalHook(CreatureMotifDrawn) != CreatureMotifDrawn)
                             return OriginalHook(CreatureMotifDrawn);
-                    }
-                }
             }
 
             return actionID;
