@@ -22,7 +22,6 @@ internal static class MNK
         ElixirField = 3545,
         FlintStrike = 25882,
         TornadoKick = 3543,
-        Meditation = 3546,
         TheForbiddenChakra = 3547,
         FormShift = 4262,
         RiddleOfFire = 7395,
@@ -183,9 +182,9 @@ internal class MonkDragonKick : CustomCombo
             // Ranged GCDs
             if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
             {
-                if (level >= MNK.Levels.Meditation && gauge.Chakra < 5)
+                if (gauge.Chakra < 5)
                 {
-                    return MNK.Meditation;
+                    return MNK.SteeledMeditation;
                 }
 
                 if (
@@ -478,50 +477,50 @@ internal class MonkPerfectBalance : CustomCombo
     }
 }
 
-internal class MonkRiddleOfFire : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
+// internal class MonkRiddleOfFire : CustomCombo
+// {
+//     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkAny;
 
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == MNK.RiddleOfFire)
-        {
-            var brotherhood = IsEnabled(CustomComboPreset.MonkRiddleOfFireBrotherhood);
-            var wind = IsEnabled(CustomComboPreset.MonkRiddleOfFireWind);
+//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+//     {
+//         if (actionID == MNK.RiddleOfFire)
+//         {
+//             var brotherhood = IsEnabled(CustomComboPreset.MonkRiddleOfFireBrotherhood);
+//             var wind = IsEnabled(CustomComboPreset.MonkRiddleOfFireWind);
 
-            if (brotherhood && wind)
-            {
-                if (level >= MNK.Levels.RiddleOfWind)
-                    return CalcBestAction(
-                        actionID,
-                        MNK.RiddleOfFire,
-                        MNK.Brotherhood,
-                        MNK.RiddleOfWind
-                    );
+//             if (brotherhood && wind)
+//             {
+//                 if (level >= MNK.Levels.RiddleOfWind)
+//                     return CalcBestAction(
+//                         actionID,
+//                         MNK.RiddleOfFire,
+//                         MNK.Brotherhood,
+//                         MNK.RiddleOfWind
+//                     );
 
-                if (level >= MNK.Levels.Brotherhood)
-                    return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.Brotherhood);
+//                 if (level >= MNK.Levels.Brotherhood)
+//                     return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.Brotherhood);
 
-                return actionID;
-            }
+//                 return actionID;
+//             }
 
-            if (brotherhood)
-            {
-                if (level >= MNK.Levels.Brotherhood)
-                    return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.Brotherhood);
+//             if (brotherhood)
+//             {
+//                 if (level >= MNK.Levels.Brotherhood)
+//                     return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.Brotherhood);
 
-                return actionID;
-            }
+//                 return actionID;
+//             }
 
-            if (wind)
-            {
-                if (level >= MNK.Levels.RiddleOfWind)
-                    return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.RiddleOfWind);
+//             if (wind)
+//             {
+//                 if (level >= MNK.Levels.RiddleOfWind)
+//                     return CalcBestAction(actionID, MNK.RiddleOfFire, MNK.RiddleOfWind);
 
-                return actionID;
-            }
-        }
+//                 return actionID;
+//             }
+//         }
 
-        return actionID;
-    }
-}
+//         return actionID;
+//     }
+// }

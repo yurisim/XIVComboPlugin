@@ -148,14 +148,14 @@ internal class MachinistCleanShot : CustomCombo
 
                 if (
                     level >= MCH.Levels.Ricochet
-                    && HasCharges(MCH.Ricochet)
+                    && HasCharges(OriginalHook(MCH.Ricochet))
                     && HasTarget()
                     && ricochetCharges >= gaussRoundCharges
                 )
                 {
                     return OriginalHook(MCH.Ricochet);
                 }
-                else if (HasCharges(MCH.GaussRound))
+                else if (HasCharges(OriginalHook(MCH.GaussRound)))
                 {
                     return OriginalHook(MCH.GaussRound);
                 }
@@ -167,7 +167,12 @@ internal class MachinistCleanShot : CustomCombo
                     && HasTarget()
                     && IsOffCooldown(MCH.Hypercharge)
                     && (gauge.Heat >= 50 || HasEffect(MCH.Buffs.HyperchargeReady))
-                    && (gauge.Heat >= 90 || TargetHasEffect(MCH.Debuffs.Wildfire) || HasRaidBuffs())
+                    && (
+                        gauge.Heat >= 90
+                        || TargetHasEffect(MCH.Debuffs.Wildfire)
+                        || HasRaidBuffs()
+                        || FindEffect(MCH.Buffs.HyperchargeReady)?.RemainingTime <= 10
+                    )
                 )
                 {
                     return MCH.Hypercharge;
@@ -336,7 +341,8 @@ internal class MachinistSpreadShot : CustomCombo
                     level >= MCH.Levels.Hypercharge
                     && HasTarget()
                     && IsOffCooldown(MCH.Hypercharge)
-                    && gauge.Heat >= 50
+                        && (gauge.Heat >= 50
+                    || HasEffect(MCH.Buffs.HyperchargeReady))
                 )
                 {
                     return MCH.Hypercharge;

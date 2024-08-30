@@ -146,7 +146,6 @@ internal static class PCT
                             when IsAvailable(OriginalHook(SteelMuse))
                                  && gauge.WeaponMotifDrawn
                                  && InCombat()
-                                 && !(HasEffect(Buffs.StarryMuse) && CanUseAction(OriginalHook(CometBlack)))
                                  && (level < Levels.StarryMuse || GetCooldown(StarryMuse).TotalCooldownRemaining >= 10)
                                  && (GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10
                                      || HasRaidBuffs()
