@@ -111,6 +111,10 @@ internal class MonkBootshine : CustomCombo
 
                 switch (level)
                 {
+                    case >= MNK.Levels.Brotherhood when
+                        IsOffCooldown(MNK.Brotherhood)
+                        && HasRaidBuffs():
+                        return MNK.Brotherhood;
                     case >= MNK.Levels.PerfectBalance when
                         GetRemainingCharges(MNK.PerfectBalance) >= 1
                         && (gauge.CoeurlFury != 0 || doesNotHaveSolar || hasSolarLunar)
@@ -154,11 +158,8 @@ internal class MonkBootshine : CustomCombo
             if (level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
-                && (riddleOfFire != null
-                    || HasRaidBuffs()
-                    || gauge.BlitzTimeRemaining <= 4
-                    || GetCooldown(MNK.RiddleOfFire).CooldownRemaining >= 15
-                    || level < MNK.Levels.RiddleOfFire))
+                && (riddleMeDaddy(15)
+                    || gauge.BlitzTimeRemaining <= 4))
                 return OriginalHook(MNK.MasterfulBlitz);
 
             if (HasEffect(MNK.Buffs.RaptorForm)
@@ -212,6 +213,12 @@ internal class MonkAoECombo : CustomCombo
             var gauge = GetJobGauge<MNKGauge>();
             var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
 
+            bool riddleMeDaddy()
+            {
+                return riddleOfFire is not null || HasRaidBuffs() ||
+                       level < MNK.Levels.RiddleOfFire;
+            }
+
             if (GCDClipCheck(actionID)
                 && InCombat())
             {
@@ -227,9 +234,7 @@ internal class MonkAoECombo : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && (riddleOfFire?.RemainingTime >= 8
-                            || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 6
-                            || level < MNK.Levels.RiddleOfFire):
+                        && (riddleMeDaddy() || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 6):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.RiddleOfFire when
                         InMeleeRange()
@@ -240,7 +245,7 @@ internal class MonkAoECombo : CustomCombo
                         && InMeleeRange():
                         return MNK.RiddleOfWind;
                     case >= MNK.Levels.RiddleOfEarth when
-                        LocalPlayerPercentage()  <= 0.98
+                        LocalPlayerPercentage() <= 0.98
                         && HasEffect(MNK.Buffs.EarthsRumination):
                         return MNK.EarthsReply;
                 }
@@ -263,8 +268,7 @@ internal class MonkAoECombo : CustomCombo
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz)
                 if (riddleOfFire != null
                     || gauge.BlitzTimeRemaining <= 6
-                    || HasEffect(MNK.Buffs.RiddleOfFire)
-                    || level < MNK.Levels.RiddleOfFire)
+                    || riddleMeDaddy())
                     return OriginalHook(MNK.MasterfulBlitz);
 
             if (HasEffect(MNK.Buffs.RaptorForm)
