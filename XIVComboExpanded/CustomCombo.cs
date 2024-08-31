@@ -309,7 +309,7 @@ internal abstract partial class CustomCombo
     }
 
     /// <summary>
-    /// Gets percentage of the players's health. If no target of target, returns 1.
+    /// Gets percentage of the players's health.
     /// </summary>
     /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
     protected static float LocalPlayerPercentage()
