@@ -187,7 +187,7 @@ internal class MonkBootshine : CustomCombo
             {
                 if (gauge.CoeurlFury == 0 && level >= MNK.Levels.Demolish)
                     return MNK.Demolish;
-                    
+
                 return OriginalHook(MNK.SnapPunch);
             }
 
@@ -266,10 +266,7 @@ internal class MonkAoECombo : CustomCombo
 
             if (level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
-                && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
-                // 5000 is in Milliseconds
-                && (gauge.BlitzTimeRemaining <= 5000 || riddleMeDaddy())
-                )
+                && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz)
                 return OriginalHook(MNK.MasterfulBlitz);
 
             if (CanUseAction(MNK.WindsReply))
@@ -288,8 +285,7 @@ internal class MonkAoECombo : CustomCombo
                 return level >= MNK.Levels.Rockbreaker ? MNK.Rockbreaker : MNK.SnapPunch;
 
             if (HasEffect(MNK.Buffs.OpoOpoForm)
-                || perfectBalance?.StackCount >= 1
-                )
+                || perfectBalance?.StackCount >= 1)
                 return OriginalHook(MNK.ArmOfTheDestroyer);
         }
 
