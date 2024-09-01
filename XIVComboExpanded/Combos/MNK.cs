@@ -92,13 +92,12 @@ internal class MonkBootshine : CustomCombo
         if (actionID == MNK.Bootshine)
         {
             var gauge = GetJobGauge<MNKGauge>();
-            var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
             var doesNotHaveSolar = !gauge.Nadi.HasFlag(Nadi.SOLAR);
             var hasSolarLunar = gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR);
 
             bool riddleMeDaddy(int skillTime)
             {
-                return riddleOfFire?.RemainingTime >= skillTime || riddleOfFire is not null || HasRaidBuffs() ||
+                return GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime || HasEffect(MNK.Buffs.RiddleOfFire) || HasRaidBuffs() ||
                        level < MNK.Levels.RiddleOfFire;
             }
 
@@ -108,15 +107,6 @@ internal class MonkBootshine : CustomCombo
             {
                 switch (level)
                 {
-                    case >= MNK.Levels.PerfectBalance when
-                        GetRemainingCharges(MNK.PerfectBalance) >= 1
-                        && (gauge.CoeurlFury != 0 || doesNotHaveSolar || hasSolarLunar)
-                        && !HasEffect(MNK.Buffs.FormlessFist)
-                        && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
-                        && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && (riddleMeDaddy(8)
-                            || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
-                        return MNK.PerfectBalance;
                     case >= MNK.Levels.Brotherhood when
                         IsOffCooldown(MNK.Brotherhood)
                         && HasRaidBuffs():
@@ -129,13 +119,22 @@ internal class MonkBootshine : CustomCombo
                             || level < MNK.Levels.Brotherhood
                             || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10):
                         return MNK.RiddleOfFire;
+                    case >= MNK.Levels.PerfectBalance when
+                        GetRemainingCharges(MNK.PerfectBalance) >= 1
+                        && (gauge.CoeurlFury != 0 || doesNotHaveSolar || hasSolarLunar)
+                        && !HasEffect(MNK.Buffs.FormlessFist)
+                        && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
+                        && !HasEffect(MNK.Buffs.PerfectBalance)
+                        && (riddleMeDaddy(8)
+                            || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
+                        return MNK.PerfectBalance;
                     case >= MNK.Levels.Meditation when
                         gauge.Chakra >= 5
                         && (level < MNK.Levels.RiddleOfFire || IsOnCooldown(MNK.RiddleOfFire)):
                         return OriginalHook(MNK.SteeledMeditation);
                     case >= MNK.Levels.RiddleOfWind when
                         IsOffCooldown(MNK.RiddleOfWind)
-                        && riddleMeDaddy(12)
+                        && riddleMeDaddy(10)
                         && InMeleeRange():
                         return MNK.RiddleOfWind;
                     case >= MNK.Levels.RiddleOfEarth when
@@ -211,11 +210,10 @@ internal class MonkAoECombo : CustomCombo
         if (actionID == MNK.ArmOfTheDestroyer)
         {
             var gauge = GetJobGauge<MNKGauge>();
-            var riddleOfFire = FindEffect(MNK.Buffs.RiddleOfFire);
 
             bool riddleMeDaddy()
             {
-                return riddleOfFire is not null || HasRaidBuffs() ||
+                return HasEffect(MNK.Buffs.RiddleOfFire) || HasRaidBuffs() ||
                        level < MNK.Levels.RiddleOfFire;
             }
 
