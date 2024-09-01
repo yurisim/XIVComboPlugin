@@ -36,6 +36,7 @@ internal static class MNK
         EnlightenedMeditation = 36943,
         LeapingOpo = 36945,
         RisingRaptor = 36946,
+        WindsReply = 36949,
         PouncingCoeurl = 36947;
 
     public static class Buffs
@@ -76,7 +77,9 @@ internal static class MNK
             RiddleOfFire = 68,
             Brotherhood = 70,
             Enlightenment = 70,
-            RiddleOfWind = 72;
+            RiddleOfWind = 72,
+            WindsReply = 96
+            ;
     }
 }
 
@@ -132,7 +135,7 @@ internal class MonkBootshine : CustomCombo
                         return OriginalHook(MNK.SteeledMeditation);
                     case >= MNK.Levels.RiddleOfWind when
                         IsOffCooldown(MNK.RiddleOfWind)
-                        && riddleMeDaddy(13)
+                        && riddleMeDaddy(12)
                         && InMeleeRange():
                         return MNK.RiddleOfWind;
                     case >= MNK.Levels.RiddleOfEarth when
@@ -142,7 +145,7 @@ internal class MonkBootshine : CustomCombo
                 }
             }
 
-            if (GetTargetDistance() >= 6 || !InCombat() || !HasTarget())
+            if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
             {
                 if (gauge.Chakra < 5)
                     return OriginalHook(MNK.SteeledMeditation);
@@ -161,31 +164,30 @@ internal class MonkBootshine : CustomCombo
                 )
                 return OriginalHook(MNK.MasterfulBlitz);
 
+            if (CanUseAction(MNK.WindsReply))
+            {
+                return MNK.WindsReply;
+            }
+
             if (HasEffect(MNK.Buffs.RaptorForm)
                 || (HasEffect(MNK.Buffs.PerfectBalance)
                     && level >= MNK.Levels.MasterfulBlitz
-                    && ((!gauge.Nadi.HasFlag(Nadi.SOLAR) && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR))
-                        || (gauge.Nadi.HasFlag(Nadi.SOLAR)
-                            && gauge.Nadi.HasFlag(Nadi.LUNAR)
-                            && gauge.RaptorFury == 0)))
-                || (HasEffect(MNK.Buffs.FormlessFist) && gauge.RaptorFury == 0))
+                    && !gauge.Nadi.HasFlag(Nadi.SOLAR) && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)))
             {
                 if (gauge.RaptorFury == 0 && level >= MNK.Levels.TwinSnakes)
                     return MNK.TwinSnakes;
+
                 return OriginalHook(MNK.TrueStrike);
             }
 
             if (HasEffect(MNK.Buffs.CoerlForm)
                 || (HasEffect(MNK.Buffs.PerfectBalance)
                     && level >= MNK.Levels.MasterfulBlitz
-                    && ((!gauge.Nadi.HasFlag(Nadi.SOLAR) && !gauge.BeastChakra.Contains(BeastChakra.COEURL))
-                        || (gauge.Nadi.HasFlag(Nadi.SOLAR)
-                            && gauge.Nadi.HasFlag(Nadi.LUNAR)
-                            && gauge.CoeurlFury == 0)))
-                || (HasEffect(MNK.Buffs.FormlessFist) && gauge.CoeurlFury == 0))
+                    && !gauge.Nadi.HasFlag(Nadi.SOLAR) && !gauge.BeastChakra.Contains(BeastChakra.COEURL)))
             {
                 if (gauge.CoeurlFury == 0 && level >= MNK.Levels.Demolish)
                     return MNK.Demolish;
+                    
                 return OriginalHook(MNK.SnapPunch);
             }
 
@@ -270,6 +272,11 @@ internal class MonkAoECombo : CustomCombo
                 )
                 return OriginalHook(MNK.MasterfulBlitz);
 
+            if (CanUseAction(MNK.WindsReply))
+            {
+                return MNK.WindsReply;
+            }
+
             if (HasEffect(MNK.Buffs.RaptorForm)
                 || (perfectBalance?.StackCount >= 3
                     && !gauge.Nadi.HasFlag(Nadi.SOLAR)))
@@ -281,7 +288,8 @@ internal class MonkAoECombo : CustomCombo
                 return level >= MNK.Levels.Rockbreaker ? MNK.Rockbreaker : MNK.SnapPunch;
 
             if (HasEffect(MNK.Buffs.OpoOpoForm)
-                || perfectBalance?.StackCount >= 1)
+                || perfectBalance?.StackCount >= 1
+                )
                 return OriginalHook(MNK.ArmOfTheDestroyer);
         }
 
