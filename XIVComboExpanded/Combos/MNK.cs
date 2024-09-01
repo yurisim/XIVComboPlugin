@@ -93,11 +93,12 @@ internal class MonkBootshine : CustomCombo
         {
             var gauge = GetJobGauge<MNKGauge>();
             var doesNotHaveSolar = !gauge.Nadi.HasFlag(Nadi.SOLAR);
+            var riddleFireEffect = FindEffect(MNK.Buffs.RiddleOfFire);
             var hasSolarLunar = gauge.Nadi.HasFlag(Nadi.SOLAR) && gauge.Nadi.HasFlag(Nadi.LUNAR);
 
             bool riddleMeDaddy(int skillTime)
             {
-                return GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime || HasEffect(MNK.Buffs.RiddleOfFire) || HasRaidBuffs() ||
+                return GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime || riddleFireEffect is not null || HasRaidBuffs() ||
                        level < MNK.Levels.RiddleOfFire;
             }
 
@@ -125,7 +126,8 @@ internal class MonkBootshine : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && (riddleMeDaddy(8)
+                        && ((HasEffect(MNK.Buffs.RiddleOfFire) && riddleFireEffect?.RemainingTime >= 9) 
+                            || HasRaidBuffs()
                             || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.Meditation when
@@ -232,7 +234,7 @@ internal class MonkAoECombo : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && (riddleMeDaddy() || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 6):
+                        && (riddleMeDaddy() || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.RiddleOfFire when
                         InMeleeRange()
