@@ -247,6 +247,7 @@ internal abstract partial class CustomCombo
             SMN.Buffs.SearingLight,
             RPR.Buffs.ArcaneCircle,
             AST.Buffs.Divination,
+            // AST.Buffs.TheBalance,
             RDM.Buffs.Embolden,
             BRD.Buffs.BattleVoice,
             DRG.Buffs.BattleLitany,

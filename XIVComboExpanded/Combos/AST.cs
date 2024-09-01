@@ -44,6 +44,7 @@ internal static class AST
     public static class Buffs
     {
         public const ushort Divination = 1878,
+            TheBalance = 3887,
             AspectedHelios = 836;
     }
 

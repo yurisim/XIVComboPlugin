@@ -108,6 +108,16 @@ internal class MonkBootshine : CustomCombo
             {
                 switch (level)
                 {
+                    case >= MNK.Levels.PerfectBalance when
+                        GetRemainingCharges(MNK.PerfectBalance) >= 1
+                        && !HasEffect(MNK.Buffs.FormlessFist)
+                        && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
+                        && !HasEffect(MNK.Buffs.PerfectBalance)
+                        // && (HasEffect(MNK.Buffs.RaptorForm) || level < MNK.TwinSnakes)
+                        && ((HasEffect(MNK.Buffs.RiddleOfFire) && riddleFireEffect?.RemainingTime >= 8)
+                            || HasRaidBuffs()
+                            || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
+                        return MNK.PerfectBalance;
                     case >= MNK.Levels.Brotherhood when
                         IsOffCooldown(MNK.Brotherhood)
                         && HasRaidBuffs():
@@ -120,16 +130,6 @@ internal class MonkBootshine : CustomCombo
                             || level < MNK.Levels.Brotherhood
                             || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10):
                         return MNK.RiddleOfFire;
-                    case >= MNK.Levels.PerfectBalance when
-                        GetRemainingCharges(MNK.PerfectBalance) >= 1
-                        && (gauge.CoeurlFury != 0 || doesNotHaveSolar || hasSolarLunar)
-                        && !HasEffect(MNK.Buffs.FormlessFist)
-                        && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
-                        && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && ((HasEffect(MNK.Buffs.RiddleOfFire) && riddleFireEffect?.RemainingTime >= 9) 
-                            || HasRaidBuffs()
-                            || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
-                        return MNK.PerfectBalance;
                     case >= MNK.Levels.Meditation when
                         gauge.Chakra >= 5
                         && (level < MNK.Levels.RiddleOfFire || IsOnCooldown(MNK.RiddleOfFire)):
@@ -161,7 +161,7 @@ internal class MonkBootshine : CustomCombo
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
                 // 5000 is in Milliseconds
-                && (gauge.BlitzTimeRemaining <= 5000 || riddleMeDaddy(6))
+                && (gauge.BlitzTimeRemaining <= 5000 || riddleFireEffect is not null || HasRaidBuffs())
                 )
                 return OriginalHook(MNK.MasterfulBlitz);
 
@@ -234,7 +234,7 @@ internal class MonkAoECombo : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && (riddleMeDaddy() || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
+                        && (riddleMeDaddy() || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 8):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.RiddleOfFire when
                         InMeleeRange()
