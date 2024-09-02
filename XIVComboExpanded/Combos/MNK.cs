@@ -31,6 +31,7 @@ internal static class MNK
         RiddleOfWind = 25766,
         ShadowOfTheDestroyer = 25767,
         EarthsReply = 36944,
+        FiresReply = 36950,
         SteeledMeditation = 36940,
         InspiritedMeditation = 36941,
         EnlightenedMeditation = 36943,
@@ -49,6 +50,7 @@ internal static class MNK
             Brotherhood = 1185,
             RiddleOfFire = 1181,
             FormlessFist = 2513,
+            FiresRumination = 3843,
             DisciplinedFist = 3001;
     }
 
@@ -78,8 +80,8 @@ internal static class MNK
             Brotherhood = 70,
             Enlightenment = 70,
             RiddleOfWind = 72,
-            WindsReply = 96
-            ;
+            WindsReply = 96,
+            FiresReply = 100;
     }
 }
 
@@ -113,7 +115,6 @@ internal class MonkBootshine : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        // && (HasEffect(MNK.Buffs.RaptorForm) || level < MNK.TwinSnakes)
                         && ((HasEffect(MNK.Buffs.RiddleOfFire) && riddleFireEffect?.RemainingTime >= 8)
                             || HasRaidBuffs()
                             || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
@@ -157,6 +158,14 @@ internal class MonkBootshine : CustomCombo
                     return MNK.FormShift;
             }
 
+            if (level >= MNK.Levels.FiresReply 
+                && CanUseAction(MNK.FiresReply) 
+                && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 6)
+                && !HasEffect(MNK.Buffs.FormlessFist))
+            {
+                return MNK.FiresReply;
+            }
+
             if (level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
@@ -165,7 +174,7 @@ internal class MonkBootshine : CustomCombo
                 )
                 return OriginalHook(MNK.MasterfulBlitz);
 
-            if (CanUseAction(MNK.WindsReply))
+            if (level >= MNK.Levels.WindsReply && CanUseAction(MNK.WindsReply))
             {
                 return MNK.WindsReply;
             }
@@ -268,6 +277,11 @@ internal class MonkAoECombo : CustomCombo
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz)
                 return OriginalHook(MNK.MasterfulBlitz);
+
+            if (level >= 100 && CanUseAction(MNK.FiresReply) && HasEffect(MNK.Buffs.RaptorForm))
+            {
+                return MNK.FiresReply;
+            }
 
             if (CanUseAction(MNK.WindsReply))
             {

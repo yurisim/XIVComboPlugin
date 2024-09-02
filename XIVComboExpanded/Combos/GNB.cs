@@ -270,57 +270,28 @@ internal class GunbreakerDemonSlaughter : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= GNB.Levels.HeartOfCorundum
-                    && IsOffCooldown(GNB.HeartOfCorundum)
-                    && !HasEffect(GNB.Buffs.Superbolide)
-                    && (LocalPlayerPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6)
-                )
+                switch (level)
                 {
-                    return GNB.HeartOfCorundum;
-                }
+                    case >= GNB.Levels.Bloodfest when HasEffect(GNB.Buffs.NoMercy) && IsOffCooldown(GNB.Bloodfest) && gauge.Ammo == 0:
+                        return GNB.Bloodfest;
 
-                if (IsOffCooldown(GNB.NoMercy))
-                {
-                    return GNB.NoMercy;
-                }
+                    case >= GNB.Levels.Aurora when (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora)) && !HasEffect(GNB.Buffs.Aurora) && (TargetOfTargetHPercentage() <= 0.7):
+                        return GNB.Aurora;
 
-                if (
-                    level >= GNB.Levels.DangerZone
-                    && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 6)
-                    && IsOffCooldown(GNB.DangerZone)
-                )
-                {
-                    return GNB.DangerZone;
-                }
+                    case >= GNB.Levels.BowShock when IsOffCooldown(GNB.BowShock) && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 12):
+                        return GNB.BowShock;
 
-                if (
-                    level >= GNB.Levels.BowShock
-                    && IsOffCooldown(GNB.BowShock)
-                    && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 12)
-                )
-                {
-                    return GNB.BowShock;
-                }
+                    case >= GNB.Levels.DangerZone when (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 6) && IsOffCooldown(GNB.DangerZone):
+                        return GNB.DangerZone;
 
-                if (
-                    level >= GNB.Levels.Aurora
-                    && (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
-                    && !HasEffect(GNB.Buffs.Aurora)
-                    && (TargetOfTargetHPercentage() <= 0.7)
-                )
-                {
-                    return GNB.Aurora;
-                }
+                    case >= GNB.Levels.HeartOfCorundum when IsOffCooldown(GNB.HeartOfCorundum) && !HasEffect(GNB.Buffs.Superbolide) && (LocalPlayerPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6):
+                        return GNB.HeartOfCorundum;
 
-                if (
-                    level >= GNB.Levels.Bloodfest
-                    && HasEffect(GNB.Buffs.NoMercy)
-                    && IsOffCooldown(GNB.Bloodfest)
-                    && gauge.Ammo == 0
-                )
-                {
-                    return GNB.Bloodfest;
+                    case >= GNB.Levels.Continuation when GNB.Continuation != OriginalHook(GNB.Continuation):
+                        return OriginalHook(GNB.Continuation);
+
+                    case >= 2 when IsOffCooldown(GNB.NoMercy):
+                        return GNB.NoMercy;
                 }
             }
 
