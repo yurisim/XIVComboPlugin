@@ -281,8 +281,8 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                     case >= GNB.Levels.BowShock when IsOffCooldown(GNB.BowShock) && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 12):
                         return GNB.BowShock;
 
-                    case >= GNB.Levels.DangerZone when (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 6) && IsOffCooldown(GNB.DangerZone):
-                        return GNB.DangerZone;
+                    case >= GNB.Levels.DangerZone when (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 6) && IsOffCooldown(OriginalHook(GNB.DangerZone)):
+                        return OriginalHook(GNB.DangerZone);
 
                     case >= GNB.Levels.HeartOfCorundum when IsOffCooldown(GNB.HeartOfCorundum) && !HasEffect(GNB.Buffs.Superbolide) && (LocalPlayerPercentage() <= 0.6 || TargetOfTargetHPercentage() <= 0.6):
                         return GNB.HeartOfCorundum;
