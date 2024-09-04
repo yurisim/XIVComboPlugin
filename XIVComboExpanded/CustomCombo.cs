@@ -574,7 +574,7 @@ internal abstract partial class CustomCombo
         var position = new Vector2(chara.Position.X, chara.Position.Z);
         var selfPosition = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
-        return (Vector2.Distance(position, selfPosition) - chara.HitboxRadius)
+        return Vector2.Distance(position, selfPosition) - chara.HitboxRadius
             - LocalPlayer.HitboxRadius;
     }
 

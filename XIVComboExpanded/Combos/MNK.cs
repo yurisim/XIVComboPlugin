@@ -158,9 +158,9 @@ internal class MonkBootshine : CustomCombo
                     return MNK.FormShift;
             }
 
-            if (level >= MNK.Levels.FiresReply 
-                && CanUseAction(MNK.FiresReply) 
-                && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 6)
+            if (level >= MNK.Levels.FiresReply
+                && CanUseAction(MNK.FiresReply)
+                && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8)
                 && !HasEffect(MNK.Buffs.FormlessFist))
             {
                 return MNK.FiresReply;
@@ -270,6 +270,11 @@ internal class MonkAoECombo : CustomCombo
                     !HasEffect(MNK.Buffs.PerfectBalance))
                     return MNK.FormShift;
             }
+            if (level >= 100 && CanUseAction(MNK.FiresReply) 
+                && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8))
+            {
+                return MNK.FiresReply;
+            }
 
             var perfectBalance = FindEffect(MNK.Buffs.PerfectBalance);
 
@@ -278,10 +283,6 @@ internal class MonkAoECombo : CustomCombo
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz)
                 return OriginalHook(MNK.MasterfulBlitz);
 
-            if (level >= 100 && CanUseAction(MNK.FiresReply) && HasEffect(MNK.Buffs.RaptorForm))
-            {
-                return MNK.FiresReply;
-            }
 
             if (CanUseAction(MNK.WindsReply))
             {
