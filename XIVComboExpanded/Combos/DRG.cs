@@ -99,6 +99,7 @@ internal static class DRG
             HighJump = 74,
             RaidenThrust = 76,
             Stardiver = 80,
+            DraconianFury = 82,
             ImprovedLifeSurge = 88,
             WyrmwindThrust = 90;
     }
@@ -150,12 +151,13 @@ internal class DragoonSingleTarget : CustomCombo
                         && (HasEffect(DRG.Buffs.BattleLitany)
                             || HasRaidBuffs()
                             || level < DRG.Levels.BattleLitany
-                            || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12):
+                            || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15):
                         return DRG.LanceCharge;
 
                     case >= DRG.Levels.Geirskogul when
                                     CanUseAction(OriginalHook(DRG.Geirskogul))
-                                    && IsOffCooldown(OriginalHook(DRG.Geirskogul)) && doWithLance(60):
+                                    && IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                                    && doWithLance(60):
                         return OriginalHook(DRG.Geirskogul);
 
                     case >= DRG.Levels.WyrmwindThrust when
@@ -289,89 +291,79 @@ internal class DragoonCoerthanTorment : CustomCombo
         {
             var gauge = GetJobGauge<DRGGauge>();
 
-            if (GCDClipCheck(actionID))
+            var disembowelDuration = FindEffect(DRG.Buffs.PowerSurge)?.RemainingTime;
+
+            if (GCDClipCheck(actionID)
+                            && InCombat()
+                            && HasTarget())
             {
-                var lanceChargeCD = GetCooldown(DRG.LanceCharge).CooldownRemaining;
-                var hasLanceCharge = HasEffect(DRG.Buffs.LanceCharge);
-
-                var hasLitany = HasEffect(DRG.Buffs.BattleLitany);
-                var litanyCD = GetCooldown(DRG.BattleLitany).CooldownRemaining;
-
-                if (
-                    gauge.IsLOTDActive
-                    && IsOffCooldown(DRG.Stardiver)
-                    && level >= DRG.Levels.Stardiver
-                    && (hasLanceCharge || lanceChargeCD > (gauge.LOTDTimer / 1000) - 5)
-                )
+                static bool doWithLance(int? cooldownAbility)
                 {
-                    return DRG.Stardiver;
+                    return (cooldownAbility is not null && GetCooldown(DRG.LanceCharge).CooldownRemaining >= cooldownAbility * 0.1)
+                        || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs();
                 }
 
-                if (
-                    HasRaidBuffs()
-                    && level >= DRG.Levels.BattleLitany
-                    && IsOffCooldown(DRG.BattleLitany)
-                )
+                switch (level)
                 {
-                    return DRG.BattleLitany;
-                }
+                    case >= DRG.Levels.BattleLitany when
+                        IsOffCooldown(DRG.BattleLitany)
+                        && HasRaidBuffs():
+                        return DRG.BattleLitany;
 
-                if (IsOffCooldown(DRG.LanceCharge) && level >= DRG.Levels.LanceCharge)
-                {
-                    return DRG.LanceCharge;
-                }
+                    case >= DRG.Levels.LanceCharge when
+                        InMeleeRange()
+                        && IsOffCooldown(DRG.LanceCharge)
+                        && (HasEffect(DRG.Buffs.BattleLitany)
+                            || HasRaidBuffs()
+                            || level < DRG.Levels.BattleLitany
+                            || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12):
+                        return DRG.LanceCharge;
 
-                if (
-                    IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                    && level >= DRG.Levels.Geirskogul
-                    && (hasLanceCharge || lanceChargeCD > 1)
-                )
-                {
-                    return OriginalHook(DRG.Geirskogul);
-                }
+                    case >= DRG.Levels.Geirskogul when
+                                    CanUseAction(OriginalHook(DRG.Geirskogul))
+                                    && IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                                    && doWithLance(60):
+                        return OriginalHook(DRG.Geirskogul);
 
-                if (
-                    gauge.FirstmindsFocusCount == 2
-                    && level >= DRG.Levels.WyrmwindThrust
-                    && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || hasLanceCharge)
-                )
-                    return DRG.WyrmwindThrust;
+                    case >= DRG.Levels.WyrmwindThrust when
+                        gauge.FirstmindsFocusCount == 2
+                        && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
+                        return DRG.WyrmwindThrust;
 
-                if (
-                    (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
-                    && !HasEffect(DRG.Buffs.LifeSurge)
-                    && level >= 15
-                    && (
-                        (lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
-                        || (lastComboMove == DRG.DoomSpike && level < DRG.Levels.CoerthanTorment)
-                    )
-                )
-                {
-                    return DRG.LifeSurge;
-                }
+                    default:
+                        if (disembowelDuration is not null)
+                        {
+                            switch (level)
+                            {
+                                case >= DRG.Levels.LifeSurge when
+                                    (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
+                                    && (level < DRG.Levels.ImprovedLifeSurge
+                                        || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
+                                        || HasRaidBuffs()
+                                        || HasEffect(DRG.Buffs.LanceCharge))
+                                    && !HasEffect(DRG.Buffs.LifeSurge)
+                                    && ((lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
+                                        || (lastComboMove == DRG.DoomSpike && level < DRG.Levels.CoerthanTorment)):
+                                    return DRG.LifeSurge;
 
-                if (
-                    IsOffCooldown(OriginalHook(DRG.Jump))
-                    && level >= DRG.Levels.Jump
-                    && (hasLanceCharge || lanceChargeCD > 3)
-                )
-                {
-                    return OriginalHook(DRG.Jump);
-                }
+                                case >= DRG.Levels.DragonfireDive when
+                                    IsOffCooldown(DRG.DragonfireDive)
+                                    && doWithLance(120):
+                                    return DRG.DragonfireDive;
 
-                if (
-                    HasEffect(DRG.Buffs.DiveReady)
-                    && level >= DRG.Levels.MirageDive
-                    && (hasLanceCharge || lanceChargeCD > 3)
-                )
-                {
-                    return DRG.MirageDive;
-                }
+                                case >= DRG.Levels.Stardiver when gauge.IsLOTDActive
+                                    && IsOffCooldown(DRG.Stardiver)
+                                    && doWithLance((gauge.LOTDTimer / 1000) - 5):
+                                    return DRG.Stardiver;
 
-                // Optimize with Litany
-                if (IsOffCooldown(DRG.DragonfireDive) && level >= DRG.Levels.DragonfireDive)
-                {
-                    return DRG.DragonfireDive;
+                                case >= DRG.Levels.Jump when
+                                    IsOffCooldown(OriginalHook(DRG.Jump))
+                                    && CanUseAction(OriginalHook(DRG.Jump))
+                                    && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
+                                    return OriginalHook(DRG.Jump);
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -413,39 +405,3 @@ internal class DragoonPositionals : CustomCombo
         return actionID;
     }
 }
-
-// internal class DragoonDives : CustomCombo
-// {
-//     protected internal override CustomComboPreset Preset { get; } =
-//         CustomComboPreset.DrgAny;
-
-//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//     {
-//         if (
-//  actionID == DRG.DragonfireDive
-//             || actionID == DRG.Stardiver
-//         )
-//         {
-//             if (level >= DRG.Levels.Stardiver)
-//             {
-//                 var gauge = GetJobGauge<DRGGauge>();
-
-//                 if (gauge.IsLOTDActive)
-//                     return CalcBestAction(
-//                         actionID,
-//                         DRG.DragonfireDive,
-//                         DRG.Stardiver
-//                     );
-
-//                 return CalcBestAction(actionID, DRG.DragonfireDive);
-//             }
-
-//             if (level >= DRG.Levels.DragonfireDive)
-//                 return CalcBestAction(actionID, DRG.DragonfireDive);
-
-//         }
-
-//         return actionID;
-//     }
-// }
-
