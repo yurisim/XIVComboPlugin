@@ -125,9 +125,7 @@ internal class ReaperSlice : CustomCombo
             var needSoulSlice =
                 level >= RPR.Levels.SoulSlice
                 && HasCharges(RPR.SoulSlice)
-                && (
-                    GetRemainingCharges(RPR.SoulSlice) >= 2
-                    || (GetCooldown(RPR.SoulSlice).ChargeCooldownRemaining <= 6)
+                && ((GetCooldown(RPR.SoulSlice).TotalCooldownRemaining <= 6)
                     || HasEffect(RPR.Buffs.ArcaneCircle)
                     || HasRaidBuffs()
                 );
@@ -137,7 +135,7 @@ internal class ReaperSlice : CustomCombo
                 if (
                     level >= RPR.Levels.ArcaneCircle
                     && IsOffCooldown(RPR.ArcaneCircle)
-                    && (gauge.LemureShroud <= 2 || HasRaidBuffs())
+                    && HasRaidBuffs()
                 )
                 {
                     return RPR.ArcaneCircle;

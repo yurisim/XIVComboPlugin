@@ -36,6 +36,7 @@ internal static class NIN
         PhantomKamaitachi = 25774,
         ForkedRaiju = 25777,
         FleetingRaiju = 25778,
+        TenriJindo = 36961,
         Dokumori = 36957;
 
     public static class Buffs
@@ -49,6 +50,7 @@ internal static class NIN
             Higi = 3850,
             Meisui = 2689,
             PhantomKamaitachi = 2723,
+            TenriJindoReady = 3851,
             RaijuReady = 2690;
     }
 
@@ -88,7 +90,9 @@ internal static class NIN
             PhantomKamaitachi = 82,
             KunaisBane = 92,
             HollowNozuchi = 86,
-            Raiju = 90;
+            Raiju = 90,
+            TenriJindo = 100
+            ;
     }
 }
 
@@ -134,73 +138,60 @@ internal class NinjaAeolianEdge : CustomCombo
             && !HasEffect(NIN.Buffs.TenChiJin)
         )
         {
-            if (InMeleeRange())
-                if (
-                    level >= NIN.Levels.TrickAttack
+            switch (level)
+            {
+                case >= NIN.Levels.TrickAttack when InMeleeRange()
                     && HasEffect(NIN.Buffs.ShadowWalker)
                     && IsOffCooldown(OriginalHook(NIN.TrickAttack))
-                    && GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10
-                )
+                    && GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10:
                     return OriginalHook(NIN.TrickAttack);
 
-            if (
-                level >= NIN.Levels.Kassatsu
-                && IsOffCooldown(NIN.Kassatsu)
-                && (
-                    TargetHasEffect(NIN.Debuffs.TrickAttack)
-                    || TargetHasEffect(NIN.Debuffs.KunaisBane)
-                    || trickAttackCD >= 6
-                )
-            )
-                return NIN.Kassatsu;
+                case >= NIN.Levels.Kassatsu when IsOffCooldown(NIN.Kassatsu)
+                    && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                        || HasRaidBuffs()
+                        || trickAttackCD >= 6):
+                    return NIN.Kassatsu;
 
-            if (
-                level >= NIN.Levels.Bunshin
-                && IsOffCooldown(NIN.Bunshin)
-                && (
-                    TargetHasEffect(NIN.Debuffs.TrickAttack)
-                    || TargetHasEffect(NIN.Debuffs.KunaisBane)
-                    || trickAttackCD >= 9
-                )
-                && ninki >= 50
-            )
-                return NIN.Bunshin;
+                case >= NIN.Levels.Bunshin when IsOffCooldown(NIN.Bunshin)
+                    && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                        || HasRaidBuffs()
+                        || trickAttackCD >= 9)
+                    && ninki >= 50:
+                    return NIN.Bunshin;
 
-            if (
-                level >= NIN.Levels.Meisui
-                && IsOffCooldown(NIN.Meisui)
-                && HasEffect(NIN.Buffs.ShadowWalker)
-                && ninki <= 50
-                && trickAttackCD >= 20
-            )
-                return NIN.Meisui;
+                case >= NIN.Levels.Meisui when IsOffCooldown(NIN.Meisui)
+                    && HasEffect(NIN.Buffs.ShadowWalker)
+                    && ninki <= 50
+                    && trickAttackCD >= 20:
+                    return NIN.Meisui;
 
-            if (
-                level >= NIN.Levels.Assassinate
-                && InMeleeRange()
-                && IsOffCooldown(OriginalHook(NIN.Assassinate))
-                && (trickAttackCD > 5 || level < NIN.Levels.Suiton)
-            )
-                return OriginalHook(NIN.Assassinate);
+                case >= NIN.Levels.Assassinate when InMeleeRange()
+                    && IsOffCooldown(OriginalHook(NIN.Assassinate))
+                    && (trickAttackCD > 5 || level < NIN.Levels.Suiton):
+                    return OriginalHook(NIN.Assassinate);
 
-            if (
-                level >= NIN.Levels.HellfrogMedium
-                && InMeleeRange()
-                && ninki >= 50
-                && (
-                    ninki >= 80
-                    || TargetHasEffect(NIN.Debuffs.TrickAttack)
-                    || TargetHasEffect(NIN.Debuffs.KunaisBane)
-                    || HasEffect(NIN.Buffs.Meisui)
-                    || (
-                        level >= NIN.Levels.EnhancedMug
-                        && GetCooldown(NIN.Mug).CooldownRemaining <= 5
-                    )
-                )
-            )
-                return level >= NIN.Levels.Bhavacakra
-                    ? OriginalHook(NIN.Bhavacakra)
-                    : OriginalHook(NIN.HellfrogMedium);
+                case >= NIN.Levels.TenriJindo when CanUseAction(NIN.TenriJindo)
+                    && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+                        || FindEffect(NIN.Buffs.TenriJindoReady)?.RemainingTime <= 5 
+                        || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                        || HasRaidBuffs()):
+                    return NIN.TenriJindo;
+
+                case >= NIN.Levels.HellfrogMedium when InMeleeRange()
+                                                         && ninki >= 50
+                                                         && (ninki >= 80
+                                                             || TargetHasEffect(NIN.Debuffs.TrickAttack)
+                                                             || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                                                             || HasEffect(NIN.Buffs.Meisui)
+                                                             || (level >= NIN.Levels.EnhancedMug
+                                                                 && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
+                    return level >= NIN.Levels.Bhavacakra
+                        ? OriginalHook(NIN.Bhavacakra)
+                        : OriginalHook(NIN.HellfrogMedium);
+            }
+
         }
 
         var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);

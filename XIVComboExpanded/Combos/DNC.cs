@@ -258,32 +258,45 @@ internal class DancerCascadeFountain : CustomCombo
                     return DNC.FanDance1;
             }
 
+
             if (level >= DNC.Levels.StandardStep && IsOffCooldown(DNC.StandardStep))
                 return DNC.StandardStep;
 
             if (
                 level >= DNC.Levels.SaberDance
-                // Use only if you are gonna soon cap the Esprit gauge
-                && (
-                    gauge.Esprit >= 85
-                    // Of if the devilment buff is active and you have enough espirit buff.
-                    || (HasEffect(DNC.Buffs.Devilment) && gauge.Esprit >= 50)
+                && gauge.Esprit >= 50
+                && (gauge.Esprit >= 85
+                    || HasRaidBuffs()
+                    || actionID is DNC.Windmill
                 )
             )
                 return DNC.SaberDance;
 
+            if (level >= DNC.Levels.LastDance
+                && HasEffect(DNC.Buffs.LastDanceReady)
+                && (HasRaidBuffs() || GetCooldown(DNC.StandardStep).CooldownRemaining <= 5 || actionID is DNC.Windmill)
+                )
+            {
+                // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
+                //     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
+                // {
+                //     return DNC.FinishingMove;
+                // }
+
+                return DNC.LastDance;
+            }
+
             // From Devilment
             if (
                 level >= DNC.Levels.StarfallDance
-                && HasEffect(DNC.Buffs.Devilment)
+                && HasRaidBuffs()
                 && HasEffect(DNC.Buffs.FlourishingStarfall)
             )
                 return DNC.StarfallDance;
 
             if (
                 level >= DNC.Levels.Tillana
-                // Use only if you are gonna soon cap the Esprit gauge
-                && HasEffect(DNC.Buffs.Devilment)
+                && HasRaidBuffs()
                 && HasEffect(DNC.Buffs.FlourishingFinish)
             )
                 return DNC.Tillana;

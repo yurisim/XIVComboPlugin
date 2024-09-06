@@ -611,11 +611,8 @@ internal abstract partial class CustomCombo
     {
         var distance = GetTargetDistance();
 
-        if (distance == 0)
-            return true;
-
-        if (distance > 3)
-            return false;
+        if (distance > 3 || distance == 0)
+            return distance == 0;
 
         return true;
     }

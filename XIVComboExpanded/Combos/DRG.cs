@@ -44,6 +44,7 @@ internal static class DRG
         DragonSight = 7398,
         // Dragon
         Stardiver = 16480,
+        RiseOfTheDragon = 36953,
         WyrmwindThrust = 25773;
 
     // Buff abilities
@@ -101,7 +102,9 @@ internal static class DRG
             Stardiver = 80,
             DraconianFury = 82,
             ImprovedLifeSurge = 88,
-            WyrmwindThrust = 90;
+            WyrmwindThrust = 90,
+            RiseOfTheDragon = 92
+            ;
     }
 }
 
@@ -197,6 +200,10 @@ internal class DragoonSingleTarget : CustomCombo
                                     && CanUseAction(OriginalHook(DRG.Jump))
                                     && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                                     return OriginalHook(DRG.Jump);
+
+                                case >= DRG.Levels.RiseOfTheDragon when
+                                    CanUseAction(DRG.RiseOfTheDragon):
+                                    return DRG.RiseOfTheDragon;
                             }
                         }
                         break;
@@ -361,6 +368,10 @@ internal class DragoonCoerthanTorment : CustomCombo
                                     && CanUseAction(OriginalHook(DRG.Jump))
                                     && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                                     return OriginalHook(DRG.Jump);
+
+                                case >= DRG.Levels.RiseOfTheDragon when
+                                    CanUseAction(DRG.RiseOfTheDragon):
+                                    return DRG.RiseOfTheDragon;
                             }
                         }
                         break;
