@@ -256,7 +256,9 @@ internal class ViperFangs : CustomCombo
             if (gauge.RattlingCoilStacks >= 1
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && HasEffect(VPR.Buffs.HuntersInstinct)
-                && (HasRaidBuffs() || (gauge.RattlingCoilStacks >= 2 && HasCharges(VPR.Vicewinder)))
+                && (HasRaidBuffs() 
+                    || (HasCharges(VPR.Vicewinder)
+                        && gauge.RattlingCoilStacks >= (level >= VPR.Levels.EnhancedRattle ? 3 : 2)))
             )
             {
                 return VPR.UncoiledFury;
