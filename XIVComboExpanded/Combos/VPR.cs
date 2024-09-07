@@ -230,20 +230,10 @@ internal class ViperFangs : CustomCombo
                 }
             }
 
-            if (level >= VPR.Levels.Vicewinder
-                && HasCharges(VPR.Vicewinder)
-                && HasEffect(VPR.Buffs.Swiftscaled)
-                && !CanUseAction(VPR.SwiftskinsCoil)
-                && !CanUseAction(VPR.HuntersCoil)
-                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 5))
-            {
-                return VPR.Vicewinder;
-            }
-
-
-
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
+
+
 
             if (canUseSSC || canUseHunters)
             {
@@ -263,6 +253,24 @@ internal class ViperFangs : CustomCombo
                 return canUseSSC ? VPR.SwiftskinsCoil : VPR.HuntersCoil;
             }
 
+            if (gauge.RattlingCoilStacks >= 1
+                && HasEffect(VPR.Buffs.Swiftscaled)
+                && HasEffect(VPR.Buffs.HuntersInstinct)
+                && (HasRaidBuffs() || (gauge.RattlingCoilStacks >= 2 && HasCharges(VPR.Vicewinder)))
+            )
+            {
+                return VPR.UncoiledFury;
+            }
+
+            if (level >= VPR.Levels.Vicewinder
+                && HasCharges(VPR.Vicewinder)
+                && HasEffect(VPR.Buffs.Swiftscaled)
+                && !canUseSSC
+                && !canUseHunters
+                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 5))
+            {
+                return VPR.Vicewinder;
+            }
 
             // Switch case here for optimization, rather than calling OriginalHook in a lot of places.
             switch (OriginalHook(VPR.SteelFangs))
@@ -329,40 +337,43 @@ internal class ViperPositionals : CustomCombo
                     || HasEffect(VPR.Buffs.FlankstungVenom);
 
             if ((hasFlanksbane
-                || hunter
-                || !HasEffect(VPR.Buffs.HuntersInstinct)
-                )
+                    || hunter
+                    || !HasEffect(VPR.Buffs.HuntersInstinct))
                 && actionID is VPR.HuntersCoil)
             {
                 if ((hunter && !hasHindsbane)
-                    || !HasEffect(VPR.Buffs.HuntersInstinct
-                    ))
+                    || !HasEffect(VPR.Buffs.HuntersInstinct)
+                    || (hunter && !swiftSkin)
+                    || (!swiftSkin && hunter))
                     return VPR.HuntersCoil;
 
-                if (HasEffect(VPR.Buffs.FlanksbaneVenom))
-                    return VPR.FlanksbaneFang;
-                if (HasEffect(VPR.Buffs.FlankstungVenom))
-                    return VPR.FlankstingStrike;
+                if (!swiftSkin && !hunter)
+                {
+                    if (HasEffect(VPR.Buffs.FlanksbaneVenom))
+                        return VPR.FlanksbaneFang;
+                    if (HasEffect(VPR.Buffs.FlankstungVenom))
+                        return VPR.FlankstingStrike;
+                }
             }
 
             if ((hasHindsbane
                     || swiftSkin
-                    || HasEffect(VPR.Buffs.HuntersInstinct)
-                    )
-                && actionID is VPR.SwiftskinsCoil
-                )
+                    || HasEffect(VPR.Buffs.HuntersInstinct))
+                && actionID is VPR.SwiftskinsCoil)
             {
-
-                if (swiftSkin && !hasFlanksbane
-                    && HasEffect(VPR.Buffs.HuntersInstinct
-                    ))
+                if (swiftSkin
+                    && (!hasFlanksbane
+                        || (swiftSkin && !hunter))
+                    && HasEffect(VPR.Buffs.HuntersInstinct))
                     return VPR.SwiftskinsCoil;
 
-                if (HasEffect(VPR.Buffs.HindsbaneVenom))
-                    return VPR.HindsbaneFang;
-                if (HasEffect(VPR.Buffs.HindstungVenom))
+                if (!swiftSkin && !hunter)
+                {
+                    if (HasEffect(VPR.Buffs.HindsbaneVenom))
+                        return VPR.HindsbaneFang;
                     return VPR.HindstingStrike;
-            };
+                }
+            }
 
             return ADV.Swiftcast;
         }
@@ -470,17 +481,6 @@ internal class ViperAoE : CustomCombo
                 }
             }
 
-
-            if (level >= VPR.Levels.VicePit
-                && HasCharges(VPR.VicePit)
-                && HasEffect(VPR.Buffs.Swiftscaled)
-                && !CanUseAction(VPR.SwiftskinsDen)
-                && !CanUseAction(VPR.HuntersDen)
-                && (HasRaidBuffs() || GetCooldown(VPR.VicePit).TotalCooldownRemaining <= 5))
-            {
-                return VPR.VicePit;
-            }
-
             var canUseSSC = CanUseAction(VPR.SwiftskinsDen);
             var canUseHunters = CanUseAction(VPR.HuntersDen);
 
@@ -501,6 +501,23 @@ internal class ViperAoE : CustomCombo
                     return VPR.SwiftskinsDen;
 
                 return canUseSSC ? VPR.SwiftskinsDen : VPR.HuntersDen;
+            }
+
+            if (gauge.RattlingCoilStacks >= 1
+                && HasEffect(VPR.Buffs.Swiftscaled)
+                && HasEffect(VPR.Buffs.HuntersInstinct)
+            )
+            {
+                return VPR.UncoiledFury;
+            }
+
+            if (level >= VPR.Levels.VicePit
+                && HasCharges(VPR.VicePit)
+                && HasEffect(VPR.Buffs.Swiftscaled)
+                && !canUseSSC
+                && !canUseHunters)
+            {
+                return VPR.VicePit;
             }
 
             switch (OriginalHook(VPR.SteelMaw))
