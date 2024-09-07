@@ -180,13 +180,13 @@ internal class NinjaAeolianEdge : CustomCombo
                     return NIN.TenriJindo;
 
                 case >= NIN.Levels.HellfrogMedium when InMeleeRange()
-                                                         && ninki >= 50
-                                                         && (ninki >= 80
-                                                             || TargetHasEffect(NIN.Debuffs.TrickAttack)
-                                                             || TargetHasEffect(NIN.Debuffs.KunaisBane)
-                                                             || HasEffect(NIN.Buffs.Meisui)
-                                                             || (level >= NIN.Levels.EnhancedMug
-                                                                 && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
+                        && ninki >= 50
+                        && (ninki >= 80
+                            || TargetHasEffect(NIN.Debuffs.TrickAttack)
+                            || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                            || HasEffect(NIN.Buffs.Meisui)
+                            || (level >= NIN.Levels.EnhancedMug
+                                && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
                     return level >= NIN.Levels.Bhavacakra
                         ? OriginalHook(NIN.Bhavacakra)
                         : OriginalHook(NIN.HellfrogMedium);
