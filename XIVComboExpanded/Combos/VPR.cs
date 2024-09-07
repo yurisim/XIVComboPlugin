@@ -269,7 +269,7 @@ internal class ViperFangs : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
                 && !canUseHunters
-                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 5))
+                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 6))
             {
                 return VPR.Vicewinder;
             }
@@ -332,11 +332,9 @@ internal class ViperPositionals : CustomCombo
             var swiftSkin = CanUseAction(VPR.SwiftskinsCoil);
             var hunter = CanUseAction(VPR.HuntersCoil);
 
-            var hasHindsbane = HasEffect(VPR.Buffs.HindsbaneVenom)
-                    || HasEffect(VPR.Buffs.HindstungVenom);
+            var hasHindsbane = HasEffect(VPR.Buffs.HindsbaneVenom) || HasEffect(VPR.Buffs.HindstungVenom);
 
-            var hasFlanksbane = HasEffect(VPR.Buffs.FlanksbaneVenom)
-                    || HasEffect(VPR.Buffs.FlankstungVenom);
+            var hasFlanksbane = HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom);
 
             if ((hasFlanksbane
                     || hunter
@@ -364,8 +362,9 @@ internal class ViperPositionals : CustomCombo
                 && actionID is VPR.SwiftskinsCoil)
             {
                 if (swiftSkin
-                    && (!hasFlanksbane
-                        || (swiftSkin && !hunter))
+                    && (
+                        !hasFlanksbane || 
+                        (swiftSkin && !hunter))
                     && HasEffect(VPR.Buffs.HuntersInstinct))
                     return VPR.SwiftskinsCoil;
 
