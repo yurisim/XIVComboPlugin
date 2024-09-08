@@ -267,9 +267,10 @@ internal abstract partial class CustomCombo
             }
         }
 
-        var buffThreshold = PartyList.Length <= 4 ? 1 : 2;
+        // var buffThreshold = PartyList.Length <= 4 ? 1 : 2;
 
-        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
+        var buffThreshold = 2;
+        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori };
 
         var raidCDsFound = 0;
 

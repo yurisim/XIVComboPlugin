@@ -133,7 +133,7 @@ internal class ViperFangs : CustomCombo
         if (actionID == VPR.SteelFangs)
         {
             var gauge = GetJobGauge<VPRGauge>();
-            var maxtribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
+            var maxTribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
 
             // if (IsEnabled(CustomComboPreset.ViperSteelTailFeature) && OriginalHook(VPR.SerpentsTail) == VPR.DeathRattle && CanUseAction(VPR.DeathRattle))
             //     return VPR.DeathRattle;
@@ -259,39 +259,37 @@ internal class ViperFangs : CustomCombo
                 return canUseSSC ? VPR.SwiftskinsCoil : VPR.HuntersCoil;
             }
 
-            if ((gauge.SerpentOffering >= 50
-                    || readyToReawaken is not null)
-                && (gauge.SerpentOffering >= 90
-                    || HasRaidBuffs()
-                    || readyToReawaken?.RemainingTime <= 10)
-                && gauge.AnguineTribute < 1
-                && !canUseSSC
-                && !canUseHunters)
-            {
-                return VPR.Reawaken;
-            }
-
-            if (gauge.AnguineTribute == maxtribute)
+            if (gauge.AnguineTribute == maxTribute)
                 return VPR.FirstGeneration;
-            if (gauge.AnguineTribute == maxtribute - 1)
+            if (gauge.AnguineTribute == maxTribute - 1)
                 return VPR.SecondGeneration;
-            if (gauge.AnguineTribute == maxtribute - 2)
+            if (gauge.AnguineTribute == maxTribute - 2)
                 return VPR.ThirdGeneration;
-            if (gauge.AnguineTribute == maxtribute - 3)
+            if (gauge.AnguineTribute == maxTribute - 3)
                 return VPR.FourthGeneration;
             if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
                 return VPR.Ouroboros;
 
-            if (gauge.RattlingCoilStacks >= 1
-                && HasEffect(VPR.Buffs.Swiftscaled)
-                && HasEffect(VPR.Buffs.HuntersInstinct)
-                && (HasRaidBuffs()
-                    || ((HasCharges(VPR.Vicewinder)
-                            || (level >= VPR.Levels.SerpentsIre && IsOffCooldown(VPR.SerpentsIre)))
-                        && gauge.RattlingCoilStacks >= rattleCount))
-            )
+            if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
             {
-                return VPR.UncoiledFury;
+                if ((gauge.SerpentOffering >= 50
+                        || readyToReawaken is not null)
+                    && (gauge.SerpentOffering >= 90
+                        || HasRaidBuffs()
+                        || readyToReawaken?.RemainingTime <= 10)
+                    && gauge.AnguineTribute < 1)
+                {
+                    return VPR.Reawaken;
+                }
+
+                if (gauge.RattlingCoilStacks >= 1
+                    && (HasRaidBuffs()
+                        || ((HasCharges(VPR.Vicewinder)
+                                || (level >= VPR.Levels.SerpentsIre && IsOffCooldown(VPR.SerpentsIre)))
+                            && gauge.RattlingCoilStacks >= rattleCount)))
+                {
+                    return VPR.UncoiledFury;
+                }
             }
 
             if (level >= VPR.Levels.Vicewinder
@@ -299,7 +297,7 @@ internal class ViperFangs : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
                 && !canUseHunters
-                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 6))
+                && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 7))
             {
                 return VPR.Vicewinder;
             }
@@ -544,17 +542,8 @@ internal class ViperAoE : CustomCombo
                 return canUseSSC ? VPR.SwiftskinsDen : VPR.HuntersDen;
             }
 
-
             var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
 
-            if ((gauge.SerpentOffering >= 50
-                    || readyToReawaken is not null)
-                && gauge.AnguineTribute < 1
-                && !canUseSSC
-                && !canUseHunters)
-            {
-                return VPR.Reawaken;
-            }
 
             if (gauge.AnguineTribute == maxtribute)
                 return VPR.FirstGeneration;
@@ -567,12 +556,22 @@ internal class ViperAoE : CustomCombo
             if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
                 return VPR.Ouroboros;
 
-            if (gauge.RattlingCoilStacks >= 1
-                && HasEffect(VPR.Buffs.Swiftscaled)
-                && HasEffect(VPR.Buffs.HuntersInstinct)
-            )
+            if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
             {
-                return VPR.UncoiledFury;
+
+                if ((gauge.SerpentOffering >= 50
+                        || readyToReawaken is not null)
+                    && gauge.AnguineTribute < 1
+                    && !canUseSSC
+                    && !canUseHunters)
+                {
+                    return VPR.Reawaken;
+                }
+
+                if (gauge.RattlingCoilStacks >= 1)
+                {
+                    return VPR.UncoiledFury;
+                }
             }
 
             if (level >= VPR.Levels.VicePit
