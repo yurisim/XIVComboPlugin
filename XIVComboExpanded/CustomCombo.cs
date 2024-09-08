@@ -9,6 +9,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Utility;
 using XIVComboExpandedPlugin.Attributes;
+using Dalamud.Plugin.Services;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -212,6 +213,8 @@ internal abstract partial class CustomCombo
 
     protected static IGameObject? GetTargetOfTarget => Service.TargetManager?.Target?.TargetObject;
 
+    protected static IPartyList PartyList => Service.PartyList;
+
     /// <summary>
     /// Gets the current territory type.
     /// </summary>
@@ -247,7 +250,6 @@ internal abstract partial class CustomCombo
             SMN.Buffs.SearingLight,
             RPR.Buffs.ArcaneCircle,
             AST.Buffs.Divination,
-            // AST.Buffs.TheBalance,
             RDM.Buffs.Embolden,
             BRD.Buffs.BattleVoice,
             DRG.Buffs.BattleLitany,
@@ -255,6 +257,17 @@ internal abstract partial class CustomCombo
             RDM.Buffs.Embolden,
             MNK.Buffs.Brotherhood,
         };
+
+        if ((CurrentTarget as IBattleChara)?.MaxHp >= LocalPlayer?.MaxHp * 200)
+        {
+
+            if (((CurrentTarget as IBattleChara)?.CurrentHp / (CurrentTarget as IBattleChara)?.MaxHp) <= 0.07)
+            {
+                return true;
+            }
+        }
+
+        var buffThreshold = PartyList.Length <= 4 ? 1 : 2;
 
         var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug };
 
@@ -265,7 +278,7 @@ internal abstract partial class CustomCombo
             if (HasEffectAny(buff))
             {
                 raidCDsFound++;
-                if (raidCDsFound == 2)
+                if (raidCDsFound == buffThreshold)
                     return true;
             }
         }
@@ -275,7 +288,7 @@ internal abstract partial class CustomCombo
             if (TargetHasEffectAny(debuff))
             {
                 raidCDsFound++;
-                if (raidCDsFound == 2)
+                if (raidCDsFound == buffThreshold)
                     return true;
             }
         }

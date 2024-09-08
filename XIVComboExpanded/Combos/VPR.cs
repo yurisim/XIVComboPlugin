@@ -239,6 +239,7 @@ internal class ViperFangs : CustomCombo
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
 
+            var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
 
             if (canUseSSC || canUseHunters)
             {
@@ -257,6 +258,29 @@ internal class ViperFangs : CustomCombo
 
                 return canUseSSC ? VPR.SwiftskinsCoil : VPR.HuntersCoil;
             }
+
+            if ((gauge.SerpentOffering >= 50
+                    || readyToReawaken is not null)
+                && (gauge.SerpentOffering >= 90
+                    || HasRaidBuffs()
+                    || readyToReawaken?.RemainingTime <= 10)
+                && gauge.AnguineTribute < 1
+                && !canUseSSC
+                && !canUseHunters)
+            {
+                return VPR.Reawaken;
+            }
+
+            if (gauge.AnguineTribute == maxtribute)
+                return VPR.FirstGeneration;
+            if (gauge.AnguineTribute == maxtribute - 1)
+                return VPR.SecondGeneration;
+            if (gauge.AnguineTribute == maxtribute - 2)
+                return VPR.ThirdGeneration;
+            if (gauge.AnguineTribute == maxtribute - 3)
+                return VPR.FourthGeneration;
+            if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
+                return VPR.Ouroboros;
 
             if (gauge.RattlingCoilStacks >= 1
                 && HasEffect(VPR.Buffs.Swiftscaled)
@@ -519,6 +543,29 @@ internal class ViperAoE : CustomCombo
 
                 return canUseSSC ? VPR.SwiftskinsDen : VPR.HuntersDen;
             }
+
+
+            var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
+
+            if ((gauge.SerpentOffering >= 50
+                    || readyToReawaken is not null)
+                && gauge.AnguineTribute < 1
+                && !canUseSSC
+                && !canUseHunters)
+            {
+                return VPR.Reawaken;
+            }
+
+            if (gauge.AnguineTribute == maxtribute)
+                return VPR.FirstGeneration;
+            if (gauge.AnguineTribute == maxtribute - 1)
+                return VPR.SecondGeneration;
+            if (gauge.AnguineTribute == maxtribute - 2)
+                return VPR.ThirdGeneration;
+            if (gauge.AnguineTribute == maxtribute - 3)
+                return VPR.FourthGeneration;
+            if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
+                return VPR.Ouroboros;
 
             if (gauge.RattlingCoilStacks >= 1
                 && HasEffect(VPR.Buffs.Swiftscaled)
