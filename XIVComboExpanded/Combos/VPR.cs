@@ -227,12 +227,14 @@ internal class ViperFangs : CustomCombo
                             return HasEffect(VPR.Buffs.SwiftskinsVenom) ? VPR.TwinbloodBite : VPR.TwinfangBite;
                         }
                         break;
+                    case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre)
+                        && (gauge.RattlingCoilStacks <= (level >= VPR.Levels.EnhancedRattle ? 3 : 2) - 1):
+                        return VPR.SerpentsIre;
                 }
             }
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
-
 
 
             if (canUseSSC || canUseHunters)
@@ -256,7 +258,7 @@ internal class ViperFangs : CustomCombo
             if (gauge.RattlingCoilStacks >= 1
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && HasEffect(VPR.Buffs.HuntersInstinct)
-                && (HasRaidBuffs() 
+                && (HasRaidBuffs()
                     || (HasCharges(VPR.Vicewinder)
                         && gauge.RattlingCoilStacks >= (level >= VPR.Levels.EnhancedRattle ? 3 : 2)))
             )
@@ -338,7 +340,7 @@ internal class ViperPositionals : CustomCombo
 
             if ((hasFlanksbane
                     || hunter
-                    || !HasEffect(VPR.Buffs.HuntersInstinct))
+                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
                 && actionID is VPR.HuntersCoil)
             {
                 if ((hunter && !hasHindsbane)
@@ -358,12 +360,11 @@ internal class ViperPositionals : CustomCombo
 
             if ((hasHindsbane
                     || swiftSkin
-                    || HasEffect(VPR.Buffs.HuntersInstinct))
+                    || (HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
                 && actionID is VPR.SwiftskinsCoil)
             {
-                if (swiftSkin
-                    && (
-                        !hasFlanksbane || 
+                if (swiftSkin && !hasFlanksbane
+                    && (!hasFlanksbane ||
                         (swiftSkin && !hunter))
                     && HasEffect(VPR.Buffs.HuntersInstinct))
                     return VPR.SwiftskinsCoil;
@@ -372,7 +373,8 @@ internal class ViperPositionals : CustomCombo
                 {
                     if (HasEffect(VPR.Buffs.HindsbaneVenom))
                         return VPR.HindsbaneFang;
-                    return VPR.HindstingStrike;
+                    if (HasEffect(VPR.Buffs.HindstungVenom))
+                        return VPR.HindstingStrike;
                 }
             }
 
@@ -479,6 +481,8 @@ internal class ViperAoE : CustomCombo
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
+                    case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre):
+                        return VPR.SerpentsIre;
                 }
             }
 
