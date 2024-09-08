@@ -258,10 +258,21 @@ internal abstract partial class CustomCombo
             MNK.Buffs.Brotherhood,
         };
 
-        if ((CurrentTarget as IBattleChara)?.MaxHp >= LocalPlayer?.MaxHp * 200)
-        {
 
-            if (((CurrentTarget as IBattleChara)?.CurrentHp / (CurrentTarget as IBattleChara)?.MaxHp) <= 0.07)
+        // var target = CurrentTarget as IBattleChara;
+        // var player = LocalPlayer;
+
+        // if (target != null && player != null && target.MaxHp >= player.MaxHp * 100)
+        // {
+        //     if (target.CurrentHp <= target.MaxHp * 0.07)
+        //     {
+        //         return true;
+        //     }
+        // }
+
+        if (CurrentTarget is IBattleChara target && LocalPlayer is not null)
+        {
+            if (target.MaxHp >= LocalPlayer.MaxHp * 100 && (float)target.CurrentHp <= (float)target.MaxHp * 0.07f)
             {
                 return true;
             }

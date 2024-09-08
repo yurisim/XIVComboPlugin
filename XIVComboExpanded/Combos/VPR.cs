@@ -229,6 +229,10 @@ internal class ViperFangs : CustomCombo
                         {
                             return HasEffect(VPR.Buffs.SwiftskinsVenom) ? VPR.TwinbloodBite : VPR.TwinfangBite;
                         }
+                        if (CanUseAction(VPR.UncoiledTwinfang))
+                        {
+                            return HasEffect(VPR.Buffs.PoisedForTwinblood) ? VPR.UncoiledTwinblood : VPR.UncoiledTwinfang;
+                        }
                         break;
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre)
                         && (gauge.RattlingCoilStacks <= rattleCount - 1):
@@ -238,8 +242,6 @@ internal class ViperFangs : CustomCombo
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
-
-            var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
 
             if (canUseSSC || canUseHunters)
             {
@@ -270,10 +272,11 @@ internal class ViperFangs : CustomCombo
             if (gauge.AnguineTribute == 1 && level >= VPR.Levels.Ouroboros)
                 return VPR.Ouroboros;
 
+            var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
+
             if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
             {
-                if ((gauge.SerpentOffering >= 50
-                        || readyToReawaken is not null)
+                if ((gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (gauge.SerpentOffering >= 90
                         || HasRaidBuffs()
                         || readyToReawaken?.RemainingTime <= 10)
@@ -387,7 +390,10 @@ internal class ViperPositionals : CustomCombo
 
             if ((hasRearBuff
                     || canUseSwiftSkinCoil
-                    || (HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
+                    || (HasEffect(VPR.Buffs.HuntersInstinct)
+                        && (level >= VPR.Levels.Vicewinder
+                            || (!hasRearBuff && !hasFlankBuff)))
+                    )
                 && actionID is VPR.SwiftskinsCoil)
             {
                 // Enable this position if we can use SwiftSkinCoil but not if our current buffs want us in the flank
@@ -511,6 +517,10 @@ internal class ViperAoE : CustomCombo
                         if (CanUseAction(VPR.TwinfangThresh))
                         {
                             return HasEffect(VPR.Buffs.FellskinsVenom) ? VPR.TwinbloodThresh : VPR.TwinfangThresh;
+                        }
+                        if (CanUseAction(VPR.UncoiledTwinfang))
+                        {
+                            return HasEffect(VPR.Buffs.PoisedForTwinblood) ? VPR.UncoiledTwinblood : VPR.UncoiledTwinfang;
                         }
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
