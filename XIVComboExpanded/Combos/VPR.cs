@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Fates;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Lumina.Excel.GeneratedSheets;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -215,6 +216,8 @@ internal class ViperFangs : CustomCombo
             //     OriginalHook(VPR.SteelFangs) == VPR.SteelFangs)
             //     return HasEffect(VPR.Buffs.HonedReavers) ? VPR.ReavingFangs : VPR.SteelFangs;
 
+            var rattleCount = level >= VPR.Levels.EnhancedRattle ? 3 : 2;
+
             if (GCDClipCheck(actionID))
             {
                 switch (level)
@@ -228,7 +231,7 @@ internal class ViperFangs : CustomCombo
                         }
                         break;
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre)
-                        && (gauge.RattlingCoilStacks <= (level >= VPR.Levels.EnhancedRattle ? 3 : 2) - 1):
+                        && (gauge.RattlingCoilStacks <= rattleCount - 1):
                         return VPR.SerpentsIre;
                 }
             }
@@ -259,8 +262,9 @@ internal class ViperFangs : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && HasEffect(VPR.Buffs.HuntersInstinct)
                 && (HasRaidBuffs()
-                    || (HasCharges(VPR.Vicewinder)
-                        && gauge.RattlingCoilStacks >= (level >= VPR.Levels.EnhancedRattle ? 3 : 2)))
+                    || ((HasCharges(VPR.Vicewinder)
+                            || (level >= VPR.Levels.SerpentsIre && IsOffCooldown(VPR.SerpentsIre)))
+                        && gauge.RattlingCoilStacks >= rattleCount))
             )
             {
                 return VPR.UncoiledFury;
@@ -331,25 +335,26 @@ internal class ViperPositionals : CustomCombo
     {
         if (actionID == VPR.HuntersCoil || actionID == VPR.SwiftskinsCoil)
         {
-            var swiftSkin = CanUseAction(VPR.SwiftskinsCoil);
-            var hunter = CanUseAction(VPR.HuntersCoil);
+            var canUseSwiftSkinCoil = CanUseAction(VPR.SwiftskinsCoil);
+            var canUseHuntersCoil = CanUseAction(VPR.HuntersCoil);
 
-            var hasHindsbane = HasEffect(VPR.Buffs.HindsbaneVenom) || HasEffect(VPR.Buffs.HindstungVenom);
+            var hasRearBuff = HasEffect(VPR.Buffs.HindsbaneVenom) || HasEffect(VPR.Buffs.HindstungVenom);
+            var hasFlankBuff = HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom);
 
-            var hasFlanksbane = HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom);
-
-            if ((hasFlanksbane
-                    || hunter
+            if ((hasFlankBuff
+                    || canUseHuntersCoil
                     || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
                 && actionID is VPR.HuntersCoil)
             {
-                if ((hunter && !hasHindsbane)
-                    || !HasEffect(VPR.Buffs.HuntersInstinct)
-                    || (hunter && !swiftSkin)
-                    || (!swiftSkin && hunter))
+                // enable if we can use HunterCoil but not if our current buffs want us in the rear
+                if ((canUseHuntersCoil && !hasRearBuff)
+                // Enable this position if we need to get the Hunter's Instinct buff
+                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder)
+                // Enable this position if we have already used the other position
+                    || (canUseHuntersCoil && !canUseSwiftSkinCoil))
                     return VPR.HuntersCoil;
 
-                if (!swiftSkin && !hunter)
+                if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
                 {
                     if (HasEffect(VPR.Buffs.FlanksbaneVenom))
                         return VPR.FlanksbaneFang;
@@ -358,22 +363,29 @@ internal class ViperPositionals : CustomCombo
                 }
             }
 
-            if ((hasHindsbane
-                    || swiftSkin
+            if ((hasRearBuff
+                    || canUseSwiftSkinCoil
                     || (HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
                 && actionID is VPR.SwiftskinsCoil)
             {
-                if (swiftSkin && !hasFlanksbane
-                    && (!hasFlanksbane ||
-                        (swiftSkin && !hunter))
-                    && HasEffect(VPR.Buffs.HuntersInstinct))
+                // Enable this position if we can use SwiftSkinCoil but not if our current buffs want us in the flank
+                if (((canUseSwiftSkinCoil && !hasFlankBuff)
+                // Enable this position if we have already used the other position
+                        || (canUseSwiftSkinCoil && !canUseHuntersCoil)
+                        // Enable this position if we have nothing
+                        // || (!hasRearBuff && !hasFlankBuff)
+                        )
+                    // Enable this position ONLY if we already have the Hunter's Instinct buff
+                    && (HasEffect(VPR.Buffs.HuntersInstinct) || level < VPR.Levels.Vicewinder))
                     return VPR.SwiftskinsCoil;
 
-                if (!swiftSkin && !hunter)
+                if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
                 {
                     if (HasEffect(VPR.Buffs.HindsbaneVenom))
                         return VPR.HindsbaneFang;
                     if (HasEffect(VPR.Buffs.HindstungVenom))
+                        return VPR.HindstingStrike;
+                    if (!hasRearBuff && !hasFlankBuff)
                         return VPR.HindstingStrike;
                 }
             }
