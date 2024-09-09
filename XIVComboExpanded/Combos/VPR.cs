@@ -274,7 +274,10 @@ internal class ViperFangs : CustomCombo
 
             var readyToReawaken = FindEffect(VPR.Buffs.ReadyToReawaken);
 
-            if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
+            if (HasEffect(VPR.Buffs.Swiftscaled) 
+                && HasEffect(VPR.Buffs.HuntersInstinct)
+                && HasTarget()
+                )
             {
                 if ((gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (gauge.SerpentOffering >= 90
