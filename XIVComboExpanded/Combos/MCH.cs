@@ -1,3 +1,4 @@
+using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -137,16 +138,15 @@ internal class MachinistCleanShot : CustomCombo
 
                         case >= MCH.Levels.Ricochet when HasCharges(OriginalHook(MCH.Ricochet))
                             && (gauge.IsOverheated
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 17
+                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 25
                                 || HasRaidBuffs())
                             && ricochetCharges >= gaussRoundCharges:
-                            return OriginalHook(MCH.Ricochet);
-
                         case >= MCH.Levels.GaussRound when HasCharges(OriginalHook(MCH.GaussRound))
                             && (gauge.IsOverheated
-                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 17
+                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 25
                             || HasRaidBuffs()):
-                            return OriginalHook(MCH.GaussRound);
+                            return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
+                                .MinBy(actionID => GetCooldown(actionID).TotalCooldownRemaining);
                     }
                 }
 
@@ -286,19 +286,18 @@ internal class MachinistSpreadShot : CustomCombo
                             HasRaidBuffs()
                             && IsOffCooldown(MCH.BarrelStabilizer):
                             return MCH.BarrelStabilizer;
-
                         case >= MCH.Levels.Ricochet when HasCharges(OriginalHook(MCH.Ricochet))
                             && (gauge.IsOverheated
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 20
+                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 25
                                 || HasRaidBuffs())
                             && ricochetCharges >= gaussRoundCharges:
-                            return OriginalHook(MCH.Ricochet);
-
                         case >= MCH.Levels.GaussRound when HasCharges(OriginalHook(MCH.GaussRound))
                             && (gauge.IsOverheated
-                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 20
-                            || HasRaidBuffs()):
-                            return OriginalHook(MCH.GaussRound);
+                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 25
+                                || HasRaidBuffs()):
+                            return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
+                                .MinBy(actionID => GetCooldown(actionID).TotalCooldownRemaining);
+
                     }
                 }
             }
