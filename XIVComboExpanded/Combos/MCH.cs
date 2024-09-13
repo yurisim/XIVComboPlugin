@@ -121,8 +121,8 @@ internal class MachinistCleanShot : CustomCombo
                                 || FindEffect(MCH.Buffs.HyperchargeReady)?.RemainingTime <= 10):
                             return MCH.Hypercharge;
                         case >= MCH.Levels.Wildfire when IsOffCooldown(MCH.Wildfire)
-                        && gauge.IsOverheated
-                        && HasRaidBuffs():
+                            && gauge.IsOverheated
+                            && HasRaidBuffs():
                             return MCH.Wildfire;
                         case >= MCH.Levels.RookOverdrive when HasTarget()
                         && CanUseAction(OriginalHook(MCH.RookAutoturret))
@@ -145,15 +145,6 @@ internal class MachinistCleanShot : CustomCombo
                             return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
                                 .MinBy(actionID => GetCooldown(actionID).TotalCooldownRemaining);
                     }
-                }
-
-                // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
-                if (IsOffCooldown(OriginalHook(MCH.HotShot)) && gauge.Battery <= 80)
-                {
-                    if (IsOffCooldown(MCH.Reassemble) && level < MCH.Levels.CleanShot)
-                        return MCH.Reassemble;
-
-                    return OriginalHook(MCH.HotShot);
                 }
 
                 if (
@@ -186,6 +177,24 @@ internal class MachinistCleanShot : CustomCombo
                         return MCH.Reassemble;
 
                     return OriginalHook(MCH.Chainsaw);
+                }
+
+                var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
+                if (level >= MCH.Levels.FullMetal
+                    && fullMetal is not null
+                    && (HasRaidBuffs() || fullMetal.RemainingTime <= 15))
+                {
+                    return MCH.FullMetal;
+                }
+
+
+                // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
+                if (IsOffCooldown(OriginalHook(MCH.HotShot)) && gauge.Battery <= 80)
+                {
+                    if (IsOffCooldown(MCH.Reassemble) && level < MCH.Levels.CleanShot)
+                        return MCH.Reassemble;
+
+                    return OriginalHook(MCH.HotShot);
                 }
 
             }
@@ -320,6 +329,14 @@ internal class MachinistSpreadShot : CustomCombo
                     return MCH.Reassemble;
 
                 return OriginalHook(MCH.Chainsaw);
+            }
+
+            var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
+            if (level >= MCH.Levels.FullMetal
+                && fullMetal is not null
+                && (HasRaidBuffs() || fullMetal.RemainingTime <= 10))
+            {
+                return MCH.FullMetal;
             }
 
             if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)

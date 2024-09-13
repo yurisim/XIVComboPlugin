@@ -107,94 +107,57 @@ internal class BardHeavyShot : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= BRD.Levels.PitchPerfect // Be the right level
-                    && gauge.Song == Song.WANDERER // be the right song
-                    && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000))
-                ) // You either have all stacks or you have 1 stack and the song timer is under 2500ms
+                var bloodLetterCD = GetCooldown(BRD.Bloodletter).TotalCooldownRemaining;
+
+
+                if (GCDClipCheck(actionID))
                 {
-                    return BRD.PitchPerfect;
-                }
-
-                if (InCombat())
-                {
-                    if (
-                        level >= BRD.Levels.WanderersMinuet
-                        && IsOffCooldown(BRD.WanderersMinuet)
-                        && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
-                        && gauge.SongTimer <= 3000
-                    )
-                        return BRD.WanderersMinuet;
-
-                    if (
-                        level >= BRD.Levels.MagesBallad
-                        && IsOffCooldown(BRD.MagesBallad)
-                        && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
-                        && gauge.SongTimer <= 3000
-                    )
-                        return BRD.MagesBallad;
-
-                    if (
-                        level >= BRD.Levels.ArmysPaeon
-                        && IsOffCooldown(BRD.ArmysPaeon)
-                        && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
-                        && (
-                            (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
-                            || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
+                    if (level >= BRD.Levels.PitchPerfect // Be the right level
+                        && gauge.Song == Song.WANDERER // be the right song
+                        && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000))
                         )
-                    )
-                        return BRD.ArmysPaeon;
+                    {
+                        return BRD.PitchPerfect;
+                    }
+
+
+                    if (InCombat())
+                    {
+                        switch (level)
+                        {
+                            case >= BRD.Levels.WanderersMinuet when IsOffCooldown(BRD.WanderersMinuet) && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE) && gauge.SongTimer <= 3000 && InCombat():
+                                return BRD.WanderersMinuet;
+
+                            case >= BRD.Levels.MagesBallad when IsOffCooldown(BRD.MagesBallad) && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE) && gauge.SongTimer <= 3000 && InCombat():
+                                return BRD.MagesBallad;
+
+                            case >= BRD.Levels.ArmysPaeon when IsOffCooldown(BRD.ArmysPaeon) && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE) && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet) || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
+                                return BRD.ArmysPaeon;
+                        }
+                    }
+
+                    switch (level)
+                    {
+                        case >= BRD.Levels.RadiantFinale when IsOffCooldown(BRD.RadiantFinale) && gauge.Coda.Length >= 1 && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)):
+                            return BRD.RadiantFinale;
+
+                        case >= BRD.Levels.BattleVoice when HasEffect(BRD.Buffs.RagingStrikes) && IsOffCooldown(BRD.BattleVoice):
+                            return BRD.BattleVoice;
+
+                        case >= BRD.Levels.Barrage when IsOffCooldown(BRD.Barrage) && (HasEffect(BRD.Buffs.RagingStrikes) || ragingStrikesCD >= 18):
+                            return BRD.Barrage;
+
+                        case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
+                            return BRD.Sidewinder;
+
+                        case >= BRD.Levels.EmpyrealArrow when IsOffCooldown(BRD.EmpyrealArrow):
+                            return BRD.EmpyrealArrow;
+
+                        case >= BRD.Levels.Bloodletter when HasCharges(BRD.Bloodletter) && (HasEffect(BRD.Buffs.RagingStrikes) || HasRaidBuffs() || (gauge.Song == Song.MAGE && bloodLetterCD <= 22) || (bloodLetterCD <= 15)):
+                            return BRD.Bloodletter;
+                    }
                 }
 
-                if (level >= BRD.Levels.RadiantFinale
-                    && IsOffCooldown(BRD.RadiantFinale)
-                    && gauge.Coda.Length >= 1
-                    && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)))
-                {
-                    return BRD.RadiantFinale;
-                }
-
-                if (HasEffect(BRD.Buffs.RagingStrikes) && IsOffCooldown(BRD.BattleVoice))
-                {
-                    return BRD.BattleVoice;
-                }
-
-                if (
-                    IsOffCooldown(BRD.Barrage)
-                    && (HasEffect(BRD.Buffs.RagingStrikes) || ragingStrikesCD >= 18)
-                )
-                {
-                    return BRD.Barrage;
-                }
-
-                if (
-                    level >= BRD.Levels.Sidewinder
-                    && IsOffCooldown(BRD.Sidewinder)
-                    && ragingStrikesCD >= 9
-                )
-                {
-                    return BRD.Sidewinder;
-                }
-
-                if (level >= BRD.Levels.EmpyrealArrow && IsOffCooldown(BRD.EmpyrealArrow))
-                {
-                    return BRD.EmpyrealArrow;
-                }
-
-                var bloodLetterCharges = GetRemainingCharges(BRD.Bloodletter);
-                var thresholdCharge = level >= BRD.Levels.EnhancedBloodLetter ? 3 : 2;
-
-                if (
-                    bloodLetterCharges >= 1
-                    && (
-                        HasEffect(BRD.Buffs.RagingStrikes)
-                        || HasRaidBuffs()
-                        || (bloodLetterCharges > thresholdCharge - 1)
-                    )
-                )
-                {
-                    return BRD.Bloodletter;
-                }
             }
 
             if (HasEffect(BRD.Buffs.Barrage))
