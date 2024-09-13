@@ -144,7 +144,7 @@ internal class BardHeavyShot : CustomCombo
                         case >= BRD.Levels.BattleVoice when HasEffect(BRD.Buffs.RagingStrikes) && IsOffCooldown(BRD.BattleVoice):
                             return BRD.BattleVoice;
 
-                        case >= BRD.Levels.Barrage when IsOffCooldown(BRD.Barrage) && (HasEffect(BRD.Buffs.RagingStrikes) || ragingStrikesCD >= 18):
+                        case >= BRD.Levels.Barrage when IsOffCooldown(BRD.Barrage) && (HasEffect(BRD.Buffs.RagingStrikes) || ragingStrikesCD >= 18 || HasRaidBuffs()):
                             return BRD.Barrage;
 
                         case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
