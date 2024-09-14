@@ -129,28 +129,46 @@ internal class MachinistCleanShot : CustomCombo
                         && (gauge.Battery >= 100
                             || HasRaidBuffs()
                             || (gauge.Battery >= 75
-                                && ((level < MCH.Levels.AirAnchor && IsOffCooldown(MCH.HotShot))
-                                    || (level >= MCH.Levels.AirAnchor && IsOffCooldown(MCH.AirAnchor))
-                                    || (level >= MCH.Levels.Chainsaw && IsOffCooldown(OriginalHook(MCH.Chainsaw)))))):
+                                && (IsOffCooldown(OriginalHook(MCH.HotShot))
+                                    || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
+                                    || HasEffect(MCH.Buffs.ExcavatorReady))
+                                    )):
                             return OriginalHook(MCH.RookAutoturret);
                         case >= MCH.Levels.Ricochet when HasCharges(OriginalHook(MCH.Ricochet))
                             && (gauge.IsOverheated
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 20
+                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 25
                                 || HasRaidBuffs())
                             && ricochetCharges >= gaussRoundCharges:
                         case >= MCH.Levels.GaussRound when HasCharges(OriginalHook(MCH.GaussRound))
                             && (gauge.IsOverheated
-                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 20
+                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 25
                             || HasRaidBuffs()):
                             return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
                                 .MinBy(actionID => GetCooldown(actionID).TotalCooldownRemaining);
                     }
                 }
 
+                var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
+
+                if (level >= MCH.Levels.Excavator
+                    && excavatorReady is not null
+                    && (excavatorReady.RemainingTime <= 10 || HasRaidBuffs())
+                    && gauge.Battery <= 80)
+                {
+                    // Try to use Reassemble before drill if possible
+                    if (
+                        (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                        && !HasEffect(MCH.Buffs.Reassemble)
+                    )
+                        return MCH.Reassemble;
+
+                    return MCH.Excavator;
+                }
+
                 if (
                     level >= MCH.Levels.Drill
                     && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
-                    && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 5 || HasRaidBuffs())
+                    && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 8 || HasRaidBuffs())
                 )
                 {
                     if (
@@ -162,11 +180,18 @@ internal class MachinistCleanShot : CustomCombo
                     return MCH.Drill;
                 }
 
-                if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
-                    return OriginalHook(MCH.HeatBlast);
+                // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
+                if (IsOffCooldown(OriginalHook(MCH.HotShot)) && gauge.Battery <= 80)
+                {
+                    if (IsOffCooldown(MCH.Reassemble) && level < MCH.Levels.CleanShot)
+                        return MCH.Reassemble;
+
+                    return OriginalHook(MCH.HotShot);
+                }
+
 
                 if (level >= MCH.Levels.Chainsaw
-                    && IsOffCooldown(OriginalHook(MCH.Chainsaw))
+                    && IsOffCooldown(MCH.Chainsaw)
                     && gauge.Battery <= 80)
                 {
                     // Try to use Reassemble before drill if possible
@@ -176,7 +201,7 @@ internal class MachinistCleanShot : CustomCombo
                     )
                         return MCH.Reassemble;
 
-                    return OriginalHook(MCH.Chainsaw);
+                    return MCH.Chainsaw;
                 }
 
                 var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
@@ -187,15 +212,8 @@ internal class MachinistCleanShot : CustomCombo
                     return MCH.FullMetal;
                 }
 
-
-                // Hot shot only fires if battery is less than 80, Hot Shot gets upgraded to Air Anchor later
-                if (IsOffCooldown(OriginalHook(MCH.HotShot)) && gauge.Battery <= 80)
-                {
-                    if (IsOffCooldown(MCH.Reassemble) && level < MCH.Levels.CleanShot)
-                        return MCH.Reassemble;
-
-                    return OriginalHook(MCH.HotShot);
-                }
+                if (gauge.IsOverheated && level >= MCH.Levels.HeatBlast)
+                    return OriginalHook(MCH.HeatBlast);
 
             }
 

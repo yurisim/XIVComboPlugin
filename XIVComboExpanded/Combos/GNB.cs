@@ -31,12 +31,14 @@ internal static class GNB
         HeartOfCorundum = 25758,
         DoubleDown = 25760,
         RoyalGuardRemoval = 32068,
+        ReignOfBeasts = 36937,
         FatedBrand = 36936;
 
     public static class Buffs
     {
         public const ushort NoMercy = 1831,
             RoyalGuard = 1833,
+            ReadyToReign = 3840,
             Aurora = 1835,
             Superbolide = 1836,
             ReadyToRip = 1842,
@@ -71,7 +73,8 @@ internal static class GNB
             HeartOfCorundum = 82,
             EnhancedContinuation = 86,
             CartridgeCharge2 = 88,
-            DoubleDown = 90;
+            DoubleDown = 90,
+            ReignOfBeasts = 100;
     }
 }
 
@@ -168,6 +171,18 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (CanUseAction(GNB.WickedTalon))
                 return GNB.WickedTalon;
+
+            if (level >= GNB.Levels.ReignOfBeasts
+                && CanUseAction(OriginalHook(GNB.ReignOfBeasts))
+                && (HasEffect(GNB.Buffs.NoMercy)
+                    || noMercyCD >= 24
+                    || HasRaidBuffs()
+                    || !IsOriginal(GNB.ReignOfBeasts)
+                    || FindEffect(GNB.Buffs.ReadyToReign)?.RemainingTime <= 10))
+            {
+                return OriginalHook(GNB.ReignOfBeasts);
+            }
+
 
             var oneMinCD = 58.80 * 0.2;
 
@@ -298,6 +313,17 @@ internal class GunbreakerDemonSlaughter : CustomCombo
             var oneMinCD = 58.80 * 0.2;
 
             var noMercyDuration = FindEffect(GNB.Buffs.NoMercy);
+
+            if (level >= GNB.Levels.ReignOfBeasts
+                && CanUseAction(OriginalHook(GNB.ReignOfBeasts))
+                && (HasEffect(GNB.Buffs.NoMercy)
+                    || noMercyCD >= 24
+                    || HasRaidBuffs()
+                    || !IsOriginal(GNB.ReignOfBeasts)
+                    || FindEffect(GNB.Buffs.ReadyToReign)?.RemainingTime <= 10))
+            {
+                return OriginalHook(GNB.ReignOfBeasts);
+            }
 
             if (
                 level >= GNB.Levels.DoubleDown

@@ -153,7 +153,10 @@ internal class BardHeavyShot : CustomCombo
                         case >= BRD.Levels.EmpyrealArrow when IsOffCooldown(BRD.EmpyrealArrow):
                             return BRD.EmpyrealArrow;
 
-                        case >= BRD.Levels.Bloodletter when HasCharges(BRD.Bloodletter) && (HasEffect(BRD.Buffs.RagingStrikes) || HasRaidBuffs() || (gauge.Song == Song.MAGE && bloodLetterCD <= 22) || (bloodLetterCD <= 15)):
+                        case >= BRD.Levels.Bloodletter when HasCharges(BRD.Bloodletter)
+                            && (HasEffect(BRD.Buffs.RagingStrikes)
+                                || HasRaidBuffs()
+                                || bloodLetterCD <= 15):
                             return BRD.Bloodletter;
                     }
                 }

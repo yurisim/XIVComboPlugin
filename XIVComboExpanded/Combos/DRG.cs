@@ -176,15 +176,15 @@ internal class DragoonSingleTarget : CustomCombo
                                 case >= DRG.Levels.LifeSurge when
                                     (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
                                     && (level < DRG.Levels.ImprovedLifeSurge
-                                        || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
+                                        || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 20
                                         || HasRaidBuffs()
                                         || HasEffect(DRG.Buffs.LanceCharge))
                                     && !HasEffect(DRG.Buffs.LifeSurge)
-                                    && ((lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
+                                    && ((lastComboMove == OriginalHook(DRG.VorpalThrust) && level >= DRG.Levels.FullThrust)
+                                        || !(IsOriginal(DRG.WheelingThrust) || IsOriginal(DRG.FangAndClaw))
                                         || (lastComboMove == DRG.TrueThrust && level < DRG.Levels.FullThrust)
-                                        || !(IsOriginal(DRG.WheelingThrust) || IsOriginal(DRG.FangAndClaw))):
+                                        ):
                                     return DRG.LifeSurge;
-
                                 case >= DRG.Levels.DragonfireDive when
                                     IsOffCooldown(DRG.DragonfireDive)
                                     && doWithLance(120):
@@ -247,21 +247,21 @@ internal class DragoonSingleTarget : CustomCombo
 
                     if (level >= DRG.Levels.Disembowel && (needToRefreshDisembowel || refreshDot))
                     {
-                        return DRG.Disembowel;
+                        return OriginalHook(DRG.Disembowel);
                     }
                     else
                     {
-                        return DRG.VorpalThrust;
+                        return OriginalHook(DRG.VorpalThrust);
                     }
                 }
 
                 // AM I doing Disembowel or Vorpal Thrust after True Thrust?
-                if (lastComboMove == DRG.Disembowel && level >= DRG.Levels.ChaosThrust)
+                if (lastComboMove == OriginalHook(DRG.Disembowel) && level >= DRG.Levels.ChaosThrust)
                 {
                     return OriginalHook(DRG.ChaosThrust);
                 }
 
-                if (lastComboMove == DRG.VorpalThrust && level >= DRG.Levels.FullThrust)
+                if (lastComboMove == OriginalHook(DRG.VorpalThrust) && level >= DRG.Levels.FullThrust)
                 {
                     return OriginalHook(DRG.FullThrust);
                 }
@@ -352,12 +352,10 @@ internal class DragoonCoerthanTorment : CustomCombo
                                     && ((lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
                                         || (lastComboMove == DRG.DoomSpike && level < DRG.Levels.CoerthanTorment)):
                                     return DRG.LifeSurge;
-
                                 case >= DRG.Levels.DragonfireDive when
                                     IsOffCooldown(DRG.DragonfireDive)
                                     && doWithLance(120):
                                     return DRG.DragonfireDive;
-
                                 case >= DRG.Levels.Stardiver when gauge.IsLOTDActive
                                     && IsOffCooldown(DRG.Stardiver)
                                     && doWithLance((gauge.LOTDTimer / 1000) - 5):
@@ -368,7 +366,6 @@ internal class DragoonCoerthanTorment : CustomCombo
                                     && CanUseAction(OriginalHook(DRG.Jump))
                                     && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                                     return OriginalHook(DRG.Jump);
-
                                 case >= DRG.Levels.RiseOfTheDragon when
                                     CanUseAction(DRG.RiseOfTheDragon):
                                     return DRG.RiseOfTheDragon;
