@@ -13,7 +13,7 @@ using XIVComboExpandedPlugin.Attributes;
 namespace XIVComboExpandedPlugin.Interface;
 
 /// <summary>
-/// Plugin configuration window.
+///     Plugin configuration window.
 /// </summary>
 internal class ConfigWindow : Window
 {
@@ -21,14 +21,16 @@ internal class ConfigWindow : Window
         string,
         List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>
     > groupedPresets;
+
     private readonly Dictionary<
         CustomComboPreset,
         (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]
     > presetChildren;
+
     private readonly Vector4 shadedColor = new(0.68f, 0.68f, 0.68f, 1.0f);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ConfigWindow"/> class.
+    ///     Initializes a new instance of the <see cref="ConfigWindow" /> class.
     /// </summary>
     public ConfigWindow()
         : base("Custom Combo Setup")
@@ -60,9 +62,9 @@ internal class ConfigWindow : Window
             kvp => kvp.Key,
             kvp =>
                 kvp.Value.Select(
-                    preset =>
-                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
-                )
+                        preset =>
+                            (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
+                    )
                     .OrderBy(tpl => tpl.Info.Order)
                     .ToArray()
         );
@@ -71,7 +73,7 @@ internal class ConfigWindow : Window
         this.Size = new Vector2(740, 490);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Draw()
     {
         ImGui.Text("DAWNTRAIL EDITION");
@@ -110,26 +112,16 @@ internal class ConfigWindow : Window
         var i = 1;
 
         foreach (var jobName in this.groupedPresets.Keys)
-        {
             if (ImGui.CollapsingHeader(jobName))
-            {
                 foreach (var (preset, info) in this.groupedPresets[jobName])
-                {
                     this.DrawPreset(preset, info, ref i);
-                }
-            }
             else
-            {
                 i += this.groupedPresets[jobName].Count;
-            }
-        }
 
         ImGui.PopStyleVar();
 
         if (ImGui.Button("You can support me on Ko-Fi ♥"))
-        {
             Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/khayle", UseShellExecute = true });
-        }
 
         ImGui.EndChild();
     }
@@ -153,10 +145,7 @@ internal class ConfigWindow : Window
             {
                 this.EnableParentPresets(preset);
                 Service.Configuration.EnabledActions.Add(preset);
-                foreach (var conflict in conflicts)
-                {
-                    Service.Configuration.EnabledActions.Remove(conflict);
-                }
+                foreach (var conflict in conflicts) Service.Configuration.EnabledActions.Remove(conflict);
             }
             else
             {
@@ -250,7 +239,7 @@ internal class ConfigWindow : Window
     }
 
     /// <summary>
-    /// Iterates up a preset's parent tree, enabling each of them.
+    ///     Iterates up a preset's parent tree, enabling each of them.
     /// </summary>
     /// <param name="preset">Combo preset to enabled.</param>
     private void EnableParentPresets(CustomComboPreset preset)
@@ -264,9 +253,7 @@ internal class ConfigWindow : Window
             {
                 Service.Configuration.EnabledActions.Add(parent);
                 foreach (var conflict in Service.Configuration.GetConflicts(parent))
-                {
                     Service.Configuration.EnabledActions.Remove(conflict);
-                }
             }
 
             parentMaybe = Service.Configuration.GetParent(parent);

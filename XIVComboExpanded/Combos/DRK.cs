@@ -89,57 +89,44 @@ internal class DarkSouleater : CustomCombo
             {
                 // Do a check for flood of darkness first since it is a lower level
                 if (
-                    (
-                        level >= DRK.Levels.FloodOfDarkness
-                        && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
-                    ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs())
-                )
-                {
+                        (
+                            level >= DRK.Levels.FloodOfDarkness
+                            && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                        ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs())
+                    )
                     // If you are high enough level for edge fo darkness then do that instead
                     return level >= DRK.Levels.EdgeOfDarkness
                         ? OriginalHook(DRK.EdgeOfDarkness)
                         : OriginalHook(DRK.FloodOfDarkness);
-                }
 
                 if (
                     level >= DRK.Levels.BloodWeapon
                     && IsOffCooldown(DRK.BloodWeapon)
                     && gauge.Blood <= 70
                 )
-                {
                     return DRK.BloodWeapon;
-                }
 
                 if (
                     level >= DRK.Levels.Delirium
                     && IsOffCooldown(DRK.Delirium)
                     && gauge.Blood <= 70
                 )
-                {
                     return DRK.Delirium;
-                }
             }
 
             if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
-            {
                 return level >= DRK.Levels.CarveAndSpit ? DRK.CarveAndSpit : DRK.AbyssalDrain;
-            }
 
             if (
                 level >= DRK.Levels.Bloodspiller
                 && gauge.Blood >= 50
                 && (HasEffect(DRK.Buffs.Delirium) || gauge.Blood >= 70 || HasRaidBuffs())
             )
-            {
                 return DRK.Bloodspiller;
-            }
 
             if (comboTime > 0)
             {
-                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
-                {
-                    return DRK.Souleater;
-                }
+                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater) return DRK.Souleater;
 
                 if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
                     return DRK.SyphonStrike;
@@ -164,14 +151,12 @@ internal class DarkStalwartSoul : CustomCombo
 
             // Do a check for flood of darkness girst since it is a lower level
             if (
-                level >= DRK.Levels.FloodOfDarkness
-                && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
-                && GCDClipCheck(actionID)
-            )
-            {
+                    level >= DRK.Levels.FloodOfDarkness
+                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    && GCDClipCheck(actionID)
+                )
                 // If you are high enough level for edge fo darkness then do that instead
                 return OriginalHook(DRK.FloodOfDarkness);
-            }
 
             if (
                 level >= DRK.Levels.BloodWeapon
@@ -179,9 +164,7 @@ internal class DarkStalwartSoul : CustomCombo
                 && IsOffCooldown(DRK.BloodWeapon)
                 && gauge.Blood <= 70
             )
-            {
                 return DRK.BloodWeapon;
-            }
 
             if (
                 level >= DRK.Levels.Delirium
@@ -189,14 +172,9 @@ internal class DarkStalwartSoul : CustomCombo
                 && IsOffCooldown(DRK.Delirium)
                 && gauge.Blood <= 70
             )
-            {
                 return DRK.Delirium;
-            }
 
-            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
-            {
-                return DRK.AbyssalDrain;
-            }
+            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain)) return DRK.AbyssalDrain;
 
             if (
                 level >= DRK.Levels.Quietus
@@ -205,17 +183,11 @@ internal class DarkStalwartSoul : CustomCombo
                     || gauge.Blood >= 70
                 )
             )
-            {
                 return DRK.Quietus;
-            }
 
             if (comboTime > 0)
-            {
                 if (lastComboMove == DRK.Unleash && level >= DRK.Levels.StalwartSoul)
-                {
                     return DRK.StalwartSoul;
-                }
-            }
 
             return DRK.Unleash;
         }
@@ -231,7 +203,6 @@ internal class DarkCarveAndSpitAbyssalDrain : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == DRK.CarveAndSpit || actionID == DRK.AbyssalDrain)
-        {
             if (IsEnabled(CustomComboPreset.DarkBloodWeaponFeature))
             {
                 if (actionID == DRK.AbyssalDrain && level < DRK.Levels.AbyssalDrain)
@@ -243,7 +214,6 @@ internal class DarkCarveAndSpitAbyssalDrain : CustomCombo
                 if (level >= DRK.Levels.BloodWeapon && IsAvailable(DRK.BloodWeapon))
                     return OriginalHook(DRK.BloodWeapon);
             }
-        }
 
         return actionID;
     }
@@ -260,14 +230,12 @@ internal class DarkQuietusBloodspiller : CustomCombo
             var gauge = GetJobGauge<DRKGauge>();
 
             if (IsEnabled(CustomComboPreset.DarkLivingShadowFeature))
-            {
                 if (
                     level >= DRK.Levels.LivingShadow
                     && gauge.Blood >= 50
                     && IsOffCooldown(DRK.LivingShadow)
                 )
                     return DRK.LivingShadow;
-            }
         }
 
         return actionID;
@@ -285,24 +253,20 @@ internal class DarkLivingShadow : CustomCombo
             var gauge = GetJobGauge<DRKGauge>();
 
             if (IsEnabled(CustomComboPreset.DarkLivingShadowbringerFeature))
-            {
                 if (
                     level >= DRK.Levels.Shadowbringer
                     && gauge.ShadowTimeRemaining > 0
                     && HasCharges(DRK.Shadowbringer)
                 )
                     return DRK.Shadowbringer;
-            }
 
             if (IsEnabled(CustomComboPreset.DarkLivingShadowbringerHpFeature))
-            {
                 if (
                     level >= DRK.Levels.Shadowbringer
                     && HasCharges(DRK.Shadowbringer)
                     && IsOnCooldown(DRK.LivingShadow)
                 )
                     return DRK.Shadowbringer;
-            }
         }
 
         return actionID;

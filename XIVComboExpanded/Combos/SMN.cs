@@ -9,7 +9,6 @@ internal static class SMN
     public const byte JobID = 27;
 
     public const uint
-
         Ruin = 163,
         Ruin2 = 172,
         Ruin3 = 3579,
@@ -173,9 +172,7 @@ internal class SummonerRuin : CustomCombo
                     )
                     && IsOffCooldown(OriginalHook(SMN.EnkindleBahamut))
                 )
-                {
                     return OriginalHook(SMN.EnkindleBahamut);
-                }
 
                 if (
                     OriginalHook(SMN.AstralFlow) != SMN.AstralFlow
@@ -188,9 +185,7 @@ internal class SummonerRuin : CustomCombo
                     && !gauge.IsIfritAttuned
                     && IsOffCooldown(OriginalHook(SMN.AstralFlow))
                 )
-                {
                     return OriginalHook(SMN.AstralFlow);
-                }
 
                 if (
                     IsOffCooldown(SMN.EnergyDrain)
@@ -200,22 +195,18 @@ internal class SummonerRuin : CustomCombo
                         || level < SMN.Levels.SearingLight
                     )
                 )
-                {
                     return
                         level >= SMN.Levels.EnergySyphon
                         && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-                        ? SMN.EnergySyphon
-                        : SMN.EnergyDrain;
-                }
+                            ? SMN.EnergySyphon
+                            : SMN.EnergyDrain;
 
                 if (gauge.HasAetherflowStacks)
-                {
                     return
                         level >= SMN.Levels.Painflare
                         && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-                        ? SMN.Painflare
-                        : SMN.Fester;
-                }
+                            ? SMN.Painflare
+                            : SMN.Fester;
 
                 if (
                     HasCondition(ConditionFlag.InCombat)
@@ -233,10 +224,7 @@ internal class SummonerRuin : CustomCombo
             }
 
             // Bahamut & Pheonix Summmon
-            if (IsOffCooldown(OriginalHook(SMN.Aethercharge)))
-            {
-                return OriginalHook(SMN.Aethercharge);
-            }
+            if (IsOffCooldown(OriginalHook(SMN.Aethercharge))) return OriginalHook(SMN.Aethercharge);
 
             if (level >= SMN.Levels.AstralFlow)
             {
@@ -247,68 +235,49 @@ internal class SummonerRuin : CustomCombo
                         && (!this.IsMoving || HasEffect(ADV.Buffs.Swiftcast))
                     )
                 )
-                {
                     return OriginalHook(SMN.AstralFlow);
-                }
 
                 if (
                     (HasEffect(SMN.Buffs.IfritsFavor) || lastComboMove == SMN.CrimsonCyclone)
                     && GetTargetDistance() <= 1
                 )
-                {
                     return OriginalHook(SMN.AstralFlow);
-                }
             }
 
             if (OriginalHook(SMN.Gemshine) != SMN.Gemshine)
-            {
                 return
                     level >= SMN.Levels.PreciousBrilliance
                     && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-                    ? OriginalHook(SMN.PreciousBrilliance)
-                    : OriginalHook(SMN.Gemshine);
-            }
+                        ? OriginalHook(SMN.PreciousBrilliance)
+                        : OriginalHook(SMN.Gemshine);
 
             // RUIN 4
             if (OriginalHook(SMN.Ruin3) != SMN.Ruin3)
-            {
                 return
                     level >= SMN.Levels.PreciousBrilliance
                     && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-                    ? OriginalHook(SMN.Outburst)
-                    : OriginalHook(SMN.Ruin3);
-            }
+                        ? OriginalHook(SMN.Outburst)
+                        : OriginalHook(SMN.Ruin3);
 
             if (gauge.IsTitanReady)
-            {
                 if (level >= SMN.Levels.Gemshine)
                     return OriginalHook(SMN.SummonTopaz);
-            }
 
-            if (gauge.IsGarudaReady)
-            {
-                return OriginalHook(SMN.SummonEmerald);
-            }
+            if (gauge.IsGarudaReady) return OriginalHook(SMN.SummonEmerald);
 
             if (gauge.IsIfritReady)
             {
-                if (HasEffect(SMN.Buffs.GarudasFavor) && IsOffCooldown(ADV.Swiftcast))
-                {
-                    return ADV.Swiftcast;
-                }
+                if (HasEffect(SMN.Buffs.GarudasFavor) && IsOffCooldown(ADV.Swiftcast)) return ADV.Swiftcast;
                 return OriginalHook(SMN.SummonRuby);
             }
 
-            if (HasEffect(SMN.Buffs.FurtherRuin))
-            {
-                return SMN.Ruin4;
-            }
+            if (HasEffect(SMN.Buffs.FurtherRuin)) return SMN.Ruin4;
 
             return
                 level >= SMN.Levels.PreciousBrilliance
                 && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
-                ? OriginalHook(SMN.Outburst)
-                : OriginalHook(SMN.Ruin);
+                    ? OriginalHook(SMN.Outburst)
+                    : OriginalHook(SMN.Ruin);
         }
 
         return actionID;
@@ -326,22 +295,15 @@ internal class SummonerOutburstTriDisaster : CustomCombo
             var gauge = GetJobGauge<SMNGauge>();
 
             if (IsEnabled(CustomComboPreset.SummonerOutburstTitansFavorFeature))
-            {
                 if (level >= SMN.Levels.ElementalMastery && HasEffect(SMN.Buffs.TitansFavor))
                     return SMN.MountainBuster;
-            }
 
             if (IsEnabled(CustomComboPreset.SummonerOutburstFeature))
-            {
                 if (level >= SMN.Levels.PreciousBrilliance)
-                {
                     if (gauge.Attunement > 0)
                         return OriginalHook(SMN.PreciousBrilliance);
-                }
-            }
 
             if (IsEnabled(CustomComboPreset.SummonerFurtherOutburstFeature))
-            {
                 if (
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
@@ -349,7 +311,6 @@ internal class SummonerOutburstTriDisaster : CustomCombo
                     && HasEffect(SMN.Buffs.FurtherRuin)
                 )
                     return SMN.Ruin4;
-            }
         }
 
         return actionID;
@@ -367,14 +328,12 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
             var gauge = GetJobGauge<SMNGauge>();
 
             if (IsEnabled(CustomComboPreset.SummonerShinyTitansFavorFeature))
-            {
                 if (level >= SMN.Levels.ElementalMastery && HasEffect(SMN.Buffs.TitansFavor))
                     return SMN.MountainBuster;
-            }
 
             if (IsEnabled(CustomComboPreset.SummonerShinyEnkindleFeature))
-            {
-                if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned && !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
+                if (level >= SMN.Levels.EnkindleBahamut && !gauge.IsIfritAttuned && !gauge.IsTitanAttuned &&
+                    !gauge.IsGarudaAttuned && gauge.SummonTimerRemaining > 0)
                     if (
                         level >= SMN.Levels.EnkindleBahamut
                         && !gauge.IsIfritAttuned
@@ -383,10 +342,8 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
                         && gauge.SummonTimerRemaining > 0
                     )
                         return OriginalHook(SMN.EnkindleBahamut);
-            }
 
             if (IsEnabled(CustomComboPreset.SummonerFurtherShinyFeature))
-            {
                 if (
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
@@ -394,7 +351,6 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
                     && HasEffect(SMN.Buffs.FurtherRuin)
                 )
                     return SMN.Ruin4;
-            }
         }
 
         return actionID;
@@ -416,10 +372,8 @@ internal class SummonerRadiantCarbuncleFeature : CustomCombo
                 return SMN.SummonCarbuncle;
 
             if (IsEnabled(CustomComboPreset.SummonerRadiantLuxSolarisFeature))
-            {
                 if (HasEffect(SMN.Buffs.LuxSolarisReady))
                     return SMN.LuxSolaris;
-            }
         }
 
         return actionID;
@@ -433,10 +387,8 @@ internal class SummonerLuxSolarisFeature : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SMN.SummonBahamut)
-        {
             if (HasEffect(SMN.Buffs.LuxSolarisReady))
                 return SMN.LuxSolaris;
-        }
 
         return actionID;
     }

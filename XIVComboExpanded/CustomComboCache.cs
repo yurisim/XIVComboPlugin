@@ -2,51 +2,53 @@
 using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using Action = Lumina.Excel.GeneratedSheets.Action;
+using Status = Dalamud.Game.ClientState.Statuses.Status;
 
 namespace XIVComboExpandedPlugin;
 
 /// <summary>
-/// Cached conditional combo logic.
+///     Cached conditional combo logic.
 /// </summary>
-internal partial class CustomComboCache : IDisposable
+internal class CustomComboCache : IDisposable
 {
     private const uint InvalidObjectID = 0xE000_0000;
+
+    private readonly Dictionary<
+        (uint ActionID, uint ClassJobID, byte Level),
+        (ushort CurrentMax, ushort Max)
+    > chargesCache = new();
+
+    private readonly Dictionary<uint, CooldownData> cooldownCache = new();
+
+    // Do not invalidate these
+    private readonly Dictionary<uint, byte> cooldownGroupCache = new();
+    private readonly Dictionary<Type, JobGaugeBase> jobGaugeCache = new();
 
     // Invalidate these
     private readonly Dictionary<
         (uint StatusID, uint? TargetID, uint? SourceID),
         Status?
     > statusCache = new();
-    private readonly Dictionary<uint, CooldownData> cooldownCache = new();
-
-    // Do not invalidate these
-    private readonly Dictionary<uint, byte> cooldownGroupCache = new();
-    private readonly Dictionary<Type, JobGaugeBase> jobGaugeCache = new();
-    private readonly Dictionary<
-        (uint ActionID, uint ClassJobID, byte Level),
-        (ushort CurrentMax, ushort Max)
-    > chargesCache = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomComboCache"/> class.
+    ///     Initializes a new instance of the <see cref="CustomComboCache" /> class.
     /// </summary>
     public CustomComboCache()
     {
         Service.Framework.Update += this.Framework_Update;
     }
 
-    private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Dispose()
     {
         Service.Framework.Update -= this.Framework_Update;
     }
 
     /// <summary>
-    /// Get a job gauge.
+    ///     Get a job gauge.
     /// </summary>
     /// <typeparam name="T">Type of job gauge.</typeparam>
     /// <returns>The job gauge.</returns>
@@ -60,7 +62,7 @@ internal partial class CustomComboCache : IDisposable
     }
 
     /// <summary>
-    /// Finds a status on the given object.
+    ///     Finds a status on the given object.
     /// </summary>
     /// <param name="statusID">Status effect ID.</param>
     /// <param name="obj">Object to look for effects on.</param>
@@ -79,7 +81,6 @@ internal partial class CustomComboCache : IDisposable
             return this.statusCache[key] = null;
 
         foreach (var status in chara.StatusList)
-        {
             if (
                 status.StatusId == statusID
                 && (
@@ -90,13 +91,12 @@ internal partial class CustomComboCache : IDisposable
                 )
             )
                 return this.statusCache[key] = status;
-        }
 
         return this.statusCache[key] = null;
     }
 
     /// <summary>
-    /// Gets the cooldown data for an action.
+    ///     Gets the cooldown data for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Cooldown data.</returns>
@@ -105,7 +105,7 @@ internal partial class CustomComboCache : IDisposable
         if (this.cooldownCache.TryGetValue(actionID, out var found))
             return found;
 
-        var actionManager = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.Instance();
+        var actionManager = ActionManager.Instance();
         if (actionManager == null)
             return this.cooldownCache[actionID] = default;
 
@@ -118,11 +118,11 @@ internal partial class CustomComboCache : IDisposable
     }
 
     /// <summary>
-    /// Get the maximum number of charges for an action.
+    ///     Get the maximum number of charges for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Max number of charges at current and max level.</returns>
-    internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
+    internal (ushort Current, ushort Max) GetMaxCharges(uint actionID)
     {
         var player = Service.ClientState.LocalPlayer;
         if (player == null)
@@ -137,8 +137,8 @@ internal partial class CustomComboCache : IDisposable
         if (this.chargesCache.TryGetValue(key, out var found))
             return found;
 
-        var cur = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 0);
-        var max = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 100);
+        var cur = ActionManager.GetMaxCharges(actionID, 0);
+        var max = ActionManager.GetMaxCharges(actionID, 100);
         return this.chargesCache[key] = (cur, max);
     }
 
@@ -147,15 +147,17 @@ internal partial class CustomComboCache : IDisposable
         if (this.cooldownGroupCache.TryGetValue(actionID, out var cooldownGroup))
             return cooldownGroup;
 
-        var sheet = Service.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>()!;
+        var sheet = Service.DataManager.GetExcelSheet<Action>()!;
         var row = sheet.GetRow(actionID);
 
         return this.cooldownGroupCache[actionID] = row!.CooldownGroup;
     }
 
-    private unsafe void Framework_Update(IFramework framework)
+    private void Framework_Update(IFramework framework)
     {
         this.statusCache.Clear();
         this.cooldownCache.Clear();
     }
+
+    private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
 }

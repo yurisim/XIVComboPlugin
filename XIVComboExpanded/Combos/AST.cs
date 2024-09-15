@@ -97,9 +97,7 @@ internal class AstrologianMalefic : CustomCombo
                     && level >= AST.Levels.MinorArcana
                     && (myHP <= 0.95 || needToUseCards)
                 )
-                {
                     return OriginalHook(AST.MinorArcanaDT);
-                }
 
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
@@ -107,9 +105,7 @@ internal class AstrologianMalefic : CustomCombo
                         tarPercentage <= threshold - 0.2
                         && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
                     )
-                    {
                         return AST.EssentialDignity;
-                    }
 
                     if (
                         level >= AST.Levels.CelestialIntersection
@@ -125,9 +121,7 @@ internal class AstrologianMalefic : CustomCombo
                             || tarPercentage <= threshold
                         )
                     )
-                    {
                         return AST.CelestialIntersection;
-                    }
                 }
 
                 if (
@@ -135,9 +129,7 @@ internal class AstrologianMalefic : CustomCombo
                     && IsOffCooldown(AST.Divination)
                     && HasRaidBuffs()
                 )
-                {
                     return AST.Divination;
-                }
 
                 if (
                     gauge.DrawnCrownCard == CardType.LORD
@@ -145,18 +137,14 @@ internal class AstrologianMalefic : CustomCombo
                     && (HasRaidBuffs() || needToUseCards)
                     && InCombat()
                 )
-                {
                     return OriginalHook(AST.MinorArcanaDT);
-                }
 
                 if (
                     OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
                     && LocalPlayerPercentage() <= 0.85
                     && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
                 )
-                {
                     return OriginalHook(AST.EarthlyStar);
-                }
 
                 if (
                     level >= AST.Levels.AstralDraw
@@ -165,14 +153,9 @@ internal class AstrologianMalefic : CustomCombo
                     && IsOriginal(AST.Play2)
                     && IsOriginal(AST.Play3)
                 )
-                {
                     return OriginalHook(AST.AstralDraw);
-                }
 
-                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
-                {
-                    return ADV.LucidDreaming;
-                }
+                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
             }
 
             if (InCombat() && TargetIsEnemy() && ShouldRefreshDots())
@@ -195,9 +178,7 @@ internal class AstrologianMalefic : CustomCombo
                             )
                     )
                 )
-                {
                     return OriginalHook(AST.Combust);
-                }
             }
         }
 
@@ -232,9 +213,7 @@ internal class AstrologianGravity : CustomCombo
                         gauge.DrawnCrownCard == CardType.LADY
                         && (myHP <= 0.95 || tarPercentage <= 0.75 || needToUseCards)
                     )
-                    {
                         return OriginalHook(AST.MinorArcanaDT);
-                    }
 
                     // Exaltation
                     if (
@@ -242,17 +221,13 @@ internal class AstrologianGravity : CustomCombo
                         && IsOffCooldown(AST.Exaltation)
                         && tarPercentage <= threshold + 0.1
                     )
-                    {
                         return AST.Exaltation;
-                    }
 
                     if (
                         tarPercentage <= threshold
                         && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
                     )
-                    {
                         return AST.EssentialDignity;
-                    }
 
                     if (
                         level >= AST.Levels.CelestialIntersection
@@ -268,18 +243,14 @@ internal class AstrologianGravity : CustomCombo
                             || tarPercentage <= threshold
                         )
                     )
-                    {
                         return AST.CelestialIntersection;
-                    }
 
                     if (
                         gauge.DrawnCrownCard == CardType.LORD
                         && (HasRaidBuffs() || needToUseCards)
                         && InCombat()
                     )
-                    {
                         return OriginalHook(AST.MinorArcanaDT);
-                    }
 
                     if (
                         level >= AST.Levels.AstralDraw
@@ -288,9 +259,7 @@ internal class AstrologianGravity : CustomCombo
                         && IsOriginal(AST.Play3)
                         && IsOffCooldown(OriginalHook(AST.AstralDraw))
                     )
-                    {
                         return OriginalHook(AST.AstralDraw);
-                    }
                 }
 
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
@@ -301,9 +270,7 @@ internal class AstrologianGravity : CustomCombo
                     && IsOffCooldown(OriginalHook(AST.CelestialOpposition))
                     && myHP <= threshold
                 )
-                {
                     return OriginalHook(AST.CelestialOpposition);
-                }
             }
         }
 
@@ -324,14 +291,10 @@ internal class AstroCelestial : CustomCombo
                 && IsOffCooldown(AST.Exaltation)
                 && GetRemainingCharges(AST.CelestialIntersection) <= 1
             )
-            {
                 return AST.Exaltation;
-            }
 
             if (level >= AST.Levels.Exaltation)
-            {
                 return CalcBestAction(actionID, AST.CelestialIntersection, AST.Exaltation);
-            }
         }
 
         return actionID;

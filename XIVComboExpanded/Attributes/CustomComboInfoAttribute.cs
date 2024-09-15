@@ -5,13 +5,13 @@ using XIVComboExpandedPlugin.Combos;
 namespace XIVComboExpandedPlugin.Attributes;
 
 /// <summary>
-/// Attribute documenting additional information for each combo.
+///     Attribute documenting additional information for each combo.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field)]
 internal class CustomComboInfoAttribute : Attribute
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomComboInfoAttribute"/> class.
+    ///     Initializes a new instance of the <see cref="CustomComboInfoAttribute" /> class.
     /// </summary>
     /// <param name="fancyName">Display name.</param>
     /// <param name="description">Combo description.</param>
@@ -31,27 +31,27 @@ internal class CustomComboInfoAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the display name.
+    ///     Gets the display name.
     /// </summary>
     public string FancyName { get; }
 
     /// <summary>
-    /// Gets the description.
+    ///     Gets the description.
     /// </summary>
     public string Description { get; }
 
     /// <summary>
-    /// Gets the job ID.
+    ///     Gets the job ID.
     /// </summary>
     public byte JobID { get; }
 
     /// <summary>
-    /// Gets the display order.
+    ///     Gets the display order.
     /// </summary>
     public int Order { get; }
 
     /// <summary>
-    /// Gets the job name.
+    ///     Gets the job name.
     /// </summary>
     public string JobName => JobIDToName(this.JobID);
 
@@ -104,7 +104,7 @@ internal class CustomComboInfoAttribute : Attribute
             42 => "Pictomancer",
             DOH.JobID => "Disciples of the Hand",
             DOL.JobID => "Disciples of the Land",
-            _ => "Unknown",
+            _ => "Unknown"
         };
     }
 }

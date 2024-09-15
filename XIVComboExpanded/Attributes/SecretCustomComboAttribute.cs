@@ -3,7 +3,9 @@
 namespace XIVComboExpandedPlugin.Attributes;
 
 /// <summary>
-/// Attribute designating secret combos.
+///     Attribute designating secret combos.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field)]
-internal class SecretCustomComboAttribute : Attribute { }
+internal class SecretCustomComboAttribute : Attribute
+{
+}

@@ -10,14 +10,14 @@ using XIVComboExpandedPlugin.Combos;
 namespace XIVComboExpandedPlugin;
 
 /// <summary>
-/// This class facilitates the icon replacing.
+///     This class facilitates the icon replacing.
 /// </summary>
-internal sealed partial class IconReplacer : IDisposable
+internal sealed class IconReplacer : IDisposable
 {
     private readonly unsafe ActionManager* clientStructActionManager;
     private readonly List<CustomCombo> customCombos;
-    private readonly Hook<IsIconReplaceableDelegate> isIconReplaceableHook;
     private readonly Hook<GetIconDelegate> getIconHook;
+    private readonly Hook<IsIconReplaceableDelegate> isIconReplaceableHook;
 
     private IntPtr actionManager = IntPtr.Zero;
 
@@ -33,11 +33,22 @@ internal sealed partial class IconReplacer : IDisposable
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(ActionManager.Addresses.GetAdjustedActionId.Value, this.GetIconDetour);
-        this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable, this.IsIconReplaceableDetour);
+        this.getIconHook =
+            gameInteropProvider.HookFromAddress<GetIconDelegate>(ActionManager.Addresses.GetAdjustedActionId.Value,
+                this.GetIconDetour);
+        this.isIconReplaceableHook =
+            gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable,
+                this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        this.getIconHook?.Dispose();
+        this.isIconReplaceableHook?.Dispose();
     }
 
     private static bool IsDescendant(Type clazz, Type ancestor)
@@ -49,41 +60,31 @@ internal sealed partial class IconReplacer : IDisposable
         return IsDescendant(clazz.BaseType, ancestor);
     }
 
-    private delegate ulong IsIconReplaceableDelegate(uint actionID);
-
-    private delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        this.getIconHook?.Dispose();
-        this.isIconReplaceableHook?.Dispose();
-    }
-
     /// <summary>
-    /// Gets bool determining if action is greyed out or not.
+    ///     Gets bool determining if action is greyed out or not.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <param name="targetID">Target ID.</param>
     /// <returns>A bool value of whether the action can be used or not.</returns>
     internal unsafe bool CanUseAction(uint actionID, uint targetID = 0xE000_0000)
     {
-        return clientStructActionManager->GetActionStatus(
-                ActionType.Action,
-                actionID,
-                targetID,
-                false,
-                true
-            ) == 0;
+        return this.clientStructActionManager->GetActionStatus(
+            ActionType.Action,
+            actionID,
+            targetID,
+            false
+        ) == 0;
     }
 
     /// <summary>
-    /// Calls the original hook.
+    ///     Calls the original hook.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>The result from the hook.</returns>
-    internal uint OriginalHook(uint actionID) =>
-        this.getIconHook.Original(this.actionManager, actionID);
+    internal uint OriginalHook(uint actionID)
+    {
+        return this.getIconHook.Original(this.actionManager, actionID);
+    }
 
     private unsafe uint GetIconDetour(IntPtr actionManager, uint actionID)
     {
@@ -99,10 +100,8 @@ internal sealed partial class IconReplacer : IDisposable
             var level = Service.ClientState.LocalPlayer?.Level ?? 0;
 
             foreach (var combo in this.customCombos)
-            {
                 if (combo.TryInvoke(actionID, level, lastComboMove, comboTime, out var newActionID))
                     return newActionID;
-            }
 
             return this.OriginalHook(actionID);
         }
@@ -113,5 +112,12 @@ internal sealed partial class IconReplacer : IDisposable
         }
     }
 
-    private ulong IsIconReplaceableDetour(uint actionID) => 1;
+    private ulong IsIconReplaceableDetour(uint actionID)
+    {
+        return 1;
+    }
+
+    private delegate ulong IsIconReplaceableDelegate(uint actionID);
+
+    private delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
 }

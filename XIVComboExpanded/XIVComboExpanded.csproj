@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Authors>attick, daemitus, Khayle</Authors>
-    <Company>-</Company>
-    <Version>1.5.1.11</Version>
-    <Description>This plugin condenses combos and mutually exclusive abilities onto a single button.</Description>
-    <Copyright>Copyleft attick 2020 baybeeee</Copyright>
-    <PackageProjectUrl>https://github.com/daemitus/XIVComboPlugin</PackageProjectUrl>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>attick, daemitus, Khayle</Authors>
+        <Company>-</Company>
+        <Version>1.5.1.11</Version>
+        <Description>This plugin condenses combos and mutually exclusive abilities onto a single button.</Description>
+        <Copyright>Copyleft attick 2020 baybeeee</Copyright>
+        <PackageProjectUrl>https://github.com/daemitus/XIVComboPlugin</PackageProjectUrl>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Platforms>x64</Platforms>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <NoWarn>CS1591</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Platforms>x64</Platforms>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <NoWarn>CS1591</NoWarn>
+    </PropertyGroup>
 
-  <PropertyGroup Label="Documentation">
-    <DocumentationFile></DocumentationFile>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Label="Documentation">
+        <DocumentationFile></DocumentationFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="..\res\icon.png" Link="images\icon.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <AssemblySearchPaths>
-      $(AssemblySearchPaths);
-      $(DalamudLibPath);
-    </AssemblySearchPaths>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.13" />
-    <PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true" />
-    <Reference Include="Dalamud" Private="False" />
-    <Reference Include="FFXIVClientStructs" Private="False" />
-    <Reference Include="ImGui.NET" Private="False" />
-    <Reference Include="Lumina" Private="False" />
-    <Reference Include="Lumina.Excel" Private="False" />
-    <Reference Include="Newtonsoft.Json" Private="False" />
-	  <Reference Include="InteropGenerator.Runtime">
-		  <HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
-		  <Private>false</Private>
-	  </Reference>
-  </ItemGroup>
-
-  <Target Name="ILRepack" AfterTargets="Build">
     <ItemGroup>
-      <InputAssemblies Include="$(TargetPath)" />
-      <InputAssemblies Include="$(TargetDir)*.dll" Exclude="$(TargetPath)" />
+        <Content Include="..\res\icon.png" Link="images\icon.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
     </ItemGroup>
-    <Exec Command="$(PkgILRepack)\tools\ILRepack.exe /lib:$(DalamudLibPath) /out:$(TargetDir)$(TargetFileName) @(InputAssemblies, ' ')" />
-  </Target>
 
-  <Target Name="CleanOutDir" AfterTargets="ILRepack">
+    <PropertyGroup>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblySearchPaths>
+            $(AssemblySearchPaths);
+            $(DalamudLibPath);
+        </AssemblySearchPaths>
+    </PropertyGroup>
+
     <ItemGroup>
-      <DeleteFiles Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll" />
-      <DeleteFiles Include="$(TargetDir)*.pdb" Exclude="$(TargetDir)$(TargetName).pdb" />
-      <DeleteFiles Include="$(TargetDir)*.xml" />
+        <AdditionalFiles Include="..\stylecop.json"/>
     </ItemGroup>
-    <Message Text="Deleting @(DeleteFiles)" Importance="high" />
-    <Delete Files="@(DeleteFiles)" />
-  </Target>
+
+    <ItemGroup>
+        <PackageReference Include="DalamudPackager" Version="2.1.13"/>
+        <PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true"/>
+        <Reference Include="Dalamud" Private="False"/>
+        <Reference Include="FFXIVClientStructs" Private="False"/>
+        <Reference Include="ImGui.NET" Private="False"/>
+        <Reference Include="Lumina" Private="False"/>
+        <Reference Include="Lumina.Excel" Private="False"/>
+        <Reference Include="Newtonsoft.Json" Private="False"/>
+        <Reference Include="InteropGenerator.Runtime">
+            <HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <Target Name="ILRepack" AfterTargets="Build">
+        <ItemGroup>
+            <InputAssemblies Include="$(TargetPath)"/>
+            <InputAssemblies Include="$(TargetDir)*.dll" Exclude="$(TargetPath)"/>
+        </ItemGroup>
+        <Exec Command="$(PkgILRepack)\tools\ILRepack.exe /lib:$(DalamudLibPath) /out:$(TargetDir)$(TargetFileName) @(InputAssemblies, ' ')"/>
+    </Target>
+
+    <Target Name="CleanOutDir" AfterTargets="ILRepack">
+        <ItemGroup>
+            <DeleteFiles Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll"/>
+            <DeleteFiles Include="$(TargetDir)*.pdb" Exclude="$(TargetDir)$(TargetName).pdb"/>
+            <DeleteFiles Include="$(TargetDir)*.xml"/>
+        </ItemGroup>
+        <Message Text="Deleting @(DeleteFiles)" Importance="high"/>
+        <Delete Files="@(DeleteFiles)"/>
+    </Target>
 </Project>

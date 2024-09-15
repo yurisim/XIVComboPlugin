@@ -3,13 +3,13 @@ using System;
 namespace XIVComboExpandedPlugin.Attributes;
 
 /// <summary>
-/// Attribute documenting required combo relationships.
+///     Attribute documenting required combo relationships.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field)]
 internal class ParentComboAttribute : Attribute
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ParentComboAttribute"/> class.
+    ///     Initializes a new instance of the <see cref="ParentComboAttribute" /> class.
     /// </summary>
     /// <param name="parentPreset">Presets that conflict with the given combo.</param>
     internal ParentComboAttribute(CustomComboPreset parentPreset)
@@ -18,7 +18,7 @@ internal class ParentComboAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the display name.
+    ///     Gets the display name.
     /// </summary>
     public CustomComboPreset ParentPreset { get; }
 }

@@ -10,7 +10,7 @@ using XIVComboExpandedPlugin.Combos;
 namespace XIVComboExpandedPlugin;
 
 /// <summary>
-/// Plugin configuration.
+///     Plugin configuration.
 /// </summary>
 [Serializable]
 public class PluginConfiguration : IPluginConfiguration
@@ -43,70 +43,85 @@ public class PluginConfiguration : IPluginConfiguration
     }
 
     /// <summary>
-    /// Gets or sets the configuration version.
-    /// </summary>
-    public int Version { get; set; } = 5;
-
-    /// <summary>
-    /// Gets or sets the collection of enabled combos.
+    ///     Gets or sets the collection of enabled combos.
     /// </summary>
     [JsonProperty("EnabledActionsV5")]
     public HashSet<CustomComboPreset> EnabledActions { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets the collection of enabled combos.
+    ///     Gets or sets the collection of enabled combos.
     /// </summary>
     [JsonProperty("EnabledActionsV4")]
     public HashSet<CustomComboPreset> EnabledActions4 { get; set; } = new();
 
     /// <summary>
-    /// Gets or sets a value indicating whether to allow and display secret combos.
+    ///     Gets or sets a value indicating whether to allow and display secret combos.
     /// </summary>
     [JsonProperty("Debug")]
-    public bool EnableSecretCombos { get; set; } = false;
+    public bool EnableSecretCombos { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to hide the children of a feature if it is disabled.
+    ///     Gets or sets a value indicating whether to hide the children of a feature if it is disabled.
     /// </summary>
     public bool HideChildren { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets an array of 4 ability IDs to interact with the <see cref="CustomComboPreset.DancerDanceComboCompatibility"/> combo.
+    ///     Gets or sets an array of 4 ability IDs to interact with the
+    ///     <see cref="CustomComboPreset.DancerDanceComboCompatibility" /> combo.
     /// </summary>
     public uint[] DancerDanceCompatActionIDs { get; set; } =
-        new uint[] { DNC.Cascade, DNC.Flourish, DNC.FanDance1, DNC.FanDance2, };
+        { DNC.Cascade, DNC.Flourish, DNC.FanDance1, DNC.FanDance2 };
 
     /// <summary>
-    /// Save the configuration to disk.
+    ///     Gets or sets the configuration version.
     /// </summary>
-    public void Save() => Service.Interface.SavePluginConfig(this);
+    public int Version { get; set; } = 5;
 
     /// <summary>
-    /// Gets a value indicating whether a preset is enabled.
+    ///     Save the configuration to disk.
+    /// </summary>
+    public void Save()
+    {
+        Service.Interface.SavePluginConfig(this);
+    }
+
+    /// <summary>
+    ///     Gets a value indicating whether a preset is enabled.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>The boolean representation.</returns>
-    public bool IsEnabled(CustomComboPreset preset) =>
-        this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
+    public bool IsEnabled(CustomComboPreset preset)
+    {
+        return this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
+    }
 
     /// <summary>
-    /// Gets a value indicating whether a preset is secret.
+    ///     Gets a value indicating whether a preset is secret.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>The boolean representation.</returns>
-    public bool IsSecret(CustomComboPreset preset) => SecretCombos.Contains(preset);
+    public bool IsSecret(CustomComboPreset preset)
+    {
+        return SecretCombos.Contains(preset);
+    }
 
     /// <summary>
-    /// Gets an array of conflicting combo presets.
+    ///     Gets an array of conflicting combo presets.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>The conflicting presets.</returns>
-    public CustomComboPreset[] GetConflicts(CustomComboPreset preset) => ConflictingCombos[preset];
+    public CustomComboPreset[] GetConflicts(CustomComboPreset preset)
+    {
+        return ConflictingCombos[preset];
+    }
 
     /// <summary>
-    /// Gets the parent combo preset if it exists, or null.
+    ///     Gets the parent combo preset if it exists, or null.
     /// </summary>
     /// <param name="preset">Preset to check.</param>
     /// <returns>The parent preset.</returns>
-    public CustomComboPreset? GetParent(CustomComboPreset preset) => ParentCombos[preset];
+    public CustomComboPreset? GetParent(CustomComboPreset preset)
+    {
+        return ParentCombos[preset];
+    }
 }

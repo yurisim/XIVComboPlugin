@@ -103,15 +103,9 @@ internal class WhiteMageHoly : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
-            {
-                return WHM.AfflatusMisery;
-            }
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3) return WHM.AfflatusMisery;
 
-            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
-            {
-                return WHM.Glare4;
-            }
+            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready)) return WHM.Glare4;
         }
 
         return actionID;
@@ -179,15 +173,9 @@ internal class WhiteMageMedica : CustomCombo
                 && gauge.BloodLily == 3
                 && LocalPlayerPercentage() > 0.90
             )
-            {
                 return WHM.AfflatusMisery;
-            }
 
-            if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
-            {
-                return WHM.AfflatusRapture;
-            }
-
+            if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0) return WHM.AfflatusRapture;
         }
 
         return actionID;
@@ -207,9 +195,7 @@ internal class WhiteMageBenison : CustomCombo
                 && IsOffCooldown(WHM.Aquaveil)
                 && GetRemainingCharges(WHM.DivineBenison) <= 1
             )
-            {
                 return WHM.Aquaveil;
-            }
 
             return CalcBestAction(actionID, WHM.Aquaveil, WHM.DivineBenison);
         }
@@ -239,9 +225,7 @@ internal class WhiteMageStoneFeature : CustomCombo
                     && IsOffCooldown(WHM.PresenceOfMind)
                     && HasRaidBuffs()
                 )
-                {
                     return WHM.PresenceOfMind;
-                }
 
                 if (
                     level >= WHM.Levels.Assize
@@ -250,9 +234,7 @@ internal class WhiteMageStoneFeature : CustomCombo
                     && (playerPercentage < 1 || TargetHPercentage() <= 0.95)
                     && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
                 )
-                {
                     return WHM.Assize;
-                }
 
                 if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
                 {
@@ -267,18 +249,14 @@ internal class WhiteMageStoneFeature : CustomCombo
                             || tarOfTarPercentage <= 0.6
                         )
                     )
-                    {
                         return WHM.DivineBenison;
-                    }
 
                     if (
                         level >= WHM.Levels.Tetragrammaton
                         && tarOfTarPercentage <= 0.70
                         && IsOffCooldown(WHM.Tetragrammaton)
                     )
-                    {
                         return WHM.Tetragrammaton;
-                    }
                 }
 
                 if (
@@ -293,7 +271,7 @@ internal class WhiteMageStoneFeature : CustomCombo
             [
                 (WHM.Debuffs.Dia, WHM.Levels.Dia),
                 (WHM.Debuffs.Aero2, WHM.Levels.Aero2),
-                (WHM.Debuffs.Aero, WHM.Levels.Aero),
+                (WHM.Debuffs.Aero, WHM.Levels.Aero)
             ];
 
             var debuff = FindTargetEffect(aeroDOT.FirstOrDefault(x => x.Level <= level).Debuff);
@@ -309,26 +287,15 @@ internal class WhiteMageStoneFeature : CustomCombo
                     ) || (debuff is null && ShouldRefreshDots())
                 )
             )
-            {
                 return OriginalHook(WHM.Aero);
-            }
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
-            {
-                return WHM.AfflatusMisery;
-            }
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3) return WHM.AfflatusMisery;
 
             if (gauge.Lily == 3)
             {
-                if (playerPercentage <= 0.80 && level >= WHM.Levels.AfflatusRapture)
-                {
-                    return WHM.AfflatusRapture;
-                }
+                if (playerPercentage <= 0.80 && level >= WHM.Levels.AfflatusRapture) return WHM.AfflatusRapture;
 
-                if (tarOfTarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace)
-                {
-                    return WHM.AfflatusSolace;
-                }
+                if (tarOfTarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace) return WHM.AfflatusSolace;
             }
 
             if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
@@ -351,9 +318,7 @@ internal class WhiteMageStoneFeature : CustomCombo
             && !HasEffect(WHM.Buffs.ThinAir)
             && GetRemainingCharges(WHM.ThinAir) >= 1
         )
-        {
             return WHM.ThinAir;
-        }
 
         return actionID;
     }

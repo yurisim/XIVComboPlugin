@@ -192,10 +192,8 @@ internal class DancerStandardStepTechnicalStep : CustomCombo
                 && gauge.IsDancing
                 && HasEffect(DNC.Buffs.TechnicalStep)
             )
-            {
                 if (gauge.CompletedSteps < 4)
                     return gauge.NextStep;
-            }
 
             // Tillana
             return OriginalHook(DNC.TechnicalStep);
@@ -275,16 +273,13 @@ internal class DancerCascadeFountain : CustomCombo
             if (level >= DNC.Levels.LastDance
                 && HasEffect(DNC.Buffs.LastDanceReady)
                 && (HasRaidBuffs() || GetCooldown(DNC.StandardStep).CooldownRemaining <= 5 || actionID is DNC.Windmill)
-                )
-            {
+               )
                 // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
                 //     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
                 // {
                 //     return DNC.FinishingMove;
                 // }
-
                 return DNC.LastDance;
-            }
 
             // From Devilment
             if (
@@ -383,9 +378,7 @@ internal class DancerDevilment : CustomCombo
                 !HasEffect(DNC.Buffs.ClosedPosition))
             {
                 if (IsEnabled(CustomComboPreset.DancerChocoboPartnerFeature) && HasCompanionPresent())
-                {
                     return DNC.ClosedPosition;
-                }
 
                 if (IsInParty() && IsInInstance())
                     return DNC.ClosedPosition;
@@ -406,18 +399,14 @@ internal class DancerLastDanceFeature : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == DNC.StandardStep)
-        {
             if (level >= DNC.Levels.LastDance && HasEffect(DNC.Buffs.LastDanceReady))
             {
                 if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
                     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
-                {
                     return DNC.FinishingMove;
-                }
 
                 return DNC.LastDance;
             }
-        }
 
         return actionID;
     }

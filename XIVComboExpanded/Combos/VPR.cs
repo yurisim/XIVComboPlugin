@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Linq;
-using Dalamud.Game.ClientState.Fates;
-using Dalamud.Game.ClientState.JobGauge.Enums;
+﻿using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Lumina.Excel.GeneratedSheets;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -12,57 +8,51 @@ internal static class VPR
     public const byte JobID = 41;
 
     public const uint
-            SteelFangs = 34606,
-            ReavingFangs = 34607,
-            HuntersSting = 34608,
-            SwiftskinsSting = 34609,
-            FlankstingStrike = 34610,
-            FlanksbaneFang = 34611,
-            HindstingStrike = 34612,
-            HindsbaneFang = 34613,
-
-            SteelMaw = 34614,
-            ReavingMaw = 34615,
-            HuntersBite = 34616,
-            SwiftskinsBite = 34617,
-            JaggedMaw = 34618,
-            BloodiedMaw = 34619,
-
-            Vicewinder = 34620,
-            HuntersCoil = 34621,
-            SwiftskinsCoil = 34622,
-            VicePit = 34623,
-            HuntersDen = 34624,
-            SwiftskinsDen = 34625,
-
-            SerpentsTail = 35920,
-            DeathRattle = 34634,
-            LastLash = 34635,
-            Twinfang = 35921,
-            Twinblood = 35922,
-            TwinfangBite = 34636,
-            TwinfangThresh = 34638,
-            TwinbloodBite = 34637,
-            TwinbloodThresh = 34639,
-
-            UncoiledFury = 34633,
-            UncoiledTwinfang = 34644,
-            UncoiledTwinblood = 34645,
-
-            SerpentsIre = 34647,
-            Reawaken = 34626,
-            FirstGeneration = 34627,
-            SecondGeneration = 34628,
-            ThirdGeneration = 34629,
-            FourthGeneration = 34630,
-            Ouroboros = 34631,
-            FirstLegacy = 34640,
-            SecondLegacy = 34641,
-            ThirdLegacy = 34642,
-            FourthLegacy = 34643,
-
-            WrithingSnap = 34632,
-            Slither = 34646;
+        SteelFangs = 34606,
+        ReavingFangs = 34607,
+        HuntersSting = 34608,
+        SwiftskinsSting = 34609,
+        FlankstingStrike = 34610,
+        FlanksbaneFang = 34611,
+        HindstingStrike = 34612,
+        HindsbaneFang = 34613,
+        SteelMaw = 34614,
+        ReavingMaw = 34615,
+        HuntersBite = 34616,
+        SwiftskinsBite = 34617,
+        JaggedMaw = 34618,
+        BloodiedMaw = 34619,
+        Vicewinder = 34620,
+        HuntersCoil = 34621,
+        SwiftskinsCoil = 34622,
+        VicePit = 34623,
+        HuntersDen = 34624,
+        SwiftskinsDen = 34625,
+        SerpentsTail = 35920,
+        DeathRattle = 34634,
+        LastLash = 34635,
+        Twinfang = 35921,
+        Twinblood = 35922,
+        TwinfangBite = 34636,
+        TwinfangThresh = 34638,
+        TwinbloodBite = 34637,
+        TwinbloodThresh = 34639,
+        UncoiledFury = 34633,
+        UncoiledTwinfang = 34644,
+        UncoiledTwinblood = 34645,
+        SerpentsIre = 34647,
+        Reawaken = 34626,
+        FirstGeneration = 34627,
+        SecondGeneration = 34628,
+        ThirdGeneration = 34629,
+        FourthGeneration = 34630,
+        Ouroboros = 34631,
+        FirstLegacy = 34640,
+        SecondLegacy = 34641,
+        ThirdLegacy = 34642,
+        FourthLegacy = 34643,
+        WrithingSnap = 34632,
+        Slither = 34646;
 
     public static class Buffs
     {
@@ -80,7 +70,7 @@ internal static class VPR
             PoisedForTwinfang = 3665,
             PoisedForTwinblood = 3666,
             HuntersInstinct = 3668, // Double check, might also be 4120
-            Swiftscaled = 3669,     // Might also be 4121
+            Swiftscaled = 3669, // Might also be 4121
             Reawakened = 3670,
             ReadyToReawaken = 3671,
             HonedSteel = 3672,
@@ -107,21 +97,21 @@ internal static class VPR
             Slither = 40,
             HuntersBite = 40,
             SwiftskinsBite = 45,
-            AoE3rdCombo = 50,    // Jagged Maw and Bloodied Maw
+            AoE3rdCombo = 50, // Jagged Maw and Bloodied Maw
             SerpentsTail = 50,
             DeathRattle = 55,
             LastLash = 60,
-            Vicewinder = 65,     // Also includes Hunter's Coil and Swiftskin's Coil
-            VicePit = 70,        // Also includes Hunter's Den and Swiftskin's Den
-            TwinsSingle = 75,    // Twinfang Bite and Twinblood Bite
-            TwinsAoE = 80,       // Twinfang Thresh and Twinblood Thresh
+            Vicewinder = 65, // Also includes Hunter's Coil and Swiftskin's Coil
+            VicePit = 70, // Also includes Hunter's Den and Swiftskin's Den
+            TwinsSingle = 75, // Twinfang Bite and Twinblood Bite
+            TwinsAoE = 80, // Twinfang Thresh and Twinblood Thresh
             UncoiledFury = 82,
             SerpentsIre = 86,
             EnhancedRattle = 88, // Third stack of Rattling Coil can be accumulated
-            Reawaken = 90,       // Also includes First Generation through Fourth Generation
-            UncoiledTwins = 92,  // Uncoiled Twinfang and Uncoiled Twinblood
-            Ouroboros = 96,      // Also includes a 5th Anguine Tribute stack from Reawaken
-            Legacies = 100;      // First through Fourth Legacy
+            Reawaken = 90, // Also includes First Generation through Fourth Generation
+            UncoiledTwins = 92, // Uncoiled Twinfang and Uncoiled Twinblood
+            Ouroboros = 96, // Also includes a 5th Anguine Tribute stack from Reawaken
+            Legacies = 100; // First through Fourth Legacy
     }
 }
 
@@ -138,37 +128,33 @@ internal class ViperFangs : CustomCombo
             var rattleCount = level >= VPR.Levels.EnhancedRattle ? 3 : 2;
 
             if (GCDClipCheck(actionID))
-            {
                 switch (level)
                 {
                     case >= VPR.Levels.SerpentsTail when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.TwinsSingle when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangBite))
-                        {
                             return HasEffect(VPR.Buffs.SwiftskinsVenom) ? VPR.TwinbloodBite : VPR.TwinfangBite;
-                        }
                         if (CanUseAction(VPR.UncoiledTwinfang))
-                        {
-                            return HasEffect(VPR.Buffs.PoisedForTwinblood) ? VPR.UncoiledTwinblood : VPR.UncoiledTwinfang;
-                        }
+                            return HasEffect(VPR.Buffs.PoisedForTwinblood)
+                                ? VPR.UncoiledTwinblood
+                                : VPR.UncoiledTwinfang;
                         break;
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre)
-                        && (gauge.RattlingCoilStacks < rattleCount):
+                                                        && gauge.RattlingCoilStacks < rattleCount:
                         return VPR.SerpentsIre;
                 }
-            }
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
 
             if (canUseSSC || canUseHunters)
             {
-                if (canUseHunters
-                    && (!HasEffect(VPR.Buffs.HuntersInstinct)
-                        || HasEffect(VPR.Buffs.FlanksbaneVenom)
-                        || HasEffect(VPR.Buffs.FlankstungVenom))
-                        || !canUseSSC)
+                if ((canUseHunters
+                     && (!HasEffect(VPR.Buffs.HuntersInstinct)
+                         || HasEffect(VPR.Buffs.FlanksbaneVenom)
+                         || HasEffect(VPR.Buffs.FlankstungVenom)))
+                    || !canUseSSC)
                     return VPR.HuntersCoil;
 
                 if (canUseSSC
@@ -196,28 +182,29 @@ internal class ViperFangs : CustomCombo
             if (HasEffect(VPR.Buffs.Swiftscaled)
                 && HasEffect(VPR.Buffs.HuntersInstinct)
                 && HasTarget()
-                )
+               )
             {
                 if ((gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (gauge.SerpentOffering >= 90
                         || HasRaidBuffs()
                         || readyToReawaken?.RemainingTime <= 10)
                     && gauge.AnguineTribute < 1)
-                {
                     return VPR.Reawaken;
-                }
 
-                var hasPostionalBuff = new[] { FindEffect(VPR.Buffs.HindsbaneVenom), FindEffect(VPR.Buffs.HindstungVenom), FindEffect(VPR.Buffs.FlanksbaneVenom), FindEffect(VPR.Buffs.FlankstungVenom) };
+                var hasPostionalBuff = new[]
+                {
+                    FindEffect(VPR.Buffs.HindsbaneVenom), FindEffect(VPR.Buffs.HindstungVenom),
+                    FindEffect(VPR.Buffs.FlanksbaneVenom), FindEffect(VPR.Buffs.FlankstungVenom)
+                };
 
                 if (gauge.RattlingCoilStacks >= 1
-                    && (gauge.RattlingCoilStacks == rattleCount || hasPostionalBuff.Any(buff => buff is not null && buff.RemainingTime >= 10))
+                    && (gauge.RattlingCoilStacks == rattleCount ||
+                        hasPostionalBuff.Any(buff => buff is not null && buff.RemainingTime >= 10))
                     && (HasRaidBuffs()
                         || (gauge.RattlingCoilStacks == rattleCount
                             && (HasCharges(VPR.Vicewinder)
                                 || IsOffCooldown(VPR.SerpentsIre)))))
-                {
                     return VPR.UncoiledFury;
-                }
             }
 
             if (level >= VPR.Levels.Vicewinder
@@ -226,9 +213,7 @@ internal class ViperFangs : CustomCombo
                 && !canUseSSC
                 && !canUseHunters
                 && (HasRaidBuffs() || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 7))
-            {
                 return VPR.Vicewinder;
-            }
 
             // Switch case here for optimization, rather than calling OriginalHook in a lot of places.
             switch (OriginalHook(VPR.SteelFangs))
@@ -275,7 +260,7 @@ internal class ViperFangs : CustomCombo
 }
 
 /// <summary>
-/// This method helps determine the relative positional
+///     This method helps determine the relative positional
 /// </summary>
 internal class ViperPositionals : CustomCombo
 {
@@ -292,15 +277,15 @@ internal class ViperPositionals : CustomCombo
             var hasFlankBuff = HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom);
 
             if ((hasFlankBuff
-                    || canUseHuntersCoil
-                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
+                 || canUseHuntersCoil
+                 || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
                 && actionID is VPR.HuntersCoil)
             {
                 // enable if we can use HunterCoil but not if our current buffs want us in the rear
                 if ((canUseHuntersCoil && !hasRearBuff)
-                // Enable this position if we need to get the Hunter's Instinct buff
+                    // Enable this position if we need to get the Hunter's Instinct buff
                     || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder)
-                // Enable this position if we have already used the other position
+                    // Enable this position if we have already used the other position
                     || (canUseHuntersCoil && !canUseSwiftSkinCoil))
                     return VPR.HuntersCoil;
 
@@ -314,20 +299,20 @@ internal class ViperPositionals : CustomCombo
             }
 
             if ((hasRearBuff
-                    || canUseSwiftSkinCoil
-                    || (HasEffect(VPR.Buffs.HuntersInstinct)
-                        && (level >= VPR.Levels.Vicewinder
-                            || (!hasRearBuff && !hasFlankBuff)))
-                    )
+                 || canUseSwiftSkinCoil
+                 || (HasEffect(VPR.Buffs.HuntersInstinct)
+                     && (level >= VPR.Levels.Vicewinder
+                         || (!hasRearBuff && !hasFlankBuff)))
+                )
                 && actionID is VPR.SwiftskinsCoil)
             {
                 // Enable this position if we can use SwiftSkinCoil but not if our current buffs want us in the flank
                 if (((canUseSwiftSkinCoil && !hasFlankBuff)
-                // Enable this position if we have already used the other position
-                        || (canUseSwiftSkinCoil && !canUseHuntersCoil)
+                     // Enable this position if we have already used the other position
+                     || (canUseSwiftSkinCoil && !canUseHuntersCoil)
                         // Enable this position if we have nothing
                         // || (!hasRearBuff && !hasFlankBuff)
-                        )
+                    )
                     // Enable this position ONLY if we already have the Hunter's Instinct buff
                     && (HasEffect(VPR.Buffs.HuntersInstinct) || level < VPR.Levels.Vicewinder))
                     return VPR.SwiftskinsCoil;
@@ -362,37 +347,33 @@ internal class ViperAoE : CustomCombo
             var maxtribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
 
             if (GCDClipCheck(actionID))
-            {
                 switch (level)
                 {
                     case >= VPR.Levels.TwinsAoE when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangThresh))
-                        {
                             return HasEffect(VPR.Buffs.FellskinsVenom) ? VPR.TwinbloodThresh : VPR.TwinfangThresh;
-                        }
                         if (CanUseAction(VPR.UncoiledTwinfang))
-                        {
-                            return HasEffect(VPR.Buffs.PoisedForTwinblood) ? VPR.UncoiledTwinblood : VPR.UncoiledTwinfang;
-                        }
+                            return HasEffect(VPR.Buffs.PoisedForTwinblood)
+                                ? VPR.UncoiledTwinblood
+                                : VPR.UncoiledTwinfang;
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre):
                         return VPR.SerpentsIre;
                 }
-            }
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsDen);
             var canUseHunters = CanUseAction(VPR.HuntersDen);
 
             if (canUseSSC || canUseHunters)
             {
-                if (canUseHunters
-                    && (!HasEffect(VPR.Buffs.HuntersInstinct)
-                        || HasEffect(VPR.Buffs.FlanksbaneVenom)
-                        || HasEffect(VPR.Buffs.FlankstungVenom))
-                        || !canUseSSC
-                        )
+                if ((canUseHunters
+                     && (!HasEffect(VPR.Buffs.HuntersInstinct)
+                         || HasEffect(VPR.Buffs.FlanksbaneVenom)
+                         || HasEffect(VPR.Buffs.FlankstungVenom)))
+                    || !canUseSSC
+                   )
                     return VPR.HuntersDen;
 
                 if (canUseSSC
@@ -420,20 +401,14 @@ internal class ViperAoE : CustomCombo
 
             if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
             {
-
                 if ((gauge.SerpentOffering >= 50
-                        || readyToReawaken is not null)
+                     || readyToReawaken is not null)
                     && gauge.AnguineTribute < 1
                     && !canUseSSC
                     && !canUseHunters)
-                {
                     return VPR.Reawaken;
-                }
 
-                if (gauge.RattlingCoilStacks >= 1)
-                {
-                    return VPR.UncoiledFury;
-                }
+                if (gauge.RattlingCoilStacks >= 1) return VPR.UncoiledFury;
             }
 
             if (level >= VPR.Levels.VicePit
@@ -441,23 +416,27 @@ internal class ViperAoE : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
                 && !canUseHunters)
-            {
                 return VPR.VicePit;
-            }
 
             switch (OriginalHook(VPR.SteelMaw))
             {
                 case VPR.SteelMaw:
-                    return (HasEffect(VPR.Buffs.HonedReavers) && level >= VPR.Levels.ReavingMaw) ? VPR.ReavingMaw : VPR.SteelMaw;
+                    return HasEffect(VPR.Buffs.HonedReavers) && level >= VPR.Levels.ReavingMaw
+                        ? VPR.ReavingMaw
+                        : VPR.SteelMaw;
 
                 case VPR.HuntersBite:
                     if (level >= VPR.Levels.SwiftskinsBite)
                     {
                         var swift = FindEffect(VPR.Buffs.Swiftscaled);
                         var instinct = FindEffect(VPR.Buffs.HuntersInstinct);
-                        if (swift is null || swift?.RemainingTime <= instinct?.RemainingTime) // We'd always want to prioritize swift since it speeds up the rotation
+                        if (swift is null ||
+                            swift?.RemainingTime <=
+                            instinct
+                                ?.RemainingTime) // We'd always want to prioritize swift since it speeds up the rotation
                             return VPR.SwiftskinsBite;
                     }
+
                     return VPR.HuntersBite;
                 case VPR.JaggedMaw:
                     if (HasEffect(VPR.Buffs.GrimskinsVenom))
@@ -470,7 +449,6 @@ internal class ViperAoE : CustomCombo
                 default:
                     return actionID;
             }
-
         }
 
         return actionID;
@@ -489,34 +467,25 @@ internal class ViperRanged : CustomCombo
             var maxtribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
 
             if (GCDClipCheck(actionID))
-            {
                 switch (level)
                 {
                     case >= VPR.Levels.TwinsAoE when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangThresh))
-                        {
                             return HasEffect(VPR.Buffs.FellskinsVenom) ? VPR.TwinbloodThresh : VPR.TwinfangThresh;
-                        }
                         if (CanUseAction(VPR.UncoiledTwinfang))
-                        {
-                            return HasEffect(VPR.Buffs.PoisedForTwinblood) ? VPR.UncoiledTwinblood : VPR.UncoiledTwinfang;
-                        }
+                            return HasEffect(VPR.Buffs.PoisedForTwinblood)
+                                ? VPR.UncoiledTwinblood
+                                : VPR.UncoiledTwinfang;
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre):
                         return VPR.SerpentsIre;
                 }
-            }
 
             if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
-            {
                 if (gauge.RattlingCoilStacks >= 1)
-                {
                     return VPR.UncoiledFury;
-                }
-            }
-
         }
 
         return actionID;

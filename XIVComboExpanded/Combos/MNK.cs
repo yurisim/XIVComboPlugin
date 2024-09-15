@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -25,20 +23,13 @@ internal static class MNK
         RiddleOfFire = 7395,
         Brotherhood = 7396,
         FourPointFury = 16473,
-        Enlightenment = 16474,
         HowlingFist = 25763,
         MasterfulBlitz = 25764,
         RiddleOfWind = 25766,
-        ShadowOfTheDestroyer = 25767,
         EarthsReply = 36944,
         FiresReply = 36950,
         SteeledMeditation = 36940,
-        InspiritedMeditation = 36941,
-        EnlightenedMeditation = 36943,
-        LeapingOpo = 36945,
-        RisingRaptor = 36946,
-        WindsReply = 36949,
-        PouncingCoeurl = 36947;
+        WindsReply = 36949;
 
     public static class Buffs
     {
@@ -50,8 +41,7 @@ internal static class MNK
             Brotherhood = 1185,
             RiddleOfFire = 1181,
             FormlessFist = 2513,
-            FiresRumination = 3843,
-            DisciplinedFist = 3001;
+            FiresRumination = 3843;
     }
 
     // public static class Debuffs
@@ -62,7 +52,7 @@ internal static class MNK
     public static class Levels
     {
         public const byte SnapPunch = 6,
-        Meditation = 15,
+            Meditation = 15,
             TwinSnakes = 18,
             ArmOfTheDestroyer = 26,
             Rockbreaker = 30,
@@ -78,7 +68,6 @@ internal static class MNK
             RiddleOfEarth = 64,
             RiddleOfFire = 68,
             Brotherhood = 70,
-            Enlightenment = 70,
             RiddleOfWind = 72,
             WindsReply = 96,
             FiresReply = 100;
@@ -99,16 +88,15 @@ internal class MonkBootshine : CustomCombo
             bool riddleMeDaddy(int? skillTime)
             {
                 return (skillTime is not null && GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime)
-                    || riddleFireEffect is not null
-                    || HasRaidBuffs()
-                    || level < MNK.Levels.RiddleOfFire;
+                       || riddleFireEffect is not null
+                       || HasRaidBuffs()
+                       || level < MNK.Levels.RiddleOfFire;
             }
 
             if (GCDClipCheck(actionID)
                 && InCombat()
                 && InMeleeRange()
                 && HasTarget())
-            {
                 switch (level)
                 {
                     case >= MNK.Levels.PerfectBalance when
@@ -116,8 +104,9 @@ internal class MonkBootshine : CustomCombo
                         && !HasEffect(MNK.Buffs.FormlessFist)
                         && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                         && !HasEffect(MNK.Buffs.PerfectBalance)
-                        && ((riddleFireEffect?.RemainingTime >= GetCooldown(actionID).BaseCooldown * 4)
-                            || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining <= GetCooldown(actionID).BaseCooldown * 3
+                        && (riddleFireEffect?.RemainingTime >= GetCooldown(actionID).BaseCooldown * 4
+                            || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining <=
+                            GetCooldown(actionID).BaseCooldown * 3
                             || HasRaidBuffs()
                             || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
                         return MNK.PerfectBalance;
@@ -145,7 +134,6 @@ internal class MonkBootshine : CustomCombo
                         && HasEffect(MNK.Buffs.EarthsRumination):
                         return MNK.EarthsReply;
                 }
-            }
 
             if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
             {
@@ -163,21 +151,16 @@ internal class MonkBootshine : CustomCombo
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
                 // 5000 is in Milliseconds
                 && (gauge.BlitzTimeRemaining <= 5000 || riddleFireEffect is not null || HasRaidBuffs())
-                )
+               )
                 return OriginalHook(MNK.MasterfulBlitz);
 
             if (level >= MNK.Levels.FiresReply
                 && CanUseAction(MNK.FiresReply)
                 && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8)
                 && !HasEffect(MNK.Buffs.FormlessFist))
-            {
                 return MNK.FiresReply;
-            }
 
-            if (level >= MNK.Levels.WindsReply && CanUseAction(MNK.WindsReply))
-            {
-                return MNK.WindsReply;
-            }
+            if (level >= MNK.Levels.WindsReply && CanUseAction(MNK.WindsReply)) return MNK.WindsReply;
 
             if (HasEffect(MNK.Buffs.RaptorForm)
                 || (HasEffect(MNK.Buffs.PerfectBalance)
@@ -270,11 +253,11 @@ internal class MonkAoECombo : CustomCombo
                     !HasEffect(MNK.Buffs.PerfectBalance))
                     return MNK.FormShift;
             }
+
             if (level >= 100 && CanUseAction(MNK.FiresReply)
-                && (HasEffect(MNK.Buffs.RaptorForm) || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8))
-            {
+                             && (HasEffect(MNK.Buffs.RaptorForm) ||
+                                 FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8))
                 return MNK.FiresReply;
-            }
 
             var perfectBalance = FindEffect(MNK.Buffs.PerfectBalance);
 
@@ -284,10 +267,7 @@ internal class MonkAoECombo : CustomCombo
                 return OriginalHook(MNK.MasterfulBlitz);
 
 
-            if (CanUseAction(MNK.WindsReply))
-            {
-                return MNK.WindsReply;
-            }
+            if (CanUseAction(MNK.WindsReply)) return MNK.WindsReply;
 
             if (HasEffect(MNK.Buffs.RaptorForm)
                 || (perfectBalance?.StackCount >= 3

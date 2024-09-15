@@ -111,36 +111,28 @@ internal class WarriorStormsPathCombo : CustomCombo
                     )
                     && !HasEffect(WAR.Buffs.InnerRelease)
                 )
-                {
                     return WAR.Infuriate;
-                }
 
                 if (
                     IsOffCooldown(WAR.Upheaval)
                     && surgingTempest is not null
                     && level >= WAR.Levels.Upheaval
                 )
-                {
                     return WAR.Upheaval;
-                }
 
                 if (
                     IsOffCooldown(OriginalHook(WAR.Berserk))
                     && (level < WAR.Levels.StormsEye || surgingTempest is not null)
-                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.InnerChaos))
+                    && (!HasEffect(WAR.Buffs.NascentChaos) || level < WAR.Levels.InnerChaos)
                 )
-                {
                     return OriginalHook(WAR.Berserk);
-                }
 
                 if (
                     level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
-                    && (localPlayerPercentage <= 0.60)
+                    && localPlayerPercentage <= 0.60
                 )
-                {
                     return WAR.Equilibrium;
-                }
             }
 
             if (
@@ -160,9 +152,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                     || HasEffect(WAR.Buffs.InnerRelease)
                 )
             )
-            {
                 return OriginalHook(WAR.InnerBeast);
-            }
 
             if (comboTime > 0)
             {
@@ -177,10 +167,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                     return WAR.StormsPath;
                 }
 
-                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
-                {
-                    return WAR.Maim;
-                }
+                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim) return WAR.Maim;
             }
         }
 
@@ -201,14 +188,11 @@ internal class WarriorMythrilTempestCombo : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 var localPlayerPercentage =
-                    (LocalPlayer is not null)
+                    LocalPlayer is not null
                         ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp
                         : 1;
 
-                if (IsOffCooldown(WAR.Upheaval) && level >= WAR.Levels.Upheaval)
-                {
-                    return WAR.Upheaval;
-                }
+                if (IsOffCooldown(WAR.Upheaval) && level >= WAR.Levels.Upheaval) return WAR.Upheaval;
 
                 if (
                     level >= WAR.Levels.Infuriate
@@ -224,26 +208,20 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                     )
                     && !HasEffect(WAR.Buffs.InnerRelease)
                 )
-                {
                     return WAR.Infuriate;
-                }
 
                 if (
                     IsOffCooldown(OriginalHook(WAR.Berserk))
-                    && (!HasEffect(WAR.Buffs.NascentChaos) || (level < WAR.Levels.ChaoticCyclone))
+                    && (!HasEffect(WAR.Buffs.NascentChaos) || level < WAR.Levels.ChaoticCyclone)
                 )
-                {
                     return OriginalHook(WAR.Berserk);
-                }
 
                 if (
                     level >= WAR.Levels.Equilibrium
                     && IsOffCooldown(WAR.Equilibrium)
                     && localPlayerPercentage <= 0.70
                 )
-                {
                     return WAR.Equilibrium;
-                }
             }
 
             var surgingTempest = FindEffect(WAR.Buffs.SurgingTempest);
@@ -261,17 +239,11 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                     || HasEffect(WAR.Buffs.InnerRelease)
                 )
             )
-            {
                 return OriginalHook(WAR.SteelCyclone);
-            }
 
             if (comboTime > 0)
-            {
                 if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
-                {
                     return WAR.MythrilTempest;
-                }
-            }
 
             return actionID;
         }
@@ -294,10 +266,8 @@ internal class WarriorFellCleaveDecimate : CustomCombo
         )
         {
             if (IsEnabled(CustomComboPreset.WarriorPrimalBeastFeature))
-            {
                 if (level >= WAR.Levels.PrimalRend && HasEffect(WAR.Buffs.PrimalRendReady))
                     return WAR.PrimalRend;
-            }
 
             if (IsEnabled(CustomComboPreset.WarriorInfuriateBeastFeature))
             {
@@ -366,7 +336,6 @@ internal class WarriorBloodwhetting : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == WAR.Bloodwhetting || actionID == WAR.RawIntuition)
-        {
             if (IsEnabled(CustomComboPreset.WarriorHealthyBalancedDietFeature))
             {
                 if (level >= WAR.Levels.Bloodwhetting)
@@ -386,7 +355,6 @@ internal class WarriorBloodwhetting : CustomCombo
                 if (level >= WAR.Levels.Equilibrium && IsAvailable(WAR.Equilibrium))
                     return WAR.Equilibrium;
             }
-        }
 
         return actionID;
     }

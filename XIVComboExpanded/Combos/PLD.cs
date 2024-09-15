@@ -113,18 +113,14 @@ internal abstract class PaladinCombo : CustomCombo
                         || TargetHasEffect(PLD.Debuffs.GoringBlade)
                     )
                 )
-                {
                     return PLD.FightOrFlight;
-                }
 
                 if (
                     level >= PLD.Levels.Requiescat
                     && IsOffCooldown(PLD.Requiescat)
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 15)
                 )
-                {
                     return PLD.Requiescat;
-                }
 
                 if (
                     level >= PLD.Levels.CircleOfScorn
@@ -133,27 +129,20 @@ internal abstract class PaladinCombo : CustomCombo
                     && GetTargetDistance() <= 5
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5)
                 )
-                {
                     return PLD.CircleOfScorn;
-                }
 
                 if (
                     level >= PLD.Levels.SpiritsWithin
                     && IsOffCooldown(PLD.SpiritsWithin)
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5)
                 )
-                {
                     return OriginalHook(PLD.SpiritsWithin);
-                }
 
                 //if (HasEffect(PLD.Buffs.Requiescat) && this.HasMp(PLD.HolySpirit))
                 //    return PLD.HolySpirit;
             }
 
-            if (HasEffect(PLD.Buffs.Requiescat) && goringBlade is not null)
-            {
-                return PLD.HolySpirit;
-            }
+            if (HasEffect(PLD.Buffs.Requiescat) && goringBlade is not null) return PLD.HolySpirit;
 
             if (comboTime > 0 && InMeleeRange())
             {
@@ -165,9 +154,7 @@ internal abstract class PaladinCombo : CustomCombo
                         || (goringBlade is not null && goringBlade.RemainingTime <= 5)
                     )
                 )
-                {
                     return PLD.GoringBlade;
-                }
 
                 if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
                     // Royal Authority
@@ -200,18 +187,14 @@ internal class PaladinProminence : CustomCombo
                     IsOffCooldown(PLD.FightOrFlight)
                     && (lastComboMove == PLD.TotalEclipse || HasEffect(PLD.Buffs.Requiescat))
                 )
-                {
                     return PLD.FightOrFlight;
-                }
 
                 if (
                     level >= PLD.Levels.Requiescat
                     && IsOffCooldown(PLD.Requiescat)
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 15)
                 )
-                {
                     return PLD.Requiescat;
-                }
 
                 if (
                     level >= PLD.Levels.CircleOfScorn
@@ -220,25 +203,18 @@ internal class PaladinProminence : CustomCombo
                     && GetTargetDistance() <= 5
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5)
                 )
-                {
                     return PLD.CircleOfScorn;
-                }
 
                 if (
                     level >= PLD.Levels.SpiritsWithin
                     && IsOffCooldown(PLD.SpiritsWithin)
                     && (HasEffect(PLD.Buffs.FightOrFlight) || fightOrFlightCD >= 7.5)
                 )
-                {
                     return OriginalHook(PLD.SpiritsWithin);
-                }
 
                 var gauge = GetJobGauge<PLDGauge>();
 
-                if (level >= PLD.Levels.Sheltron && gauge.OathGauge == 100)
-                {
-                    return PLD.Sheltron;
-                }
+                if (level >= PLD.Levels.Sheltron && gauge.OathGauge == 100) return PLD.Sheltron;
             }
 
             if (
@@ -246,15 +222,11 @@ internal class PaladinProminence : CustomCombo
                 && level >= PLD.Levels.HolyCircle
                 && GetTargetDistance() <= 5
             )
-            {
                 return PLD.HolyCircle;
-            }
 
             if (comboTime > 0)
-            {
                 if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
                     return PLD.Prominence;
-            }
 
             return PLD.TotalEclipse;
         }
@@ -271,7 +243,6 @@ internal class PaladinHolySpiritHolyCircle : PaladinCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == PLD.HolySpirit || actionID == PLD.HolyCircle)
-        {
             if (level >= PLD.Levels.Confiteor)
             {
                 var original = OriginalHook(PLD.Confiteor);
@@ -281,7 +252,6 @@ internal class PaladinHolySpiritHolyCircle : PaladinCombo
                 if (HasEffect(PLD.Buffs.ConfiteorReady))
                     return PLD.Confiteor;
             }
-        }
 
         return actionID;
     }
@@ -439,12 +409,9 @@ internal class PaladinShieldBash : PaladinCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == PLD.ShieldBash)
-        {
             if (level >= PLD.Levels.LowBlow && IsAvailable(PLD.LowBlow))
                 return PLD.LowBlow;
-        }
 
         return actionID;
     }
 }
-

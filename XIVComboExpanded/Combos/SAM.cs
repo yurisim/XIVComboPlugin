@@ -10,8 +10,6 @@ internal static class SAM
 
     public const uint
         // Single target
-
-
         Hakaze = 7477,
         Jinpu = 7478,
         Shifu = 7479,
@@ -24,23 +22,17 @@ internal static class SAM
         KaeshiSetsugekka = 16486,
         Gyofu = 36963,
         // AoE
-
-
         Fuga = 7483,
         Mangetsu = 7484,
         Oka = 7485,
         TenkaGoken = 7488,
         Fuko = 25780,
         // Iaijutsu and Tsubame
-
-
         Iaijutsu = 7867,
         TsubameGaeshi = 16483,
         KaeshiHiganbana = 16484,
         Shoha = 16487,
         // Misc
-
-
         MeikyoShisui = 7499,
         HissatsuShinten = 7490,
         HissatsuKyuten = 7491,
@@ -106,11 +98,11 @@ internal class SamuraiYukikaze : CustomCombo
         {
             var gauge = GetJobGauge<SAMGauge>();
 
-            var gaugeSen = new int[]
+            var gaugeSen = new[]
             {
                 gauge.HasSetsu ? 1 : 0,
                 gauge.HasKa ? 1 : 0,
-                gauge.HasGetsu ? 1 : 0,
+                gauge.HasGetsu ? 1 : 0
             };
 
             var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
@@ -133,14 +125,9 @@ internal class SamuraiYukikaze : CustomCombo
                         || GetCooldown(SAM.MeikyoShisui).CooldownRemaining <= 5
                     )
                 )
-                {
                     return SAM.MeikyoShisui;
-                }
 
-                if (canUseIkishoten && HasRaidBuffs() && gauge.Kenki <= 50)
-                {
-                    return SAM.Ikishoten;
-                }
+                if (canUseIkishoten && HasRaidBuffs() && gauge.Kenki <= 50) return SAM.Ikishoten;
 
                 if (
                     level >= SAM.Levels.HissatsuGuren
@@ -149,11 +136,9 @@ internal class SamuraiYukikaze : CustomCombo
                     && gauge.Kenki >= 25
                     && HasEffect(SAM.Buffs.Jinpu)
                 )
-                {
-                    return (level >= SAM.Levels.HissatsuSenei)
+                    return level >= SAM.Levels.HissatsuSenei
                         ? SAM.HissatsuSenei
                         : SAM.HissatsuGuren;
-                }
 
                 if (
                     level >= SAM.Levels.HissatsuShinten
@@ -174,41 +159,29 @@ internal class SamuraiYukikaze : CustomCombo
                     )
                     && HasEffect(SAM.Buffs.Jinpu)
                 )
-                {
                     return SAM.HissatsuShinten;
-                }
             }
 
-            if (OriginalHook(SAM.OgiNamikiri) != SAM.OgiNamikiri)
-            {
-                return OriginalHook(SAM.OgiNamikiri);
-            }
+            if (OriginalHook(SAM.OgiNamikiri) != SAM.OgiNamikiri) return OriginalHook(SAM.OgiNamikiri);
 
             if (
                 gauge.MeditationStacks == 3
-                && (higanbanaTime || HasRaidBuffs() || (gaugeSen.Sum() == 3))
+                && (higanbanaTime || HasRaidBuffs() || gaugeSen.Sum() == 3)
             )
-            {
                 return SAM.Shoha;
-            }
 
             if (
                 level >= SAM.Levels.TsubameGaeshi
                 && HasCharges(SAM.TsubameGaeshi)
                 && (GetCooldown(SAM.TsubameGaeshi).CooldownRemaining <= 15 || HasRaidBuffs())
                 && HasEffect(SAM.Buffs.Jinpu)
-                && (OriginalHook(SAM.TsubameGaeshi) == SAM.KaeshiSetsugekka)
+                && OriginalHook(SAM.TsubameGaeshi) == SAM.KaeshiSetsugekka
             )
-            {
                 return OriginalHook(SAM.TsubameGaeshi);
-            }
 
             var ogiBuff = FindEffect(SAM.Buffs.OgiNamikiriReady);
 
-            if (level >= SAM.Levels.OgiNamikiri && ogiBuff is not null)
-            {
-                return SAM.OgiNamikiri;
-            }
+            if (level >= SAM.Levels.OgiNamikiri && ogiBuff is not null) return SAM.OgiNamikiri;
 
             if (gauge.MeditationStacks != 3)
             {
@@ -223,14 +196,9 @@ internal class SamuraiYukikaze : CustomCombo
                         || (higanabana is not null && higanabana.RemainingTime <= 6)
                     )
                 )
-                {
                     return OriginalHook(SAM.Iaijutsu);
-                }
 
-                if (level >= SAM.Levels.MidareSetsugekka && gaugeSen.Sum() == 3)
-                {
-                    return OriginalHook(SAM.Iaijutsu);
-                }
+                if (level >= SAM.Levels.MidareSetsugekka && gaugeSen.Sum() == 3) return OriginalHook(SAM.Iaijutsu);
             }
 
             if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
@@ -245,14 +213,12 @@ internal class SamuraiYukikaze : CustomCombo
 
             // Does not matter
             if (!gauge.HasSetsu)
-            {
                 return lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze
                     ? SAM.Yukikaze
                     : SAM.Hakaze;
-            }
 
             // Rear
-            if (!gauge.HasGetsu || ((!HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Jinpu))
+            if (!gauge.HasGetsu || (!HasEffect(SAM.Buffs.Jinpu) && level >= SAM.Levels.Jinpu))
             {
                 if (lastComboMove == SAM.Jinpu && level >= SAM.Levels.Gekko)
                     return SAM.Gekko;
@@ -262,7 +228,7 @@ internal class SamuraiYukikaze : CustomCombo
             }
 
             // Flank
-            if (!gauge.HasKa || ((!HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Shifu))
+            if (!gauge.HasKa || (!HasEffect(SAM.Buffs.Shifu) && level >= SAM.Levels.Shifu))
             {
                 if (lastComboMove == SAM.Shifu && level >= SAM.Levels.Kasha)
                     return SAM.Kasha;
@@ -286,11 +252,11 @@ internal class SamuraiMangetsu : CustomCombo
         {
             var gauge = GetJobGauge<SAMGauge>();
 
-            var gaugeSen = new int[]
+            var gaugeSen = new[]
             {
                 gauge.HasSetsu ? 1 : 0,
                 gauge.HasKa ? 1 : 0,
-                gauge.HasGetsu ? 1 : 0,
+                gauge.HasGetsu ? 1 : 0
             };
 
             if (
@@ -298,11 +264,9 @@ internal class SamuraiMangetsu : CustomCombo
                 && HasCharges(SAM.TsubameGaeshi)
                 && (GetCooldown(SAM.TsubameGaeshi).CooldownRemaining <= 15 || HasRaidBuffs())
                 && HasEffect(SAM.Buffs.Jinpu)
-                && (OriginalHook(SAM.TsubameGaeshi) != SAM.TsubameGaeshi)
+                && OriginalHook(SAM.TsubameGaeshi) != SAM.TsubameGaeshi
             )
-            {
                 return OriginalHook(SAM.TsubameGaeshi);
-            }
 
             if (GCDClipCheck(actionID))
             {
@@ -319,10 +283,7 @@ internal class SamuraiMangetsu : CustomCombo
                 var canUseIkishoten =
                     level >= SAM.Levels.Ikishoten && IsOffCooldown(SAM.Ikishoten) && InCombat();
 
-                if (canUseIkishoten && gauge.Kenki <= 50)
-                {
-                    return SAM.Ikishoten;
-                }
+                if (canUseIkishoten && gauge.Kenki <= 50) return SAM.Ikishoten;
 
                 if (
                     level >= SAM.Levels.MeikyoShisui
@@ -333,9 +294,7 @@ internal class SamuraiMangetsu : CustomCombo
                         || GetCooldown(SAM.MeikyoShisui).CooldownRemaining <= 5
                     )
                 )
-                {
                     return SAM.MeikyoShisui;
-                }
 
                 if (
                     level >= SAM.Levels.HissatsuGuren
@@ -343,24 +302,18 @@ internal class SamuraiMangetsu : CustomCombo
                     && gauge.Kenki >= 25
                     && HasEffect(SAM.Buffs.Jinpu)
                 )
-                {
                     return SAM.HissatsuGuren;
-                }
 
                 if (
                     level >= SAM.Levels.HissatsuKyuten
                     && gauge.Kenki >= 50
                     && HasEffect(SAM.Buffs.Jinpu)
                 )
-                {
                     return SAM.HissatsuKyuten;
-                }
             }
 
             if (level >= SAM.Levels.TenkaGoken && gaugeSen.Sum() >= 2 && !this.IsMoving)
-            {
                 return OriginalHook(SAM.Iaijutsu);
-            }
 
             if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
             {
@@ -372,17 +325,13 @@ internal class SamuraiMangetsu : CustomCombo
 
             // Rear
             if ((!gauge.HasGetsu || !HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Mangetsu)
-            {
                 if (lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko)
                     return SAM.Mangetsu;
-            }
 
             // Flank
             if ((!gauge.HasKa || !HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Oka)
-            {
                 if (lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko)
                     return SAM.Oka;
-            }
         }
 
         return actionID;
@@ -402,13 +351,11 @@ internal class SamuraiOka : CustomCombo
                 return SAM.Oka;
 
             if (comboTime > 0)
-            {
                 if (
                     (lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko)
                     && level >= SAM.Levels.Oka
                 )
                     return SAM.Oka;
-            }
 
             // Fuko
             return OriginalHook(SAM.Fuga);
@@ -429,10 +376,8 @@ internal class SamuraiTsubame : CustomCombo
             var gauge = GetJobGauge<SAMGauge>();
 
             if (IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiShohaFeature))
-            {
                 if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
                     return SAM.Shoha;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiTsubameGaeshiIaijutsuFeature))
             {
@@ -458,10 +403,8 @@ internal class SamuraiIaijutsu : CustomCombo
             var gauge = GetJobGauge<SAMGauge>();
 
             if (IsEnabled(CustomComboPreset.SamuraiIaijutsuShohaFeature))
-            {
                 if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
                     return SAM.Shoha;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiIaijutsuTsubameGaeshiFeature))
             {
@@ -487,16 +430,12 @@ internal class SamuraiShinten : CustomCombo
             var gauge = GetJobGauge<SAMGauge>();
 
             if (IsEnabled(CustomComboPreset.SamuraiShintenZanshinFeature))
-            {
                 if (level >= SAM.Levels.Zanshin && HasEffect(SAM.Buffs.ZanshinReady))
                     return SAM.Zanshin;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiShintenShohaFeature))
-            {
                 if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
                     return SAM.Shoha;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiShintenSeneiFeature))
             {
@@ -504,14 +443,12 @@ internal class SamuraiShinten : CustomCombo
                     return SAM.HissatsuSenei;
 
                 if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
-                {
                     if (
                         level >= SAM.Levels.HissatsuGuren
                         && level < SAM.Levels.HissatsuSenei
                         && IsOffCooldown(SAM.HissatsuGuren)
                     )
                         return SAM.HissatsuGuren;
-                }
             }
         }
 
@@ -526,13 +463,9 @@ internal class SamuraiSenei : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SAM.HissatsuSenei)
-        {
             if (IsEnabled(CustomComboPreset.SamuraiSeneiGurenFeature))
-            {
                 if (level >= SAM.Levels.HissatsuGuren && level < SAM.Levels.HissatsuSenei)
                     return SAM.HissatsuGuren;
-            }
-        }
 
         return actionID;
     }
@@ -549,22 +482,16 @@ internal class SamuraiKyuten : CustomCombo
             var gauge = GetJobGauge<SAMGauge>();
 
             if (IsEnabled(CustomComboPreset.SamuraiKyutenZanshinFeature))
-            {
                 if (level >= SAM.Levels.Zanshin && HasEffect(SAM.Buffs.ZanshinReady))
                     return SAM.Zanshin;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiKyutenShohaFeature))
-            {
                 if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
                     return SAM.Shoha;
-            }
 
             if (IsEnabled(CustomComboPreset.SamuraiKyutenGurenFeature))
-            {
                 if (level >= SAM.Levels.HissatsuGuren && IsAvailable(SAM.HissatsuGuren))
                     return SAM.HissatsuGuren;
-            }
         }
 
         return actionID;
@@ -579,16 +506,13 @@ internal class SamuraiIkishoten : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SAM.Ikishoten)
-        {
             if (level >= SAM.Levels.OgiNamikiri)
             {
                 var gauge = GetJobGauge<SAMGauge>();
 
                 if (IsEnabled(CustomComboPreset.SamuraiIkishotenShohaFeature))
-                {
                     if (level >= SAM.Levels.Shoha && gauge.MeditationStacks >= 3)
                         return SAM.Shoha;
-                }
 
                 if (gauge.Kaeshi == Kaeshi.NAMIKIRI)
                     return SAM.KaeshiNamikiri;
@@ -596,7 +520,6 @@ internal class SamuraiIkishoten : CustomCombo
                 if (HasEffect(SAM.Buffs.OgiNamikiriReady))
                     return SAM.OgiNamikiri;
             }
-        }
 
         return actionID;
     }
