@@ -129,14 +129,18 @@ internal static class PCT
 
             if (actionID is FireRed or HolyWhite)
             {
+                var hasRaidBuffs = HasRaidBuffs();
+
+                var starryMuseCD = HasEffect(Buffs.StarryMuse) || level < Levels.StarryMuse || hasRaidBuffs;
+
                 var canUsePalette = (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum))
-                                    && (StarryMuseCD() || gauge.PalleteGauge >= 100);
+                                    && (starryMuseCD || gauge.PalleteGauge >= 100);
 
                 if (GCDClipCheck(actionID))
                     switch (level)
                     {
                         case >= Levels.StarryMuse
-                            when HasRaidBuffs() && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
+                            when hasRaidBuffs && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
                             return StarryMuse;
                         case >= Levels.SubtractivePalette
                             when canUsePalette && CanUseAction(SubtractivePalette) &&
@@ -148,7 +152,7 @@ internal static class PCT
                                  && InCombat()
                                  && (level < Levels.StarryMuse || GetCooldown(StarryMuse).TotalCooldownRemaining >= 10)
                                  && (GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10
-                                     || HasRaidBuffs()
+                                     || hasRaidBuffs
                                      || HasEffect(Buffs.StarryMuse)
                                      || level < Levels.HammerBrush):
                             return OriginalHook(SteelMuse);
@@ -159,20 +163,20 @@ internal static class PCT
                                      (gauge.CreatureFlags.HasFlag(CreatureFlags.Pom) &&
                                       !gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
                                      || gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)
-                                     || StarryMuseCD()
+                                     || starryMuseCD
                                  ):
                             return OriginalHook(MogOftheAges);
                         case >= Levels.CreatureMotif
                             when IsAvailable(OriginalHook(LivingMuse))
                                  && gauge.CreatureMotifDrawn
                                  && InCombat()
-                                 && (StarryMuseCD()
+                                 && (starryMuseCD
                                      || GetCooldown(StarryMuse).TotalCooldownRemaining > 10
                                      || ((!gauge.CreatureFlags.HasFlag(CreatureFlags.Pom) ||
                                           gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
                                          && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
-                                 && (StarryMuseCD() ||
-                                     GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining <= 10):
+                                 && (starryMuseCD
+                                    || GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining < GetCooldown(StarryMuse).TotalCooldownRemaining):
                             return OriginalHook(LivingMuse);
                         case >= 15
                             when InCombat()
@@ -183,7 +187,7 @@ internal static class PCT
 
                 if (
                     CanUseAction(OriginalHook(CometBlack))
-                    && (canUsePalette || StarryMuseCD() || actionID is HolyWhite)
+                    && (canUsePalette || starryMuseCD || actionID is HolyWhite)
                 )
                     return OriginalHook(CometBlack);
 
@@ -225,11 +229,7 @@ internal static class PCT
                 return actionID is FireRed
                     ? OriginalHook(FireRed)
                     : HolyWhite;
-
-                bool StarryMuseCD()
-                {
-                    return HasEffect(Buffs.StarryMuse) || level < Levels.StarryMuse || HasRaidBuffs();
-                }
+                
             }
 
             return actionID;

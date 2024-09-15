@@ -245,17 +245,31 @@ internal class DancerCascadeFountain : CustomCombo
                     && gauge.Feathers < 4
                     && IsOffCooldown(DNC.Flourish)
                     && (
-                        HasEffect(DNC.Buffs.Devilment)
+                        HasRaidBuffs()
                         || GetCooldown(DNC.Devilment).CooldownRemaining > 20
                     )
                 )
                     return DNC.Flourish;
 
                 // Only use feathers if full or you have the devilment buff
-                if (gauge.Feathers == 4 || (HasEffect(DNC.Buffs.Devilment) && gauge.Feathers > 0))
+                if (gauge.Feathers >= 1
+                    && (HasRaidBuffs() || gauge.Feathers == 4)
+                     )
                     return DNC.FanDance1;
             }
 
+            if (level >= DNC.Levels.LastDance
+                && HasEffect(DNC.Buffs.LastDanceReady)
+                && (HasRaidBuffs()
+                    || GetCooldown(DNC.StandardStep).CooldownRemaining <= 20
+                    || actionID is DNC.Windmill)
+               )
+                // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
+                //     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
+                // {
+                //     return DNC.FinishingMove;
+                // }
+                return DNC.LastDance;
 
             if (level >= DNC.Levels.StandardStep && IsOffCooldown(DNC.StandardStep))
                 return DNC.StandardStep;
@@ -265,23 +279,12 @@ internal class DancerCascadeFountain : CustomCombo
                 && gauge.Esprit >= 50
                 && (gauge.Esprit >= 85
                     || HasRaidBuffs()
+                    || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill
                 )
             )
                 return DNC.SaberDance;
 
-            if (level >= DNC.Levels.LastDance
-                && HasEffect(DNC.Buffs.LastDanceReady)
-                && (HasRaidBuffs() || GetCooldown(DNC.StandardStep).CooldownRemaining <= 5 || actionID is DNC.Windmill)
-               )
-                // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
-                //     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
-                // {
-                //     return DNC.FinishingMove;
-                // }
-                return DNC.LastDance;
-
-            // From Devilment
             if (
                 level >= DNC.Levels.StarfallDance
                 && HasRaidBuffs()
@@ -292,12 +295,13 @@ internal class DancerCascadeFountain : CustomCombo
             if (
                 level >= DNC.Levels.Tillana
                 && HasRaidBuffs()
+                && gauge.Esprit <= 50
                 && HasEffect(DNC.Buffs.FlourishingFinish)
             )
                 return DNC.Tillana;
 
             // Single Target
-            if (actionID == DNC.Cascade)
+            if (actionID is DNC.Cascade)
             {
                 if (
                     level >= DNC.Levels.Fountainfall
@@ -319,7 +323,7 @@ internal class DancerCascadeFountain : CustomCombo
             }
 
             // Aoe
-            if (actionID == DNC.Windmill)
+            if (actionID is DNC.Windmill)
             {
                 if (
                     level >= DNC.Levels.Bloodshower
@@ -338,26 +342,6 @@ internal class DancerCascadeFountain : CustomCombo
 
                 if (lastComboMove == DNC.Windmill && level >= DNC.Levels.Bladeshower)
                     return DNC.Bladeshower;
-            }
-        }
-
-        if (actionID == DNC.RisingWindmill || actionID == DNC.Bloodshower)
-        {
-            var gauge = GetJobGauge<DNCGauge>();
-
-            if (level >= DNC.Levels.SaberDance && !HasEffect(DNC.Buffs.StandardStep) &&
-                !HasEffect(DNC.Buffs.TechnicalStep))
-            {
-                if (IsEnabled(CustomComboPreset.DancerAoeDanceOfTheDawn) &&
-                    gauge.Esprit >= 50 && HasEffect(DNC.Buffs.DanceOfTheDawnReady))
-                    return OriginalHook(DNC.SaberDance);
-
-                if (IsEnabled(CustomComboPreset.DancerAoeSabreDance) && gauge.Esprit >= 85)
-                    return OriginalHook(DNC.SaberDance);
-
-                if (IsEnabled(CustomComboPreset.DancerAoeSabreDanceTech) &&
-                    gauge.Esprit >= 50 && HasEffect(DNC.Buffs.TechnicalFinish))
-                    return OriginalHook(DNC.SaberDance);
             }
         }
 
