@@ -153,13 +153,13 @@ internal class MachinistCleanShot : CustomCombo
                         case >= MCH.Levels.Ricochet when
                             HasCharges(OriginalHook(MCH.Ricochet))
                             && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 27
+                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 30
                                 || HasRaidBuffs())
                             && ricochetCharges >= gaussRoundCharges:
                         case >= MCH.Levels.GaussRound when
                             HasCharges(OriginalHook(MCH.GaussRound))
                             && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 27
+                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 30
                                 || HasRaidBuffs()):
                             return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
                             .MinBy(actionID => GetCooldown(actionID).TotalCooldownRemaining);
@@ -167,10 +167,11 @@ internal class MachinistCleanShot : CustomCombo
 
                 }
 
-                if (overheated is null || (overheated.StackCount == 1 && overheated.RemainingTime >= 3))
+                if (overheated is null || fullMetal?.RemainingTime <= 5 || excavatorReady?.RemainingTime <= 5)
                 {
-                    if (level >= MCH.Levels.Drill && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill)) &&
-                        (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 8 || HasRaidBuffs()))
+                    if (level >= MCH.Levels.Drill
+                        && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
+                        && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 8 || HasRaidBuffs()))
                     {
                         if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble)) && GCDClipCheck(actionID) &&
                             !HasEffect(MCH.Buffs.Reassemble))
@@ -189,7 +190,7 @@ internal class MachinistCleanShot : CustomCombo
                         if (level >= MCH.Levels.Chainsaw
                         && (IsOffCooldown(MCH.Chainsaw) || excavatorReady is not null)
                         && (excavatorReady is null
-                            || excavatorReady.RemainingTime <= 10
+                            || excavatorReady.RemainingTime <= 15
                             || HasRaidBuffs()))
                         {
                             if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble)) &&
