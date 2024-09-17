@@ -115,6 +115,9 @@ internal class SamuraiYukikaze : CustomCombo
 
             var hasRaidBuffs = HasRaidBuffs();
 
+            var jinpu = FindEffect(SAM.Buffs.Jinpu);
+            var shifu = FindEffect(SAM.Buffs.Shifu);
+
             if (GCDClipCheck(actionID))
             {
                 switch (level)
@@ -127,8 +130,10 @@ internal class SamuraiYukikaze : CustomCombo
                         return SAM.Shoha;
                     case >= SAM.Levels.MeikyoShisui when
                         (HasCharges(SAM.MeikyoShisui) || IsOffCooldown(SAM.MeikyoShisui))
+                        && InCombat()
+                        // && (!(comboTime > 0) || jinpu is null || shifu is null)
                         && (hasRaidBuffs
-                            || GetCooldown(SAM.MeikyoShisui).TotalCooldownRemaining <= 5):
+                            || GetCooldown(SAM.MeikyoShisui).TotalCooldownRemaining <= 10):
                         return SAM.MeikyoShisui;
                     case >= SAM.Levels.Ikishoten when
                         canUseIkishoten
@@ -177,6 +182,7 @@ internal class SamuraiYukikaze : CustomCombo
                 return OriginalHook(SAM.TsubameGaeshi);
 
             if (level >= SAM.Levels.OgiNamikiri
+                && gauge.MeditationStacks is not 3
                 && FindEffect(SAM.Buffs.OgiNamikiriReady) is not null)
                 return SAM.OgiNamikiri;
 
@@ -201,16 +207,14 @@ internal class SamuraiYukikaze : CustomCombo
             if (!gauge.HasSetsu && level >= SAM.Levels.Higanbana)
                 return lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze ? SAM.Yukikaze : SAM.Hakaze;
 
-            var jinpu = FindEffect(SAM.Buffs.Jinpu);
-            var shifu = FindEffect(SAM.Buffs.Shifu);
 
-            if (!gauge.HasGetsu || (jinpu is null && level >= SAM.Levels.Jinpu) || jinpu?.RemainingTime > shifu?.RemainingTime)
+            if (!gauge.HasGetsu || (jinpu is null && level >= SAM.Levels.Jinpu) || (jinpu?.RemainingTime > shifu?.RemainingTime && level < SAM.Levels.Higanbana))
             {
                 if (lastComboMove == SAM.Jinpu && level >= SAM.Levels.Gekko) return SAM.Gekko;
                 if (lastComboMove == SAM.Hakaze) return SAM.Jinpu;
             }
 
-            if (!gauge.HasKa || (shifu is null && level >= SAM.Levels.Shifu) || jinpu?.RemainingTime < shifu?.RemainingTime)
+            if (!gauge.HasKa || (shifu is null && level >= SAM.Levels.Shifu) || (jinpu?.RemainingTime < shifu?.RemainingTime && level < SAM.Levels.Higanbana))
             {
                 if (lastComboMove == SAM.Shifu && level >= SAM.Levels.Kasha) return SAM.Kasha;
                 if (lastComboMove == SAM.Hakaze) return SAM.Shifu;
@@ -250,16 +254,6 @@ internal class SamuraiMangetsu : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
-
-                // var higanbanaTime = ((higanabana is null && ShouldRefreshDots())
-                //            || (higanabana is not null && higanabana.RemainingTime <= 6));
-
-                //if (gauge.MeditationStacks == 3 && (HasRaidBuffs() || (gaugeSen.Sum() >= 2)))
-                //{
-                //    return level >= SAM.Levels.Shoha2 ? SAM.Shoha2 : SAM.Shoha;
-                //}
-
                 var canUseIkishoten =
                     level >= SAM.Levels.Ikishoten && IsOffCooldown(SAM.Ikishoten) && InCombat();
 

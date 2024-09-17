@@ -275,7 +275,7 @@ internal abstract partial class CustomCombo
         // }
 
         if (CurrentTarget is IBattleChara target && LocalPlayer is not null)
-            if (target.MaxHp >= LocalPlayer.MaxHp * 50 && target.CurrentHp <= target.MaxHp * 0.1f)
+            if (target.MaxHp >= LocalPlayer.MaxHp * 24 && target.CurrentHp <= target.MaxHp * 0.1f)
                 // if (target.MaxHp >= LocalPlayer.MaxHp * 100 && (float)target.CurrentHp <= (float)target.MaxHp * 0.07f)
                 return true;
 

@@ -246,7 +246,7 @@ internal class DancerCascadeFountain : CustomCombo
                     && IsOffCooldown(DNC.Flourish)
                     && (
                         HasRaidBuffs()
-                        || GetCooldown(DNC.Devilment).CooldownRemaining > 20
+                        || GetCooldown(DNC.Devilment).CooldownRemaining >= 5
                     )
                 )
                     return DNC.Flourish;
@@ -261,7 +261,7 @@ internal class DancerCascadeFountain : CustomCombo
             if (level >= DNC.Levels.LastDance
                 && HasEffect(DNC.Buffs.LastDanceReady)
                 && (HasRaidBuffs()
-                    || GetCooldown(DNC.StandardStep).CooldownRemaining <= 20
+                    || GetCooldown(DNC.StandardStep).CooldownRemaining <= 10
                     || actionID is DNC.Windmill)
                )
                 // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
@@ -271,8 +271,18 @@ internal class DancerCascadeFountain : CustomCombo
                 // }
                 return DNC.LastDance;
 
-            if (level >= DNC.Levels.StandardStep && IsOffCooldown(DNC.StandardStep))
-                return DNC.StandardStep;
+            if (level >= DNC.Levels.StandardStep
+                && IsOffCooldown(OriginalHook(DNC.StandardStep))
+                && (level < DNC.Levels.FinishingMove
+                    || (level >= DNC.Levels.FinishingMove
+                        && (IsOnCooldown(DNC.Flourish)
+                            || !InCombat()
+                            || actionID is DNC.Windmill
+                            )
+                        )
+                    )
+                )
+                return OriginalHook(DNC.StandardStep);
 
             if (
                 level >= DNC.Levels.SaberDance
