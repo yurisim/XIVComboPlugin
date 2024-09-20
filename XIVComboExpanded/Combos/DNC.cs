@@ -264,11 +264,6 @@ internal class DancerCascadeFountain : CustomCombo
                     || GetCooldown(DNC.StandardStep).CooldownRemaining <= 10
                     || actionID is DNC.Windmill)
                )
-                // if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
-                //     HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
-                // {
-                //     return DNC.FinishingMove;
-                // }
                 return DNC.LastDance;
 
             if (level >= DNC.Levels.StandardStep
@@ -286,14 +281,14 @@ internal class DancerCascadeFountain : CustomCombo
 
             if (
                 level >= DNC.Levels.SaberDance
-                && gauge.Esprit >= 50
+                && CanUseAction(OriginalHook(DNC.SaberDance))
                 && (gauge.Esprit >= 85
                     || HasRaidBuffs()
                     || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill
                 )
             )
-                return DNC.SaberDance;
+                return OriginalHook(DNC.SaberDance);
 
             if (
                 level >= DNC.Levels.StarfallDance
@@ -381,26 +376,6 @@ internal class DancerDevilment : CustomCombo
             if (level >= DNC.Levels.StarfallDance && HasEffect(DNC.Buffs.FlourishingStarfall))
                 return DNC.StarfallDance;
         }
-
-        return actionID;
-    }
-}
-
-internal class DancerLastDanceFeature : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerLastDanceFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == DNC.StandardStep)
-            if (level >= DNC.Levels.LastDance && HasEffect(DNC.Buffs.LastDanceReady))
-            {
-                if (IsEnabled(CustomComboPreset.DancerFinishingMovePriorityFeature) &&
-                    HasEffect(DNC.Buffs.FinishingMoveReady) && level >= DNC.Levels.FinishingMove)
-                    return DNC.FinishingMove;
-
-                return DNC.LastDance;
-            }
 
         return actionID;
     }

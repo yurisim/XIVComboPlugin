@@ -154,7 +154,9 @@ internal static class PCT
                                  && (GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10
                                      || hasRaidBuffs
                                      || HasEffect(Buffs.StarryMuse)
-                                     || level < Levels.HammerBrush):
+                                    //  || FindEffect(Buffs.HammerTime)?.RemainingTime <= 15
+                                     || level < Levels.HammerBrush
+                                     ):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))
@@ -195,7 +197,7 @@ internal static class PCT
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
-                    && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 10)
+                    && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
                 )
                     return StarPrism;
 
@@ -209,14 +211,21 @@ internal static class PCT
                 {
                     var availableSkill = new (uint Level, float CD, bool MotifNeeded, uint Skill)[]
                         {
-                            (Levels.LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
-                                !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif),
-                            (Levels.WeaponMotif, GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining,
-                                !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
-                            (Levels.CreatureMotif, GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
-                                !gauge.CreatureMotifDrawn, CreatureMotif)
+                            (Levels.LandscapeMotif,
+                                GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
+                                !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)),
+                                LandscapeMotif),
+                            (Levels.WeaponMotif,
+                                GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining,
+                                !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)),
+                                WeaponMotif),
+                            (Levels.CreatureMotif,
+                                GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
+                                !gauge.CreatureMotifDrawn,
+                                CreatureMotif)
                         }
-                        .Where(s => s.Level <= level && s.MotifNeeded && s.CD <= 20)
+                        .Where(s => s.Level <= level && s.MotifNeeded && (s.CD <= 40 || !InCombat()))
+                        .OrderBy(s => s.CD)
                         .Select(s => s.Skill)
                         .FirstOrDefault();
 
@@ -228,8 +237,9 @@ internal static class PCT
 
                 return actionID is FireRed
                     ? OriginalHook(FireRed)
-                    : HolyWhite;
-                
+                    : CanUseAction(CometBlack)
+                        ? CometBlack
+                        : HolyWhite;
             }
 
             return actionID;
@@ -287,21 +297,21 @@ internal static class PCT
                 )
                     return OriginalHook(HammerStamp);
 
-                if (HasEffect(Buffs.SubtractivePalette)) return OriginalHook(ExtraBlizzardCyan);
-
-
-                var skills = new (uint Level, bool hasCharges, bool MotifNeeded, uint Skill)[]
+                var skills = new (uint Level, bool hasCharges, bool MotifNeeded, uint Skill, float CD)[]
                     {
                         (Levels.CreatureMotif, HasCharges(OriginalHook(LivingMuse)), !gauge.CreatureMotifDrawn,
-                            CreatureMotif),
+                            CreatureMotif, GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining),
                         (Levels.WeaponMotif, HasCharges(OriginalHook(SteelMuse)),
-                            !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif),
+                            !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)), WeaponMotif, GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining),
                         (Levels.LandscapeMotif, HasCharges(OriginalHook(ScenicMuse)),
-                            !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif)
+                            !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)), LandscapeMotif, GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining),
                     }
                     .Where(s => s.Level <= level && s.hasCharges && s.MotifNeeded)
+                    .OrderBy(s => s.CD)
                     .Select(s => s.Skill)
                     .FirstOrDefault();
+
+                if (HasEffect(Buffs.SubtractivePalette)) return OriginalHook(ExtraBlizzardCyan);
 
                 if (skills != default) return OriginalHook(skills);
 
