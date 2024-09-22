@@ -234,7 +234,7 @@ internal class DragoonSingleTarget : CustomCombo
                             )
                             || (
                                 whichDotEffect is null
-                                && ShouldRefreshDots()
+                                && ShouldUseDots()
                                 && level >= DRG.Levels.ChaosThrust
                             )
                         );

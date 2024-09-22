@@ -108,7 +108,7 @@ internal class SamuraiYukikaze : CustomCombo
             var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
 
             var higanbanaTime =
-                (higanabana is null && ShouldRefreshDots())
+                (higanabana is null && ShouldUseDots())
                 || (higanabana is not null && higanabana.RemainingTime <= 6);
 
             var canUseIkishoten = IsOffCooldown(SAM.Ikishoten) && InCombat();
@@ -190,7 +190,7 @@ internal class SamuraiYukikaze : CustomCombo
             {
                 if (level >= SAM.Levels.Higanbana && !HasEffect(SAM.Buffs.MeikyoShisui) &&
                     HasEffect(SAM.Buffs.Jinpu) && HasEffect(SAM.Buffs.Shifu) && gaugeSen.Sum() == 1 &&
-                    ((higanabana is null && ShouldRefreshDots()) || (higanabana is not null && higanabana.RemainingTime <= 6)))
+                    ((higanabana is null && ShouldUseDots()) || (higanabana is not null && higanabana.RemainingTime <= 6)))
                     return OriginalHook(SAM.Iaijutsu);
 
                 if (level >= SAM.Levels.MidareSetsugekka && gaugeSen.Sum() == 3)

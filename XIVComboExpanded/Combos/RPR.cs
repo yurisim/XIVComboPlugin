@@ -200,7 +200,7 @@ internal class ReaperSlice : CustomCombo
                         && (HasRaidBuffs() || HasEffect(RPR.Buffs.ArcaneCircle)))))
                 return OriginalHook(RPR.Soulsow);
 
-            if ((deathsDesign is null && ShouldRefreshDots())
+            if ((deathsDesign is null && ShouldUseDots())
                 || (deathsDesign is not null && deathsDesign.RemainingTime <= 20))
                 return RPR.ShadowOfDeath;
 
@@ -275,7 +275,7 @@ internal class ReaperScythe : CustomCombo
                     return OriginalHook(RPR.Soulsow);
 
             if (
-                (deathsDesign is null && ShouldRefreshDots())
+                (deathsDesign is null && ShouldUseDots())
                 || (deathsDesign is not null && deathsDesign.RemainingTime <= 15)
             )
                 return RPR.WhorlOfDeath;
@@ -302,7 +302,7 @@ internal class ReaperScythe : CustomCombo
                 return RPR.SoulScythe;
 
             if (
-                (deathsDesign is null && ShouldRefreshDots())
+                (deathsDesign is null && ShouldUseDots())
                 || (deathsDesign is not null && deathsDesign.RemainingTime <= 20)
             )
                 return RPR.WhorlOfDeath;

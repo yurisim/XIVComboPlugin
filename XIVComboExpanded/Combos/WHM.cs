@@ -284,7 +284,7 @@ internal class WhiteMageStoneFeature : CustomCombo
                     (
                         debuff is not null
                         && (debuffTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving))
-                    ) || (debuff is null && ShouldRefreshDots())
+                    ) || (debuff is null && ShouldUseDots())
                 )
             )
                 return OriginalHook(WHM.Aero);

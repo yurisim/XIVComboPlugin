@@ -158,7 +158,7 @@ internal class AstrologianMalefic : CustomCombo
                 if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
             }
 
-            if (InCombat() && TargetIsEnemy() && ShouldRefreshDots())
+            if (InCombat() && TargetIsEnemy() && ShouldUseDots())
             {
                 var debuffs = new[]
                 {

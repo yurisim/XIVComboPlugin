@@ -233,7 +233,7 @@ internal abstract partial class CustomCombo
     ///     Should refresh DoTs
     /// </summary>
     /// <returns>Whether or not the</returns>
-    protected static bool ShouldRefreshDots()
+    protected static bool ShouldUseDots()
     {
         return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 15;
     }
@@ -255,6 +255,7 @@ internal abstract partial class CustomCombo
             AST.Buffs.Divination,
             RDM.Buffs.Embolden,
             BRD.Buffs.BattleVoice,
+            BRD.Buffs.RadiantFinale,
             DRG.Buffs.BattleLitany,
             DRG.Buffs.LeftEye,
             RDM.Buffs.Embolden,
@@ -717,7 +718,7 @@ internal abstract partial class CustomCombo
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.8s or not.</returns>
     protected static bool GCDClipCheck(uint actionID)
     {
-        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.20;
+        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.18;
     }
 
     /// <summary>

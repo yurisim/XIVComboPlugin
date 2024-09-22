@@ -212,7 +212,7 @@ internal class SageDosis : CustomCombo
                         (
                             debuff is not null
                             && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                        ) || (debuff is null && ShouldRefreshDots())
+                        ) || (debuff is null && ShouldUseDots())
                     )
                     {
                         if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
@@ -410,7 +410,7 @@ internal class SagePhlegma : CustomCombo
                 var debuffTime = debuff?.RemainingTime;
                 if (
                     (debuff is not null && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving)))
-                    || (debuff is null && ShouldRefreshDots())
+                    || (debuff is null && ShouldUseDots())
                 )
                 {
                     if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;

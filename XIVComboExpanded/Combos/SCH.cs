@@ -207,7 +207,7 @@ internal class ScholarEnergyDrain : CustomCombo
                 }
             }
 
-            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar && ShouldRefreshDots())
+            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar && ShouldUseDots())
             {
                 var combustEffects = new[]
                 {
