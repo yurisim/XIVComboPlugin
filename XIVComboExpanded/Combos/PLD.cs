@@ -186,10 +186,6 @@ internal class PaladinAOE : CustomCombo
             {
                 switch (level)
                 {
-                    case >= PLD.Levels.Sheltron when
-                        IsOffCooldown(PLD.Sheltron)
-                        && gauge.OathGauge == 100:
-                        return PLD.Sheltron;
                     case >= PLD.Levels.FightOrFlight when
                         IsOffCooldown(PLD.FightOrFlight)
                         && ((level < PLD.Levels.Prominence && lastComboMove == PLD.TotalEclipse)
@@ -216,6 +212,10 @@ internal class PaladinAOE : CustomCombo
                             || fightOrFlightCD >= 7.5
                             || hasRaidBuffs):
                         return OriginalHook(PLD.SpiritsWithin);
+                    case >= PLD.Levels.Sheltron when
+                        IsOffCooldown(PLD.Sheltron)
+                        && gauge.OathGauge == 100:
+                        return PLD.Sheltron;
                 }
             }
 

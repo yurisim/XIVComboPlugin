@@ -24,6 +24,7 @@ internal static class MNK
         Brotherhood = 7396,
         FourPointFury = 16473,
         HowlingFist = 25763,
+        Mantra = 65,
         MasterfulBlitz = 25764,
         RiddleOfWind = 25766,
         EarthsReply = 36944,
@@ -58,6 +59,7 @@ internal static class MNK
             Rockbreaker = 30,
             Demolish = 30,
             FourPointFury = 45,
+            Mantra = 42,
             HowlingFist = 40,
             DragonKick = 50,
             PerfectBalance = 50,
@@ -133,6 +135,10 @@ internal class MonkBootshine : CustomCombo
                         LocalPlayerPercentage() <= 0.98
                         && HasEffect(MNK.Buffs.EarthsRumination):
                         return MNK.EarthsReply;
+                    case >= MNK.Levels.Mantra when
+                        IsOffCooldown(MNK.Mantra)
+                        && LocalPlayerPercentage() <= 0.65:
+                        return MNK.Mantra;
                 }
 
             if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
@@ -150,7 +156,7 @@ internal class MonkBootshine : CustomCombo
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
                 // 5000 is in Milliseconds
-                && (gauge.BlitzTimeRemaining <= 5000 || riddleFireEffect is not null || HasRaidBuffs())
+                && (gauge.BlitzTimeRemaining <= 7500 || riddleFireEffect is not null || HasRaidBuffs())
                )
                 return OriginalHook(MNK.MasterfulBlitz);
 
