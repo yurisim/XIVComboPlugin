@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net.NetworkInformation;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -93,6 +94,7 @@ internal static class BRD
             ResonantArrow = 96,
             RadiantEncore = 100;
     }
+
 }
 
 internal class BardHeavyShot : CustomCombo
@@ -101,13 +103,13 @@ internal class BardHeavyShot : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == BRD.HeavyShot || actionID == BRD.BurstShot)
+        if (actionID is BRD.HeavyShot or BRD.BurstShot)
         {
             var gauge = GetJobGauge<BRDGauge>();
 
             var ragingStrikesCD = GetCooldown(BRD.RagingStrikes).CooldownRemaining;
 
-            if (GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 if (level >= BRD.Levels.PitchPerfect // Be the right level
                     && gauge.Song == Song.WANDERER // be the right song
@@ -115,33 +117,28 @@ internal class BardHeavyShot : CustomCombo
                    )
                     return BRD.PitchPerfect;
 
-
-                if (InCombat())
-                    switch (level)
-                    {
-                        case >= BRD.Levels.WanderersMinuet when IsOffCooldown(BRD.WanderersMinuet) &&
-                                                                (gauge.Song == Song.ARMY ||
-                                                                 gauge.Song == Song.NONE) &&
-                                                                gauge.SongTimer <= 3000 && InCombat():
-                            return BRD.WanderersMinuet;
-
-                        case >= BRD.Levels.MagesBallad when IsOffCooldown(BRD.MagesBallad) &&
-                                                            (gauge.Song == Song.WANDERER ||
-                                                             gauge.Song == Song.NONE) && gauge.SongTimer <= 3000 &&
-                                                            InCombat():
-                            return BRD.MagesBallad;
-
-                        case >= BRD.Levels.ArmysPaeon when IsOffCooldown(BRD.ArmysPaeon) &&
-                                                           (gauge.Song == Song.MAGE || gauge.Song == Song.NONE) &&
-                                                           ((gauge.SongTimer <= 12000 &&
-                                                             level >= BRD.Levels.WanderersMinuet) ||
-                                                            (gauge.SongTimer <= 3000 &&
-                                                             level < BRD.Levels.WanderersMinuet)):
-                            return BRD.ArmysPaeon;
-                    }
-
                 switch (level)
                 {
+                    case >= BRD.Levels.WanderersMinuet when
+                        IsOffCooldown(BRD.WanderersMinuet)
+                        && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000:
+                        return BRD.WanderersMinuet;
+                    case >= BRD.Levels.MagesBallad when
+                        IsOffCooldown(BRD.MagesBallad)
+                        && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000:
+                        return BRD.MagesBallad;
+                    case >= BRD.Levels.ArmysPaeon when
+                        IsOffCooldown(BRD.ArmysPaeon)
+                        && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                        && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
+                            || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
+                        return BRD.ArmysPaeon;
+                    case >= BRD.Levels.RagingStrikes when
+                        IsOffCooldown(BRD.RagingStrikes)
+                        && HasRaidBuffs():
+                        return BRD.RagingStrikes;
                     case >= BRD.Levels.BattleVoice when
                         HasEffect(BRD.Buffs.RagingStrikes)
                         && IsOffCooldown(BRD.BattleVoice):
@@ -202,6 +199,16 @@ internal class BardHeavyShot : CustomCombo
 
                 if (stormDots.All(x => x is null || x.RemainingTime <= refreshTime))
                     return OriginalHook(BRD.Windbite);
+            }
+
+            var resonantArrowReady = FindEffect(BRD.Buffs.ResonantArrowReady);
+
+            if (level >= BRD.Levels.ResonantArrow
+                && resonantArrowReady is not null
+                && (resonantArrowReady.RemainingTime <= 10 || HasRaidBuffs())
+                )
+            {
+                return BRD.ResonantArrow;
             }
 
             if (level >= BRD.Levels.BlastShot && HasEffect(BRD.Buffs.BlastShotReady))
@@ -322,53 +329,64 @@ internal class BardQuickNock : CustomCombo
         if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
         {
             var gauge = GetJobGauge<BRDGauge>();
+            var ragingStrikesCD = GetCooldown(BRD.RagingStrikes).CooldownRemaining;
 
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= BRD.Levels.PitchPerfect // Be the right level
+                if (level >= BRD.Levels.PitchPerfect // Be the right level
                     && gauge.Song == Song.WANDERER // be the right song
-                    && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 2500))
-                ) // You either have all stacks or you have 1 stack and the song timer is under 2500ms
+                    && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000))
+                   )
                     return BRD.PitchPerfect;
 
-                    if (level >= BRD.Levels.BattleVoice &&
+                switch (level)
+                {
+                    case >= BRD.Levels.WanderersMinuet when
+                        IsOffCooldown(BRD.WanderersMinuet)
+                        && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000:
+                        return BRD.WanderersMinuet;
+                    case >= BRD.Levels.MagesBallad when
+                        IsOffCooldown(BRD.MagesBallad)
+                        && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                        && gauge.SongTimer <= 3000:
+                        return BRD.MagesBallad;
+                    case >= BRD.Levels.ArmysPaeon when
+                        IsOffCooldown(BRD.ArmysPaeon)
+                        && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                        && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
+                            || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
+                        return BRD.ArmysPaeon;
+                    case >= BRD.Levels.RagingStrikes when
+                        IsOffCooldown(BRD.RagingStrikes)
+                        && HasRaidBuffs():
+                        return BRD.RagingStrikes;
+                    case >= BRD.Levels.BattleVoice when
                         HasEffect(BRD.Buffs.RagingStrikes)
-                        && IsOffCooldown(BRD.BattleVoice))
+                        && IsOffCooldown(BRD.BattleVoice):
                         return BRD.BattleVoice;
-
-                if (
-                    level >= BRD.Levels.WanderersMinuet
-                    && IsOffCooldown(BRD.WanderersMinuet)
-                    && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
-                    && gauge.SongTimer <= 3000
-                )
-                    return BRD.WanderersMinuet;
-
-                if (
-                    level >= BRD.Levels.MagesBallad
-                    && IsOffCooldown(BRD.MagesBallad)
-                    && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
-                    && gauge.SongTimer <= 3000
-                )
-                    return BRD.MagesBallad;
-
-                if (
-                    level >= BRD.Levels.ArmysPaeon
-                    && IsOffCooldown(BRD.ArmysPaeon)
-                    && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
-                    && (
-                        (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
-                        || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
-                    )
-                )
-                    return BRD.ArmysPaeon;
-
-                if (IsOffCooldown(BRD.RainOfDeath) || HasCharges(BRD.RainOfDeath)) return BRD.RainOfDeath;
-
-                if (level >= BRD.Levels.Sidewinder && IsOffCooldown(BRD.Sidewinder)) return BRD.Sidewinder;
-
-                if (level >= BRD.Levels.EmpyrealArrow && IsOffCooldown(BRD.EmpyrealArrow)) return BRD.EmpyrealArrow;
+                    case >= BRD.Levels.RadiantFinale when
+                        IsOffCooldown(BRD.RadiantFinale)
+                        && gauge.Coda.Length >= 1
+                        && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)):
+                        return BRD.RadiantFinale;
+                    case >= BRD.Levels.EmpyrealArrow when
+                        IsOffCooldown(BRD.EmpyrealArrow):
+                        return BRD.EmpyrealArrow;
+                    case >= BRD.Levels.Barrage when
+                        IsOffCooldown(BRD.Barrage)
+                        && (HasEffect(BRD.Buffs.RagingStrikes)
+                            || ragingStrikesCD >= 18
+                            || HasRaidBuffs()):
+                        return BRD.Barrage;
+                    case >= BRD.Levels.RainOfDeath when
+                        IsOffCooldown(BRD.RainOfDeath)
+                            || HasCharges(BRD.RainOfDeath):
+                        return OriginalHook(BRD.RainOfDeath);
+                    case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder):
+                        return BRD.Sidewinder;
+                }
+        
             }
 
             if (level >= BRD.Levels.ApexArrow
@@ -376,19 +394,21 @@ internal class BardQuickNock : CustomCombo
                     )
                 return BRD.ApexArrow;
 
+            var resonantArrowReady = FindEffect(BRD.Buffs.ResonantArrowReady);
+
+            if (level >= BRD.Levels.ResonantArrow
+                && resonantArrowReady is not null
+                && (resonantArrowReady.RemainingTime <= 10 || HasRaidBuffs())
+                )
+            {
+                return BRD.ResonantArrow;
+            }
+
             if (level >= BRD.Levels.BlastShot && HasEffect(BRD.Buffs.BlastShotReady))
                 return BRD.BlastArrow;
 
             if (level >= BRD.Levels.WideVolley && HasEffect(BRD.Buffs.HawksEye))
             {
-                if (
-                    level >= BRD.Levels.Barrage
-                    && IsOffCooldown(BRD.Barrage)
-                    && GCDClipCheck(actionID)
-                    && HasEffect(BRD.Buffs.RagingStrikes)
-                )
-                    return BRD.Barrage;
-
                 return OriginalHook(BRD.WideVolley);
             }
         }
