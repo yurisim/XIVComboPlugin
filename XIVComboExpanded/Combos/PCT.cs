@@ -139,13 +139,13 @@ internal static class PCT
                 if (GCDClipCheck(actionID))
                     switch (level)
                     {
-                        case >= Levels.StarryMuse
-                            when hasRaidBuffs && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
-                            return StarryMuse;
                         case >= Levels.SubtractivePalette
                             when canUsePalette && CanUseAction(SubtractivePalette) &&
                                  !CanUseAction(OriginalHook(CometBlack)):
                             return SubtractivePalette;
+                        case >= Levels.StarryMuse
+                            when hasRaidBuffs && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
+                            return StarryMuse;
                         case >= Levels.WeaponMotif
                             when IsAvailable(OriginalHook(SteelMuse))
                                  && gauge.WeaponMotifDrawn

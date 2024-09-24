@@ -231,7 +231,7 @@ internal class WhiteMageStoneFeature : CustomCombo
                     level >= WHM.Levels.Assize
                     && IsOffCooldown(WHM.Assize)
                     && GetTargetDistance() <= 15
-                    && (playerPercentage < 1 || TargetHPercentage() <= 0.95)
+                    && (playerPercentage < 1)
                     && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
                 )
                     return WHM.Assize;

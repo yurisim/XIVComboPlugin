@@ -170,10 +170,10 @@ internal class AstrologianMalefic : CustomCombo
                 if (
                     !debuffs.Any(
                         effect =>
-                            effect?.RemainingTime > 2.8
+                            effect?.RemainingTime <= 4
                             || (
                                 effect?.RemainingTime is not null
-                                && effect.RemainingTime <= 6
+                                && effect.RemainingTime <= 6.5
                                 && this.IsMoving
                             )
                     )

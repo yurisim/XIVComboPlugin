@@ -485,6 +485,11 @@ internal abstract partial class CustomCombo
         return FindTargetEffect(effectID) is not null;
     }
 
+    /// <summary> Gets the Resource Cost of the action. </summary>
+    /// <param name="actionID"> Action ID to check. </param>
+    /// <returns></returns>
+    public static int GetResourceCost(uint actionID) => CustomComboCache.GetResourceCost(actionID);
+
     /// <summary>
     ///     Finds an effect on the current target of target.
     ///     The effect must be owned by the player or unowned.

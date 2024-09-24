@@ -95,6 +95,20 @@ internal class CustomComboCache : IDisposable
         return this.statusCache[key] = null;
     }
 
+    /// <summary> Get the resource cost of an action. </summary>
+    /// <param name="actionID"> Action ID to check. </param>
+    /// <returns> Returns the resource cost of an action. </returns>
+    internal static unsafe int GetResourceCost(uint actionID)
+    {
+        ActionManager* actionManager = ActionManager.Instance();
+        if (actionManager == null)
+            return 0;
+
+        int cost = ActionManager.GetActionCost(ActionType.Action, actionID, 0, 0, 0, 0);
+
+        return cost;
+    }
+
     /// <summary>
     ///     Gets the cooldown data for an action.
     /// </summary>

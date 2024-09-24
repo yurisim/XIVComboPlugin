@@ -137,7 +137,7 @@ internal class MonkBootshine : CustomCombo
                         return MNK.EarthsReply;
                     case >= MNK.Levels.Mantra when
                         IsOffCooldown(MNK.Mantra)
-                        && LocalPlayerPercentage() <= 0.65:
+                        && LocalPlayerPercentage() <= 0.50:
                         return MNK.Mantra;
                 }
 
@@ -156,7 +156,7 @@ internal class MonkBootshine : CustomCombo
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
                 // 5000 is in Milliseconds
-                && (gauge.BlitzTimeRemaining <= 7500 || riddleFireEffect is not null || HasRaidBuffs())
+                && (gauge.BlitzTimeRemaining <= 8500 || riddleFireEffect is not null || HasRaidBuffs())
                )
                 return OriginalHook(MNK.MasterfulBlitz);
 

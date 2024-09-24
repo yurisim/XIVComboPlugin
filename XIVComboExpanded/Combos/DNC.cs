@@ -225,15 +225,18 @@ internal class DancerCascadeFountain : CustomCombo
                 return OriginalHook(DNC.StandardStep);
             }
 
-            if (
-                level >= DNC.Levels.Devilment
-                && IsOffCooldown(DNC.Devilment)
-                && (HasEffect(DNC.Buffs.TechnicalFinish) || level < DNC.Levels.TechnicalStep)
-            )
-                return DNC.Devilment;
-
             if (GCDClipCheck(actionID))
             {
+
+                if (
+                    level >= DNC.Levels.Devilment
+                    && IsOffCooldown(DNC.Devilment)
+                    && (HasEffect(DNC.Buffs.TechnicalFinish) || HasRaidBuffs())
+                )
+                {
+                    return DNC.Devilment;
+                }
+
                 if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
                     return DNC.FanDance4;
 
@@ -258,14 +261,6 @@ internal class DancerCascadeFountain : CustomCombo
                     return DNC.FanDance1;
             }
 
-            if (level >= DNC.Levels.LastDance
-                && HasEffect(DNC.Buffs.LastDanceReady)
-                && (HasRaidBuffs()
-                    || GetCooldown(DNC.StandardStep).CooldownRemaining <= 10
-                    || actionID is DNC.Windmill)
-               )
-                return DNC.LastDance;
-
             if (level >= DNC.Levels.StandardStep
                 && IsOffCooldown(OriginalHook(DNC.StandardStep))
                 && (level < DNC.Levels.FinishingMove
@@ -280,6 +275,14 @@ internal class DancerCascadeFountain : CustomCombo
                 return OriginalHook(DNC.StandardStep);
 
             if (
+                level >= DNC.Levels.Tillana
+                && (actionID is DNC.Windmill || HasRaidBuffs())
+                && gauge.Esprit < 50
+                && HasEffect(DNC.Buffs.FlourishingFinish)
+            )
+                return DNC.Tillana;
+
+            if (
                 level >= DNC.Levels.SaberDance
                 && CanUseAction(OriginalHook(DNC.SaberDance))
                 && (gauge.Esprit >= 85
@@ -290,20 +293,20 @@ internal class DancerCascadeFountain : CustomCombo
             )
                 return OriginalHook(DNC.SaberDance);
 
+            if (level >= DNC.Levels.LastDance
+                && HasEffect(DNC.Buffs.LastDanceReady)
+                && (HasRaidBuffs()
+                    || GetCooldown(DNC.StandardStep).CooldownRemaining <= 10
+                    || actionID is DNC.Windmill)
+               )
+                return DNC.LastDance;
+
             if (
                 level >= DNC.Levels.StarfallDance
                 && HasRaidBuffs()
                 && HasEffect(DNC.Buffs.FlourishingStarfall)
             )
                 return DNC.StarfallDance;
-
-            if (
-                level >= DNC.Levels.Tillana
-                && HasRaidBuffs()
-                && gauge.Esprit <= 50
-                && HasEffect(DNC.Buffs.FlourishingFinish)
-            )
-                return DNC.Tillana;
 
             // Single Target
             if (actionID is DNC.Cascade)
@@ -348,33 +351,6 @@ internal class DancerCascadeFountain : CustomCombo
                 if (lastComboMove == DNC.Windmill && level >= DNC.Levels.Bladeshower)
                     return DNC.Bladeshower;
             }
-        }
-
-        return actionID;
-    }
-}
-
-internal class DancerDevilment : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.DancerDevilmentFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == DNC.Devilment)
-        {
-            if (IsEnabled(CustomComboPreset.DancerPartnerFeature) && level >= DNC.Levels.ClosedPosition &&
-                !HasEffect(DNC.Buffs.ClosedPosition))
-            {
-                if (IsEnabled(CustomComboPreset.DancerChocoboPartnerFeature) && HasCompanionPresent())
-                    return DNC.ClosedPosition;
-
-                if (IsInParty() && IsInInstance())
-                    return DNC.ClosedPosition;
-            }
-
-            if (level >= DNC.Levels.StarfallDance && HasEffect(DNC.Buffs.FlourishingStarfall))
-                return DNC.StarfallDance;
         }
 
         return actionID;
