@@ -107,6 +107,8 @@ internal class BlackMageFire : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
+            var fireCost = GetResourceCost(OriginalHook(BLM.Fire));
+
             if (InCombat() && TargetIsEnemy()
             && ShouldUseDots()
             )
@@ -140,9 +142,13 @@ internal class BlackMageFire : CustomCombo
                     return BLM.Manafont;
                 }
 
+                if (fireCost <= LocalPlayer?.CurrentMp && gauge.ElementTimeRemaining >= 5500)
+                {
+                    return BLM.Fire;
+                }
+
                 if (level >= BLM.Levels.Flare
-                       && LocalPlayer?.CurrentMp >= 800
-                       && LocalPlayer?.CurrentMp <= 1600)
+                    && fireCost > LocalPlayer?.CurrentMp)
                 {
                     // Use Despair if you are high enough
                     if (level >= BLM.Levels.Despair) return BLM.Despair;
@@ -159,9 +165,9 @@ internal class BlackMageFire : CustomCombo
                     }
                 }
 
-                if (GetResourceCost(OriginalHook(BLM.Fire)) < LocalPlayer?.CurrentMp)
+                if (fireCost < LocalPlayer?.CurrentMp)
                 {
-                    return (level >= BLM.Levels.Fire4 && gauge.ElementTimeRemaining >= 5500) ? BLM.Fire4 : BLM.Fire;
+                    return (level >= BLM.Levels.Fire4) ? BLM.Fire4 : BLM.Fire;
                 }
 
                 return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
@@ -296,8 +302,8 @@ internal class BlackFireBlizzard2 : CustomCombo
             }
 
             if (!gauge.InAstralFire && !gauge.InAstralFire)
-                return LocalPlayer?.CurrentMp >= 9000 
-                    ? level >= BLM.Levels.Fire2 ? BLM.Fire2 : BLM.Fire 
+                return LocalPlayer?.CurrentMp >= 9000
+                    ? level >= BLM.Levels.Fire2 ? BLM.Fire2 : BLM.Fire
                     : level >= BLM.Levels.Blizzard2 ? BLM.Blizzard2 : BLM.Blizzard;
         }
 
@@ -323,29 +329,11 @@ internal class BlackTranspose : CustomCombo
     }
 }
 
-internal class BlackUmbralSoul : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackUmbralSoulTransposeFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.UmbralSoul)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (level < BLM.Levels.UmbralSoul || (gauge.IsEnochianActive && gauge.InAstralFire))
-                return BLM.Transpose;
-        }
-
-        return actionID;
-    }
-}
 
 internal class BlackLeyLines : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackLeyLinesFeature;
+        CustomComboPreset.BlmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

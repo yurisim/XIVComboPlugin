@@ -28,6 +28,7 @@ internal static class ADV
     public static class Levels
     {
         public const byte Swiftcast = 18,
+            LucidDreaming = 14,
             VariantRaise2 = 90;
     }
 }

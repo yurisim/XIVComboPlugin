@@ -58,6 +58,7 @@ internal static class AST
     public static class Levels
     {
         public const byte Ascend = 12,
+            EssentialDignity = 15,
             Benefic2 = 26,
             AstralDraw = 30,
             Redraw = 40,
@@ -90,72 +91,62 @@ internal class AstrologianMalefic : CustomCombo
 
             var needToUseCards = GetCooldown(OriginalHook(AST.AstralDraw)).CooldownRemaining <= 15;
 
+            var noTankCDs = FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null;
+
             if (GCDClipCheck(actionID))
             {
-                if (
-                    gauge.DrawnCrownCard == CardType.LADY
-                    && level >= AST.Levels.MinorArcana
-                    && (myHP <= 0.95 || needToUseCards)
-                )
-                    return OriginalHook(AST.MinorArcanaDT);
-
-                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+                switch (level)
                 {
-                    if (
-                        tarPercentage <= threshold - 0.2
-                        && (IsOffCooldown(AST.EssentialDignity) || HasCharges(AST.EssentialDignity))
-                    )
+                    case >= AST.Levels.MinorArcana when
+                        gauge.DrawnCrownCard == CardType.LADY
+                        && (myHP <= 0.95 || needToUseCards):
+                        return OriginalHook(AST.MinorArcanaDT);
+
+                    case >= AST.Levels.EssentialDignity when
+                        noTankCDs
+                        && (HasCharges(AST.EssentialDignity) || IsOffCooldown(AST.EssentialDignity))
+                        && ((GetCooldown(OriginalHook(AST.EssentialDignity)).TotalCooldownRemaining <= 25
+                                && tarPercentage <= threshold - 0.1)
+                            || tarPercentage <= threshold - 0.15):
                         return AST.EssentialDignity;
 
-                    if (
-                        level >= AST.Levels.CelestialIntersection
-                        && (
-                            HasCharges(AST.CelestialIntersection)
-                            || IsOffCooldown(AST.CelestialIntersection)
-                        )
-                        && (
-                            (
-                                GetRemainingCharges(AST.CelestialIntersection) >= 2
-                                && tarPercentage <= threshold + 0.1
-                            )
-                            || tarPercentage <= threshold
-                        )
-                    )
+                    case >= AST.Levels.CelestialIntersection when
+                        noTankCDs
+                        && (HasCharges(AST.CelestialIntersection) || IsOffCooldown(AST.CelestialIntersection))
+                        && ((GetCooldown(OriginalHook(AST.CelestialIntersection)).TotalCooldownRemaining <= 25
+                                && tarPercentage <= threshold + 0.05)
+                            || tarPercentage <= threshold):
                         return AST.CelestialIntersection;
+
+                    case >= AST.Levels.Astrodyne when
+                        IsOffCooldown(AST.Divination)
+                        && HasRaidBuffs():
+                        return AST.Divination;
+
+                    case >= AST.Levels.MinorArcana when
+                        gauge.DrawnCrownCard == CardType.LORD
+                        && (HasRaidBuffs() || needToUseCards)
+                        && InCombat():
+                        return OriginalHook(AST.MinorArcanaDT);
+
+                    case >= AST.Levels.EarthlyStar when
+                        OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
+                        && LocalPlayerPercentage() <= 0.85
+                        && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50:
+                        return OriginalHook(AST.EarthlyStar);
+
+                    case >= AST.Levels.AstralDraw when
+                        IsOffCooldown(OriginalHook(AST.AstralDraw))
+                        && IsOriginal(AST.Play1)
+                        && IsOriginal(AST.Play2)
+                        && IsOriginal(AST.Play3):
+                        return OriginalHook(AST.AstralDraw);
+
+                    case >= ADV.Levels.LucidDreaming when
+                        IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 7500:
+                        return ADV.LucidDreaming;
                 }
 
-                if (
-                    level >= AST.Levels.Astrodyne
-                    && IsOffCooldown(AST.Divination)
-                    && HasRaidBuffs()
-                )
-                    return AST.Divination;
-
-                if (
-                    gauge.DrawnCrownCard == CardType.LORD
-                    && level >= AST.Levels.MinorArcana
-                    && (HasRaidBuffs() || needToUseCards)
-                    && InCombat()
-                )
-                    return OriginalHook(AST.MinorArcanaDT);
-
-                if (
-                    OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
-                    && LocalPlayerPercentage() <= 0.85
-                    && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50
-                )
-                    return OriginalHook(AST.EarthlyStar);
-
-                if (
-                    level >= AST.Levels.AstralDraw
-                    && IsOffCooldown(OriginalHook(AST.AstralDraw))
-                    && IsOriginal(AST.Play1)
-                    && IsOriginal(AST.Play2)
-                    && IsOriginal(AST.Play3)
-                )
-                    return OriginalHook(AST.AstralDraw);
-
-                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
             }
 
             if (InCombat() && TargetIsEnemy() && ShouldUseDots())
@@ -167,17 +158,7 @@ internal class AstrologianMalefic : CustomCombo
                     FindTargetEffect(AST.Debuffs.Combust3)
                 };
 
-                if (
-                    !debuffs.Any(
-                        effect =>
-                            effect?.RemainingTime <= 4
-                            || (
-                                effect?.RemainingTime is not null
-                                && effect.RemainingTime <= 6.5
-                                && this.IsMoving
-                            )
-                    )
-                )
+                if (debuffs.All(x => x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
                     return OriginalHook(AST.Combust);
             }
         }

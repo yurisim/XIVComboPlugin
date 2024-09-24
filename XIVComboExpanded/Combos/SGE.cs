@@ -309,18 +309,18 @@ internal class SageShieldDiagnosis : CustomCombo
             if (IsOffCooldown(SGE.Zoe)
                 && level >= SGE.Levels.Zoe
                 && HasEffect(SGE.Buffs.Eukrasia)
-                && !HasEffect(SGE.Buffs.Philosophia))
+                )
             {
                 return SGE.Zoe;
             }
 
-            if (IsOffCooldown(SGE.Philosophia)
-                && level >= SGE.Levels.Philosophia
-                && HasEffect(SGE.Buffs.Eukrasia)
-                && !HasEffect(SGE.Buffs.Zoe))
-            {
-                return SGE.Philosophia;
-            }
+            // if (IsOffCooldown(SGE.Philosophia)
+            //     && level >= SGE.Levels.Philosophia
+            //     && HasEffect(SGE.Buffs.Eukrasia)
+            //     && !HasEffect(SGE.Buffs.Zoe))
+            // {
+            //     return SGE.Philosophia;
+            // }
 
             return actionID;
         }
