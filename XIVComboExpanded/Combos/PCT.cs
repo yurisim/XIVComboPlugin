@@ -132,9 +132,9 @@ internal static class PCT
             {
                 var hasRaidBuffs = HasRaidBuffs();
 
-                var starryMuseBuffs = HasEffect(Buffs.StarryMuse) || level < Levels.StarryMuse || hasRaidBuffs;
+                var starryMuseBuffs = HasEffect(Buffs.StarryMuse) || hasRaidBuffs || level < Levels.StarryMuse;
 
-                var canUsePalette = (gauge.PalleteGauge >= 50 || HasEffect(Buffs.SubtractiveSpectrum))
+                var canUsePalette = (HasEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
                                     && (starryMuseBuffs || gauge.PalleteGauge >= 100);
 
                 var starryCD = GetCooldown(StarryMuse).TotalCooldownRemaining;
@@ -192,6 +192,14 @@ internal static class PCT
                             return ADV.LucidDreaming;
                     }
 
+                if (HasEffect(Buffs.RainbowReady)) return RainbowDrip;
+
+                if (
+                    HasEffect(Buffs.StarPrismReady)
+                    && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
+                )
+                    return StarPrism;
+
                 if (
                     level >= Levels.HammerStamp
                     && CanUseAction(OriginalHook(HammerStamp))
@@ -204,14 +212,6 @@ internal static class PCT
                     && (canUsePalette || starryMuseBuffs || actionID is HolyWhite)
                 )
                     return OriginalHook(CometBlack);
-
-                if (HasEffect(Buffs.RainbowReady)) return RainbowDrip;
-
-                if (
-                    HasEffect(Buffs.StarPrismReady)
-                    && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
-                )
-                    return StarPrism;
 
                 if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs()))
                 {
@@ -228,9 +228,7 @@ internal static class PCT
                                 WeaponMotif),
                             (Levels.CreatureMotif,
                                 GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
-                                !gauge.CreatureMotifDrawn 
-                                // || needToUseLivingMuse
-                                ,
+                                !gauge.CreatureMotifDrawn,
                                 CreatureMotif)
                         }
                         .Where(s => s.Level <= level && s.MotifNeeded && (s.CD <= 40 || !InCombat()))

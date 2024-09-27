@@ -229,7 +229,7 @@ internal class BlackFireBlizzard2 : CustomCombo
 
                 // Switch out of Fire Phase into Ice phase if less MP than 2500
 
-                if (level >= BLM.Levels.Flare && playerMP < fire2Cost)
+                if (level >= BLM.Levels.Flare && playerMP < fire2Cost && playerMP > 0)
                 {
                     // Flare block
                     if (
@@ -267,7 +267,7 @@ internal class BlackFireBlizzard2 : CustomCombo
                 //     return BLM.Fire;
                 // }
 
-                return level >= BLM.Levels.Blizzard2
+                return level > BLM.Levels.Blizzard2
                         ? BLM.Blizzard2
                         : BLM.Blizzard;
             }

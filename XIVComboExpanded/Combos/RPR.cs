@@ -171,12 +171,12 @@ internal class ReaperSlice : CustomCombo
                     && gauge.LemureShroud == 1)
                     return RPR.Communio;
 
+                var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
+
                 if (level >= RPR.Levels.PlentifulHarvest
-                    && gauge.Shroud <= 50
-                    && gauge.EnshroudedTimeRemaining == 0
-                    && !HasEffect(RPR.Buffs.SoulReaver)
-                    && !HasEffect(RPR.Buffs.BloodsownCircle)
-                    && HasEffect(RPR.Buffs.ImmortalSacrifice)
+                    && CanUseAction(RPR.PlentifulHarvest)
+                    && immortalSacrifice is not null
+                    && (immortalSacrifice.StackCount == 8 || immortalSacrifice?.RemainingTime <= 10)
                    )
                     return RPR.PlentifulHarvest;
 
@@ -286,17 +286,14 @@ internal class ReaperScythe : CustomCombo
             if (HasEffect(RPR.Buffs.SoulReaver) || gauge.EnshroudedTimeRemaining > 0)
                 return OriginalHook(RPR.Guillotine);
 
+            var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
 
-            if (
-                level >= RPR.Levels.PlentifulHarvest
-                && gauge.Shroud <= 50
-                && gauge.EnshroudedTimeRemaining == 0
-                && !HasEffect(RPR.Buffs.SoulReaver)
-                && !HasEffect(RPR.Buffs.BloodsownCircle)
-                && HasEffect(RPR.Buffs.ImmortalSacrifice)
-            )
+            if (level >= RPR.Levels.PlentifulHarvest
+                && CanUseAction(RPR.PlentifulHarvest)
+                && immortalSacrifice is not null
+                && (immortalSacrifice.StackCount == 8 || immortalSacrifice?.RemainingTime <= 10)
+               )
                 return RPR.PlentifulHarvest;
-
 
             if (doSoulScythe && gauge.Soul <= 50)
                 return RPR.SoulScythe;
