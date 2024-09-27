@@ -109,8 +109,9 @@ internal class BlackMageFire : CustomCombo
 
             var fireCost = GetResourceCost(OriginalHook(BLM.Fire));
 
+            var playerMP = LocalPlayer?.CurrentMp;
+
             if (InCombat() && TargetIsEnemy()
-            && ShouldUseDots()
             )
             {
                 var debuffs = new[]
@@ -131,48 +132,36 @@ internal class BlackMageFire : CustomCombo
 
             if (gauge.InAstralFire)
             {
-                if (level >= BLM.Levels.Fire3
-                    && HasEffect(BLM.Buffs.Firestarter))
+                if (IsOffCooldown(BLM.Manafont) && fireCost > playerMP && level >= BLM.Levels.Manafont)
+                    return BLM.Manafont;
+
+                var firestarter = FindEffect(BLM.Buffs.Firestarter);
+
+                if (level >= BLM.Levels.Fire3 && firestarter is not null && (firestarter.RemainingTime <= 5 || fireCost > playerMP))
                     return BLM.Fire3;
 
-                if (IsOffCooldown(BLM.Manafont)
-                       && LocalPlayer?.CurrentMp < 100
-                       && level >= BLM.Levels.Manafont)
-                {
-                    return BLM.Manafont;
-                }
+                if (fireCost < playerMP && gauge.ElementTimeRemaining < 5500)
+                    return level >= BLM.Levels.Fire3 && firestarter is not null ? BLM.Fire3 : BLM.Fire;
 
-                if (fireCost <= LocalPlayer?.CurrentMp && gauge.ElementTimeRemaining >= 5500)
+                if (level >= BLM.Levels.Flare && fireCost > playerMP && playerMP > 0)
                 {
-                    return BLM.Fire;
-                }
+                    if (level >= BLM.Levels.Despair)
+                        return BLM.Despair;
 
-                if (level >= BLM.Levels.Flare
-                    && fireCost > LocalPlayer?.CurrentMp)
-                {
-                    // Use Despair if you are high enough
-                    if (level >= BLM.Levels.Despair) return BLM.Despair;
-
-                    // Only use the flare rotation if you don't have fire 4.
-                    if (level < BLM.Levels.Fire4)
+                    if (level < BLM.Levels.Fire4 && (HasEffect(ADV.Buffs.Swiftcast) || IsOffCooldown(ADV.Swiftcast)))
                     {
-                        if (HasEffect(ADV.Buffs.Swiftcast) || IsOffCooldown(ADV.Swiftcast))
-                        {
-                            if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast) return ADV.Swiftcast;
+                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
+                            return ADV.Swiftcast;
 
-                            return BLM.Flare;
-                        }
+                        return BLM.Flare;
                     }
                 }
 
-                if (fireCost < LocalPlayer?.CurrentMp)
-                {
-                    return (level >= BLM.Levels.Fire4) ? BLM.Fire4 : BLM.Fire;
-                }
+                if (fireCost < playerMP)
+                    return level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire;
 
                 return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
             }
-
 
             if (gauge.InUmbralIce)
             {
@@ -211,9 +200,7 @@ internal class BlackFireBlizzard2 : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            if (InCombat() && TargetIsEnemy()
-            && ShouldUseDots()
-            )
+            if (InCombat() && TargetIsEnemy())
             {
                 var debuffs = new[]
                 {
@@ -231,6 +218,10 @@ internal class BlackFireBlizzard2 : CustomCombo
                     return OriginalHook(BLM.Thunder2);
             }
 
+            var playerMP = LocalPlayer?.CurrentMp;
+
+            var fire2Cost = GetResourceCost(OriginalHook(BLM.Fire2));
+
             if (gauge.InAstralFire)
             {
                 if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul)
@@ -238,13 +229,13 @@ internal class BlackFireBlizzard2 : CustomCombo
 
                 // Switch out of Fire Phase into Ice phase if less MP than 2500
 
-                if (level >= BLM.Levels.Flare && LocalPlayer?.CurrentMp <= 3000)
+                if (level >= BLM.Levels.Flare && playerMP < fire2Cost)
                 {
                     // Flare block
                     if (
                         !HasEffect(ADV.Buffs.Swiftcast)
                         && !HasEffect(BLM.Buffs.Triplecast)
-                        && (LocalPlayer.CurrentMp > 0 || IsOffCooldown(BLM.Manafont))
+                        && (playerMP > 0 || IsOffCooldown(BLM.Manafont))
                     )
                     {
                         if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
@@ -259,23 +250,24 @@ internal class BlackFireBlizzard2 : CustomCombo
                     }
                     else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
                     {
-                        if (LocalPlayer.CurrentMp > 1000)
+                        if (playerMP > 0)
                             return BLM.Flare;
+
                         if (IsOffCooldown(BLM.Manafont)) return BLM.Manafont;
                     }
                 }
 
-                if (level >= BLM.Levels.Fire2 && GetResourceCost(OriginalHook(BLM.Fire2)) < LocalPlayer?.CurrentMp)
+                if (level >= BLM.Levels.Fire2 && fire2Cost < playerMP)
                 {
                     return BLM.Fire2;
                 }
 
-                if (GetResourceCost(OriginalHook(BLM.Fire)) < LocalPlayer?.CurrentMp)
-                {
-                    return BLM.Fire;
-                }
+                // if (GetResourceCost(OriginalHook(BLM.Fire)) < LocalPlayer?.CurrentMp)
+                // {
+                //     return BLM.Fire;
+                // }
 
-                return level >= BLM.Levels.Blizzard2 && GetResourceCost(OriginalHook(BLM.Blizzard2)) <= LocalPlayer?.CurrentMp
+                return level >= BLM.Levels.Blizzard2
                         ? BLM.Blizzard2
                         : BLM.Blizzard;
             }

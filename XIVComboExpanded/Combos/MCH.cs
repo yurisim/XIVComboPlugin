@@ -112,9 +112,9 @@ internal class MachinistCleanShot : CustomCombo
 
                     var hyperchargeCDs = new[]
                     {
-                level < MCH.Levels.Drill || GetCooldown(MCH.Drill).TotalCooldownRemaining >= 6,
-                GetCooldown(OriginalHook(MCH.HotShot)).CooldownRemaining >= 6,
-                level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= 6
+                level < MCH.Levels.Drill || GetCooldown(MCH.Drill).TotalCooldownRemaining >= 5,
+                GetCooldown(OriginalHook(MCH.HotShot)).CooldownRemaining >= 5,
+                level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= 5
             };
 
                     var hyperchargeMe = hyperchargeCDs.Count(x => x is true) >= 2;

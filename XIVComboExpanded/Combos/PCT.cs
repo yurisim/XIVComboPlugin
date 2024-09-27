@@ -154,9 +154,8 @@ internal static class PCT
                                  && (GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining <= 10
                                      || hasRaidBuffs
                                      || HasEffect(Buffs.StarryMuse)
-                                    //  || FindEffect(Buffs.HammerTime)?.RemainingTime <= 15
                                      || level < Levels.HammerBrush
-                                     ):
+                                     || GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining < GetCooldown(StarryMuse).TotalCooldownRemaining):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))

@@ -335,24 +335,6 @@ internal class ReaperCommunioPositional : CustomCombo
     }
 }
 
-internal class ReaperEnshroud : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RprAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == RPR.Enshroud)
-        {
-            var gauge = GetJobGauge<RPRGauge>();
-
-            if (IsEnabled(CustomComboPreset.ReaperEnshroudCommunioFeature))
-                if (level >= RPR.Levels.Communio && gauge.EnshroudedTimeRemaining > 0)
-                    return RPR.Communio;
-        }
-
-        return actionID;
-    }
-}
 
 internal class ReaperHellsIngressEgress : CustomCombo
 {

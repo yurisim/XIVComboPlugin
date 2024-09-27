@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -60,7 +61,7 @@ internal static class SGE
 
     public static class Levels
     {
-        public const ushort Dosis = 1,
+        public const byte Dosis = 1,
             Prognosis = 10,
             Egeiro = 12,
             Physis = 20,
@@ -107,93 +108,65 @@ internal class SageDosis : CustomCombo
 
             var threshold = 0.80;
 
+
+
             if (GCDClipCheck(actionID))
             {
+                var needToUseAddersgall = (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10) || gauge.Addersgall == 3;
                 var targetHPPercent = TargetOfTargetHPercentage();
 
-                if (
-                    level >= SGE.Levels.Physis
-                    && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
-                    && IsOffCooldown(OriginalHook(SGE.Physis))
-                    && myHP <= threshold
-                )
-                    return OriginalHook(SGE.Physis);
+                switch (level)
+                {
+                    case >= SGE.Levels.Physis when (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
+                                   && IsOffCooldown(OriginalHook(SGE.Physis))
+                                   && myHP <= threshold:
+                        return OriginalHook(SGE.Physis);
 
-                if (
-                    level >= SGE.Levels.Ixochole
-                    && IsOffCooldown(SGE.Ixochole)
-                    && gauge.Addersgall >= 2
-                    && (
-                        (
-                            !HasEffect(SGE.Buffs.Physis)
-                            && !HasEffect(SGE.Buffs.Physis2)
-                            && !HasEffect(SGE.Buffs.Kerakeia)
-                        )
-                        || myHP <= threshold - 0.40
-                    )
-                    && myHP <= threshold - 0.10
-                )
-                    return SGE.Ixochole;
+                    case >= SGE.Levels.Ixochole when IsOffCooldown(SGE.Ixochole)
+                                     && gauge.Addersgall >= 2
+                                     && ((!HasEffect(SGE.Buffs.Physis)
+                                          && !HasEffect(SGE.Buffs.Physis2)
+                                          && !HasEffect(SGE.Buffs.Kerakeia))
+                                         || myHP <= threshold - 0.40)
+                                     && myHP <= threshold - 0.10:
+                        return SGE.Ixochole;
 
-                if (
-                    level >= SGE.Levels.Soteria
-                    && IsOffCooldown(SGE.Soteria)
-                    && (
-                        (
-                            !HasEffect(SGE.Buffs.Physis)
-                            && !HasEffect(SGE.Buffs.Physis2)
-                            && !HasEffect(SGE.Buffs.Kerakeia)
-                        )
-                        || myHP <= threshold - 0.25
-                    )
-                    && targetHPPercent <= threshold
-                )
-                    return SGE.Soteria;
+                    case >= SGE.Levels.Soteria when IsOffCooldown(SGE.Soteria)
+                                    && ((!HasEffect(SGE.Buffs.Physis)
+                                         && !HasEffect(SGE.Buffs.Physis2)
+                                         && !HasEffect(SGE.Buffs.Kerakeia))
+                                        || myHP <= threshold - 0.25)
+                                    && targetHPPercent <= threshold:
+                        return SGE.Soteria;
 
-                if (
-                    level >= SGE.Levels.Krasis
-                    && IsOffCooldown(SGE.Krasis)
-                    && (
-                        (
-                            !HasEffect(SGE.Buffs.Physis)
-                            && !HasEffect(SGE.Buffs.Physis2)
-                            && !HasEffect(SGE.Buffs.Kerakeia)
-                        )
-                        || myHP <= threshold - 0.15
-                    )
-                    && targetHPPercent <= threshold - 0.1
-                )
-                    return SGE.Krasis;
+                    case >= SGE.Levels.Krasis when IsOffCooldown(SGE.Krasis)
+                                   && ((!HasEffect(SGE.Buffs.Physis)
+                                        && !HasEffect(SGE.Buffs.Physis2)
+                                        && !HasEffect(SGE.Buffs.Kerakeia))
+                                       || myHP <= threshold - 0.15)
+                                   && targetHPPercent <= threshold - 0.1:
+                        return SGE.Krasis;
 
-                var needToUseAddersgall =
-                    (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10) || gauge.Addersgall == 3;
+                    case >= SGE.Levels.Druochole when targetHPPercent >= 0.2
+                                      && gauge.Addersgall >= 2
+                                      && (targetHPPercent <= threshold - 0.2
+                                          || (needToUseAddersgall && targetHPPercent <= threshold - 0.1)):
+                        return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
+                            ? SGE.Taurochole
+                            : SGE.Druochole;
 
-                // Use Druchole if the target of druget is less than 0.7 and we have 3 charges.
-                if (
-                    level >= SGE.Levels.Druochole
-                    && targetHPPercent >= 0.2
-                    && gauge.Addersgall >= 2
-                    && (
-                        targetHPPercent <= threshold - 0.2
-                        || (needToUseAddersgall && targetHPPercent <= threshold - 0.1)
-                    )
-                )
-                    return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
-                        ? SGE.Taurochole
-                        : SGE.Druochole;
+                    case >= SGE.Levels.Rhizomata when gauge.Addersgall <= 2
+                                      && IsOffCooldown(SGE.Rhizomata):
+                        return SGE.Rhizomata;
 
-                if (
-                    level >= SGE.Levels.Rhizomata
-                    && gauge.Addersgall <= 2
-                    && IsOffCooldown(SGE.Rhizomata)
-                )
-                    return SGE.Rhizomata;
+                    case >= SGE.Levels.Psyche when (HasRaidBuffs() || IsOnCooldown(ADV.LucidDreaming))
+                                   && IsOffCooldown(SGE.Psyche):
+                        return SGE.Psyche;
 
-                if (level >= SGE.Levels.Psyche && (HasRaidBuffs() || IsOnCooldown(ADV.LucidDreaming)) &&
-                    IsOffCooldown(SGE.Psyche)) return SGE.Psyche;
+                    case >= ADV.Levels.LucidDreaming when IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000:
+                        return ADV.LucidDreaming;
+                }
 
-                // Use Lucid Dreaming if low enough mana
-                if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
             }
 
             (ushort Debuff, ushort Level)[] EDosises =
