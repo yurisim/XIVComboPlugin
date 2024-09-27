@@ -139,6 +139,10 @@ internal static class PCT
 
                 var starryCD = GetCooldown(StarryMuse).TotalCooldownRemaining;
 
+                var needToUseHammer = GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining < starryCD;
+
+                var needToUseLivingMuse = GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining < starryCD;
+
                 if (GCDClipCheck(actionID))
                     switch (level)
                     {
@@ -158,7 +162,7 @@ internal static class PCT
                                      || hasRaidBuffs
                                      || HasEffect(Buffs.StarryMuse)
                                      || level < Levels.HammerBrush
-                                     || GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining < starryCD):
+                                     || needToUseHammer):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))
@@ -179,8 +183,7 @@ internal static class PCT
                                      || ((!gauge.CreatureFlags.HasFlag(CreatureFlags.Pom) ||
                                           gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
                                          && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
-                                 && (starryMuseBuffs
-                                    || GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining < starryCD):
+                                 && (starryMuseBuffs || needToUseLivingMuse):
                             return OriginalHook(LivingMuse);
                         case >= 15
                             when InCombat()
@@ -217,14 +220,17 @@ internal static class PCT
                             (Levels.LandscapeMotif,
                                 GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
                                 !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)),
-                                LandscapeMotif),
+                                LandscapeMotif
+                                ),
                             (Levels.WeaponMotif,
                                 GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining,
                                 !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)),
                                 WeaponMotif),
                             (Levels.CreatureMotif,
                                 GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
-                                !gauge.CreatureMotifDrawn,
+                                !gauge.CreatureMotifDrawn 
+                                // || needToUseLivingMuse
+                                ,
                                 CreatureMotif)
                         }
                         .Where(s => s.Level <= level && s.MotifNeeded && (s.CD <= 40 || !InCombat()))
