@@ -199,25 +199,24 @@ internal class SamuraiYukikaze : CustomCombo
 
             if (level >= SAM.Levels.MeikyoShisui && HasEffect(SAM.Buffs.MeikyoShisui))
             {
-                if (!gauge.HasGetsu) return SAM.Gekko;
                 if (!gauge.HasKa) return SAM.Kasha;
+                if (!gauge.HasGetsu) return SAM.Gekko;
                 if (!gauge.HasSetsu) return SAM.Yukikaze;
             }
 
             if (!gauge.HasSetsu && level >= SAM.Levels.Higanbana)
-                return lastComboMove == SAM.Hakaze && level >= SAM.Levels.Yukikaze ? SAM.Yukikaze : SAM.Hakaze;
+                return lastComboMove == OriginalHook(SAM.Hakaze) && level >= SAM.Levels.Yukikaze ? SAM.Yukikaze : OriginalHook(SAM.Hakaze);
 
-
-            if (!gauge.HasGetsu || (jinpu is null && level >= SAM.Levels.Jinpu) || (jinpu?.RemainingTime > shifu?.RemainingTime && level < SAM.Levels.Higanbana))
-            {
-                if (lastComboMove == SAM.Jinpu && level >= SAM.Levels.Gekko) return SAM.Gekko;
-                if (lastComboMove == SAM.Hakaze) return SAM.Jinpu;
-            }
-
-            if (!gauge.HasKa || (shifu is null && level >= SAM.Levels.Shifu) || (jinpu?.RemainingTime < shifu?.RemainingTime && level < SAM.Levels.Higanbana))
+            if (!gauge.HasKa || (shifu is null && level >= SAM.Levels.Shifu) || (jinpu?.RemainingTime > shifu?.RemainingTime && level < SAM.Levels.Higanbana))
             {
                 if (lastComboMove == SAM.Shifu && level >= SAM.Levels.Kasha) return SAM.Kasha;
-                if (lastComboMove == SAM.Hakaze) return SAM.Shifu;
+                if (lastComboMove == OriginalHook(SAM.Hakaze)) return SAM.Shifu;
+            }
+
+            if (!gauge.HasGetsu || (jinpu is null && level >= SAM.Levels.Jinpu) || (jinpu?.RemainingTime < shifu?.RemainingTime && level < SAM.Levels.Higanbana))
+            {
+                if (lastComboMove == SAM.Jinpu && level >= SAM.Levels.Gekko) return SAM.Gekko;
+                if (lastComboMove == OriginalHook(SAM.Hakaze)) return SAM.Jinpu;
             }
 
         }

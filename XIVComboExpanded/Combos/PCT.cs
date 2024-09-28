@@ -349,48 +349,4 @@ internal static class PCT
             };
         }
     }
-
-    internal class PictomancerHolyCometCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PictomancerHolyCometCombo;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == HolyWhite)
-            {
-                if (IsEnabled(CustomComboPreset.PictomancerRainbowHolyCombo) && HasEffect(Buffs.RainbowReady))
-                    return RainbowDrip;
-
-                if (HasEffect(Buffs.Monochrome))
-                    return CometBlack;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class PictomancerCreatureMotifCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PctAny;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            var gauge = GetJobGauge<PCTGauge>();
-
-            if (actionID == CreatureMotif)
-            {
-                if (IsEnabled(CustomComboPreset.PictomancerCreatureMogCombo))
-                    if (gauge.MooglePortraitReady || gauge.MadeenPortraitReady)
-                        if (IsAvailable(MogOftheAges))
-                            return OriginalHook(MogOftheAges);
-
-                if (IsEnabled(CustomComboPreset.PictomancerCreatureMotifCombo))
-                    if (actionID == CreatureMotif)
-                        if (OriginalHook(CreatureMotifDrawn) != CreatureMotifDrawn)
-                            return OriginalHook(CreatureMotifDrawn);
-            }
-
-            return actionID;
-        }
-    }
 }

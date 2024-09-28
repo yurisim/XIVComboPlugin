@@ -106,7 +106,7 @@ internal class SageDosis : CustomCombo
 
             var myHP = LocalPlayerPercentage();
 
-            var threshold = 0.80;
+            var threshold = 0.75;
 
 
 
@@ -117,9 +117,10 @@ internal class SageDosis : CustomCombo
 
                 switch (level)
                 {
-                    case >= SGE.Levels.Physis when (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
-                                   && IsOffCooldown(OriginalHook(SGE.Physis))
-                                   && myHP <= threshold:
+                    case >= SGE.Levels.Physis when 
+                        (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
+                        && IsOffCooldown(OriginalHook(SGE.Physis))
+                        && myHP <= threshold:
                         return OriginalHook(SGE.Physis);
 
                     case >= SGE.Levels.Ixochole when IsOffCooldown(SGE.Ixochole)
@@ -155,7 +156,7 @@ internal class SageDosis : CustomCombo
                             ? SGE.Taurochole
                             : SGE.Druochole;
 
-                    case >= SGE.Levels.Rhizomata when gauge.Addersgall <= 2
+                    case >= SGE.Levels.Rhizomata when gauge.Addersgall <= 1
                                       && IsOffCooldown(SGE.Rhizomata):
                         return SGE.Rhizomata;
 
@@ -375,7 +376,7 @@ internal class SageShieldDiagnosis : CustomCombo
 
                     if (
                         level >= SGE.Levels.Rhizomata
-                        && gauge.Addersgall <= 2
+                        && gauge.Addersgall <= 1
                         && IsOffCooldown(SGE.Rhizomata)
                     )
                         return SGE.Rhizomata;
@@ -420,5 +421,26 @@ internal class SageShieldDiagnosis : CustomCombo
 
             return actionID;
         }
+    }
+}
+
+internal class SagePhlegma : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (actionID == SGE.Physis)
+        {
+            if (IsOffCooldown(SGE.Philosophia)
+                && level >= SGE.Levels.Philosophia)
+            {
+                return CalcBestAction(OriginalHook(SGE.Physis), OriginalHook(SGE.Physis), SGE.Philosophia);
+            }
+
+            return actionID;
+        }
+
+        return actionID;
     }
 }
