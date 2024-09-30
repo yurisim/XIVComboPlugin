@@ -227,7 +227,7 @@ internal class NinjaAeolianEdge : CustomCombo
             && (
                 OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                 || HasEffect(NIN.Buffs.Kassatsu)
-                || GetRemainingCharges(NIN.ChiNormal) == 2
+                || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
                 || (
                     continueMudra
                     && (startMudra || (upcomingTrickAttack && !HasEffect(NIN.Buffs.ShadowWalker)))
@@ -269,7 +269,7 @@ internal class NinjaAeolianEdge : CustomCombo
         if (comboTime > 0)
         {
             if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
-                return level >= NIN.Levels.ArmorCrush && gauge.Kazematoi <= 3 && !targetHasTrick ? NIN.ArmorCrush : actionID;
+                return level >= NIN.Levels.ArmorCrush && gauge.Kazematoi == 0 && !targetHasTrick ? NIN.ArmorCrush : actionID;
 
             if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                 return NIN.GustSlash;
@@ -346,7 +346,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                            // Otherwise, check that I can use Ninjitsu chain
                            OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                            || HasEffect(NIN.Buffs.Kassatsu)
-                           || GetRemainingCharges(NIN.ChiNormal) >= 2
+                            || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
                            || HasEffect(NIN.Buffs.Mudra)
                        );
             }

@@ -298,6 +298,8 @@ internal class ViperPositionals : CustomCombo
                 }
             }
 
+            // TODO: Vicewinder is now behaving correctly
+
             if ((hasRearBuff
                  || canUseSwiftSkinCoil
                  || (HasEffect(VPR.Buffs.HuntersInstinct)

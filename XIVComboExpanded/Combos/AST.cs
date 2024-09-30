@@ -170,7 +170,7 @@ internal class AstrologianMalefic : CustomCombo
 internal class AstrologianGravity : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.AstrologianPlayDrawFeature;
+        CustomComboPreset.AstAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {

@@ -241,24 +241,14 @@ internal class ScholarEnergyDrain : CustomCombo
 
             if (InCombat() && actionID != SCH.ArtOfWar && ShouldUseDots())
             {
-                var combustEffects = new[]
+                var dots = new[]
                 {
                     FindTargetEffect(SCH.Debuffs.Bio),
                     FindTargetEffect(SCH.Debuffs.Bio2),
                     FindTargetEffect(SCH.Debuffs.Biolysis)
                 };
 
-                if (
-                    !combustEffects.Any(
-                        effect =>
-                            effect?.RemainingTime > 2.8
-                            || (
-                                effect?.RemainingTime is not null
-                                && effect.RemainingTime <= 6
-                                && this.IsMoving
-                            )
-                    )
-                )
+                if (dots.All(x => x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
                     return OriginalHook(SCH.Bio);
             }
         }
