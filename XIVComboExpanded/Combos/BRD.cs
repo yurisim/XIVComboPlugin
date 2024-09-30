@@ -29,6 +29,7 @@ internal static class BRD
         PitchPerfect = 7404,
         CausticBite = 7406,
         Stormbite = 7407,
+        NaturesMinne = 7408, 
         RefulgentArrow = 7409,
         BurstShot = 16495,
         ApexArrow = 16496,
@@ -82,6 +83,7 @@ internal static class BRD
             IronJaws = 56,
             Sidewinder = 60,
             BiteUpgrade = 64,
+            NaturesMinne = 66,
             RefulgentArrow = 70,
             Shadowbite = 72,
             BurstShot = 76,
@@ -135,10 +137,10 @@ internal class BardHeavyShot : CustomCombo
                         && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                             || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
                         return BRD.ArmysPaeon;
-                    case >= BRD.Levels.RagingStrikes when
-                        IsOffCooldown(BRD.RagingStrikes)
-                        && HasRaidBuffs():
-                        return BRD.RagingStrikes;
+
+                    case >= BRD.Levels.EmpyrealArrow when
+                        IsOffCooldown(BRD.EmpyrealArrow):
+                        return BRD.EmpyrealArrow;
                     case >= BRD.Levels.BattleVoice when
                         HasEffect(BRD.Buffs.RagingStrikes)
                         && IsOffCooldown(BRD.BattleVoice):
@@ -148,23 +150,32 @@ internal class BardHeavyShot : CustomCombo
                         && gauge.Coda.Length >= 1
                         && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)):
                         return BRD.RadiantFinale;
-                    case >= BRD.Levels.EmpyrealArrow when
-                        IsOffCooldown(BRD.EmpyrealArrow):
-                        return BRD.EmpyrealArrow;
+                    case >= BRD.Levels.RagingStrikes when
+                        IsOffCooldown(BRD.RagingStrikes)
+                        && HasRaidBuffs():
+                        return BRD.RagingStrikes;
+
+                    case >= BRD.Levels.Bloodletter when
+                        HasCharges(OriginalHook(BRD.Bloodletter))
+                        && (HasEffect(BRD.Buffs.RagingStrikes)
+                            || HasRaidBuffs()
+                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 18):
+                        return OriginalHook(BRD.Bloodletter);
+
                     case >= BRD.Levels.Barrage when
                         IsOffCooldown(BRD.Barrage)
                         && (HasEffect(BRD.Buffs.RagingStrikes)
                             || ragingStrikesCD >= 18
                             || HasRaidBuffs()):
                         return BRD.Barrage;
+
                     case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
                         return BRD.Sidewinder;
-                    case >= BRD.Levels.Bloodletter when
-                        HasCharges(OriginalHook(BRD.Bloodletter))
-                        && (HasEffect(BRD.Buffs.RagingStrikes)
-                            || HasRaidBuffs()
-                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 15):
-                        return OriginalHook(BRD.Bloodletter);
+                        
+                    case >= BRD.Levels.NaturesMinne when
+                        IsOffCooldown(BRD.NaturesMinne)
+                        && LocalPlayerPercentage() <= 0.50:
+                        return BRD.NaturesMinne;
                 }
             }
 
@@ -199,6 +210,16 @@ internal class BardHeavyShot : CustomCombo
 
                 if (stormDots.All(x => x is null || x.RemainingTime <= refreshTime))
                     return OriginalHook(BRD.Windbite);
+            }
+
+            var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
+
+            if (level >= BRD.Levels.RadiantEncore
+                && radiantEncore is not null
+                && (radiantEncore.RemainingTime <= 10 || HasRaidBuffs())
+                )
+            {
+                return BRD.RadiantEncore;
             }
 
             var resonantArrowReady = FindEffect(BRD.Buffs.ResonantArrowReady);
@@ -385,6 +406,10 @@ internal class BardQuickNock : CustomCombo
                         return OriginalHook(BRD.RainOfDeath);
                     case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder):
                         return BRD.Sidewinder;
+                    case >= BRD.Levels.NaturesMinne when
+                        IsOffCooldown(BRD.NaturesMinne)
+                        && LocalPlayerPercentage() <= 0.50:
+                        return BRD.NaturesMinne;
                 }
         
             }
@@ -393,6 +418,16 @@ internal class BardQuickNock : CustomCombo
                 && gauge.SoulVoice >= 80
                     )
                 return BRD.ApexArrow;
+
+            var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
+
+            if (level >= BRD.Levels.RadiantEncore
+                && radiantEncore is not null
+                && (radiantEncore.RemainingTime <= 10)
+                )
+            {
+                return BRD.RadiantEncore;
+            }
 
             var resonantArrowReady = FindEffect(BRD.Buffs.ResonantArrowReady);
 

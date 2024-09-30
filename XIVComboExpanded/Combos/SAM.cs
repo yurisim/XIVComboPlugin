@@ -172,7 +172,6 @@ internal class SamuraiYukikaze : CustomCombo
                                             && HasEffect(SAM.Buffs.Shifu):
                         return OriginalHook(SAM.HissatsuKyuten);
                 }
-
             }
 
             if (OriginalHook(SAM.OgiNamikiri) != SAM.OgiNamikiri) return OriginalHook(SAM.OgiNamikiri);
@@ -242,31 +241,77 @@ internal class SamuraiMangetsu : CustomCombo
                 gauge.HasGetsu ? 1 : 0
             };
 
-            if (
-                level >= SAM.Levels.TsubameGaeshi
-                && HasCharges(SAM.TsubameGaeshi)
-                && (GetCooldown(SAM.TsubameGaeshi).CooldownRemaining <= 15 || HasRaidBuffs())
-                && HasEffect(SAM.Buffs.Jinpu)
-                && OriginalHook(SAM.TsubameGaeshi) != SAM.TsubameGaeshi
-            )
-                return OriginalHook(SAM.TsubameGaeshi);
+            var higanabana = FindTargetEffect(SAM.Debuffs.Higanabana);
+
+            var higanbanaTime =
+                (higanabana is null && ShouldUseDots())
+                || (higanabana is not null && higanabana.RemainingTime <= 6);
+
+            var canUseIkishoten = IsOffCooldown(SAM.Ikishoten) && InCombat();
+
+            var hasRaidBuffs = HasRaidBuffs();
+
+            var jinpu = FindEffect(SAM.Buffs.Jinpu);
+            var shifu = FindEffect(SAM.Buffs.Shifu);
 
             if (GCDClipCheck(actionID))
             {
-                var canUseIkishoten =
-                    level >= SAM.Levels.Ikishoten && IsOffCooldown(SAM.Ikishoten) && InCombat();
+                switch (level)
+                {
+                    case >= SAM.Levels.Shoha when
+                        gauge.MeditationStacks == 3
+                        && (higanbanaTime
+                            || hasRaidBuffs
+                            || gaugeSen.Sum() == 3):
+                        return SAM.Shoha;
+                    case >= SAM.Levels.MeikyoShisui when
+                        (HasCharges(SAM.MeikyoShisui) || IsOffCooldown(SAM.MeikyoShisui))
+                        && InCombat()
+                        // && (!(comboTime > 0) || jinpu is null || shifu is null)
+                        && (hasRaidBuffs
+                            || GetCooldown(SAM.MeikyoShisui).TotalCooldownRemaining <= 10):
+                        return SAM.MeikyoShisui;
+                    case >= SAM.Levels.Ikishoten when
+                        canUseIkishoten
+                        && hasRaidBuffs
+                        && gauge.Kenki <= 50:
+                        return SAM.Ikishoten;
+                    case >= SAM.Levels.HissatsuGuren when
+                        IsOffCooldown(SAM.HissatsuGuren)
+                        && gauge.Kenki >= 25
+                        && HasEffect(SAM.Buffs.Jinpu):
+                        return level >= SAM.Levels.HissatsuSenei
+                            ? SAM.HissatsuSenei
+                            : SAM.HissatsuGuren;
+                    case >= SAM.Levels.HissatsuShinten when gauge.Kenki >= 25 && HasEffect(SAM.Buffs.Jinpu):
+                        if (gauge.Kenki >= 75)
+                            return OriginalHook(SAM.HissatsuShinten);
 
-                if (canUseIkishoten && gauge.Kenki <= 50) return SAM.Ikishoten;
+                        if (level >= SAM.Levels.Ikishoten && canUseIkishoten && gauge.Kenki >= 35)
+                            return OriginalHook(SAM.HissatsuShinten);
 
-                if (
-                    level >= SAM.Levels.MeikyoShisui
-                    && (HasCharges(SAM.MeikyoShisui) || IsOffCooldown(SAM.MeikyoShisui))
-                    && (
-                        HasRaidBuffs()
-                        || GetCooldown(SAM.MeikyoShisui).CooldownRemaining <= 5
-                    )
-                )
-                    return SAM.MeikyoShisui;
+                        if (GetCooldown(SAM.Ikishoten).CooldownRemaining <= 6 && gauge.Kenki >= 35)
+                            return OriginalHook(SAM.HissatsuShinten);
+
+                        if (hasRaidBuffs
+                            && (GetCooldown(SAM.HissatsuGuren).CooldownRemaining >= 15 || level < SAM.Levels.HissatsuGuren))
+                            return OriginalHook(SAM.HissatsuShinten);
+                        break;
+                    case >= SAM.Levels.HissatsuKyuten when gauge.Kenki >= 25
+                                            && (gauge.Kenki >= 75
+                                                || (((level >= SAM.Levels.Ikishoten && canUseIkishoten)
+                                                     || GetCooldown(SAM.Ikishoten).CooldownRemaining <= 6)
+                                                    && gauge.Kenki >= 35)
+                                                || (hasRaidBuffs
+                                                    && (GetCooldown(SAM.HissatsuGuren).CooldownRemaining >= 15
+                                                        || level < SAM.Levels.HissatsuGuren)))
+                                            && HasEffect(SAM.Buffs.Shifu):
+                        return OriginalHook(SAM.HissatsuKyuten);
+                }
+
+                if (level >= SAM.Levels.TsubameGaeshi
+                    && CanUseAction(OriginalHook(SAM.TsubameGaeshi)))
+                    return OriginalHook(SAM.TsubameGaeshi);
 
                 if (
                     level >= SAM.Levels.HissatsuGuren

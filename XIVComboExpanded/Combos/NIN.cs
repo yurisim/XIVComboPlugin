@@ -1,3 +1,4 @@
+using System;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -77,6 +78,7 @@ internal static class NIN
             Huton = 45,
             Kassatsu = 50,
             HakkeMujinsatsu = 52,
+            ArmorCrush = 54,
             DreamWithinADream = 56,
             Huraijin = 60,
             HellfrogMedium = 62,
@@ -105,6 +107,7 @@ internal class NinjaAeolianEdge : CustomCombo
         float comboTime,
         byte level
     )
+
     {
         if (actionID != NIN.AeolianEdge && actionID != NIN.ArmorCrush) return actionID;
 
@@ -129,6 +132,8 @@ internal class NinjaAeolianEdge : CustomCombo
 
         var ninki = gauge.Ninki;
 
+        var targetHasTrick = TargetHasEffect(NIN.Debuffs.TrickAttack) || TargetHasEffect(NIN.Debuffs.KunaisBane);
+
         // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
         if (
             GCDClipCheck(actionID)
@@ -145,15 +150,13 @@ internal class NinjaAeolianEdge : CustomCombo
                     return OriginalHook(NIN.TrickAttack);
 
                 case >= NIN.Levels.Kassatsu when IsOffCooldown(NIN.Kassatsu)
-                                                 && (TargetHasEffect(NIN.Debuffs.TrickAttack)
-                                                     || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                                                 && (targetHasTrick
                                                      || HasRaidBuffs()
                                                      || trickAttackCD >= 6):
                     return NIN.Kassatsu;
 
                 case >= NIN.Levels.Bunshin when IsOffCooldown(NIN.Bunshin)
-                                                && (TargetHasEffect(NIN.Debuffs.TrickAttack)
-                                                    || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                                                && (targetHasTrick
                                                     || HasRaidBuffs()
                                                     || trickAttackCD >= 9)
                                                 && ninki >= 50:
@@ -171,17 +174,15 @@ internal class NinjaAeolianEdge : CustomCombo
                     return OriginalHook(NIN.Assassinate);
 
                 case >= NIN.Levels.TenriJindo when CanUseAction(NIN.TenriJindo)
-                                                   && (TargetHasEffect(NIN.Debuffs.TrickAttack)
+                                                   && (targetHasTrick
                                                        || FindEffect(NIN.Buffs.TenriJindoReady)?.RemainingTime <= 5
-                                                       || TargetHasEffect(NIN.Debuffs.KunaisBane)
                                                        || HasRaidBuffs()):
                     return NIN.TenriJindo;
 
                 case >= NIN.Levels.HellfrogMedium when InMeleeRange()
                                                        && ninki >= 50
                                                        && (ninki >= 80
-                                                           || TargetHasEffect(NIN.Debuffs.TrickAttack)
-                                                           || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                                                           || targetHasTrick
                                                            || HasEffect(NIN.Buffs.Meisui)
                                                            || (level >= NIN.Levels.EnhancedMug
                                                                && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
@@ -201,8 +202,7 @@ internal class NinjaAeolianEdge : CustomCombo
             && !HasEffect(NIN.Buffs.TenChiJin)
             && !HasEffect(NIN.Buffs.RaijuReady)
             && (
-                TargetHasEffect(NIN.Debuffs.TrickAttack)
-                || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                targetHasTrick
                 || phantomTime <= 10
                 || GetTargetDistance() >= 9
                 || trickAttackCD >= phantomTime
@@ -214,8 +214,7 @@ internal class NinjaAeolianEdge : CustomCombo
         // Need to put before instant GCDs to not interrupot mudras.
 
         var startMudra =
-            TargetHasEffect(NIN.Debuffs.TrickAttack)
-            || TargetHasEffect(NIN.Debuffs.KunaisBane)
+            targetHasTrick
             || (
                 (TargetHasEffect(NIN.Debuffs.Mug) || TargetHasEffect(NIN.Debuffs.Dokumori))
                 && IsOnCooldown(OriginalHook(NIN.TrickAttack))
@@ -270,7 +269,7 @@ internal class NinjaAeolianEdge : CustomCombo
         if (comboTime > 0)
         {
             if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
-                return actionID;
+                return level >= NIN.Levels.ArmorCrush && gauge.Kazematoi <= 3 && !targetHasTrick ? NIN.ArmorCrush : actionID;
 
             if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                 return NIN.GustSlash;

@@ -158,10 +158,10 @@ internal abstract partial class CustomCombo
             // higher priority than an ability that is not currently usable), adjusted such that the ability with
             // the shortest time until it reaches charge cap having the largest priority value.
             // Any ability not currently cooling down will have a priority of 1000.
-            var a1Priority = a1.Data.Available
+            var a1Priority = a1.Data.IsAvailable
                 ? 1000 - a1.Data.TotalCooldownRemaining
                 : -a1.Data.CooldownRemaining;
-            var a2Priority = a2.Data.Available
+            var a2Priority = a2.Data.IsAvailable
                 ? 1000 - a2.Data.TotalCooldownRemaining
                 : -a2.Data.CooldownRemaining;
 
@@ -235,7 +235,7 @@ internal abstract partial class CustomCombo
     /// <returns>Whether or not the</returns>
     protected static bool ShouldUseDots()
     {
-        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 15;
+        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 10;
     }
 
     /// <summary>
@@ -619,7 +619,7 @@ internal abstract partial class CustomCombo
     /// <returns>True or false.</returns>
     protected static bool IsAvailable(uint actionID)
     {
-        return GetCooldown(actionID).Available;
+        return GetCooldown(actionID).IsAvailable;
     }
 
     protected static bool HasCharges(uint actionID)

@@ -26,6 +26,7 @@ internal static class SCH
         WhisperingDawn = 16537,
         FeyIllumination = 16538,
         Biolysis = 16540,
+        BanefulImpaction = 37012,
         Recitation = 16542,
         FeyBlessing = 16543,
         SummonSeraph = 16545,
@@ -47,6 +48,7 @@ internal static class SCH
             Catalyze = 1918,
             Dissipation = 791,
             Recitation = 1896,
+            ImpactImminent = 3882,
             SeraphicVeil = 3097,
             Seraphism = 3884,
             SeraphismAura = 3885;
@@ -82,7 +84,9 @@ internal static class SCH
             Consolation = 80,
             SummonSeraph = 80,
             Protraction = 86,
-            Expedient = 90;
+            Expedient = 90,
+            BanefulImpaction = 92;
+
     }
 }
 
@@ -117,97 +121,96 @@ internal class ScholarEnergyDrain : CustomCombo
 
             var aetherflowCD = GetCooldown(SCH.Aetherflow).CooldownRemaining;
 
+            var whisperingDawnCD = GetCooldown(SCH.WhisperingDawn);
+            var feyBlessingCD = GetCooldown(SCH.FeyBlessing);
+            var summonSeraphCD = GetCooldown(SCH.SummonSeraph);
+
+            var doDissipation =
+                whisperingDawnCD.CooldownRemaining >= 30
+                && (feyBlessingCD.CooldownRemaining >= 30 || level < SCH.Levels.FeyBlessing)
+                && (summonSeraphCD.CooldownRemaining >= 30 || level < SCH.Levels.SummonSeraph)
+                && (aetherflowCD >= 8 || level < SCH.Levels.Aetherflow)
+                && IsOffCooldown(SCH.Dissipation)
+                && level >= SCH.Levels.Dissipation
+                && gauge.SeraphTimer < 1;
+
+            var impactImminent = FindEffect(SCH.Buffs.ImpactImminent);
+
+            var threshold = 0.8;
+
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= SCH.Levels.ChainStratagem
-                    && IsOffCooldown(SCH.ChainStratagem)
-                    && HasRaidBuffs()
-                )
-                    return SCH.ChainStratagem;
-
-                if (
-                    level >= SCH.Levels.Consolation
-                    && gauge.SeraphTimer > 0
-                    && HasCharges(SCH.Consolation)
-                    && (
-                        GetRemainingCharges(SCH.Consolation) == 2
-                        || gauge.SeraphTimer <= 10
-                    )
-                )
-                    return SCH.Consolation;
-
-                if (
-                    TargetOfTargetHPercentage() <= 0.6
-                    && level >= SCH.Levels.Excogitation
-                    && IsOffCooldown(SCH.Excogitation)
-                    && gauge.Aetherflow >= 2
-                )
-                    return SCH.Excogitation;
-
-                var doDissipation =
-                    IsOnCooldown(SCH.WhisperingDawn)
-                    && (IsOnCooldown(SCH.FeyBlessing) || level < SCH.Levels.FeyBlessing)
-                    && (IsOnCooldown(SCH.SummonSeraph) || level < SCH.Levels.SummonSeraph)
-                    && IsOffCooldown(SCH.Dissipation)
-                    && level >= SCH.Levels.Dissipation
-                    && gauge.SeraphTimer == 0;
-
-                if (
-                    level >= SCH.Levels.Aetherflow
-                    && gauge.Aetherflow >= 1
-                    && (
-                        (aetherflowCD <= 10 && aetherflowCD / gauge.Aetherflow <= 3)
-                        || IsOffCooldown(SCH.Aetherflow)
-                        || (HasRaidBuffs() && gauge.Aetherflow >= 3)
-                        || doDissipation
-                    )
-                )
-                    return SCH.EnergyDrain;
-
-                if (
-                    level >= SCH.Levels.Aetherflow
-                    && CanUseAction(SCH.Aetherflow)
-                    && gauge.Aetherflow == 0
-                    && IsOffCooldown(SCH.Aetherflow)
-                )
-                    return SCH.Aetherflow;
-
-                if (
-                    level >= SCH.Levels.Dissipation
-                    && doDissipation
-                    && gauge.Aetherflow == 0
-                    && IsOffCooldown(SCH.Dissipation)
-                )
-                    return SCH.Dissipation;
-
-                if (
-                    InCombat()
-                    && IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000
-                )
-                    return ADV.LucidDreaming;
-
-                if (level >= SCH.Levels.Aetherpact)
+                switch (level)
                 {
-                    if (
-                        gauge.FairyGauge >= 30
-                        && TargetOfTargetHPercentage() <= 0.80
-                        && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
-                        && !HasEffect(SCH.Buffs.Dissipation)
-                        && gauge.SeraphTimer == 0
-                    )
-                        return OriginalHook(SCH.Aetherpact);
+                    case >= SCH.Levels.ChainStratagem when
+                        IsOffCooldown(SCH.ChainStratagem)
+                        && HasRaidBuffs():
+                        return SCH.ChainStratagem;
 
-                    if (
-                        TargetOfTargetHPercentage() >= 0.95
-                        && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact
-                    )
-                        return OriginalHook(SCH.Aetherpact);
+                    case >= SCH.Levels.WhisperingDawn when
+                        whisperingDawnCD.IsAvailable
+                        && (LocalPlayerPercentage() <= threshold)
+                        && !HasEffect(SCH.Buffs.SacredSoil):
+                        return SCH.Consolation;
+
+                    case >= SCH.Levels.FeyBlessing when
+                        feyBlessingCD.IsAvailable
+                        && (LocalPlayerPercentage() <= threshold)
+                        && !HasEffect(SCH.Buffs.SacredSoil)
+                        && !HasEffect(SCH.Buffs.WhisperingDawn):
+                        return SCH.Consolation;
+
+                    case >= SCH.Levels.Consolation when
+                        gauge.SeraphTimer > 0
+                        && HasCharges(SCH.Consolation)
+                        && (GetRemainingCharges(SCH.Consolation) == 2
+                            || (LocalPlayerPercentage() <= threshold + 0.1 && !HasEffect(SCH.Buffs.SeraphicVeil))
+                            || gauge.SeraphTimer <= 5000):
+                        return SCH.Consolation;
+
+                    case >= SCH.Levels.Excogitation when
+                        TargetOfTargetHPercentage() <= 0.6
+                        && IsOffCooldown(SCH.Excogitation)
+                        && gauge.Aetherflow >= 2:
+                        return SCH.Excogitation;
+
+                    case >= SCH.Levels.Aetherflow when
+                        gauge.Aetherflow >= 1
+                        && ((aetherflowCD <= 7.5 && aetherflowCD / gauge.Aetherflow <= 2.5)
+                            || IsOffCooldown(SCH.Aetherflow)
+                            || doDissipation):
+                        return SCH.EnergyDrain;
+
+                    case >= SCH.Levels.BanefulImpaction when
+                        impactImminent is not null
+                        && (HasRaidBuffs() || impactImminent.RemainingTime <= 20):
+                        return SCH.BanefulImpaction;
+
+                    case >= SCH.Levels.Aetherflow when CanUseAction(SCH.Aetherflow) &&
+                        gauge.Aetherflow == 0 && IsOffCooldown(SCH.Aetherflow):
+                        return SCH.Aetherflow;
+
+                    case >= SCH.Levels.Dissipation when doDissipation && gauge.Aetherflow == 0 &&
+                        IsOffCooldown(SCH.Dissipation):
+                        return SCH.Dissipation;
+
+                    case >= ADV.Levels.LucidDreaming when InCombat() && IsOffCooldown(ADV.LucidDreaming) &&
+                        LocalPlayer?.CurrentMp <= 8000:
+                        return ADV.LucidDreaming;
+
+                    case >= SCH.Levels.Aetherpact:
+                        if (gauge.FairyGauge >= 30 && TargetOfTargetHPercentage() <= 0.80 &&
+                            OriginalHook(SCH.Aetherpact) == SCH.Aetherpact && !HasEffect(SCH.Buffs.Dissipation) &&
+                            gauge.SeraphTimer == 0)
+                            return OriginalHook(SCH.Aetherpact);
+                        if (TargetOfTargetHPercentage() >= 0.95 && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
+                            return OriginalHook(SCH.Aetherpact);
+                        break;
                 }
+
             }
 
-            if (InCombat() && TargetIsEnemy() && actionID != SCH.ArtOfWar && ShouldUseDots())
+            if (InCombat() && actionID != SCH.ArtOfWar && ShouldUseDots())
             {
                 var combustEffects = new[]
                 {

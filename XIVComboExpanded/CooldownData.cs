@@ -65,7 +65,7 @@ internal struct CooldownData
     ///     Gets a value indicating whether this action is off cooldown, or for charge-based actions, if the action
     ///     has at least one usable charge available.
     /// </summary>
-    public bool Available => !this.IsCooldown || this.RemainingCharges > 0;
+    public bool IsAvailable => !this.IsCooldown || this.RemainingCharges > 0;
 
     /// <summary>
     ///     Gets a value indicating whether the action is on cooldown, or for charge-based actions, if any charges
