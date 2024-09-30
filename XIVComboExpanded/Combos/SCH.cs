@@ -199,12 +199,16 @@ internal class ScholarEnergyDrain : CustomCombo
                         return ADV.LucidDreaming;
 
                     case >= SCH.Levels.Aetherpact:
-                        if (gauge.FairyGauge >= 30 && TargetOfTargetHPercentage() <= 0.80 &&
-                            OriginalHook(SCH.Aetherpact) == SCH.Aetherpact && !HasEffect(SCH.Buffs.Dissipation) &&
-                            gauge.SeraphTimer == 0)
-                            return OriginalHook(SCH.Aetherpact);
-                        if (TargetOfTargetHPercentage() >= 0.95 && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
-                            return OriginalHook(SCH.Aetherpact);
+                        if (gauge.FairyGauge >= 30 
+                            && TargetOfTargetHPercentage() <= 0.80 
+                            && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact 
+                            && !HasEffect(SCH.Buffs.Dissipation) 
+                            && gauge.SeraphTimer == 0)
+                        return OriginalHook(SCH.Aetherpact);
+
+                        if (TargetOfTargetHPercentage() >= 0.95 
+                            && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
+                        return OriginalHook(SCH.Aetherpact);
                         break;
                 }
 
