@@ -311,13 +311,13 @@ internal abstract partial class CustomCombo
     }
 
     /// <summary>
-    ///     Gets bool determining if action is greyed out or not.
+    ///     Gets bool determining if action is greyed out or not and if it's available.
     /// </summary>
     /// <param name="actionID">Action ID.</param>
     /// <returns>A bool value of whether the action can be used or not.</returns>
     protected static bool CanUseAction(uint actionID)
     {
-        return Service.IconReplacer.CanUseAction(actionID);
+        return Service.IconReplacer.CanUseAction(actionID) && IsAvailable(actionID);
     }
 
     /// <summary>
