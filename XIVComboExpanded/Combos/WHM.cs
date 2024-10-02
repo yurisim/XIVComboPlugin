@@ -243,8 +243,8 @@ internal class WhiteMageStoneFeature : CustomCombo
                         && HasCharges(WHM.DivineBenison)
                         && (
                             (
-                                GetCooldown(WHM.DivineBenison).CooldownRemaining <= 5
-                                && tarOfTarPercentage <= 0.75
+                                GetCooldown(WHM.DivineBenison).TotalCooldownRemaining <= 10
+                                && tarOfTarPercentage <= 0.80
                             )
                             || tarOfTarPercentage <= 0.6
                         )

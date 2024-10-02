@@ -118,16 +118,27 @@ internal class BlackMageFire : CustomCombo
                 {
                     FindTargetEffect(BLM.Debuffs.Thunder),
                     FindTargetEffect(BLM.Debuffs.Thunder3),
-                    FindTargetEffect(BLM.Debuffs.HighThunder)
+                    FindTargetEffect(BLM.Debuffs.HighThunder),
+                    FindTargetEffect(BLM.Debuffs.Thunder2),
+                    FindTargetEffect(BLM.Debuffs.Thunder4),
+                    FindTargetEffect(BLM.Debuffs.HighThunder2)
                 };
 
                 if (level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
-                    && gauge.ElementTimeRemaining >= 5000
+                    && gauge.ElementTimeRemaining >= 6000
                     && (debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
                         || debuffs.All(effect => effect is null))
                 )
                     return OriginalHook(BLM.Thunder);
+            }
+
+            if (gauge.PolyglotStacks >= 1
+                && gauge.EnochianTimer <= 6000
+                && gauge.ElementTimeRemaining >= 8000
+                && level >= BLM.Levels.Foul)
+            {
+                return level >= BLM.Levels.Xenoglossy ? BLM.Xenoglossy : BLM.Foul;
             }
 
             if (gauge.InAstralFire)
@@ -137,28 +148,24 @@ internal class BlackMageFire : CustomCombo
 
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
 
-                if (level >= BLM.Levels.Fire3 && firestarter is not null && (firestarter.RemainingTime <= 5 || fireCost > playerMP))
+                if (level >= BLM.Levels.Fire3 
+                    && firestarter is not null 
+                    && (firestarter.RemainingTime <= 5 || 11 > playerMP))
                     return BLM.Fire3;
 
-                if (fireCost < playerMP && gauge.ElementTimeRemaining < 5500)
+                if (fireCost < playerMP 
+                    && gauge.ElementTimeRemaining < 6000)
                     return level >= BLM.Levels.Fire3 && firestarter is not null ? BLM.Fire3 : BLM.Fire;
 
-                if (level >= BLM.Levels.Flare && fireCost > playerMP && playerMP > 0)
-                {
-                    if (level >= BLM.Levels.Despair)
-                        return BLM.Despair;
-
-                    if (level < BLM.Levels.Fire4 && (HasEffect(ADV.Buffs.Swiftcast) || IsOffCooldown(ADV.Swiftcast)))
-                    {
-                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
-                            return ADV.Swiftcast;
-
-                        return BLM.Flare;
-                    }
-                }
+                if (level >= BLM.Levels.Despair
+                    && fireCost > playerMP
+                    && playerMP > 0)
+                    return BLM.Despair;
 
                 if (fireCost < playerMP)
+                {
                     return level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire;
+                }
 
                 return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
             }
@@ -172,10 +179,6 @@ internal class BlackMageFire : CustomCombo
                 if (level < BLM.Levels.Blizzard4
                     && LocalPlayer?.CurrentMp >= 9500)
                     return BLM.Fire3;
-
-                if (gauge.PolyglotStacks >= 1
-                    && level >= BLM.Levels.Foul)
-                    return level >= BLM.Levels.Xenoglossy ? BLM.Xenoglossy : BLM.Foul;
 
                 return level >= BLM.Levels.Blizzard4 ? BLM.Blizzard4 : BLM.Blizzard;
             }
@@ -206,7 +209,10 @@ internal class BlackFireBlizzard2 : CustomCombo
                 {
                     FindTargetEffect(BLM.Debuffs.Thunder2),
                     FindTargetEffect(BLM.Debuffs.Thunder4),
-                    FindTargetEffect(BLM.Debuffs.HighThunder2)
+                    FindTargetEffect(BLM.Debuffs.HighThunder2),
+                    FindTargetEffect(BLM.Debuffs.Thunder),
+                    FindTargetEffect(BLM.Debuffs.Thunder3),
+                    FindTargetEffect(BLM.Debuffs.HighThunder)
                 };
 
                 if (level >= BLM.Levels.Thunder2

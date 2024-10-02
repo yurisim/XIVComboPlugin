@@ -238,6 +238,15 @@ internal abstract partial class CustomCombo
         return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 10;
     }
 
+    protected static bool TargetIsLow()
+    {
+        return CurrentTarget is IBattleChara target
+            && LocalPlayer is not null
+            && target.MaxHp >= LocalPlayer.MaxHp * 24
+            && target.CurrentHp <= target.MaxHp * 0.1f;
+    }
+
+
     /// <summary>
     ///     Should return whether or not player has raid debuffs.
     ///     Uses forEach loops for faster iterations rather than count for shortcircuiting
@@ -275,9 +284,7 @@ internal abstract partial class CustomCombo
         //     }
         // }
 
-        if (CurrentTarget is IBattleChara target && LocalPlayer is not null)
-            if (target.MaxHp >= LocalPlayer.MaxHp * 24 && target.CurrentHp <= target.MaxHp * 0.1f)
-                // if (target.MaxHp >= LocalPlayer.MaxHp * 100 && (float)target.CurrentHp <= (float)target.MaxHp * 0.07f)
+        if (TargetIsLow())
                 return true;
 
         // var buffThreshold = PartyList.Length <= 4 ? 1 : 2;
@@ -317,7 +324,9 @@ internal abstract partial class CustomCombo
     /// <returns>A bool value of whether the action can be used or not.</returns>
     protected static bool CanUseAction(uint actionID)
     {
-        return Service.IconReplacer.CanUseAction(actionID) && IsAvailable(actionID);
+        return Service.IconReplacer.CanUseAction(actionID)
+        // && IsAvailable(actionID)
+        ;
     }
 
     /// <summary>

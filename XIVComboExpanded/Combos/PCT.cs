@@ -202,10 +202,12 @@ internal static class PCT
 
                 if (
                     level >= Levels.HammerStamp
-                    && CanUseAction(OriginalHook(HammerStamp))
+                    && HasEffect(Buffs.HammerTime)
                     && !HasEffect(Buffs.Inspiration)
                     )
+                {
                     return OriginalHook(HammerStamp);
+                }
 
                 if (
                     CanUseAction(OriginalHook(CometBlack))
@@ -215,23 +217,30 @@ internal static class PCT
 
                 if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs()))
                 {
-                    var availableSkill = new (uint Level, float CD, bool MotifNeeded, uint Skill)[]
+                    var availableSkill = new (uint Level, uint skill, float CD, bool MotifNeeded, uint Skill)[]
                         {
                             (Levels.LandscapeMotif,
+                                ScenicMuse,
                                 GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
                                 !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)),
                                 LandscapeMotif
                                 ),
                             (Levels.WeaponMotif,
+                                SteelMuse,
                                 GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining,
                                 !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)),
                                 WeaponMotif),
                             (Levels.CreatureMotif,
+                                LivingMuse,
                                 GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
                                 !gauge.CreatureMotifDrawn,
                                 CreatureMotif)
                         }
-                        .Where(s => s.Level <= level && s.MotifNeeded && (s.CD <= 40 || !InCombat()))
+                        .Where(s => s.Level <= level 
+                            && s.MotifNeeded 
+                            && (GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40 
+                                || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
+                                || !InCombat()))
                         .OrderBy(s => s.CD)
                         .Select(s => s.Skill)
                         .FirstOrDefault();
@@ -301,7 +310,7 @@ internal static class PCT
                 if (
                     level >= Levels.HammerStamp
                     && !HasEffect(Buffs.Inspiration)
-                    && CanUseAction(OriginalHook(HammerStamp))
+                    && HasEffect(Buffs.HammerTime)
                 )
                     return OriginalHook(HammerStamp);
 
