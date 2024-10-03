@@ -181,7 +181,7 @@ internal class ReaperSlice : CustomCombo
                 return OriginalHook(RPR.Gallows);
             }
 
-            if ((deathsDesign is null)
+            if ((deathsDesign is null && ShouldUseDots())
                 || (deathsDesign is not null && deathsDesign.RemainingTime <= 15))
                 return RPR.ShadowOfDeath;
 
