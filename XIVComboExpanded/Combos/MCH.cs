@@ -107,12 +107,12 @@ internal class MachinistCleanShot : CustomCombo
 
                 var raidbuffs = HasRaidBuffs();
 
-                if (GCDClipCheck(actionID))
+                if (GCDClipCheck(actionID) && HasTarget() && InCombat())
                 {
                     var gaussRoundCharges = GetRemainingCharges(OriginalHook(MCH.GaussRound));
                     var ricochetCharges = GetRemainingCharges(OriginalHook(MCH.Ricochet));
 
-                    var timeThreshold = 8;
+                    var timeThreshold = 7.5;
 
                     var hyperchargeCDs = new[]
                     {
@@ -121,7 +121,7 @@ internal class MachinistCleanShot : CustomCombo
                         level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= timeThreshold
                     };
 
-                    var hyperchargeNotBlocked = hyperchargeCDs.Count(x => x is true) >= 2;
+                    var noIncomingCDs = hyperchargeCDs.All(x => x is true);
 
                     var hyperchargeReady = FindEffect(MCH.Buffs.HyperchargeReady);
 
@@ -134,23 +134,23 @@ internal class MachinistCleanShot : CustomCombo
                             && IsOffCooldown(MCH.BarrelStabilizer):
                             return MCH.BarrelStabilizer;
 
-                        case >= MCH.Levels.Hypercharge when
-                            IsOffCooldown(MCH.Hypercharge)
-                            && canUseHypercharge
-                            && (hyperchargeNotBlocked
-                                || TargetHasEffect(MCH.Debuffs.Wildfire)
-                                || hyperchargeReady?.RemainingTime <= 10)
-                            && (gauge.Heat >= 80
-                                || TargetHasEffect(MCH.Debuffs.Wildfire)
-                                || raidbuffs
-                                || hyperchargeReady?.RemainingTime <= 10):
-                            return MCH.Hypercharge;
-
                         case >= MCH.Levels.Wildfire when
                             IsOffCooldown(MCH.Wildfire)
                             && overheated is not null
                             && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
                             return MCH.Wildfire;
+
+                        case >= MCH.Levels.Hypercharge when
+                            IsOffCooldown(MCH.Hypercharge)
+                            && canUseHypercharge
+                            && (noIncomingCDs
+                                || TargetHasEffect(MCH.Debuffs.Wildfire)
+                                || hyperchargeReady?.RemainingTime <= 10)
+                            && (gauge.Heat >= 70
+                                || TargetHasEffect(MCH.Debuffs.Wildfire)
+                                || raidbuffs
+                                || hyperchargeReady?.RemainingTime <= 10):
+                            return MCH.Hypercharge;
 
                         case >= MCH.Levels.RookOverdrive when
                             gauge.Battery >= 50

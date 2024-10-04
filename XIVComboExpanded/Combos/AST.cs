@@ -40,6 +40,7 @@ internal static class AST
         TheBalance = 37023,
         TheSpear = 37026,
         Oracle = 37029,
+        SunSign = 37031,
         UmbralDraw = 37018;
 
     public static class Buffs
@@ -72,6 +73,7 @@ internal static class AST
             CelestialIntersection = 74,
             Exaltation = 86,
             Oracle = 92,
+            SunSign = 100,
             Horoscope = 76;
     }
 }
@@ -111,7 +113,9 @@ internal class AstrologianMalefic : CustomCombo
                             || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)
                             ):
                         return OriginalHook(AST.MinorArcanaDT);
-
+                    case >= AST.Levels.SunSign when 
+                        CanUseAction(AST.SunSign):
+                        return AST.SunSign;
                     case >= AST.Levels.Oracle when
                         divining is not null
                         && (divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity):
