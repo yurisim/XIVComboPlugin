@@ -238,7 +238,8 @@ internal static class PCT
                         }
                         .Where(s => s.Level <= level 
                             && s.MotifNeeded 
-                            && (GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40 
+                            && (GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40
+                                || (s.skill is not ScenicMuse && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining <= 30)
                                 || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
                                 || !InCombat()))
                         .OrderBy(s => s.CD)

@@ -29,7 +29,7 @@ internal static class BRD
         PitchPerfect = 7404,
         CausticBite = 7406,
         Stormbite = 7407,
-        NaturesMinne = 7408, 
+        NaturesMinne = 7408,
         RefulgentArrow = 7409,
         BurstShot = 16495,
         ApexArrow = 16496,
@@ -159,7 +159,7 @@ internal class BardHeavyShot : CustomCombo
                         HasCharges(OriginalHook(BRD.Bloodletter))
                         && (HasEffect(BRD.Buffs.RagingStrikes)
                             || HasRaidBuffs()
-                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 18):
+                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 15):
                         return OriginalHook(BRD.Bloodletter);
 
                     case >= BRD.Levels.Barrage when
@@ -171,7 +171,7 @@ internal class BardHeavyShot : CustomCombo
 
                     case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
                         return BRD.Sidewinder;
-                        
+
                     case >= BRD.Levels.NaturesMinne when
                         IsOffCooldown(BRD.NaturesMinne)
                         && LocalPlayerPercentage() <= 0.50:
@@ -216,7 +216,7 @@ internal class BardHeavyShot : CustomCombo
 
             if (level >= BRD.Levels.RadiantEncore
                 && radiantEncore is not null
-                && (radiantEncore.RemainingTime <= 10 || HasRaidBuffs())
+                && (radiantEncore.RemainingTime <= 20 || HasRaidBuffs())
                 )
             {
                 return BRD.RadiantEncore;
@@ -242,7 +242,7 @@ internal class BardHeavyShot : CustomCombo
                     || HasRaidBuffs()))
                 return BRD.ApexArrow;
 
-            if (level >= BRD.Levels.StraightShot && HasEffect(BRD.Buffs.HawksEye))
+            if (level >= BRD.Levels.StraightShot && CanUseAction(OriginalHook(BRD.StraightShot)))
                 // Refulgent Arrow
                 return OriginalHook(BRD.StraightShot);
         }
@@ -411,7 +411,7 @@ internal class BardQuickNock : CustomCombo
                         && LocalPlayerPercentage() <= 0.50:
                         return BRD.NaturesMinne;
                 }
-        
+
             }
 
             if (level >= BRD.Levels.ApexArrow
