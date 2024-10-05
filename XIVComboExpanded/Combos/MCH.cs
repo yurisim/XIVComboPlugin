@@ -154,26 +154,26 @@ internal class MachinistCleanShot : CustomCombo
                                         || HasEffect(MCH.Buffs.ExcavatorReady)))):
                             return OriginalHook(MCH.RookAutoturret);
 
-
                         case >= MCH.Levels.Hypercharge when
                             IsOffCooldown(MCH.Hypercharge)
                             && canUseHypercharge
                             && (noIncomingCDs || pleaseUseHypercharge)
                             && (gauge.Heat >= 70
                                 || raidbuffs
+                                || (IsOnCooldown(MCH.BarrelStabilizer) && IsOffCooldown(MCH.Wildfire))
                                 || pleaseUseHypercharge):
                             return MCH.Hypercharge;
 
                         case >= MCH.Levels.Ricochet when
                             HasCharges(OriginalHook(MCH.Ricochet))
                             && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 35
+                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 40
                                 || raidbuffs)
                             && ricochetCharges >= gaussRoundCharges:
                         case >= MCH.Levels.GaussRound when
                             HasCharges(OriginalHook(MCH.GaussRound))
                             && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 35
+                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 40
                                 || raidbuffs):
                             return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
                                 .MinBy(action => GetCooldown(action).TotalCooldownRemaining);
@@ -187,7 +187,7 @@ internal class MachinistCleanShot : CustomCombo
                 var chainSawReady = level >= MCH.Levels.Chainsaw
                             && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null)
                             && (excavatorReady is null
-                                || excavatorReady.RemainingTime <= 15
+                                || excavatorReady.RemainingTime <= 20
                                 || HasEffect(MCH.Buffs.Reassemble)
                                 || raidbuffs);
 
@@ -199,6 +199,7 @@ internal class MachinistCleanShot : CustomCombo
                     if (drillReady)
                     {
                         if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 25 || raidbuffs)
                             && GCDClipCheck(actionID)
                             && !HasEffect(MCH.Buffs.Reassemble))
                         {
@@ -210,7 +211,7 @@ internal class MachinistCleanShot : CustomCombo
 
                     if (level >= MCH.Levels.FullMetal
                         && fullMetal is not null
-                        && (raidbuffs || fullMetal.RemainingTime <= 15))
+                        && (raidbuffs || fullMetal.RemainingTime <= 20))
                     {
                         return MCH.FullMetal;
                     }
@@ -219,9 +220,10 @@ internal class MachinistCleanShot : CustomCombo
                     {
                         if (chainSawReady)
                         {
-                            if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                                && GCDClipCheck(actionID)
-                                && !HasEffect(MCH.Buffs.Reassemble))
+                        if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 25 || raidbuffs)
+                            && GCDClipCheck(actionID)
+                            && !HasEffect(MCH.Buffs.Reassemble))
                             {
                                 return MCH.Reassemble;
                             }
@@ -232,8 +234,11 @@ internal class MachinistCleanShot : CustomCombo
                         if (IsOffCooldown(OriginalHook(MCH.HotShot)))
                         {
                             if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                                && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 25 || raidbuffs)
                                 && level >= MCH.Levels.AirAnchor
-                                && GCDClipCheck(actionID))
+                                && GCDClipCheck(actionID)
+                                && !HasEffect(MCH.Buffs.Reassemble)
+                                )
                             {
                                 return MCH.Reassemble;
                             }
