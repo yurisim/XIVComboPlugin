@@ -128,8 +128,7 @@ internal class MachinistCleanShot : CustomCombo
                     var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady is not null;
 
                     var pleaseUseHypercharge = TargetHasEffect(MCH.Debuffs.Wildfire)
-                        || hyperchargeReady?.RemainingTime <= 15
-                        || (IsOnCooldown(MCH.BarrelStabilizer) && IsOffCooldown(MCH.Wildfire));
+                        || hyperchargeReady?.RemainingTime <= 10;
 
                     switch (level)
                     {
@@ -144,15 +143,6 @@ internal class MachinistCleanShot : CustomCombo
                             && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
                             return MCH.Wildfire;
 
-                        case >= MCH.Levels.Hypercharge when
-                            IsOffCooldown(MCH.Hypercharge)
-                            && canUseHypercharge
-                            && (noIncomingCDs || pleaseUseHypercharge)
-                            && (gauge.Heat >= 70
-                                || raidbuffs
-                                || pleaseUseHypercharge):
-                            return MCH.Hypercharge;
-
                         case >= MCH.Levels.RookOverdrive when
                             gauge.Battery >= 50
                             && (gauge.Battery >= 100
@@ -163,6 +153,16 @@ internal class MachinistCleanShot : CustomCombo
                                         || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
                                         || HasEffect(MCH.Buffs.ExcavatorReady)))):
                             return OriginalHook(MCH.RookAutoturret);
+
+
+                        case >= MCH.Levels.Hypercharge when
+                            IsOffCooldown(MCH.Hypercharge)
+                            && canUseHypercharge
+                            && (noIncomingCDs || pleaseUseHypercharge)
+                            && (gauge.Heat >= 70
+                                || raidbuffs
+                                || pleaseUseHypercharge):
+                            return MCH.Hypercharge;
 
                         case >= MCH.Levels.Ricochet when
                             HasCharges(OriginalHook(MCH.Ricochet))
@@ -191,9 +191,10 @@ internal class MachinistCleanShot : CustomCombo
                                 || HasEffect(MCH.Buffs.Reassemble)
                                 || raidbuffs);
 
-
-
-                if (overheated is null || fullMetal?.RemainingTime <= 5 || excavatorReady?.RemainingTime <= 5 || HasEffect(MCH.Buffs.Reassemble))
+                if (overheated is null
+                    || fullMetal?.RemainingTime <= 5
+                    || excavatorReady?.RemainingTime <= 5
+                    || HasEffect(MCH.Buffs.Reassemble))
                 {
                     if (drillReady)
                     {
@@ -389,11 +390,7 @@ internal class MachinistSpreadShot : CustomCombo
                 var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
 
                 var chainSawReady = level >= MCH.Levels.Chainsaw
-                            && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null)
-                            && (excavatorReady is null
-                                || excavatorReady.RemainingTime <= 15
-                                || HasEffect(MCH.Buffs.Reassemble)
-                                || raidbuffs);
+                            && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null);
 
                 if (chainSawReady)
                 {
@@ -409,10 +406,10 @@ internal class MachinistSpreadShot : CustomCombo
             }
 
             var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
-            
+
             if (level >= MCH.Levels.FullMetal
                 && fullMetal is not null
-                && (raidbuffs || fullMetal.RemainingTime <= 10))
+                )
                 return MCH.FullMetal;
 
             if (overheated is not null && level >= MCH.Levels.HeatBlast)
