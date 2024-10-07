@@ -111,6 +111,8 @@ internal class BardHeavyShot : CustomCombo
 
             var ragingStrikesCD = GetCooldown(BRD.RagingStrikes).CooldownRemaining;
 
+            var raidBuffs = HasRaidBuffs();
+
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 if (level >= BRD.Levels.PitchPerfect // Be the right level
@@ -159,7 +161,7 @@ internal class BardHeavyShot : CustomCombo
                         HasCharges(OriginalHook(BRD.Bloodletter))
                         && (HasEffect(BRD.Buffs.RagingStrikes)
                             || HasRaidBuffs()
-                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 15):
+                            || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 10):
                         return OriginalHook(BRD.Bloodletter);
 
                     case >= BRD.Levels.Barrage when
@@ -169,7 +171,9 @@ internal class BardHeavyShot : CustomCombo
                             || HasRaidBuffs()):
                         return BRD.Barrage;
 
-                    case >= BRD.Levels.Sidewinder when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
+                    case >= BRD.Levels.Sidewinder when
+                        IsOffCooldown(BRD.Sidewinder)
+                        && ragingStrikesCD >= 9:
                         return BRD.Sidewinder;
 
                     case >= BRD.Levels.NaturesMinne when
@@ -199,7 +203,7 @@ internal class BardHeavyShot : CustomCombo
             if (level >= BRD.Levels.IronJaws
                 && combinedDots.Any(x => x is not null))
             {
-                if (combinedDots.Any(x => x?.RemainingTime <= refreshTime))
+                if (combinedDots.Any(x => x?.RemainingTime <= (raidBuffs ? 35 : refreshTime)))
                     return BRD.IronJaws;
             }
 
@@ -212,11 +216,18 @@ internal class BardHeavyShot : CustomCombo
                     return OriginalHook(BRD.Windbite);
             }
 
+            var blastArrow = FindEffect(BRD.Buffs.BlastShotReady);
+
+            if (level >= BRD.Levels.BlastShot
+                && blastArrow is not null
+                && (blastArrow.RemainingTime <= 6 || raidBuffs))
+                return BRD.BlastArrow;
+
             var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
 
             if (level >= BRD.Levels.RadiantEncore
                 && radiantEncore is not null
-                && (radiantEncore.RemainingTime <= 20 || HasRaidBuffs())
+                && (radiantEncore.RemainingTime <= 20 || raidBuffs)
                 )
             {
                 return BRD.RadiantEncore;
@@ -226,23 +237,23 @@ internal class BardHeavyShot : CustomCombo
 
             if (level >= BRD.Levels.ResonantArrow
                 && resonantArrowReady is not null
-                && (resonantArrowReady.RemainingTime <= 10 || HasRaidBuffs())
+                && (resonantArrowReady.RemainingTime <= 10 || raidBuffs)
                 )
             {
                 return BRD.ResonantArrow;
             }
 
-            if (level >= BRD.Levels.BlastShot && HasEffect(BRD.Buffs.BlastShotReady))
-                return BRD.BlastArrow;
-
             if (level >= BRD.Levels.ApexArrow
                 && gauge.SoulVoice >= 80
                 && (HasEffect(BRD.Buffs.RagingStrikes)
-                    || (gauge.SoulVoice == 100)
-                    || HasRaidBuffs()))
+                    || (gauge.SoulVoice == 100
+                        && gauge.Song != Song.ARMY
+                        && IsOnCooldown(BRD.RagingStrikes))
+                    || raidBuffs))
                 return BRD.ApexArrow;
 
-            if (level >= BRD.Levels.StraightShot && CanUseAction(OriginalHook(BRD.StraightShot)))
+            if (level >= BRD.Levels.StraightShot
+                && CanUseAction(OriginalHook(BRD.StraightShot)))
                 // Refulgent Arrow
                 return OriginalHook(BRD.StraightShot);
         }

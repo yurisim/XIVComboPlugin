@@ -278,7 +278,9 @@ internal class NinjaAeolianEdge : CustomCombo
         if (comboTime > 0)
         {
             if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
-                return level >= NIN.Levels.ArmorCrush && gauge.Kazematoi == 0 && !targetHasTrick ? NIN.ArmorCrush : actionID;
+                return level >= NIN.Levels.ArmorCrush 
+                    && gauge.Kazematoi <= 3 
+                    && !targetHasTrick ? NIN.ArmorCrush : actionID;
 
             if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                 return NIN.GustSlash;
