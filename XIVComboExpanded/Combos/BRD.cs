@@ -123,6 +123,19 @@ internal class BardHeavyShot : CustomCombo
 
                 switch (level)
                 {
+                    case >= BRD.Levels.BattleVoice when
+                        HasEffect(BRD.Buffs.RagingStrikes)
+                        && IsOffCooldown(BRD.BattleVoice):
+                        return BRD.BattleVoice;
+                    case >= BRD.Levels.RadiantFinale when
+                        IsOffCooldown(BRD.RadiantFinale)
+                        && gauge.Coda.Length >= 1
+                        && HasEffect(BRD.Buffs.RagingStrikes):
+                        return BRD.RadiantFinale;
+                    case >= BRD.Levels.RagingStrikes when
+                        IsOffCooldown(BRD.RagingStrikes)
+                        && HasRaidBuffs():
+                        return BRD.RagingStrikes;
                     case >= BRD.Levels.WanderersMinuet when
                         IsOffCooldown(BRD.WanderersMinuet)
                         && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
@@ -139,19 +152,6 @@ internal class BardHeavyShot : CustomCombo
                         && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                             || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
                         return BRD.ArmysPaeon;
-                    case >= BRD.Levels.BattleVoice when
-                        HasEffect(BRD.Buffs.RagingStrikes)
-                        && IsOffCooldown(BRD.BattleVoice):
-                        return BRD.BattleVoice;
-                    case >= BRD.Levels.RadiantFinale when
-                        IsOffCooldown(BRD.RadiantFinale)
-                        && gauge.Coda.Length >= 1
-                        && HasEffect(BRD.Buffs.RagingStrikes):
-                        return BRD.RadiantFinale;
-                    case >= BRD.Levels.RagingStrikes when
-                        IsOffCooldown(BRD.RagingStrikes)
-                        && HasRaidBuffs():
-                        return BRD.RagingStrikes;
                     case >= BRD.Levels.EmpyrealArrow when
                         IsOffCooldown(BRD.EmpyrealArrow):
                         return BRD.EmpyrealArrow;

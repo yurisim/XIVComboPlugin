@@ -132,6 +132,8 @@ internal class NinjaAeolianEdge : CustomCombo
 
         var ninki = gauge.Ninki;
 
+        var raidBuffs = HasRaidBuffs();
+
         var targetHasTrick = TargetHasEffect(NIN.Debuffs.TrickAttack) || TargetHasEffect(NIN.Debuffs.KunaisBane);
 
         var tenri = FindEffect(NIN.Buffs.TenriJindoReady);
@@ -155,14 +157,14 @@ internal class NinjaAeolianEdge : CustomCombo
                     IsOffCooldown(NIN.Kassatsu)
                     && IsOnCooldown(OriginalHook(NIN.TrickAttack))
                     && (targetHasTrick
-                        || HasRaidBuffs()
+                        || raidBuffs
                         || trickAttackCD >= 6):
                     return NIN.Kassatsu;
 
                 case >= NIN.Levels.Bunshin when 
                     IsOffCooldown(NIN.Bunshin)
                     && (targetHasTrick
-                        || HasRaidBuffs()
+                        || raidBuffs
                         || trickAttackCD >= 9)
                     && ninki >= 50:
                     return NIN.Bunshin;
@@ -177,14 +179,13 @@ internal class NinjaAeolianEdge : CustomCombo
                 case >= NIN.Levels.Assassinate when 
                     InMeleeRange()
                     && IsOffCooldown(OriginalHook(NIN.Assassinate))
-                    && IsOnCooldown(OriginalHook(NIN.TrickAttack))
-                    && (trickAttackCD > 5 || level < NIN.Levels.Suiton):
+                    && targetHasTrick:
                     return OriginalHook(NIN.Assassinate);
 
                 case >= NIN.Levels.TenriJindo when 
                     tenri is not null
                     && (targetHasTrick
-                        || HasRaidBuffs()):
+                        || raidBuffs):
                     return NIN.TenriJindo;
 
                 case >= NIN.Levels.HellfrogMedium when 
@@ -215,7 +216,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 || phantomTime <= 10
                 || GetTargetDistance() >= 9
                 || trickAttackCD >= phantomTime
-                || HasRaidBuffs()
+                || raidBuffs
             )
         )
             return OriginalHook(NIN.Bunshin);
@@ -280,7 +281,7 @@ internal class NinjaAeolianEdge : CustomCombo
             if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
                 return level >= NIN.Levels.ArmorCrush 
                     && gauge.Kazematoi <= 3 
-                    && !targetHasTrick ? NIN.ArmorCrush : actionID;
+                    && !(targetHasTrick || raidBuffs) ? NIN.ArmorCrush : actionID;
 
             if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                 return NIN.GustSlash;
