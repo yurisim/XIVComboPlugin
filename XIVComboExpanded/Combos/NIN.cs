@@ -176,17 +176,17 @@ internal class NinjaAeolianEdge : CustomCombo
                     && trickAttackCD >= 20:
                     return NIN.Meisui;
 
-                case >= NIN.Levels.Assassinate when 
-                    InMeleeRange()
-                    && IsOffCooldown(OriginalHook(NIN.Assassinate))
-                    && targetHasTrick:
-                    return OriginalHook(NIN.Assassinate);
-
                 case >= NIN.Levels.TenriJindo when 
                     tenri is not null
                     && (targetHasTrick
                         || raidBuffs):
                     return NIN.TenriJindo;
+
+                case >= NIN.Levels.Assassinate when 
+                    InMeleeRange()
+                    && IsOffCooldown(OriginalHook(NIN.Assassinate))
+                    && targetHasTrick:
+                    return OriginalHook(NIN.Assassinate);
 
                 case >= NIN.Levels.HellfrogMedium when 
                     InMeleeRange()
@@ -237,7 +237,7 @@ internal class NinjaAeolianEdge : CustomCombo
             && (
                 OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
                 || HasEffect(NIN.Buffs.Kassatsu)
-                || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
+                || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 3
                 || (
                     continueMudra
                     && (startMudra || (upcomingTrickAttack && !HasEffect(NIN.Buffs.ShadowWalker)))
