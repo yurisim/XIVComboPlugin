@@ -108,7 +108,12 @@ internal class SageDosis : CustomCombo
 
             var threshold = 0.75;
 
+            var mpThreshold = 9200;
 
+            var raidbuffs = HasRaidBuffs();
+
+            var controlBurst = LocalPlayer?.CurrentMp <= mpThreshold
+                            || IsOnCooldown(ADV.LucidDreaming);
 
             if (GCDClipCheck(actionID))
             {
@@ -117,7 +122,7 @@ internal class SageDosis : CustomCombo
 
                 switch (level)
                 {
-                    case >= SGE.Levels.Physis when 
+                    case >= SGE.Levels.Physis when
                         (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
                         && IsOffCooldown(OriginalHook(SGE.Physis))
                         && myHP <= threshold:
@@ -160,39 +165,32 @@ internal class SageDosis : CustomCombo
                                       && IsOffCooldown(SGE.Rhizomata):
                         return SGE.Rhizomata;
 
-                    case >= SGE.Levels.Psyche when (HasRaidBuffs() || IsOnCooldown(ADV.LucidDreaming))
-                                   && IsOffCooldown(SGE.Psyche):
+                    case >= SGE.Levels.Psyche when 
+                        (controlBurst || raidbuffs)
+                        && IsOffCooldown(SGE.Psyche):
                         return SGE.Psyche;
 
-                    case >= ADV.Levels.LucidDreaming when IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000:
+                    case >= ADV.Levels.LucidDreaming when 
+                        IsOffCooldown(ADV.LucidDreaming) 
+                        && LocalPlayer?.CurrentMp <= 9200:
                         return ADV.LucidDreaming;
                 }
 
             }
 
-            (ushort Debuff, ushort Level)[] EDosises =
-            [
-                (SGE.Debuffs.EDosis3, SGE.Levels.EDosis3),
-                (SGE.Debuffs.EDosis2, SGE.Levels.EDosis2),
-                (SGE.Debuffs.EDosis1, SGE.Levels.EDosis1)
-            ];
-
             if (InCombat())
             {
-                if (level >= SGE.Levels.EDosis1)
+                if (InCombat() && TargetIsEnemy() && ShouldUseDots() && actionID is not AST.Gravity)
                 {
-                    var debuff = FindTargetEffect(
-                        EDosises.FirstOrDefault(x => x.Level <= level).Debuff
-                    );
+                    var debuffs = new[]
+                    {
+                        FindTargetEffect(SGE.Debuffs.EDyskrasia),
+                        FindTargetEffect(SGE.Debuffs.EDosis3),
+                        FindTargetEffect(SGE.Debuffs.EDosis2),
+                        FindTargetEffect(SGE.Debuffs.EDosis1)
+                        };
 
-                    var debuffTime = debuff?.RemainingTime;
-
-                    if (
-                        (
-                            debuff is not null
-                            && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving))
-                        ) || (debuff is null && ShouldUseDots())
-                    )
+                    if (debuffs.All(x => x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
                     {
                         if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
 
@@ -217,20 +215,18 @@ internal class SageDosis : CustomCombo
                 )
                     return SGE.Pneuma;
 
-                var plegma = OriginalHook(SGE.Phlegma);
-
-                var charges = GetRemainingCharges(plegma);
+                var charges = GetRemainingCharges(OriginalHook(SGE.Phlegma));
 
                 if (
                     level >= SGE.Levels.Phlegma
                     && GetTargetDistance() <= 6
                     && charges >= 1
-                    && (
-                        GetCooldown(plegma).TotalCooldownRemaining <= 3
-                        || HasRaidBuffs()
-                    )
+                    && controlBurst
+                    && (GetCooldown(OriginalHook(SGE.Phlegma)).TotalCooldownRemaining <= 5
+                        || raidbuffs
+                        || charges >= 2)
                 )
-                    return plegma;
+                    return OriginalHook(SGE.Phlegma);
 
                 if (this.IsMoving)
                     if (gauge.Addersting >= 1 && level >= SGE.Levels.Toxikon)
@@ -387,20 +383,29 @@ internal class SageShieldDiagnosis : CustomCombo
                     if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
                 }
 
-                if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6)
+                if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6 && TargetIsEnemy())
                 {
-                    var debuff = FindTargetEffect(SGE.Debuffs.EDyskrasia);
-                    var debuffTime = debuff?.RemainingTime;
-                    if (
-                        (debuff is not null && (debuffTime <= 3 || (debuffTime <= 6 && this.IsMoving)))
-                        || (debuff is null && ShouldUseDots())
-                    )
-                    {
-                        if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
 
-                        return OriginalHook(SGE.Dyskrasia);
+                    if (InCombat() && TargetIsEnemy() && ShouldUseDots() && actionID is not AST.Gravity)
+                    {
+                        var debuffs = new[]
+                        {
+                        FindTargetEffect(SGE.Debuffs.EDyskrasia),
+                        FindTargetEffect(SGE.Debuffs.EDosis3),
+                        FindTargetEffect(SGE.Debuffs.EDosis2),
+                        FindTargetEffect(SGE.Debuffs.EDosis1)
+                        };
+
+                        if (debuffs.All(x => x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
+                        {
+                            if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
+
+                            return OriginalHook(SGE.Dyskrasia);
+                        }
                     }
                 }
+
+
 
                 var plegma = OriginalHook(SGE.Phlegma);
 

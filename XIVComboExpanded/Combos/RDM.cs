@@ -48,10 +48,12 @@ internal static class RDM
             VerstoneReady = 1235,
             Acceleration = 1238,
             Embolden = 1239,
+            EmboldenParty = 1297,
             Dualcast = 1249,
             LostChainspell = 2560,
             ThornedFlourish = 3876,
             GrandImpactReady = 3877,
+            MagickedSwordPlay = 3875,
             PrefulgenceReady = 3878;
     }
 
@@ -103,35 +105,51 @@ internal class RedMageVeraeroVerthunder : CustomCombo
         {
             var gauge = GetJobGauge<RDMGauge>();
 
+            var raidBuffs = HasRaidBuffs();
+
+            var mpThreshold = 9200;
+
+            var controlBurst = LocalPlayer?.CurrentMp <= mpThreshold
+                || IsOnCooldown(ADV.LucidDreaming);
+
+            var embolden = HasEffect(RDM.Buffs.Embolden);
+
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= RDM.Levels.Manafication
-                    && gauge.BlackMana <= 50
-                    && gauge.WhiteMana <= 50
-                    && gauge.ManaStacks == 0
-                    && (
-                        HasEffect(RDM.Buffs.Embolden)
-                        || level < RDM.Levels.Embolden
-                        || GetCooldown(RDM.Embolden).CooldownRemaining >= 5.5
-                    )
-                    && IsOffCooldown(RDM.Manafication)
-                )
-                    return RDM.Manafication;
+                switch (level)
+                {
+                    case >= RDM.Levels.Embolden when 
+                        IsOffCooldown(RDM.Embolden)
+                        && raidBuffs:
+                        return RDM.Manafication;
+                    case >= RDM.Levels.Manafication when 
+                        (HasEffect(RDM.Buffs.Embolden) 
+                            || raidBuffs
+                            || GetCooldown(RDM.Embolden).CooldownRemaining >= 5.5) 
+                        && IsOffCooldown(RDM.Manafication):
+                        return RDM.Manafication;
+                    case >= RDM.Levels.Fleche when 
+                        IsOffCooldown(RDM.Fleche)
+                        && (controlBurst || embolden || raidBuffs):
+                        return RDM.Fleche;
+                    case >= RDM.Levels.ContreSixte when 
+                        IsOffCooldown(RDM.ContreSixte)
+                        && (controlBurst || embolden || raidBuffs):
+                        return RDM.ContreSixte;
+                    case >= RDM.Levels.Engagement when 
+                        InMeleeRange() 
+                        && HasCharges(RDM.Engagement) 
+                        && (GetCooldown(RDM.Engagement).CooldownRemaining >= 6
+                            || HasEffect(RDM.Buffs.Embolden)):
+                        return RDM.Engagement;
+                    case >= RDM.Levels.Acceleration when IsOffCooldown(RDM.Acceleration):
+                        return RDM.Acceleration;
+                    case >= ADV.Levels.LucidDreaming when 
+                        IsOffCooldown(ADV.LucidDreaming) 
+                        && LocalPlayer?.CurrentMp <= 8500:
+                        return ADV.LucidDreaming;
+                }
 
-                if (level >= RDM.Levels.Fleche && IsOffCooldown(RDM.Fleche)) return RDM.Fleche;
-
-                if (level >= RDM.Levels.ContreSixte && IsOffCooldown(RDM.ContreSixte)) return RDM.ContreSixte;
-
-                if (
-                    level >= RDM.Levels.Engagement
-                    && InMeleeRange()
-                    && HasCharges(RDM.Engagement)
-                    && (GetRemainingCharges(RDM.Engagement) >= 2 || HasEffect(RDM.Buffs.Embolden))
-                )
-                    return RDM.Engagement;
-
-                if (level >= RDM.Levels.Acceleration && IsOffCooldown(RDM.Acceleration)) return RDM.Acceleration;
             }
 
             if (gauge.ManaStacks == 3)
@@ -144,19 +162,33 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 || HasEffect(RDM.Buffs.Acceleration)
                 || HasEffect(ADV.Buffs.Swiftcast);
 
+            var swordPlay = FindEffect(RDM.Buffs.MagickedSwordPlay);
+
+            var swordPlayStacks = swordPlay is not null ? swordPlay.StackCount : 0;
+
+            var actualBlack = gauge.BlackMana + swordPlayStacks * 20;
+            var actualWhite = gauge.WhiteMana + swordPlayStacks * 20;
+
+            var startMeleeCombo = 
+                (actualWhite >= 50 
+                    && actualBlack >= 50 
+                    && (HasEffect(RDM.Buffs.Embolden) || raidBuffs))
+                || (gauge.WhiteMana >= 85 
+                    && gauge.BlackMana >= 85 
+                    && !hasSpeedy);
+
             // Melee Combo
             if (
                 (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
-                || lastComboMove == RDM.Riposte
-                || lastComboMove == RDM.EnchantedRiposte
-                || lastComboMove == RDM.Zwerchhau
-                || lastComboMove == RDM.EnchantedZwerchhau
-                || (gauge.WhiteMana >= 50 && gauge.BlackMana >= 50 && HasEffect(RDM.Buffs.Embolden))
-                || (gauge.WhiteMana >= 85 && gauge.BlackMana >= 85 && !hasSpeedy)
+                // || lastComboMove == RDM.Riposte
+                // || lastComboMove == RDM.EnchantedRiposte
+                // || lastComboMove == RDM.Zwerchhau
+                // || lastComboMove == RDM.EnchantedZwerchhau
+                || startMeleeCombo
             )
             {
                 if (
-                        (lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau)
+                    (lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau)
                         && level >= RDM.Levels.Redoublement
                     )
                     // Enchanted
@@ -175,7 +207,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             // Dualcast
             if (hasSpeedy)
-                return gauge.WhiteMana <= gauge.BlackMana
+                return gauge.WhiteMana < gauge.BlackMana
                     ? OriginalHook(RDM.Veraero)
                     : OriginalHook(RDM.Verthunder);
 

@@ -268,6 +268,7 @@ internal abstract partial class CustomCombo
             DRG.Buffs.BattleLitany,
             DRG.Buffs.LeftEye,
             RDM.Buffs.Embolden,
+            RDM.Buffs.EmboldenParty,
             MNK.Buffs.Brotherhood,
             ADV.Buffs.Medicated
         };

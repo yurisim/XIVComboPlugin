@@ -29,6 +29,7 @@ internal static class PLD
         Prominence = 16457,
         HolyCircle = 16458,
         Confiteor = 16459,
+        Intervene = 16461,
         Atonement = 16460,
         Expiacion = 25747,
         BladeOfFaith = 25748,
@@ -77,6 +78,7 @@ internal static class PLD
             DivineMagicMastery = 64,
             Requiescat = 68,
             HolyCircle = 72,
+            Intervene = 74,
             Atonement = 76,
             Supplication = 76,
             Sepulchre = 76,
@@ -132,6 +134,13 @@ internal class PaladinST : CustomCombo
                             || fightOrFlightCD >= 7.5
                             || hasRaidBuffs):
                         return OriginalHook(PLD.SpiritsWithin);
+                    case >= PLD.Levels.Intervene when
+                        HasCharges(PLD.Intervene)
+                        && InMeleeRange()
+                        && (GetCooldown(PLD.Intervene).TotalCooldownRemaining <= 3
+                            || hasRaidBuffs):
+                        return PLD.Intervene;
+                    
                 }
             }
 
@@ -192,12 +201,6 @@ internal class PaladinAOE : CustomCombo
                             || (level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence)
                             || HasRaidBuffs()):
                         return PLD.FightOrFlight;
-                    case >= PLD.Levels.Requiescat when
-                        IsOffCooldown(OriginalHook(PLD.Requiescat))
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 15
-                            || hasRaidBuffs):
-                        return OriginalHook(PLD.Requiescat);
                     case >= PLD.Levels.CircleOfScorn when
                         IsOffCooldown(PLD.CircleOfScorn)
                         && HasTarget()
@@ -212,6 +215,12 @@ internal class PaladinAOE : CustomCombo
                             || fightOrFlightCD >= 7.5
                             || hasRaidBuffs):
                         return OriginalHook(PLD.SpiritsWithin);
+                    case >= PLD.Levels.Requiescat when
+                        IsOffCooldown(OriginalHook(PLD.Requiescat))
+                        && (flightOrFight is not null
+                            || fightOrFlightCD >= 15
+                            || hasRaidBuffs):
+                        return OriginalHook(PLD.Requiescat);
                     case >= PLD.Levels.Sheltron when
                         IsOffCooldown(PLD.Sheltron)
                         && gauge.OathGauge == 100:
@@ -219,20 +228,20 @@ internal class PaladinAOE : CustomCombo
                 }
             }
 
-            if (level >= PLD.Levels.GoringBlade
-                && goringBladeReady is not null
-                && (goringBladeReady.RemainingTime <= 10
-                    || flightOrFight?.RemainingTime <= 10
-                    || HasRaidBuffs())
-                )
-                return PLD.GoringBlade;
+            // if (level >= PLD.Levels.GoringBlade
+            //     && goringBladeReady is not null
+            //     && (goringBladeReady.RemainingTime <= 10
+            //         || flightOrFight?.RemainingTime <= 10
+            //         || HasRaidBuffs())
+            //     )
+            //     return PLD.GoringBlade;
 
-            if (level >= PLD.Levels.HolySpirit
+            if (level >= PLD.Levels.HolyCircle
                 && (HasEffect(PLD.Buffs.Requiescat) || HasEffect(PLD.Buffs.DivineMight))
                 && GetTargetDistance() <= 5
                 )
             {
-                return level >= PLD.Levels.HolyCircle ? PLD.HolyCircle : PLD.HolySpirit;
+                return PLD.HolyCircle;
             }
 
             if (comboTime > 0)

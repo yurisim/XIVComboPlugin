@@ -75,6 +75,7 @@ internal static class SCH
             ArtOfWar = 46,
             SacredSoil = 50,
             Indomitability = 52,
+            Broil = 54,
             DeploymentTactics = 56,
             Dissipation = 60,
             Excogitation = 62,
@@ -234,6 +235,10 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 if (dots.All(x => x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
                     return OriginalHook(SCH.Bio);
+            }
+
+            if (level >= SCH.Levels.ArtOfWar && level < SCH.Levels.Broil) {
+                return OriginalHook(SCH.ArtOfWar);
             }
         }
 

@@ -134,6 +134,8 @@ internal class NinjaAeolianEdge : CustomCombo
 
         var targetHasTrick = TargetHasEffect(NIN.Debuffs.TrickAttack) || TargetHasEffect(NIN.Debuffs.KunaisBane);
 
+        var tenri = FindEffect(NIN.Buffs.TenriJindoReady);
+
         // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
         if (
             GCDClipCheck(actionID)
@@ -144,48 +146,55 @@ internal class NinjaAeolianEdge : CustomCombo
             switch (level)
             {
                 case >= NIN.Levels.TrickAttack when InMeleeRange()
-                                                    && HasEffect(NIN.Buffs.ShadowWalker)
-                                                    && IsOffCooldown(OriginalHook(NIN.TrickAttack))
-                                                    && GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10:
+                    && HasEffect(NIN.Buffs.ShadowWalker)
+                    && IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                    && GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10:
                     return OriginalHook(NIN.TrickAttack);
 
-                case >= NIN.Levels.Kassatsu when IsOffCooldown(NIN.Kassatsu)
-                                                 && (targetHasTrick
-                                                     || HasRaidBuffs()
-                                                     || trickAttackCD >= 6):
+                case >= NIN.Levels.Kassatsu when 
+                    IsOffCooldown(NIN.Kassatsu)
+                    && IsOnCooldown(OriginalHook(NIN.TrickAttack))
+                    && (targetHasTrick
+                        || HasRaidBuffs()
+                        || trickAttackCD >= 6):
                     return NIN.Kassatsu;
 
-                case >= NIN.Levels.Bunshin when IsOffCooldown(NIN.Bunshin)
-                                                && (targetHasTrick
-                                                    || HasRaidBuffs()
-                                                    || trickAttackCD >= 9)
-                                                && ninki >= 50:
+                case >= NIN.Levels.Bunshin when 
+                    IsOffCooldown(NIN.Bunshin)
+                    && (targetHasTrick
+                        || HasRaidBuffs()
+                        || trickAttackCD >= 9)
+                    && ninki >= 50:
                     return NIN.Bunshin;
 
-                case >= NIN.Levels.Meisui when IsOffCooldown(NIN.Meisui)
-                                               && HasEffect(NIN.Buffs.ShadowWalker)
-                                               && ninki <= 50
-                                               && trickAttackCD >= 20:
+                case >= NIN.Levels.Meisui when 
+                    IsOffCooldown(NIN.Meisui)
+                    && HasEffect(NIN.Buffs.ShadowWalker)
+                    && ninki <= 50
+                    && trickAttackCD >= 20:
                     return NIN.Meisui;
 
-                case >= NIN.Levels.Assassinate when InMeleeRange()
-                                                    && IsOffCooldown(OriginalHook(NIN.Assassinate))
-                                                    && (trickAttackCD > 5 || level < NIN.Levels.Suiton):
+                case >= NIN.Levels.Assassinate when 
+                    InMeleeRange()
+                    && IsOffCooldown(OriginalHook(NIN.Assassinate))
+                    && IsOnCooldown(OriginalHook(NIN.TrickAttack))
+                    && (trickAttackCD > 5 || level < NIN.Levels.Suiton):
                     return OriginalHook(NIN.Assassinate);
 
-                case >= NIN.Levels.TenriJindo when CanUseAction(NIN.TenriJindo)
-                                                   && (targetHasTrick
-                                                       || FindEffect(NIN.Buffs.TenriJindoReady)?.RemainingTime <= 5
-                                                       || HasRaidBuffs()):
+                case >= NIN.Levels.TenriJindo when 
+                    tenri is not null
+                    && (targetHasTrick
+                        || HasRaidBuffs()):
                     return NIN.TenriJindo;
 
-                case >= NIN.Levels.HellfrogMedium when InMeleeRange()
-                                                       && ninki >= 50
-                                                       && (ninki >= 80
-                                                           || targetHasTrick
-                                                           || HasEffect(NIN.Buffs.Meisui)
-                                                           || (level >= NIN.Levels.EnhancedMug
-                                                               && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
+                case >= NIN.Levels.HellfrogMedium when 
+                    InMeleeRange()
+                    && ninki >= 50
+                    && (ninki >= 80
+                        || targetHasTrick
+                        || HasEffect(NIN.Buffs.Meisui)
+                        || (level >= NIN.Levels.EnhancedMug
+                            && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
                     return level >= NIN.Levels.Bhavacakra
                         ? OriginalHook(NIN.Bhavacakra)
                         : OriginalHook(NIN.HellfrogMedium);

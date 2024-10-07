@@ -116,6 +116,7 @@ internal class AstrologianMalefic : CustomCombo
                     case >= AST.Levels.SunSign when 
                         CanUseAction(AST.SunSign):
                         return AST.SunSign;
+
                     case >= AST.Levels.Oracle when
                         divining is not null
                         && (divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity):
@@ -162,7 +163,7 @@ internal class AstrologianMalefic : CustomCombo
 
                     case >= AST.Levels.MinorArcana when
                         gauge.DrawnCrownCard == CardType.LORD
-                        && (HasRaidBuffs() || needToUseCards)
+                        && (HasRaidBuffs() || needToUseCards || actionID is AST.Gravity)
                         && InCombat():
                         return OriginalHook(AST.MinorArcanaDT);
 
