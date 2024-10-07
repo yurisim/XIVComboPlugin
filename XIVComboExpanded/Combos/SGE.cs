@@ -153,16 +153,18 @@ internal class SageDosis : CustomCombo
                                    && targetHPPercent <= threshold - 0.1:
                         return SGE.Krasis;
 
-                    case >= SGE.Levels.Druochole when targetHPPercent >= 0.2
-                                      && gauge.Addersgall >= 2
-                                      && (targetHPPercent <= threshold - 0.2
-                                          || (needToUseAddersgall && targetHPPercent <= threshold - 0.1)):
+                    case >= SGE.Levels.Druochole when 
+                        targetHPPercent >= 0.2
+                        && gauge.Addersgall >= 2
+                        && (targetHPPercent <= threshold - 0.25
+                            || (needToUseAddersgall && targetHPPercent <= threshold - 0.15)):
                         return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
                             ? SGE.Taurochole
                             : SGE.Druochole;
 
-                    case >= SGE.Levels.Rhizomata when gauge.Addersgall <= 1
-                                      && IsOffCooldown(SGE.Rhizomata):
+                    case >= SGE.Levels.Rhizomata when 
+                        gauge.Addersgall <= 1
+                        && IsOffCooldown(SGE.Rhizomata):
                         return SGE.Rhizomata;
 
                     case >= SGE.Levels.Psyche when 

@@ -137,6 +137,7 @@ internal class PaladinST : CustomCombo
                     case >= PLD.Levels.Intervene when
                         HasCharges(PLD.Intervene)
                         && InMeleeRange()
+                        && IsOnCooldown(PLD.FightOrFlight)
                         && (GetCooldown(PLD.Intervene).TotalCooldownRemaining <= 3
                             || hasRaidBuffs):
                         return PLD.Intervene;

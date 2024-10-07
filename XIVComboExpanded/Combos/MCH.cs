@@ -111,7 +111,7 @@ internal class MachinistCleanShot : CustomCombo
                 var drillReady = level >= MCH.Levels.Drill
                         && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
                         && overheated is null
-                        && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 8
+                        && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 9
                             || raidbuffs);
 
                 if (GCDClipCheck(actionID) && HasTarget() && InCombat())

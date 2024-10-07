@@ -139,10 +139,6 @@ internal class BardHeavyShot : CustomCombo
                         && ((gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                             || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)):
                         return BRD.ArmysPaeon;
-
-                    case >= BRD.Levels.EmpyrealArrow when
-                        IsOffCooldown(BRD.EmpyrealArrow):
-                        return BRD.EmpyrealArrow;
                     case >= BRD.Levels.BattleVoice when
                         HasEffect(BRD.Buffs.RagingStrikes)
                         && IsOffCooldown(BRD.BattleVoice):
@@ -150,13 +146,15 @@ internal class BardHeavyShot : CustomCombo
                     case >= BRD.Levels.RadiantFinale when
                         IsOffCooldown(BRD.RadiantFinale)
                         && gauge.Coda.Length >= 1
-                        && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)):
+                        && HasEffect(BRD.Buffs.RagingStrikes):
                         return BRD.RadiantFinale;
                     case >= BRD.Levels.RagingStrikes when
                         IsOffCooldown(BRD.RagingStrikes)
                         && HasRaidBuffs():
                         return BRD.RagingStrikes;
-
+                    case >= BRD.Levels.EmpyrealArrow when
+                        IsOffCooldown(BRD.EmpyrealArrow):
+                        return BRD.EmpyrealArrow;
                     case >= BRD.Levels.Bloodletter when
                         HasCharges(OriginalHook(BRD.Bloodletter))
                         && (HasEffect(BRD.Buffs.RagingStrikes)
@@ -200,12 +198,8 @@ internal class BardHeavyShot : CustomCombo
 
             var combinedDots = causticDots.Concat(stormDots);
 
-            if (level >= BRD.Levels.IronJaws
-                && combinedDots.Any(x => x is not null))
-            {
-                if (combinedDots.Any(x => x?.RemainingTime <= (raidBuffs ? 35 : refreshTime)))
-                    return BRD.IronJaws;
-            }
+            if (level >= BRD.Levels.IronJaws && combinedDots.Any(x => x?.RemainingTime <= (raidBuffs ? 26 : refreshTime)))
+                return BRD.IronJaws;
 
             if (ShouldUseDots())
             {
