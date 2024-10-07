@@ -121,7 +121,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                     case >= RDM.Levels.Embolden when
                         IsOffCooldown(RDM.Embolden)
                         && raidBuffs:
-                        return RDM.Manafication;
+                        return RDM.Embolden;
                     case >= RDM.Levels.Manafication when
                         (HasEffect(RDM.Buffs.Embolden)
                             || raidBuffs
@@ -170,18 +170,23 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             var actualBlack = gauge.BlackMana + swordPlayStacks * 20;
             var actualWhite = gauge.WhiteMana + swordPlayStacks * 20;
 
+            var minimiumGauge = 20 +
+                (level >= RDM.Levels.Zwerchhau ? 15 : 0) +
+                (level >= RDM.Levels.Redoublement ? 15 : 0);
+
             var startMeleeCombo =
-                (actualWhite >= 50
-                    && actualBlack >= 50
+                (actualWhite >= minimiumGauge
+                    && actualBlack >= minimiumGauge
                     && (HasEffect(RDM.Buffs.Embolden) || raidBuffs))
                 || (gauge.WhiteMana >= 85
                     && gauge.BlackMana >= 85
                     && !hasSpeedy);
 
-            // Melee Combo
             if (
                 (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
-                || startMeleeCombo
+                || (lastComboMove == RDM.EnchantedRiposte && (level >= RDM.Levels.Zwerchhau))
+                || (lastComboMove == RDM.EnchantedZwerchhau && (level >= RDM.Levels.Redoublement))
+                || (startMeleeCombo && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent))
             )
             {
                 if (
@@ -216,7 +221,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             if (hasSpeedy && actionID == RDM.Scatter) return RDM.Scatter;
 
             if (actionID == RDM.Scatter && level >= RDM.Levels.Verthunder2)
-                return gauge.BlackMana <= gauge.WhiteMana || level < RDM.Levels.Veraero2
+                return gauge.BlackMana < gauge.WhiteMana + 6 || level < RDM.Levels.Veraero2
                     ? OriginalHook(RDM.Verthunder2)
                     : OriginalHook(RDM.Veraero2);
 
