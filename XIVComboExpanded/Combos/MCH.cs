@@ -127,7 +127,7 @@ internal class MachinistCleanShot : CustomCombo
                         GetCooldown(OriginalHook(MCH.HotShot)).TotalCooldownRemaining >= timeThreshold,
                         level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= timeThreshold,
                         fullMetal is null || fullMetal.RemainingTime >= 20,
-                        excavatorReady is null || excavatorReady.RemainingTime >= 20
+                        excavatorReady is null
                     };
 
                     var nothingBlockingHypercharge = hyperchargeCDs.All(x => x is true);
@@ -198,64 +198,42 @@ internal class MachinistCleanShot : CustomCombo
                 }
 
                 var chainSawReady = level >= MCH.Levels.Chainsaw
-                            && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null)
-                            && (excavatorReady is null
-                                || excavatorReady.RemainingTime <= 25
-                                || HasEffect(MCH.Buffs.Reassemble)
-                                || raidbuffs);
+                                    && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null);
 
-                if (overheated is null
-                    || HasEffect(MCH.Buffs.Reassemble))
+                var shouldUseReassemble = 
+                        (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                        && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
+                        && GCDClipCheck(actionID)
+                        && !HasEffect(MCH.Buffs.Reassemble);
+
+                if (overheated is null || HasEffect(MCH.Buffs.Reassemble))
                 {
+                    if (level >= MCH.Levels.FullMetal
+                        && fullMetal is not null
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 1.5 || raidbuffs))
+                    {
+                        return MCH.FullMetal;
+                    }
+
                     if (drillReady)
                     {
-                        if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
-                            && GCDClipCheck(actionID)
-                            && !HasEffect(MCH.Buffs.Reassemble))
-                        {
-                            return MCH.Reassemble;
-                        }
-
-                        return MCH.Drill;
+                        return shouldUseReassemble 
+                            ? MCH.Reassemble 
+                            : MCH.Drill;
                     }
 
                     if (IsOffCooldown(OriginalHook(MCH.HotShot)))
                     {
-                        if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
-                            && level >= MCH.Levels.AirAnchor
-                            && GCDClipCheck(actionID)
-                            && !HasEffect(MCH.Buffs.Reassemble)
-                            )
-                        {
-                            return MCH.Reassemble;
-                        }
-
-                        return OriginalHook(MCH.HotShot);
+                        return shouldUseReassemble && level >= MCH.Levels.AirAnchor 
+                            ? MCH.Reassemble 
+                            : OriginalHook(MCH.HotShot);
                     }
 
-                    if (gauge.Battery <= 80)
+                    if (gauge.Battery <= 80 && chainSawReady)
                     {
-                        if (chainSawReady)
-                        {
-                            if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
-                                && GCDClipCheck(actionID)
-                                && !HasEffect(MCH.Buffs.Reassemble))
-                            {
-                                return MCH.Reassemble;
-                            }
-
-                            return OriginalHook(MCH.Chainsaw);
-                        }
-                    }
-
-                    if (level >= MCH.Levels.FullMetal
-                        && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 2 || raidbuffs))
-                    {
-                        return MCH.FullMetal;
+                        return shouldUseReassemble 
+                            ? MCH.Reassemble 
+                            : OriginalHook(MCH.Chainsaw);
                     }
                 }
 
