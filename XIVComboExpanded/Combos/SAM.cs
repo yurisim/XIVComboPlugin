@@ -288,19 +288,19 @@ internal class SamuraiMangetsu : CustomCombo
                         return level >= SAM.Levels.HissatsuSenei
                             ? SAM.HissatsuSenei
                             : SAM.HissatsuGuren;
-                    case >= SAM.Levels.HissatsuShinten when gauge.Kenki >= 25 && HasEffect(SAM.Buffs.Jinpu):
+                    case >= SAM.Levels.HissatsuKyuten when gauge.Kenki >= 25 && HasEffect(SAM.Buffs.Jinpu):
                         if (gauge.Kenki >= 75)
-                            return OriginalHook(SAM.HissatsuShinten);
+                            return OriginalHook(SAM.HissatsuKyuten);
 
                         if (level >= SAM.Levels.Ikishoten && canUseIkishoten && gauge.Kenki >= 35)
-                            return OriginalHook(SAM.HissatsuShinten);
+                            return OriginalHook(SAM.HissatsuKyuten);
 
                         if (GetCooldown(SAM.Ikishoten).CooldownRemaining <= 6 && gauge.Kenki >= 35)
-                            return OriginalHook(SAM.HissatsuShinten);
+                            return OriginalHook(SAM.HissatsuKyuten);
 
                         if (hasRaidBuffs
                             && (GetCooldown(SAM.HissatsuGuren).CooldownRemaining >= 15 || level < SAM.Levels.HissatsuGuren))
-                            return OriginalHook(SAM.HissatsuShinten);
+                            return OriginalHook(SAM.HissatsuKyuten);
                         break;
                     case >= SAM.Levels.HissatsuKyuten when gauge.Kenki >= 25
                                             && (gauge.Kenki >= 75
@@ -314,9 +314,6 @@ internal class SamuraiMangetsu : CustomCombo
                         return OriginalHook(SAM.HissatsuKyuten);
                 }
 
-                if (level >= SAM.Levels.TsubameGaeshi
-                    && CanUseAction(OriginalHook(SAM.TsubameGaeshi)))
-                    return OriginalHook(SAM.TsubameGaeshi);
 
                 if (
                     level >= SAM.Levels.HissatsuGuren
@@ -326,6 +323,10 @@ internal class SamuraiMangetsu : CustomCombo
                 )
                     return SAM.HissatsuGuren;
             }
+
+            if (level >= SAM.Levels.TsubameGaeshi
+                && CanUseAction(OriginalHook(SAM.TsubameGaeshi)))
+                return OriginalHook(SAM.TsubameGaeshi);
 
             if (level >= SAM.Levels.TenkaGoken && gaugeSen.Sum() >= 2 && !this.IsMoving)
                 return OriginalHook(SAM.Iaijutsu);
@@ -340,13 +341,13 @@ internal class SamuraiMangetsu : CustomCombo
 
             // Rear
             if ((!gauge.HasGetsu || !HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Mangetsu)
-                if (lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko)
-                    return SAM.Mangetsu;
+                if (lastComboMove == OriginalHook(SAM.Fuga) || lastComboMove == OriginalHook(SAM.Fuko))
+                    return OriginalHook(SAM.Mangetsu);
 
             // Flank
             if ((!gauge.HasKa || !HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Oka)
-                if (lastComboMove == SAM.Fuga || lastComboMove == SAM.Fuko)
-                    return SAM.Oka;
+                if (lastComboMove == OriginalHook(SAM.Fuga) || lastComboMove == OriginalHook(SAM.Fuko))
+                    return OriginalHook(SAM.Oka);
         }
 
         return actionID;

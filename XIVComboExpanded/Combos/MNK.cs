@@ -141,7 +141,7 @@ internal class MonkBootshine : CustomCombo
                         return MNK.Mantra;
                 }
 
-            if (GetTargetDistance() >= 7 || !InCombat() || !HasTarget())
+            if (GetTargetDistance() >= 4 || !InCombat() || !HasTarget())
             {
                 if (gauge.Chakra < 5)
                     return OriginalHook(MNK.SteeledMeditation);
