@@ -223,7 +223,7 @@ internal class MachinistCleanShot : CustomCombo
                     if (IsOffCooldown(OriginalHook(MCH.HotShot)))
                     {
                         if ((IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                        && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
+                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
                             && level >= MCH.Levels.AirAnchor
                             && GCDClipCheck(actionID)
                             && !HasEffect(MCH.Buffs.Reassemble)
@@ -253,7 +253,7 @@ internal class MachinistCleanShot : CustomCombo
 
                     if (level >= MCH.Levels.FullMetal
                         && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 2.4 || raidbuffs))
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 2 || raidbuffs))
                     {
                         return MCH.FullMetal;
                     }
