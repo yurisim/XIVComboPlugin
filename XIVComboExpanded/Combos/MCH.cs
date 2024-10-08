@@ -130,15 +130,14 @@ internal class MachinistCleanShot : CustomCombo
                         excavatorReady is null || excavatorReady.RemainingTime >= 20
                     };
 
-                    var noIncomingCDs = hyperchargeCDs.All(x => x is true);
+                    var nothingBlockingHypercharge = hyperchargeCDs.All(x => x is true);
 
                     var hyperchargeReady = FindEffect(MCH.Buffs.HyperchargeReady);
 
                     var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady is not null;
 
-                    var pleaseUseHypercharge =
-                        // TargetHasEffect(MCH.Debuffs.Wildfire) || 
-                        (hyperchargeReady is not null && GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 2.4);
+                    var pleaseUseHyperchargeSoon =
+                        hyperchargeReady is not null && GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 1.5;
 
                     switch (level)
                     {
@@ -175,10 +174,11 @@ internal class MachinistCleanShot : CustomCombo
                         case >= MCH.Levels.Hypercharge when
                             IsOffCooldown(MCH.Hypercharge)
                             && canUseHypercharge
-                            && (noIncomingCDs || pleaseUseHypercharge)
+                            && nothingBlockingHypercharge
                             && (gauge.Heat >= 80
                                 || raidbuffs
-                                || pleaseUseHypercharge):
+                                || TargetHasEffect(MCH.Debuffs.Wildfire)
+                                || pleaseUseHyperchargeSoon):
                             return MCH.Hypercharge;
 
                         case >= MCH.Levels.Ricochet when
