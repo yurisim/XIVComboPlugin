@@ -155,6 +155,7 @@ internal class MachinistCleanShot : CustomCombo
 
                         case >= MCH.Levels.RookOverdrive when
                             gauge.Battery >= 50
+                            && CanUseAction(OriginalHook(MCH.RookAutoturret))
                             && (gauge.Battery >= 100
                                 || raidbuffs
                                 || (gauge.Battery >= 70
@@ -210,7 +211,7 @@ internal class MachinistCleanShot : CustomCombo
                 {
                     if (level >= MCH.Levels.FullMetal
                         && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 1.5 || raidbuffs))
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 5 || raidbuffs))
                     {
                         return MCH.FullMetal;
                     }

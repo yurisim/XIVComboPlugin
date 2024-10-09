@@ -104,6 +104,8 @@ internal class PaladinST : CustomCombo
             var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
 
+            var canUseAtonement = level >= PLD.Levels.Atonement && CanUseAction(OriginalHook(PLD.Atonement));
+
             if (GCDClipCheck(actionID) && InMeleeRange() && HasTarget())
             {
                 switch (level)
@@ -112,6 +114,7 @@ internal class PaladinST : CustomCombo
                         IsOffCooldown(PLD.FightOrFlight)
                         && ((level < PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
                             || (level >= PLD.Levels.RoyalAuthority && lastComboMove == PLD.RoyalAuthority)
+                            || canUseAtonement
                             || HasRaidBuffs()):
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.Requiescat when
@@ -139,25 +142,41 @@ internal class PaladinST : CustomCombo
                         && InMeleeRange()
                         && IsOnCooldown(PLD.FightOrFlight)
                         && (GetCooldown(PLD.Intervene).TotalCooldownRemaining <= 3
+                            || flightOrFight is not null
                             || hasRaidBuffs):
                         return PLD.Intervene;
-                    
+
                 }
             }
 
-            if (level >= PLD.Levels.GoringBlade
-                && goringBladeReady is not null
-                && (goringBladeReady.RemainingTime <= 10
-                    || flightOrFight?.RemainingTime <= 10
-                    || HasRaidBuffs())
-                )
-                return PLD.GoringBlade;
+            if (InMeleeRange())
+            {
+                if (level >= PLD.Levels.GoringBlade
+                    && goringBladeReady is not null
+                    && (goringBladeReady.RemainingTime <= 10
+                        || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
+                        || HasRaidBuffs())
+                    )
+                    return PLD.GoringBlade;
+            }
 
             if (level >= PLD.Levels.HolySpirit
-                && (HasEffect(PLD.Buffs.Requiescat) || HasEffect(PLD.Buffs.DivineMight)))
+                && (HasEffect(PLD.Buffs.Requiescat)
+                    || (HasEffect(PLD.Buffs.DivineMight) && (!InMeleeRange() || lastComboMove == PLD.RiotBlade))
+                    )
+                )
             {
                 return PLD.HolySpirit;
             }
+
+            if (InMeleeRange())
+            {
+                if (canUseAtonement)
+                {
+                    return OriginalHook(PLD.Atonement);
+                }
+            }
+
 
             if (comboTime > 0)
             {
@@ -189,7 +208,6 @@ internal class PaladinAOE : CustomCombo
 
             var gauge = GetJobGauge<PLDGauge>();
 
-            var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
 
             if (GCDClipCheck(actionID) && InMeleeRange() && HasTarget())
