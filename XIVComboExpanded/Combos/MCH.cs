@@ -100,7 +100,7 @@ internal class MachinistCleanShot : CustomCombo
         {
             var gauge = GetJobGauge<MCHGauge>();
 
-            if (InCombat() && HasTarget())
+            if (HasTarget())
             {
                 var overheated = FindEffect(MCH.Buffs.Overheated);
                 var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
@@ -114,7 +114,7 @@ internal class MachinistCleanShot : CustomCombo
                         && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 9
                             || raidbuffs);
 
-                if (GCDClipCheck(actionID) && HasTarget() && InCombat())
+                if (GCDClipCheck(actionID) && InCombat())
                 {
                     var gaussRoundCharges = GetRemainingCharges(OriginalHook(MCH.GaussRound));
                     var ricochetCharges = GetRemainingCharges(OriginalHook(MCH.Ricochet));
@@ -149,8 +149,7 @@ internal class MachinistCleanShot : CustomCombo
                         case >= MCH.Levels.Wildfire when
                             IsOffCooldown(MCH.Wildfire)
                             && overheated is not null
-                            && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer))
-                            :
+                            && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
                             return MCH.Wildfire;
 
                         case >= MCH.Levels.RookOverdrive when
@@ -209,13 +208,6 @@ internal class MachinistCleanShot : CustomCombo
 
                 if (overheated is null || HasEffect(MCH.Buffs.Reassemble))
                 {
-                    if (level >= MCH.Levels.FullMetal
-                        && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 5 || raidbuffs))
-                    {
-                        return MCH.FullMetal;
-                    }
-
                     if (drillReady)
                     {
                         return shouldUseReassemble 
@@ -235,6 +227,13 @@ internal class MachinistCleanShot : CustomCombo
                         return shouldUseReassemble 
                             ? MCH.Reassemble 
                             : OriginalHook(MCH.Chainsaw);
+                    }
+
+                    if (level >= MCH.Levels.FullMetal
+                        && fullMetal is not null
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 10 || raidbuffs))
+                    {
+                        return MCH.FullMetal;
                     }
                 }
 
