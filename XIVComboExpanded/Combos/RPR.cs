@@ -127,7 +127,8 @@ internal class ReaperSlice : CustomCombo
 
             var idealHost = FindEffect(RPR.Buffs.IdealHost);
 
-            if (GCDClipCheck(actionID))
+            if (GCDClipCheck(actionID) && deathsDesign is not null)
+            {
                 switch (level)
                 {
                     case >= RPR.Levels.Sacrificium when
@@ -172,19 +173,16 @@ internal class ReaperSlice : CustomCombo
                         && gauge.Soul >= 50:
                         return RPR.Gluttony;
                 }
-
-            if (level >= RPR.Levels.Soulsow
-                && ((!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
-                    || (InCombat()
-                        && HasEffect(RPR.Buffs.Soulsow)
-                        && (HasRaidBuffs() || HasEffect(RPR.Buffs.ArcaneCircle)))))
-                return OriginalHook(RPR.Soulsow);
+            }
 
             if (level >= RPR.Levels.Communio
+                && deathsDesign is not null
                 && gauge.LemureShroud == 1)
                 return RPR.Communio;
 
-            if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Executioner) || gauge.EnshroudedTimeRemaining > 0)
+            if (HasEffect(RPR.Buffs.SoulReaver)
+                || HasEffect(RPR.Buffs.Executioner)
+                || gauge.EnshroudedTimeRemaining > 0)
             {
                 if ((HasEffect(RPR.Buffs.EnhancedGibbet) && gauge.LemureShroud < 1)
                     || HasEffect(RPR.Buffs.EnhancedVoidReaping))
@@ -192,23 +190,36 @@ internal class ReaperSlice : CustomCombo
                 return OriginalHook(RPR.Gallows);
             }
 
+            if (level >= RPR.Levels.Soulsow
+                && ((!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
+                    || (InCombat()
+                        && HasEffect(RPR.Buffs.Soulsow)
+                        && deathsDesign is not null
+                        && (HasRaidBuffs() || HasEffect(RPR.Buffs.ArcaneCircle)))))
+                return OriginalHook(RPR.Soulsow);
+
             if ((deathsDesign is null && ShouldUseDots())
                 || (deathsDesign is not null && deathsDesign.RemainingTime <= 15))
                 return RPR.ShadowOfDeath;
 
-            var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
+            if (deathsDesign is not null)
+            {
 
-            if (level >= RPR.Levels.PlentifulHarvest
-                && CanUseAction(RPR.PlentifulHarvest)
-                && immortalSacrifice is not null
-                && (immortalSacrifice.StackCount == PartyList.Length
-                    || immortalSacrifice.StackCount == 8
-                    || immortalSacrifice?.RemainingTime <= 25)
-               )
-                return RPR.PlentifulHarvest;
+                var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
 
-            if (needSoulSlice && gauge.Soul <= 50)
-                return RPR.SoulSlice;
+                if (level >= RPR.Levels.PlentifulHarvest
+                    && CanUseAction(RPR.PlentifulHarvest)
+                    && immortalSacrifice is not null
+                   // && (immortalSacrifice.StackCount == PartyList.Length
+                   //     || immortalSacrifice.StackCount == 8
+                   //     || immortalSacrifice?.RemainingTime <= 25
+                   //     )
+                   )
+                    return RPR.PlentifulHarvest;
+
+                if (needSoulSlice && gauge.Soul <= 50)
+                    return RPR.SoulSlice;
+            }
 
             if (comboTime > 0)
             {

@@ -201,6 +201,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
             if (
                 gauge.Ammo >= 1
                 && noMercy is not null
+                && (level < GNB.Levels.DoubleDown || IsOnCooldown(GNB.DoubleDown))
                 && (bloodfestOffCD || noMercy.RemainingTime < gauge.Ammo * 4)
             )
                 return GNB.BurstStrike;
@@ -320,6 +321,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 level >= GNB.Levels.FatedCircle
                 && gauge.Ammo >= 1
                 && noMercy is not null
+                && (level < GNB.Levels.DoubleDown || IsOnCooldown(GNB.DoubleDown))
                 && (bloodfestOffCD || noMercy.RemainingTime < gauge.Ammo * 4)
             )
                 return GNB.FatedCircle;
