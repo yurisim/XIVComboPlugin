@@ -172,7 +172,7 @@ internal class MachinistCleanShot : CustomCombo
 
                         case >= MCH.Levels.Reassemble when
                             (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
+                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 20 || raidbuffs)
                             && !HasEffect(MCH.Buffs.Reassemble)
                             && drillReady:
                             return MCH.Reassemble;
@@ -203,12 +203,12 @@ internal class MachinistCleanShot : CustomCombo
                         case >= MCH.Levels.Tactician when
                             IsOffCooldown(MCH.Tactician)
                             && !TargetHasEffect(MCH.Debuffs.Dismantle)
-                            && TargetHasEffect(ADV.Debuffs.Reprisal):
+                            && TargetHasEffectAny(ADV.Debuffs.Reprisal):
                             return MCH.Tactician;
                         case >= MCH.Levels.Dismantle when
                             IsOffCooldown(MCH.Dismantle)
                             && !HasEffect(MCH.Buffs.Tactician)
-                            && TargetHasEffect(ADV.Debuffs.Reprisal):
+                            && TargetHasEffectAny(ADV.Debuffs.Reprisal):
                             return MCH.Tactician;
                     }
                 }
@@ -218,7 +218,7 @@ internal class MachinistCleanShot : CustomCombo
 
                 var shouldUseReassemble =
                         (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                        && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
+                        && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 20 || raidbuffs)
                         && GCDClipCheck(actionID)
                         && !HasEffect(MCH.Buffs.Reassemble);
 
@@ -244,15 +244,15 @@ internal class MachinistCleanShot : CustomCombo
                             ? MCH.Reassemble
                             : OriginalHook(MCH.Chainsaw);
                     }
-                }
 
-                if (level >= MCH.Levels.FullMetal
-                    && fullMetal is not null
-                    && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 5
-                        || gauge.IsRobotActive
-                        || raidbuffs))
-                {
-                    return MCH.FullMetal;
+                    if (level >= MCH.Levels.FullMetal
+                        && fullMetal is not null
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 3
+                            || gauge.IsRobotActive
+                            || raidbuffs))
+                    {
+                        return MCH.FullMetal;
+                    }
                 }
 
                 if (overheated is not null && level >= MCH.Levels.HeatBlast)
