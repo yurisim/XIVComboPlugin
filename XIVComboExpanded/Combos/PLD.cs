@@ -99,7 +99,7 @@ internal class PaladinST : CustomCombo
         {
             var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
-            var hasRaidBuffs = HasRaidBuffs();
+            var hasRaidBuffs = HasRaidBuffs(2);
 
             var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
@@ -115,7 +115,7 @@ internal class PaladinST : CustomCombo
                         && ((level < PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
                             || (level >= PLD.Levels.RoyalAuthority && lastComboMove == PLD.RoyalAuthority)
                             || canUseAtonement
-                            || HasRaidBuffs()):
+                            || HasRaidBuffs(2)):
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.Requiescat when
                         IsOffCooldown(OriginalHook(PLD.Requiescat))
@@ -155,7 +155,7 @@ internal class PaladinST : CustomCombo
                     && goringBladeReady is not null
                     && (goringBladeReady.RemainingTime <= 10
                         || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
-                        || HasRaidBuffs())
+                        || HasRaidBuffs(2))
                     )
                     return PLD.GoringBlade;
             }
@@ -204,7 +204,7 @@ internal class PaladinAOE : CustomCombo
         if (actionID == PLD.TotalEclipse)
         {
             var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
-            var hasRaidBuffs = HasRaidBuffs();
+            var hasRaidBuffs = HasRaidBuffs(2);
 
             var gauge = GetJobGauge<PLDGauge>();
 
@@ -218,7 +218,7 @@ internal class PaladinAOE : CustomCombo
                         IsOffCooldown(PLD.FightOrFlight)
                         && ((level < PLD.Levels.Prominence && lastComboMove == PLD.TotalEclipse)
                             || (level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence)
-                            || HasRaidBuffs()):
+                            || HasRaidBuffs(2)):
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.CircleOfScorn when
                         IsOffCooldown(PLD.CircleOfScorn)
@@ -251,7 +251,7 @@ internal class PaladinAOE : CustomCombo
             //     && goringBladeReady is not null
             //     && (goringBladeReady.RemainingTime <= 10
             //         || flightOrFight?.RemainingTime <= 10
-            //         || HasRaidBuffs())
+            //         || HasRaidBuffs(2))
             //     )
             //     return PLD.GoringBlade;
 

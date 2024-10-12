@@ -130,7 +130,7 @@ internal static class PCT
 
             if (actionID is FireRed or HolyWhite)
             {
-                var hasRaidBuffs = HasRaidBuffs();
+                var hasRaidBuffs = HasRaidBuffs(2);
 
                 var starryMuseBuffs = HasEffect(Buffs.StarryMuse) || hasRaidBuffs || level < Levels.StarryMuse;
 
@@ -196,7 +196,7 @@ internal static class PCT
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
-                    && (HasRaidBuffs() || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
+                    && (HasRaidBuffs(2) || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
                 )
                     return StarPrism;
 
@@ -215,7 +215,7 @@ internal static class PCT
                 )
                     return OriginalHook(CometBlack);
 
-                if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs()))
+                if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs(2)))
                 {
                     var availableSkill = new (uint Level, uint skill, float CD, bool MotifNeeded, uint Skill)[]
                         {
@@ -236,8 +236,8 @@ internal static class PCT
                                 !gauge.CreatureMotifDrawn,
                                 CreatureMotif)
                         }
-                        .Where(s => s.Level <= level 
-                            && s.MotifNeeded 
+                        .Where(s => s.Level <= level
+                            && s.MotifNeeded
                             && (GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40
                                 || (s.skill is not ScenicMuse && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining <= 30)
                                 || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))

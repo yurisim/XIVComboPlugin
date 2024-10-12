@@ -105,7 +105,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
         {
             var gauge = GetJobGauge<RDMGauge>();
 
-            var raidBuffs = HasRaidBuffs();
+            var raidBuffs = HasRaidBuffs(2);
 
             var mpThreshold = 9300;
 

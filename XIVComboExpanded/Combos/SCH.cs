@@ -130,7 +130,7 @@ internal class ScholarEnergyDrain : CustomCombo
                 {
                     case >= SCH.Levels.ChainStratagem when
                         IsOffCooldown(SCH.ChainStratagem)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return SCH.ChainStratagem;
 
                     case >= SCH.Levels.FeyBlessing when
@@ -189,12 +189,12 @@ internal class ScholarEnergyDrain : CustomCombo
 
                     case >= SCH.Levels.BanefulImpaction when
                         impactImminent is not null
-                        && (HasRaidBuffs() || impactImminent.RemainingTime <= 20):
+                        && (HasRaidBuffs(2) || impactImminent.RemainingTime <= 20):
                         return SCH.BanefulImpaction;
 
-                    case >= SCH.Levels.Aetherflow when 
-                        CanUseAction(SCH.Aetherflow) 
-                        && gauge.Aetherflow == 0 
+                    case >= SCH.Levels.Aetherflow when
+                        CanUseAction(SCH.Aetherflow)
+                        && gauge.Aetherflow == 0
                         && IsOffCooldown(SCH.Aetherflow):
                         return SCH.Aetherflow;
 
@@ -237,7 +237,8 @@ internal class ScholarEnergyDrain : CustomCombo
                     return OriginalHook(SCH.Bio);
             }
 
-            if (level >= SCH.Levels.ArtOfWar && level < SCH.Levels.Broil) {
+            if (level >= SCH.Levels.ArtOfWar && level < SCH.Levels.Broil)
+            {
                 return OriginalHook(SCH.ArtOfWar);
             }
         }

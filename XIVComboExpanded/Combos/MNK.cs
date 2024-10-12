@@ -91,7 +91,7 @@ internal class MonkBootshine : CustomCombo
             {
                 return (skillTime is not null && GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime)
                        || riddleFireEffect is not null
-                       || HasRaidBuffs()
+                       || HasRaidBuffs(2)
                        || level < MNK.Levels.RiddleOfFire;
             }
 
@@ -109,17 +109,17 @@ internal class MonkBootshine : CustomCombo
                         && (riddleFireEffect?.RemainingTime >= GetCooldown(actionID).BaseCooldown * 4
                             || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining <=
                             GetCooldown(actionID).BaseCooldown * 3
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.Brotherhood when
                         IsOffCooldown(MNK.Brotherhood)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return MNK.Brotherhood;
                     case >= MNK.Levels.RiddleOfFire when
                         IsOffCooldown(MNK.RiddleOfFire)
                         && (HasEffect(MNK.Buffs.Brotherhood)
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || level < MNK.Levels.Brotherhood
                             || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10):
                         return MNK.RiddleOfFire;
@@ -156,7 +156,7 @@ internal class MonkBootshine : CustomCombo
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
                 // 5000 is in Milliseconds
-                && (gauge.BlitzTimeRemaining <= 8500 || riddleFireEffect is not null || HasRaidBuffs())
+                && (gauge.BlitzTimeRemaining <= 8500 || riddleFireEffect is not null || HasRaidBuffs(2))
                )
                 return OriginalHook(MNK.MasterfulBlitz);
 
@@ -213,7 +213,7 @@ internal class MonkAoECombo : CustomCombo
 
             bool riddleMeDaddy()
             {
-                return HasEffect(MNK.Buffs.RiddleOfFire) || HasRaidBuffs() ||
+                return HasEffect(MNK.Buffs.RiddleOfFire) || HasRaidBuffs(2) ||
                        level < MNK.Levels.RiddleOfFire;
             }
 

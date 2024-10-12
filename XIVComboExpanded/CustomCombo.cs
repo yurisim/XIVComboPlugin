@@ -235,7 +235,7 @@ internal abstract partial class CustomCombo
     /// <returns>Whether or not the</returns>
     protected static bool ShouldUseDots()
     {
-        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 10;
+        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 5;
     }
 
     protected static bool TargetIsLow()
@@ -252,7 +252,7 @@ internal abstract partial class CustomCombo
     ///     Uses forEach loops for faster iterations rather than count for shortcircuiting
     /// </summary>
     /// <returns>Whether or not the</returns>
-    protected static bool HasRaidBuffs()
+    protected static bool HasRaidBuffs(int buffThreshold)
     {
         var raidBuffs = new[]
         {
@@ -273,37 +273,22 @@ internal abstract partial class CustomCombo
             ADV.Buffs.Medicated
         };
 
-
-        // var target = CurrentTarget as IBattleChara;
-        // var player = LocalPlayer;
-
-        // if (target != null && player != null && target.MaxHp >= player.MaxHp * 100)
-        // {
-        //     if (target.CurrentHp <= target.MaxHp * 0.07)
-        //     {
-        //         return true;
-        //     }
-        // }
-
         if (TargetIsLow())
                 return true;
 
-        // var buffThreshold = PartyList.Length <= 4 ? 1 : 2;
-
-        var buffThreshold = 2;
-        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori };
+        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori};
 
         var raidCDsFound = 0;
 
         foreach (var buff in raidBuffs)
             if (HasEffectAny(buff))
             {
+                if (buff is ADV.Buffs.Medicated) 
+                    raidCDsFound++;
+
                 raidCDsFound++;
 
-                // More or less always do it if I'm medicated
-                if (buff is ADV.Buffs.Medicated) raidCDsFound++;
-
-                if (raidCDsFound == buffThreshold)
+                if (raidCDsFound >= buffThreshold)
                     return true;
             }
 
@@ -311,7 +296,7 @@ internal abstract partial class CustomCombo
             if (TargetHasEffectAny(debuff))
             {
                 raidCDsFound++;
-                if (raidCDsFound == buffThreshold)
+                if (raidCDsFound >= buffThreshold)
                     return true;
             }
 

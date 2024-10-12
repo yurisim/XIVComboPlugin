@@ -40,6 +40,7 @@ internal static class DRK
             Grit = 743,
             Darkside = 751,
             Delirium = 1972,
+            WalkingDead = 811,
             ScarletDelirium = 3836;
     }
 
@@ -92,7 +93,7 @@ internal class DarkSouleater : CustomCombo
                         (
                             level >= DRK.Levels.FloodOfDarkness
                             && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
-                        ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs())
+                        ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs(2))
                     )
                     // If you are high enough level for edge fo darkness then do that instead
                     return level >= DRK.Levels.EdgeOfDarkness
@@ -120,7 +121,7 @@ internal class DarkSouleater : CustomCombo
             if (
                 level >= DRK.Levels.Bloodspiller
                 && gauge.Blood >= 50
-                && (HasEffect(DRK.Buffs.Delirium) || gauge.Blood >= 70 || HasRaidBuffs())
+                && (HasEffect(DRK.Buffs.Delirium) || gauge.Blood >= 70 || HasRaidBuffs(2))
             )
                 return DRK.Bloodspiller;
 

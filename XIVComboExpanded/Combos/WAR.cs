@@ -106,7 +106,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                     && (
                         GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
-                        || HasRaidBuffs()
+                        || HasRaidBuffs(2)
                         || HasEffect(WAR.Buffs.Berserk)
                     )
                     && !HasEffect(WAR.Buffs.InnerRelease)
@@ -145,7 +145,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                         gauge.BeastGauge >= 50
                         && (
                             GetRemainingCharges(WAR.Infuriate) >= 2
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || HasEffect(WAR.Buffs.Berserk)
                         )
                     )
@@ -203,7 +203,7 @@ internal class WarriorMythrilTempestCombo : CustomCombo
                     && (
                         GetRemainingCharges(WAR.Infuriate) >= 2
                         || GetCooldown(WAR.Infuriate).ChargeCooldownRemaining <= 5
-                        || HasRaidBuffs()
+                        || HasRaidBuffs(2)
                         || HasEffect(WAR.Buffs.Berserk)
                     )
                     && !HasEffect(WAR.Buffs.InnerRelease)

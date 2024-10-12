@@ -135,21 +135,21 @@ internal class DragoonSingleTarget : CustomCombo
                 {
                     return (cooldownAbility is not null &&
                             GetCooldown(DRG.LanceCharge).CooldownRemaining >= cooldownAbility * 0.1)
-                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs();
+                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs(2);
                 }
 
                 switch (level)
                 {
                     case >= DRG.Levels.BattleLitany when
                         IsOffCooldown(DRG.BattleLitany)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return DRG.BattleLitany;
 
                     case >= DRG.Levels.LanceCharge when
                         InMeleeRange()
                         && IsOffCooldown(DRG.LanceCharge)
                         && (HasEffect(DRG.Buffs.BattleLitany)
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || level < DRG.Levels.BattleLitany
                             || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15):
                         return DRG.LanceCharge;
@@ -174,7 +174,7 @@ internal class DragoonSingleTarget : CustomCombo
                             (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
                             && (level < DRG.Levels.ImprovedLifeSurge
                                 || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 20
-                                || HasRaidBuffs()
+                                || HasRaidBuffs(2)
                                 || HasEffect(DRG.Buffs.LanceCharge))
                             && !HasEffect(DRG.Buffs.LifeSurge)
                             && ((lastComboMove == OriginalHook(DRG.VorpalThrust) &&
@@ -300,21 +300,21 @@ internal class DragoonCoerthanTorment : CustomCombo
                 {
                     return (cooldownAbility is not null &&
                             GetCooldown(DRG.LanceCharge).CooldownRemaining >= cooldownAbility * 0.1)
-                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs();
+                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs(2);
                 }
 
                 switch (level)
                 {
                     case >= DRG.Levels.BattleLitany when
                         IsOffCooldown(DRG.BattleLitany)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return DRG.BattleLitany;
 
                     case >= DRG.Levels.LanceCharge when
                         InMeleeRange()
                         && IsOffCooldown(DRG.LanceCharge)
                         && (HasEffect(DRG.Buffs.BattleLitany)
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || level < DRG.Levels.BattleLitany
                             || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12):
                         return DRG.LanceCharge;
@@ -339,7 +339,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                             (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
                             && (level < DRG.Levels.ImprovedLifeSurge
                                 || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
-                                || HasRaidBuffs()
+                                || HasRaidBuffs(2)
                                 || HasEffect(DRG.Buffs.LanceCharge))
                             && !HasEffect(DRG.Buffs.LifeSurge)
                             && ((lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)

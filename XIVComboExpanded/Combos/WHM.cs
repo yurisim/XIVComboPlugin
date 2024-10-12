@@ -36,6 +36,7 @@ internal static class WHM
         Temperance = 16536,
         Glare3 = 25859,
         Holy3 = 25860,
+        DivCar = 37011,
         Aquaveil = 25861,
         LiturgyOfTheBell = 25862,
         Glare4 = 37009,
@@ -71,6 +72,7 @@ internal static class WHM
             Aquaveil = 86,
             EnhancedBenison = 88,
             AfflatusRapture = 76,
+            DivineCarress = 100,
             Glare4 = 92;
     }
 }
@@ -218,53 +220,52 @@ internal class WhiteMageStoneFeature : CustomCombo
 
             var gauge = GetJobGauge<WHMGauge>();
 
+            var threshold = 0.80;
+
             if (GCDClipCheck(actionID))
             {
-                if (
-                    level >= WHM.Levels.PresenceOfMind
-                    && IsOffCooldown(WHM.PresenceOfMind)
-                    && HasRaidBuffs()
-                )
-                    return WHM.PresenceOfMind;
-
-                if (
-                    level >= WHM.Levels.Assize
-                    && IsOffCooldown(WHM.Assize)
-                    && GetTargetDistance() <= 15
-                    && (playerPercentage < 1)
-                    && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs())
-                )
-                    return WHM.Assize;
-
-                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)
+                switch (level)
                 {
-                    if (
-                        level >= WHM.Levels.EnhancedBenison
-                        && HasCharges(WHM.DivineBenison)
-                        && (
-                            (
-                                GetCooldown(WHM.DivineBenison).TotalCooldownRemaining <= 10
-                                && tarOfTarPercentage <= 0.80
-                            )
-                            || tarOfTarPercentage <= 0.6
-                        )
-                    )
-                        return WHM.DivineBenison;
-
-                    if (
-                        level >= WHM.Levels.Tetragrammaton
-                        && tarOfTarPercentage <= 0.70
-                        && IsOffCooldown(WHM.Tetragrammaton)
-                    )
-                        return WHM.Tetragrammaton;
+                    case >= WHM.Levels.PresenceOfMind when
+                        IsOffCooldown(WHM.PresenceOfMind)
+                        && HasRaidBuffs(2):
+                        return WHM.PresenceOfMind;
+                    case >= WHM.Levels.Assize when
+                        IsOffCooldown(WHM.Assize)
+                        && GetTargetDistance() <= 15
+                        && playerPercentage < 1
+                        && (IsOnCooldown(WHM.PresenceOfMind)
+                            || HasRaidBuffs(2)):
+                        return WHM.Assize;
+                    case >= WHM.Levels.DivineCarress when
+                        CanUseAction(WHM.DivCar)
+                        && playerPercentage < 1:
+                        return WHM.DivCar;
+                    case >= ADV.Levels.LucidDreaming when
+                        IsOffCooldown(ADV.LucidDreaming)
+                        && LocalPlayer?.CurrentMp <= 8000:
+                        return ADV.LucidDreaming;
                 }
 
-                if (
-                    HasCondition(ConditionFlag.InCombat)
-                    && IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000
-                )
-                    return ADV.LucidDreaming;
+                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
+                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null)
+                {
+                    switch (level)
+                    {
+                        case >= WHM.Levels.EnhancedBenison when
+                            (HasCharges(WHM.DivineBenison) || IsOffCooldown(WHM.DivineBenison))
+                            && ((GetCooldown(OriginalHook(WHM.DivineBenison)).TotalCooldownRemaining <= 10
+                                    && tarOfTarPercentage <= threshold)
+                                || tarOfTarPercentage <= threshold - 0.2):
+                            return WHM.DivineBenison;
+                        case >= WHM.Levels.Tetragrammaton when
+                            (HasCharges(WHM.Tetragrammaton) || IsOffCooldown(WHM.Tetragrammaton))
+                            && ((GetCooldown(OriginalHook(AST.EssentialDignity)).TotalCooldownRemaining <= 15
+                                    && tarOfTarPercentage <= threshold - 0.15)
+                                || tarOfTarPercentage <= threshold - 0.2):
+                            return WHM.Tetragrammaton;
+                    }
+                }
             }
 
             (ushort Debuff, ushort Level)[] aeroDOT =

@@ -22,13 +22,14 @@ internal static class ADV
 
     public static class Debuffs
     {
-        public const ushort Placeholder = 0;
+        public const ushort Reprisal = 1193;
     }
 
     public static class Levels
     {
         public const byte Swiftcast = 18,
             LucidDreaming = 14,
+            Feint = 22,
             VariantRaise2 = 90;
     }
 }

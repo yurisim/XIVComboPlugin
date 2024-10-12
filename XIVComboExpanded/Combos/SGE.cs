@@ -110,10 +110,13 @@ internal class SageDosis : CustomCombo
 
             var mpThreshold = 9200;
 
-            var raidbuffs = HasRaidBuffs();
+            var raidbuffs = HasRaidBuffs(2);
 
             var controlBurst = LocalPlayer?.CurrentMp <= mpThreshold
                             || IsOnCooldown(ADV.LucidDreaming);
+
+            var noTankBuffs = FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
+                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null;
 
             if (GCDClipCheck(actionID))
             {
@@ -138,6 +141,7 @@ internal class SageDosis : CustomCombo
                         return SGE.Ixochole;
 
                     case >= SGE.Levels.Soteria when IsOffCooldown(SGE.Soteria)
+                                    && noTankBuffs
                                     && ((!HasEffect(SGE.Buffs.Physis)
                                          && !HasEffect(SGE.Buffs.Physis2)
                                          && !HasEffect(SGE.Buffs.Kerakeia))
@@ -146,6 +150,7 @@ internal class SageDosis : CustomCombo
                         return SGE.Soteria;
 
                     case >= SGE.Levels.Krasis when IsOffCooldown(SGE.Krasis)
+                                    && noTankBuffs
                                    && ((!HasEffect(SGE.Buffs.Physis)
                                         && !HasEffect(SGE.Buffs.Physis2)
                                         && !HasEffect(SGE.Buffs.Kerakeia))
@@ -153,8 +158,9 @@ internal class SageDosis : CustomCombo
                                    && targetHPPercent <= threshold - 0.1:
                         return SGE.Krasis;
 
-                    case >= SGE.Levels.Druochole when 
+                    case >= SGE.Levels.Druochole when
                         targetHPPercent >= 0.2
+                        && noTankBuffs
                         && gauge.Addersgall >= 2
                         && (targetHPPercent <= threshold - 0.25
                             || (needToUseAddersgall && targetHPPercent <= threshold - 0.15)):
@@ -162,18 +168,18 @@ internal class SageDosis : CustomCombo
                             ? SGE.Taurochole
                             : SGE.Druochole;
 
-                    case >= SGE.Levels.Rhizomata when 
+                    case >= SGE.Levels.Rhizomata when
                         gauge.Addersgall <= 1
                         && IsOffCooldown(SGE.Rhizomata):
                         return SGE.Rhizomata;
 
-                    case >= SGE.Levels.Psyche when 
+                    case >= SGE.Levels.Psyche when
                         (controlBurst || raidbuffs)
                         && IsOffCooldown(SGE.Psyche):
                         return SGE.Psyche;
 
-                    case >= ADV.Levels.LucidDreaming when 
-                        IsOffCooldown(ADV.LucidDreaming) 
+                    case >= ADV.Levels.LucidDreaming when
+                        IsOffCooldown(ADV.LucidDreaming)
                         && LocalPlayer?.CurrentMp <= 9200:
                         return ADV.LucidDreaming;
                 }

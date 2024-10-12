@@ -23,6 +23,7 @@ internal static class MCH
         Checkmate = 36980,
         // AoE
         SpreadShot = 2870,
+        Dismantle = 40102,
         AutoCrossbow = 16497,
         Scattergun = 25786,
         // Rook
@@ -38,6 +39,7 @@ internal static class MCH
         HeatBlast = 7410,
         BlazingShot = 36978,
         HotShot = 2872,
+        Tactician = 16889,
         Drill = 16498,
         Bioblaster = 16499,
         AirAnchor = 16500,
@@ -50,6 +52,7 @@ internal static class MCH
         public const ushort
             HyperchargeReady = 3864,
             Overheated = 2688,
+            Tactician = 1951,
             ExcavatorReady = 3865,
             FullMetalPrepared = 3866,
             Reassemble = 851;
@@ -57,7 +60,8 @@ internal static class MCH
 
     public static class Debuffs
     {
-        public const ushort Wildfire = 861;
+        public const ushort Wildfire = 861,
+        Dismantle = 860;
     }
 
     public static class Levels
@@ -73,8 +77,10 @@ internal static class MCH
             Ricochet = 50,
             AutoCrossbow = 52,
             HeatedSplitShot = 54,
+            Tactician = 56,
             Drill = 58,
             HeatedSlugshot = 60,
+            Dismantle = 62,
             HeatedCleanShot = 64,
             BarrelStabilizer = 66,
             Bioblaster = 72,
@@ -106,7 +112,7 @@ internal class MachinistCleanShot : CustomCombo
                 var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
                 var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
 
-                var raidbuffs = HasRaidBuffs();
+                var raidbuffs = HasRaidBuffs(1);
 
                 var drillReady = level >= MCH.Levels.Drill
                         && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
@@ -194,13 +200,23 @@ internal class MachinistCleanShot : CustomCombo
                                 || raidbuffs):
                             return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
                                 .MinBy(action => GetCooldown(action).TotalCooldownRemaining);
+                        case >= MCH.Levels.Tactician when
+                            IsOffCooldown(MCH.Tactician)
+                            && !TargetHasEffect(MCH.Debuffs.Dismantle)
+                            && TargetHasEffect(ADV.Debuffs.Reprisal):
+                            return MCH.Tactician;
+                        case >= MCH.Levels.Dismantle when
+                            IsOffCooldown(MCH.Dismantle)
+                            && !HasEffect(MCH.Buffs.Tactician)
+                            && TargetHasEffect(ADV.Debuffs.Reprisal):
+                            return MCH.Tactician;
                     }
                 }
 
                 var chainSawReady = level >= MCH.Levels.Chainsaw
                                     && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null);
 
-                var shouldUseReassemble = 
+                var shouldUseReassemble =
                         (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
                         && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 19 || raidbuffs)
                         && GCDClipCheck(actionID)
@@ -210,28 +226,30 @@ internal class MachinistCleanShot : CustomCombo
                 {
                     if (drillReady)
                     {
-                        return shouldUseReassemble 
-                            ? MCH.Reassemble 
+                        return shouldUseReassemble
+                            ? MCH.Reassemble
                             : MCH.Drill;
                     }
 
                     if (IsOffCooldown(OriginalHook(MCH.HotShot)))
                     {
-                        return shouldUseReassemble && level >= MCH.Levels.AirAnchor 
-                            ? MCH.Reassemble 
+                        return shouldUseReassemble && level >= MCH.Levels.AirAnchor
+                            ? MCH.Reassemble
                             : OriginalHook(MCH.HotShot);
                     }
 
                     if (gauge.Battery <= 80 && chainSawReady)
                     {
-                        return shouldUseReassemble 
-                            ? MCH.Reassemble 
+                        return shouldUseReassemble
+                            ? MCH.Reassemble
                             : OriginalHook(MCH.Chainsaw);
                     }
 
                     if (level >= MCH.Levels.FullMetal
                         && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 10 || raidbuffs))
+                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 15
+                            || gauge.IsRobotActive
+                            || raidbuffs))
                     {
                         return MCH.FullMetal;
                     }
@@ -284,7 +302,7 @@ internal class MachinistSpreadShot : CustomCombo
 
             var overheated = FindEffect(MCH.Buffs.Overheated);
 
-            var raidbuffs = HasRaidBuffs();
+            var raidbuffs = HasRaidBuffs(2);
 
             if (InCombat() && HasTarget())
                 if (GCDClipCheck(actionID))

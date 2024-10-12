@@ -100,7 +100,7 @@ internal class AstrologianMalefic : CustomCombo
 
             var divining = FindEffect(AST.Buffs.Divining);
 
-            var raidbuffs = HasRaidBuffs();
+            var raidbuffs = HasRaidBuffs(2);
 
             if (GCDClipCheck(actionID))
             {
@@ -113,7 +113,7 @@ internal class AstrologianMalefic : CustomCombo
                             || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)
                             ):
                         return OriginalHook(AST.MinorArcanaDT);
-                    case >= AST.Levels.SunSign when 
+                    case >= AST.Levels.SunSign when
                         CanUseAction(AST.SunSign):
                         return AST.SunSign;
 
@@ -158,12 +158,12 @@ internal class AstrologianMalefic : CustomCombo
 
                     case >= AST.Levels.Astrodyne when
                         IsOffCooldown(AST.Divination)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return AST.Divination;
 
                     case >= AST.Levels.MinorArcana when
                         gauge.DrawnCrownCard == CardType.LORD
-                        && (HasRaidBuffs() || needToUseCards || actionID is AST.Gravity)
+                        && (HasRaidBuffs(2) || needToUseCards || actionID is AST.Gravity)
                         && InCombat():
                         return OriginalHook(AST.MinorArcanaDT);
 

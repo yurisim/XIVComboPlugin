@@ -97,7 +97,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
             var noMercy = FindEffect(GNB.Buffs.NoMercy);
-            var raidbuffs = HasRaidBuffs();
+            var raidbuffs = HasRaidBuffs(2);
             var bloodfestCD = GetCooldown(GNB.Bloodfest);
 
             if (GCDClipCheck(actionID) && HasTarget() && InCombat())
@@ -112,7 +112,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                             || lastComboMove == GNB.BrutalShell):
                         return GNB.NoMercy;
 
-                    case >= GNB.Levels.Continuation when 
+                    case >= GNB.Levels.Continuation when
                         GNB.Continuation != OriginalHook(GNB.Continuation)
                         && CanUseAction(OriginalHook(GNB.Continuation)):
                         return OriginalHook(GNB.Continuation);
@@ -242,7 +242,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
 
             var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
             var noMercy = FindEffect(GNB.Buffs.NoMercy);
-            var raidbuffs = HasRaidBuffs();
+            var raidbuffs = HasRaidBuffs(2);
             var bloodfestCD = GetCooldown(GNB.Bloodfest);
 
             if (GCDClipCheck(actionID))
@@ -250,15 +250,15 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 {
                     case >= GNB.Levels.NoMercy when
                         IsOffCooldown(GNB.NoMercy)
-                        && (level < GNB.Levels.ReignOfBeasts 
-                            || bloodfestCD.TotalCooldownRemaining >= 12 
+                        && (level < GNB.Levels.ReignOfBeasts
+                            || bloodfestCD.TotalCooldownRemaining >= 12
                             || raidbuffs)
                         && (gauge.Ammo >= 1
                             || level < GNB.Levels.BurstStrike
                             || lastComboMove == GNB.BrutalShell):
                         return GNB.NoMercy;
 
-                    case >= GNB.Levels.Continuation when 
+                    case >= GNB.Levels.Continuation when
                         GNB.Continuation != OriginalHook(GNB.Continuation)
                         && CanUseAction(OriginalHook(GNB.Continuation)):
                         return OriginalHook(GNB.Continuation);
@@ -270,13 +270,13 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                         && gauge.Ammo == 0:
                         return GNB.Bloodfest;
 
-                    case >= GNB.Levels.Aurora when 
-                    (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora)) 
+                    case >= GNB.Levels.Aurora when
+                    (IsOffCooldown(GNB.Aurora) || HasCharges(GNB.Aurora))
                     && !HasEffect(GNB.Buffs.Aurora) && TargetOfTargetHPercentage() <= 0.7:
                         return GNB.Aurora;
 
-                    case >= GNB.Levels.BowShock when 
-                    IsOffCooldown(GNB.BowShock) 
+                    case >= GNB.Levels.BowShock when
+                    IsOffCooldown(GNB.BowShock)
                     && (HasEffect(GNB.Buffs.NoMercy) || noMercyCD >= 12):
                         return GNB.BowShock;
 
@@ -307,7 +307,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                 && CanUseAction(OriginalHook(GNB.ReignOfBeasts))
                 && (noMercy is not null
                     || noMercyCD >= 24
-                    || HasRaidBuffs()
+                    || HasRaidBuffs(2)
                     || !IsOriginal(GNB.ReignOfBeasts)
                     || FindEffect(GNB.Buffs.ReadyToReign)?.RemainingTime <= 10))
                 return OriginalHook(GNB.ReignOfBeasts);

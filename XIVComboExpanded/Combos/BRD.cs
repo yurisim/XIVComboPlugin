@@ -111,7 +111,7 @@ internal class BardHeavyShot : CustomCombo
 
             var ragingStrikesCD = GetCooldown(BRD.RagingStrikes).CooldownRemaining;
 
-            var raidBuffs = HasRaidBuffs();
+            var raidBuffs = HasRaidBuffs(2);
 
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
@@ -134,7 +134,7 @@ internal class BardHeavyShot : CustomCombo
                         return BRD.RadiantFinale;
                     case >= BRD.Levels.RagingStrikes when
                         IsOffCooldown(BRD.RagingStrikes)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return BRD.RagingStrikes;
                     case >= BRD.Levels.WanderersMinuet when
                         IsOffCooldown(BRD.WanderersMinuet)
@@ -158,7 +158,7 @@ internal class BardHeavyShot : CustomCombo
                     case >= BRD.Levels.Bloodletter when
                         HasCharges(OriginalHook(BRD.Bloodletter))
                         && (HasEffect(BRD.Buffs.RagingStrikes)
-                            || HasRaidBuffs()
+                            || HasRaidBuffs(2)
                             || GetCooldown(OriginalHook(BRD.Bloodletter)).TotalCooldownRemaining <= 10):
                         return OriginalHook(BRD.Bloodletter);
 
@@ -166,7 +166,7 @@ internal class BardHeavyShot : CustomCombo
                         IsOffCooldown(BRD.Barrage)
                         && (HasEffect(BRD.Buffs.RagingStrikes)
                             || ragingStrikesCD >= 18
-                            || HasRaidBuffs()):
+                            || HasRaidBuffs(2)):
                         return BRD.Barrage;
 
                     case >= BRD.Levels.Sidewinder when
@@ -385,7 +385,7 @@ internal class BardQuickNock : CustomCombo
                         return BRD.ArmysPaeon;
                     case >= BRD.Levels.RagingStrikes when
                         IsOffCooldown(BRD.RagingStrikes)
-                        && HasRaidBuffs():
+                        && HasRaidBuffs(2):
                         return BRD.RagingStrikes;
                     case >= BRD.Levels.BattleVoice when
                         HasEffect(BRD.Buffs.RagingStrikes)
@@ -394,7 +394,7 @@ internal class BardQuickNock : CustomCombo
                     case >= BRD.Levels.RadiantFinale when
                         IsOffCooldown(BRD.RadiantFinale)
                         && gauge.Coda.Length >= 1
-                        && (HasRaidBuffs() || HasEffect(BRD.Buffs.RagingStrikes)):
+                        && (HasRaidBuffs(2) || HasEffect(BRD.Buffs.RagingStrikes)):
                         return BRD.RadiantFinale;
                     case >= BRD.Levels.EmpyrealArrow when
                         IsOffCooldown(BRD.EmpyrealArrow):
@@ -403,7 +403,7 @@ internal class BardQuickNock : CustomCombo
                         IsOffCooldown(BRD.Barrage)
                         && (HasEffect(BRD.Buffs.RagingStrikes)
                             || ragingStrikesCD >= 18
-                            || HasRaidBuffs()):
+                            || HasRaidBuffs(2)):
                         return BRD.Barrage;
                     case >= BRD.Levels.RainOfDeath when
                         IsOffCooldown(BRD.RainOfDeath)
@@ -438,7 +438,7 @@ internal class BardQuickNock : CustomCombo
 
             if (level >= BRD.Levels.ResonantArrow
                 && resonantArrowReady is not null
-                && (resonantArrowReady.RemainingTime <= 10 || HasRaidBuffs())
+                && (resonantArrowReady.RemainingTime <= 10 || HasRaidBuffs(2))
                 )
             {
                 return BRD.ResonantArrow;
