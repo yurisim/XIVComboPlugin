@@ -167,7 +167,7 @@ internal class MachinistCleanShot : CustomCombo
                                     && (IsOffCooldown(OriginalHook(MCH.HotShot))
                                         || (level >= MCH.Levels.Drill && HasCharges(MCH.Drill))
                                         || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
-                                        || HasEffect(MCH.Buffs.ExcavatorReady)))):
+                                        || excavatorReady is not null))):
                             return OriginalHook(MCH.RookAutoturret);
 
                         case >= MCH.Levels.Reassemble when
@@ -214,7 +214,7 @@ internal class MachinistCleanShot : CustomCombo
                 }
 
                 var chainSawReady = level >= MCH.Levels.Chainsaw
-                                    && (IsOffCooldown(OriginalHook(MCH.Chainsaw)) || excavatorReady is not null);
+                                    && (GetCooldown(MCH.Chainsaw).IsAvailable || HasEffect(MCH.Buffs.ExcavatorReady));
 
                 var shouldUseReassemble =
                         (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
@@ -244,15 +244,15 @@ internal class MachinistCleanShot : CustomCombo
                             ? MCH.Reassemble
                             : OriginalHook(MCH.Chainsaw);
                     }
+                }
 
-                    if (level >= MCH.Levels.FullMetal
-                        && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 15
-                            || gauge.IsRobotActive
-                            || raidbuffs))
-                    {
-                        return MCH.FullMetal;
-                    }
+                if (level >= MCH.Levels.FullMetal
+                    && fullMetal is not null
+                    && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 5
+                        || gauge.IsRobotActive
+                        || raidbuffs))
+                {
+                    return MCH.FullMetal;
                 }
 
                 if (overheated is not null && level >= MCH.Levels.HeatBlast)
@@ -261,24 +261,24 @@ internal class MachinistCleanShot : CustomCombo
                 }
             }
 
-            if (comboTime > 0)
+
+            //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+            if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
             {
-                if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
+                if (level < MCH.Levels.Drill
+                    && GCDClipCheck(actionID)
+                    && IsOffCooldown(MCH.Reassemble))
                 {
-                    if (level < MCH.Levels.Drill
-                        && GCDClipCheck(actionID)
-                        && IsOffCooldown(MCH.Reassemble))
-                    {
-                        return MCH.Reassemble;
-                    }
-
-                    return OriginalHook(MCH.CleanShot);
+                    return MCH.Reassemble;
                 }
 
-                if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
-                {
-                    return OriginalHook(MCH.SlugShot);
-                }
+                return OriginalHook(MCH.CleanShot);
+            }
+
+            //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+            if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
+            {
+                return OriginalHook(MCH.SlugShot);
             }
 
             return OriginalHook(MCH.SplitShot);
