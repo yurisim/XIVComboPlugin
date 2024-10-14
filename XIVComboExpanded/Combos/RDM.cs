@@ -14,6 +14,7 @@ internal static class RDM
         Verfire = 7510,
         Verstone = 7511,
         Zwerchhau = 7512,
+        Reprise = 16529,
         Moulinet = 7513,
         Vercure = 7514,
         Redoublement = 7516,
@@ -85,6 +86,7 @@ internal static class RDM
             Impact = 66,
             Verflare = 68,
             Verholy = 70,
+            Reprise = 76,
             Scorch = 80,
             Veraero3 = 82,
             Verthunder3 = 82,
@@ -174,16 +176,25 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 (level >= RDM.Levels.Zwerchhau ? 15 : 0) +
                 (level >= RDM.Levels.Redoublement ? 15 : 0);
 
+            var needToReprise = gauge.WhiteMana >= 85
+                    && gauge.BlackMana >= 85
+                    && !hasSpeedy;
+
             var startMeleeCombo =
                 (actualWhite >= minimiumGauge
                     && actualBlack >= minimiumGauge
                     && (HasEffect(RDM.Buffs.Embolden) || raidBuffs))
-                || (gauge.WhiteMana >= 85
-                    && gauge.BlackMana >= 85
-                    && !hasSpeedy);
+                || needToReprise;
 
-            if (
-                (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
+            if (level >= RDM.Levels.Reprise 
+                && actionID is not RDM.Scatter
+                && needToReprise 
+                && !InMeleeRange())
+            {
+                return OriginalHook(RDM.Reprise);
+            }
+
+            if ((gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
                 || ((lastComboMove is RDM.EnchantedRiposte or RDM.Riposte) && (level >= RDM.Levels.Zwerchhau))
                 || ((lastComboMove is RDM.EnchantedZwerchhau or RDM.Zwerchhau) && (level >= RDM.Levels.Redoublement))
                 || (startMeleeCombo && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent))
@@ -191,25 +202,28 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             {
                 if (
                     (lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau)
+                        && OriginalHook(RDM.Redoublement) != RDM.Redoublement
                         && level >= RDM.Levels.Redoublement
                     )
                     // Enchanted
                     return OriginalHook(RDM.Redoublement);
 
-                if (
-                        (lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte)
+                if ((lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte)
                         && level >= RDM.Levels.Zwerchhau
-                    )
-                    // Enchanted
+                        && OriginalHook(RDM.Zwerchhau) != RDM.Zwerchhau)
+                {
                     return OriginalHook(RDM.Zwerchhau);
+                }
 
                 if (actionID is RDM.Scatter)
                 {
                     return OriginalHook(RDM.Moulinet);
                 }
 
-                // Enchanted
-                return OriginalHook(RDM.Riposte);
+                if (OriginalHook(RDM.Riposte) != RDM.Riposte)
+                {
+                    return OriginalHook(RDM.Riposte);
+                }
             }
 
             // Dualcast

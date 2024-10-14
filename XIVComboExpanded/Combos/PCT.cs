@@ -247,27 +247,26 @@ internal static class PCT
                                 GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
                                 !gauge.CreatureMotifDrawn,
                                 CreatureMotif)
-                    }.Where(s => s.Level <= level && s.MotifNeeded);
+                    }.Where(s => s.Level <= level && s.MotifNeeded).OrderBy(s => s.CD);
 
                 var swiftCast = HasEffect(ADV.Buffs.Swiftcast);
 
-                var quickSkill = availableSkill.OrderBy(s => s.CD)
-                                                   .Select(s => s.motifSkill)
-                                                   .FirstOrDefault();
+                var quickSkill = availableSkill.Select(s => s.motifSkill)
+                                            .FirstOrDefault();
 
                 if (swiftCast)
                 {
                     return quickSkill;
                 }
 
-                if (actionID is HolyWhite || swiftCast)
+                if (actionID is HolyWhite)
                 {
                     if (gauge.Paint >= 2)
                     {
                         return HolyWhite;
                     }
 
-                    if (IsOffCooldown(ADV.Swiftcast) && quickSkill != default)
+                    if (IsOffCooldown(ADV.Swiftcast) && quickSkill != default && GCDClipCheck(actionID))
                     {
                         return ADV.Swiftcast;
                     }
@@ -279,7 +278,6 @@ internal static class PCT
                             || (s.skill is not ScenicMuse && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining <= 30)
                             || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
                             || !InCombat())
-                    .OrderBy(s => s.CD)
                     .Select(s => s.motifSkill)
                     .FirstOrDefault();
 

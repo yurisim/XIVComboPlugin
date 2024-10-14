@@ -134,7 +134,7 @@ internal class BlackMageFire : CustomCombo
             }
 
             if (gauge.PolyglotStacks >= 1
-                && gauge.EnochianTimer <= 6000
+                && gauge.EnochianTimer <= 10000
                 && gauge.ElementTimeRemaining >= 8000
                 && level >= BLM.Levels.Foul)
             {
