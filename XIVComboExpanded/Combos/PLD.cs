@@ -99,7 +99,7 @@ internal class PaladinST : CustomCombo
         {
             var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
-            var hasRaidBuffs = HasRaidBuffs(2);
+            var hasRaidBuffs = HasRaidBuffs(1);
 
             var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
@@ -115,7 +115,7 @@ internal class PaladinST : CustomCombo
                         && ((level < PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
                             || (level >= PLD.Levels.RoyalAuthority && lastComboMove == PLD.RoyalAuthority)
                             || canUseAtonement
-                            || HasRaidBuffs(2)):
+                            || hasRaidBuffs):
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.Requiescat when
                         IsOffCooldown(OriginalHook(PLD.Requiescat))
@@ -155,7 +155,7 @@ internal class PaladinST : CustomCombo
                     && goringBladeReady is not null
                     && (goringBladeReady.RemainingTime <= 10
                         || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
-                        || HasRaidBuffs(2))
+                        || hasRaidBuffs)
                     )
                     return PLD.GoringBlade;
             }

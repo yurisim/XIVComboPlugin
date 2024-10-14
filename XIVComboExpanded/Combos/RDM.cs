@@ -184,8 +184,8 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             if (
                 (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
-                || (lastComboMove == RDM.EnchantedRiposte && (level >= RDM.Levels.Zwerchhau))
-                || (lastComboMove == RDM.EnchantedZwerchhau && (level >= RDM.Levels.Redoublement))
+                || ((lastComboMove is RDM.EnchantedRiposte or RDM.Riposte) && (level >= RDM.Levels.Zwerchhau))
+                || ((lastComboMove is RDM.EnchantedZwerchhau or RDM.Zwerchhau) && (level >= RDM.Levels.Redoublement))
                 || (startMeleeCombo && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent))
             )
             {

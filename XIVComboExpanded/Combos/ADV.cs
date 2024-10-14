@@ -10,6 +10,7 @@ internal static class ADV
         Provoke = 7533,
         Shirk = 7537,
         Peloton = 7557,
+        Addle = 7560,
         Swiftcast = 7561,
         AngelWhisper = 18317,
         VariantRaise2 = 29734;
@@ -22,12 +23,14 @@ internal static class ADV
 
     public static class Debuffs
     {
-        public const ushort Reprisal = 1193;
+        public const ushort Reprisal = 1193,
+        Addle = 1203;
     }
 
     public static class Levels
     {
         public const byte Swiftcast = 18,
+        Addle = 8,
             LucidDreaming = 14,
             Feint = 22,
             VariantRaise2 = 90;

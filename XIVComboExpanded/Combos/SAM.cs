@@ -113,7 +113,7 @@ internal class SamuraiYukikaze : CustomCombo
 
             var canUseIkishoten = IsOffCooldown(SAM.Ikishoten) && InCombat();
 
-            var hasRaidBuffs = HasRaidBuffs(2);
+            var hasRaidBuffs = HasRaidBuffs(1);
 
             var jinpu = FindEffect(SAM.Buffs.Jinpu);
             var shifu = FindEffect(SAM.Buffs.Shifu);
@@ -172,8 +172,9 @@ internal class SamuraiYukikaze : CustomCombo
                             : OriginalHook(SAM.HissatsuShinten);
 
                         if (gauge.Kenki >= 75
-                            || (level >= SAM.Levels.Ikishoten && canUseIkishoten && gauge.Kenki >= 35)
-                            || (GetCooldown(SAM.Ikishoten).CooldownRemaining <= 6 && gauge.Kenki >= 35)
+                            || (level >= SAM.Levels.Ikishoten 
+                                && (canUseIkishoten || GetCooldown(SAM.Ikishoten).CooldownRemaining <= 6) 
+                                && gauge.Kenki >= 35)
                             || (hasRaidBuffs && (GetCooldown(SAM.HissatsuGuren).CooldownRemaining >= 5 || level < SAM.Levels.HissatsuGuren)))
                         {
                             return skill;
@@ -205,8 +206,7 @@ internal class SamuraiYukikaze : CustomCombo
                     return OriginalHook(SAM.Iaijutsu);
                 }
 
-                if (actionID is SAM.Hakaze && !IsMoving
-)
+                if (actionID is SAM.Hakaze)
                 {
                     if (level >= SAM.Levels.Higanbana
                         // && !HasEffect(SAM.Buffs.MeikyoShisui)
@@ -218,6 +218,7 @@ internal class SamuraiYukikaze : CustomCombo
                         return OriginalHook(SAM.Iaijutsu);
 
                     if (level >= SAM.Levels.MidareSetsugekka
+                        && !IsMoving
                         && gaugeSen.Sum() == 3)
                         return OriginalHook(SAM.Iaijutsu);
                 }

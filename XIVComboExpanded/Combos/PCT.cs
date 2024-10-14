@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -143,6 +144,14 @@ internal static class PCT
 
                 var needToUseLivingMuse = GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining < starryCD;
 
+                if (HasEffect(Buffs.SubtractiveSpectrum)
+                    && CanUseAction(SubtractivePalette)
+                    && !HasEffect(Buffs.Monochrome)
+                    )
+                {
+                    return SubtractivePalette;
+                }
+
                 if (GCDClipCheck(actionID))
                     switch (level)
                     {
@@ -153,6 +162,11 @@ internal static class PCT
                         case >= Levels.StarryMuse
                             when hasRaidBuffs && gauge.LandscapeMotifDrawn && IsOffCooldown(StarryMuse):
                             return StarryMuse;
+                        case >= ADV.Levels.Addle when
+                            IsOffCooldown(ADV.Addle)
+                            && !TargetHasEffectAny(ADV.Debuffs.Addle)
+                            && TargetHasEffectAny(ADV.Debuffs.Reprisal):
+                            return ADV.Addle;
                         case >= Levels.WeaponMotif
                             when IsAvailable(OriginalHook(SteelMuse))
                                  && gauge.WeaponMotifDrawn
@@ -185,7 +199,7 @@ internal static class PCT
                                          && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
                                  && (starryMuseBuffs || needToUseLivingMuse):
                             return OriginalHook(LivingMuse);
-                        case >= 15
+                        case >= ADV.Levels.LucidDreaming
                             when InCombat()
                                  && IsOffCooldown(ADV.LucidDreaming)
                                  && LocalPlayer?.CurrentMp <= 7000:
@@ -196,7 +210,7 @@ internal static class PCT
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
-                    && (HasRaidBuffs(2) || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
+                    && (hasRaidBuffs || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
                 )
                     return StarPrism;
 
@@ -210,15 +224,13 @@ internal static class PCT
                 }
 
                 if (
-                    CanUseAction(OriginalHook(CometBlack))
-                    && (canUsePalette || starryMuseBuffs || actionID is HolyWhite)
+                    CanUseAction(CometBlack)
+                    && (actionID is HolyWhite || canUsePalette || starryMuseBuffs)
                 )
-                    return OriginalHook(CometBlack);
+                    return CometBlack;
 
-                if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || HasRaidBuffs(2)))
-                {
-                    var availableSkill = new (uint Level, uint skill, float CD, bool MotifNeeded, uint Skill)[]
-                        {
+                var availableSkill = new (uint Level, uint skill, float CD, bool MotifNeeded, uint motifSkill)[]
+                    {
                             (Levels.LandscapeMotif,
                                 ScenicMuse,
                                 GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
@@ -235,28 +247,48 @@ internal static class PCT
                                 GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
                                 !gauge.CreatureMotifDrawn,
                                 CreatureMotif)
-                        }
-                        .Where(s => s.Level <= level
-                            && s.MotifNeeded
-                            && (GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40
-                                || (s.skill is not ScenicMuse && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining <= 30)
-                                || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
-                                || !InCombat()))
-                        .OrderBy(s => s.CD)
-                        .Select(s => s.Skill)
-                        .FirstOrDefault();
+                    }.Where(s => s.Level <= level && s.MotifNeeded);
 
-                    if (availableSkill != default)
-                        return OriginalHook(availableSkill);
+                var swiftCast = HasEffect(ADV.Buffs.Swiftcast);
+
+                var quickSkill = availableSkill.OrderBy(s => s.CD)
+                                                   .Select(s => s.motifSkill)
+                                                   .FirstOrDefault();
+
+                if (swiftCast)
+                {
+                    return quickSkill;
                 }
 
-                if (HasEffect(Buffs.SubtractivePalette) && actionID is not HolyWhite) return OriginalHook(BlizzardCyan);
+                if (actionID is HolyWhite || swiftCast)
+                {
+                    if (gauge.Paint >= 2)
+                    {
+                        return HolyWhite;
+                    }
 
-                return actionID is FireRed
-                    ? OriginalHook(FireRed)
-                    : CanUseAction(CometBlack)
-                        ? CometBlack
-                        : HolyWhite;
+                    if (IsOffCooldown(ADV.Swiftcast) && quickSkill != default)
+                    {
+                        return ADV.Swiftcast;
+                    }
+                }
+
+                if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || hasRaidBuffs))
+                {
+                    var filteredskills = availableSkill.Where(s => GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40
+                            || (s.skill is not ScenicMuse && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining <= 30)
+                            || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
+                            || !InCombat())
+                    .OrderBy(s => s.CD)
+                    .Select(s => s.motifSkill)
+                    .FirstOrDefault();
+
+                    if (filteredskills != default)
+                        return OriginalHook(filteredskills);
+                }
+
+                return HasEffect(Buffs.SubtractivePalette) ? OriginalHook(BlizzardCyan): OriginalHook(FireRed);
+
             }
 
             return actionID;

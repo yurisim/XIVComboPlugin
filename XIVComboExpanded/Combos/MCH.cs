@@ -132,7 +132,7 @@ internal class MachinistCleanShot : CustomCombo
                         level < MCH.Levels.Drill || GetCooldown(MCH.Drill).TotalCooldownRemaining >= timeThreshold,
                         GetCooldown(OriginalHook(MCH.HotShot)).TotalCooldownRemaining >= timeThreshold,
                         level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= timeThreshold,
-                        fullMetal is null || fullMetal.RemainingTime >= 20,
+                        fullMetal is null,
                         excavatorReady is null
                     };
 
@@ -202,14 +202,15 @@ internal class MachinistCleanShot : CustomCombo
                                 .MinBy(action => GetCooldown(action).TotalCooldownRemaining);
                         case >= MCH.Levels.Tactician when
                             IsOffCooldown(MCH.Tactician)
+                            && IsOffCooldown(MCH.Dismantle)
                             && !TargetHasEffect(MCH.Debuffs.Dismantle)
                             && TargetHasEffectAny(ADV.Debuffs.Reprisal):
                             return MCH.Tactician;
-                        case >= MCH.Levels.Dismantle when
-                            IsOffCooldown(MCH.Dismantle)
-                            && !HasEffect(MCH.Buffs.Tactician)
-                            && TargetHasEffectAny(ADV.Debuffs.Reprisal):
-                            return MCH.Tactician;
+                        // case >= MCH.Levels.Dismantle when
+                        //     IsOffCooldown(MCH.Dismantle)
+                        //     && !HasEffect(MCH.Buffs.Tactician)
+                        //     && TargetHasEffectAny(ADV.Debuffs.Reprisal):
+                        //     return MCH.Dismantle;
                     }
                 }
 
