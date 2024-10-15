@@ -228,14 +228,14 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             // Dualcast
             if (hasSpeedy && actionID == RDM.Jolt)
-                return gauge.WhiteMana + 6 < gauge.BlackMana
+                return gauge.WhiteMana + 7 < gauge.BlackMana
                     ? OriginalHook(RDM.Veraero)
                     : OriginalHook(RDM.Verthunder);
 
             if (hasSpeedy && actionID == RDM.Scatter) return RDM.Scatter;
 
             if (actionID == RDM.Scatter && level >= RDM.Levels.Verthunder2)
-                return gauge.BlackMana < gauge.WhiteMana + 6 || level < RDM.Levels.Veraero2
+                return gauge.BlackMana < gauge.WhiteMana + 7 || level < RDM.Levels.Veraero2
                     ? OriginalHook(RDM.Verthunder2)
                     : OriginalHook(RDM.Veraero2);
 

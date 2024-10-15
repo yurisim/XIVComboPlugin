@@ -102,120 +102,105 @@ internal class MachinistCleanShot : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == MCH.CleanShot || actionID == MCH.HeatedCleanShot)
+        if (actionID is MCH.SplitShot or MCH.HeatedSplitShot)
         {
             var gauge = GetJobGauge<MCHGauge>();
 
-            if (HasTarget())
+            var overheated = FindEffect(MCH.Buffs.Overheated);
+            var raidbuffs = HasRaidBuffs(1);
+
+            var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
+            var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
+
+            var drillReady = level >= MCH.Levels.Drill
+                    && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
+                    && overheated is null
+                    && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 9
+                        || raidbuffs);
+
+            if (GCDClipCheck(actionID))
             {
-                var overheated = FindEffect(MCH.Buffs.Overheated);
-                var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
-                var fullMetal = FindEffect(MCH.Buffs.FullMetalPrepared);
+                var timeThreshold = 9;
 
-                var raidbuffs = HasRaidBuffs(1);
-
-                var drillReady = level >= MCH.Levels.Drill
-                        && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
-                        && overheated is null
-                        && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 9
-                            || raidbuffs);
-
-                if (GCDClipCheck(actionID) && InCombat())
+                var nothingBlockingHypercharge = new[]
                 {
-                    var gaussRoundCharges = GetRemainingCharges(OriginalHook(MCH.GaussRound));
-                    var ricochetCharges = GetRemainingCharges(OriginalHook(MCH.Ricochet));
-
-                    var timeThreshold = 9;
-
-                    var hyperchargeCDs = new[]
-                    {
                         level < MCH.Levels.Drill || GetCooldown(MCH.Drill).TotalCooldownRemaining >= timeThreshold,
                         GetCooldown(OriginalHook(MCH.HotShot)).TotalCooldownRemaining >= timeThreshold,
                         level < MCH.Levels.Chainsaw || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= timeThreshold,
                         fullMetal is null,
                         excavatorReady is null
-                    };
+            }.All(x => x is true);
 
-                    var nothingBlockingHypercharge = hyperchargeCDs.All(x => x is true);
+                var hyperchargeReady = FindEffect(MCH.Buffs.HyperchargeReady);
 
-                    var hyperchargeReady = FindEffect(MCH.Buffs.HyperchargeReady);
+                var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady is not null;
 
-                    var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady is not null;
+                var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
 
-                    var pleaseUseHyperchargeSoon =
-                        hyperchargeReady is not null && GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 1.5;
+                // this line is causing weird delays to occur with the icon replacer off GCD
+                // var dismantleCD = GetCooldown(MCH.Dismantle);
 
-                    switch (level)
-                    {
-                        case >= MCH.Levels.BarrelStabilizer when
-                            raidbuffs
-                            && IsOffCooldown(MCH.BarrelStabilizer):
-                            return MCH.BarrelStabilizer;
+                switch (level)
+                {
+                    case >= MCH.Levels.BarrelStabilizer when
+                        raidbuffs
+                        && IsOffCooldown(MCH.BarrelStabilizer):
+                        return MCH.BarrelStabilizer;
+                    case >= MCH.Levels.Wildfire when
+                        IsOffCooldown(MCH.Wildfire)
+                        && overheated is not null
+                        && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
+                        return MCH.Wildfire;
 
-                        case >= MCH.Levels.Wildfire when
-                            IsOffCooldown(MCH.Wildfire)
-                            && overheated is not null
-                            && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
-                            return MCH.Wildfire;
-
-                        case >= MCH.Levels.RookOverdrive when
-                            gauge.Battery >= 50
-                            && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                            && (gauge.Battery >= 100
-                                || raidbuffs
-                                || (gauge.Battery >= 70
-                                    && (IsOffCooldown(OriginalHook(MCH.HotShot))
-                                        || (level >= MCH.Levels.Drill && HasCharges(MCH.Drill))
-                                        || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
-                                        || excavatorReady is not null))):
-                            return OriginalHook(MCH.RookAutoturret);
-
-                        case >= MCH.Levels.Reassemble when
-                            (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
-                            && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 20 || raidbuffs)
-                            && !HasEffect(MCH.Buffs.Reassemble)
-                            && drillReady:
-                            return MCH.Reassemble;
-
-                        case >= MCH.Levels.Hypercharge when
-                            IsOffCooldown(MCH.Hypercharge)
-                            && canUseHypercharge
-                            && nothingBlockingHypercharge
-                            && (gauge.Heat >= 80
-                                || raidbuffs
-                                || TargetHasEffect(MCH.Debuffs.Wildfire)
-                                || pleaseUseHyperchargeSoon):
-                            return MCH.Hypercharge;
-
-                        case >= MCH.Levels.Ricochet when
-                            HasCharges(OriginalHook(MCH.Ricochet))
-                            && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 40
-                                || raidbuffs)
-                            && ricochetCharges >= gaussRoundCharges:
-                        case >= MCH.Levels.GaussRound when
-                            HasCharges(OriginalHook(MCH.GaussRound))
-                            && (overheated is not null
-                                || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 40
-                                || raidbuffs):
-                            return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
-                                .MinBy(action => GetCooldown(action).TotalCooldownRemaining);
-                        case >= MCH.Levels.Tactician when
-                            IsOffCooldown(MCH.Tactician)
-                            && IsOffCooldown(MCH.Dismantle)
-                            && !TargetHasEffect(MCH.Debuffs.Dismantle)
-                            && TargetHasEffectAny(ADV.Debuffs.Reprisal):
-                            return MCH.Tactician;
-                        // case >= MCH.Levels.Dismantle when
-                        //     IsOffCooldown(MCH.Dismantle)
-                        //     && !HasEffect(MCH.Buffs.Tactician)
-                        //     && TargetHasEffectAny(ADV.Debuffs.Reprisal):
-                        //     return MCH.Dismantle;
-                    }
+                    case >= MCH.Levels.RookOverdrive when
+                        gauge.Battery >= 50
+                        && CanUseAction(OriginalHook(MCH.RookAutoturret))
+                        && (gauge.Battery >= 100
+                            || raidbuffs
+                            || (gauge.Battery >= 70
+                                && (IsOffCooldown(OriginalHook(MCH.HotShot))
+                                    || (level >= MCH.Levels.Drill && HasCharges(MCH.Drill))
+                                    || (level >= MCH.Levels.Chainsaw && IsOffCooldown(MCH.Chainsaw))
+                                    || excavatorReady is not null))):
+                        return OriginalHook(MCH.RookAutoturret);
+                    case >= MCH.Levels.Reassemble when
+                        (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
+                        && (GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 20 || raidbuffs)
+                        && !HasEffect(MCH.Buffs.Reassemble)
+                        && drillReady:
+                        return MCH.Reassemble;
+                    case >= MCH.Levels.Tactician when
+                        IsOffCooldown(MCH.Tactician)
+                        // && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 15)
+                        && reprisal is not null
+                        && reprisal.RemainingTime >= 8:
+                        return MCH.Tactician;
+                    case >= MCH.Levels.Hypercharge when
+                        IsOffCooldown(MCH.Hypercharge)
+                        && canUseHypercharge
+                        && nothingBlockingHypercharge
+                        && (gauge.Heat >= 80
+                            || raidbuffs
+                            || TargetHasEffect(MCH.Debuffs.Wildfire)
+                            || hyperchargeReady is not null):
+                        return MCH.Hypercharge;
+                    case >= MCH.Levels.Ricochet when
+                        HasCharges(OriginalHook(MCH.Ricochet))
+                        && (overheated is not null
+                            || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining <= 40
+                            || raidbuffs):
+                    case >= MCH.Levels.GaussRound when
+                        HasCharges(OriginalHook(MCH.GaussRound))
+                        && (overheated is not null
+                            || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining <= 40
+                            || raidbuffs):
+                        return new[] { OriginalHook(MCH.Ricochet), OriginalHook(MCH.GaussRound) }
+                            .MinBy(action => GetCooldown(action).TotalCooldownRemaining);
                 }
+            }
 
-                var chainSawReady = level >= MCH.Levels.Chainsaw
-                                    && (GetCooldown(MCH.Chainsaw).IsAvailable || HasEffect(MCH.Buffs.ExcavatorReady));
+            if (overheated is null || HasEffect(MCH.Buffs.Reassemble))
+            {
 
                 var shouldUseReassemble =
                         (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
@@ -223,66 +208,69 @@ internal class MachinistCleanShot : CustomCombo
                         && GCDClipCheck(actionID)
                         && !HasEffect(MCH.Buffs.Reassemble);
 
-                if (overheated is null || HasEffect(MCH.Buffs.Reassemble))
+                if (drillReady)
                 {
-                    if (drillReady)
-                    {
-                        return shouldUseReassemble
-                            ? MCH.Reassemble
-                            : MCH.Drill;
-                    }
-
-                    if (IsOffCooldown(OriginalHook(MCH.HotShot)))
-                    {
-                        return shouldUseReassemble && level >= MCH.Levels.AirAnchor
-                            ? MCH.Reassemble
-                            : OriginalHook(MCH.HotShot);
-                    }
-
-                    if (gauge.Battery <= 80 && chainSawReady)
-                    {
-                        return shouldUseReassemble
-                            ? MCH.Reassemble
-                            : OriginalHook(MCH.Chainsaw);
-                    }
-
-                    if (level >= MCH.Levels.FullMetal
-                        && fullMetal is not null
-                        && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 3
-                            || gauge.IsRobotActive
-                            || raidbuffs))
-                    {
-                        return MCH.FullMetal;
-                    }
+                    return shouldUseReassemble
+                        ? MCH.Reassemble
+                        : MCH.Drill;
                 }
 
-                if (overheated is not null && level >= MCH.Levels.HeatBlast)
+                if (IsOffCooldown(OriginalHook(MCH.HotShot)))
                 {
-                    return OriginalHook(MCH.HeatBlast);
+                    return shouldUseReassemble && level >= MCH.Levels.AirAnchor
+                        ? MCH.Reassemble
+                        : OriginalHook(MCH.HotShot);
+                }
+
+                var chainSawReady = level >= MCH.Levels.Chainsaw
+                                    && (GetCooldown(MCH.Chainsaw).IsAvailable || HasEffect(MCH.Buffs.ExcavatorReady));
+
+                if (gauge.Battery <= 80 && chainSawReady)
+                {
+                    return shouldUseReassemble
+                        ? MCH.Reassemble
+                        : OriginalHook(MCH.Chainsaw);
+                }
+
+                if (level >= MCH.Levels.FullMetal
+                    && fullMetal is not null
+                    && (GetCooldown(MCH.BarrelStabilizer).CooldownElapsed >= 5
+                        || gauge.IsRobotActive
+                        || raidbuffs))
+                {
+                    return MCH.FullMetal;
                 }
             }
 
-
-            //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
-            if (lastComboMove == MCH.SlugShot && level >= MCH.Levels.CleanShot)
+            if (overheated is not null && level >= MCH.Levels.HeatBlast)
             {
-                if (level < MCH.Levels.Drill
-                    && GCDClipCheck(actionID)
-                    && IsOffCooldown(MCH.Reassemble))
-                {
-                    return MCH.Reassemble;
-                }
-
-                return OriginalHook(MCH.CleanShot);
+                return OriginalHook(MCH.HeatBlast);
             }
 
-            //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
-            if (lastComboMove == MCH.SplitShot && level >= MCH.Levels.SlugShot)
+            if (comboTime > 0)
             {
-                return OriginalHook(MCH.SlugShot);
+                //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+                if (lastComboMove is MCH.SplitShot && level >= MCH.Levels.SlugShot)
+                {
+                    return OriginalHook(MCH.SlugShot);
+                }
+
+                //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+                if (lastComboMove is MCH.SlugShot && level >= MCH.Levels.CleanShot)
+                {
+                    if (level < MCH.Levels.Drill
+                        && GCDClipCheck(actionID)
+                        && IsOffCooldown(MCH.Reassemble))
+                    {
+                        return MCH.Reassemble;
+                    }
+
+                    return OriginalHook(MCH.CleanShot);
+                }
             }
 
             return OriginalHook(MCH.SplitShot);
+
         }
 
         return actionID;

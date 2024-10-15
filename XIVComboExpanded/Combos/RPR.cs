@@ -116,24 +116,37 @@ internal class ReaperSlice : CustomCombo
             var gauge = GetJobGauge<RPRGauge>();
 
             var deathsDesign = FindTargetEffect(RPR.Debuffs.DeathsDesign);
+            var raidBuffs = HasRaidBuffs(2);
 
             var needSoulSlice =
                 level >= RPR.Levels.SoulSlice
                 && HasCharges(RPR.SoulSlice)
                 && (GetCooldown(RPR.SoulSlice).TotalCooldownRemaining <= 15
                     || HasEffect(RPR.Buffs.ArcaneCircle)
-                    || HasRaidBuffs(2)
+                    || raidBuffs
                 );
 
             var idealHost = FindEffect(RPR.Buffs.IdealHost);
 
+            var arcaneCD = GetCooldown(RPR.ArcaneCircle);
+
+
             if (GCDClipCheck(actionID) && deathsDesign is not null)
             {
+                var normalBloodStalkReady = gauge.Soul >= 50
+                            && (level < RPR.Levels.ArcaneCircle || IsOnCooldown(RPR.ArcaneCircle))
+                            && !HasEffect(RPR.Buffs.SoulReaver)
+                            && !HasEffect(RPR.Buffs.Executioner)
+                            && (gauge.Soul >= 80
+                                || needSoulSlice
+                                || HasEffect(RPR.Buffs.ArcaneCircle)
+                                || raidBuffs);
+
                 switch (level)
                 {
                     case >= RPR.Levels.ArcaneCircle when
                         IsOffCooldown(RPR.ArcaneCircle)
-                        && HasRaidBuffs(2):
+                        && raidBuffs:
                         return RPR.ArcaneCircle;
 
                     case >= RPR.Levels.Sacrificium when
@@ -142,27 +155,19 @@ internal class ReaperSlice : CustomCombo
 
                     case >= RPR.Levels.Gluttony when
                         IsOffCooldown(RPR.Gluttony)
-                        && (level < RPR.Levels.ArcaneCircle || IsOnCooldown(RPR.ArcaneCircle))
                         && !HasEffect(RPR.Buffs.SoulReaver)
                         && !HasEffect(RPR.Buffs.Executioner)
                         && gauge.Shroud <= 80
                         && gauge.EnshroudedTimeRemaining == 0
                         && (HasEffect(RPR.Buffs.ArcaneCircle)
-                            || HasRaidBuffs(2)
-                            || GetCooldown(RPR.ArcaneCircle).CooldownRemaining >= 3)
+                            || raidBuffs
+                            || arcaneCD.TotalCooldownRemaining >= 6)
                         && gauge.Soul >= 50:
                         return RPR.Gluttony;
 
                     case >= RPR.Levels.BloodStalk when
-                        (gauge.Soul >= 50
-                        && (level < RPR.Levels.ArcaneCircle || IsOnCooldown(RPR.ArcaneCircle))
-                        && !HasEffect(RPR.Buffs.SoulReaver)
-                        && !HasEffect(RPR.Buffs.Executioner)
-                        && (gauge.Soul >= 90
-                             || needSoulSlice
-                             || HasEffect(RPR.Buffs.ArcaneCircle)
-                             || HasRaidBuffs(2)))
-                        || gauge.VoidShroud >= 2:
+                    CanUseAction(OriginalHook(RPR.BloodStalk))
+                        && (normalBloodStalkReady || gauge.VoidShroud >= 2):
                         return OriginalHook(RPR.BloodStalk);
 
                     case >= RPR.Levels.Enshroud when
@@ -171,14 +176,14 @@ internal class ReaperSlice : CustomCombo
                         && (gauge.Shroud >= 80
                             || idealHost is not null
                             || HasEffect(RPR.Buffs.ArcaneCircle)
-                            || HasRaidBuffs(2))
+                            || raidBuffs)
                         && IsOffCooldown(RPR.Enshroud):
                         return RPR.Enshroud;
                 }
             }
 
             if (level >= RPR.Levels.Communio
-                && deathsDesign is not null
+                // && deathsDesign is not null
                 && gauge.LemureShroud == 1)
                 return RPR.Communio;
 
@@ -197,7 +202,7 @@ internal class ReaperSlice : CustomCombo
                     || (InCombat()
                         && HasEffect(RPR.Buffs.Soulsow)
                         && deathsDesign is not null
-                        && (HasRaidBuffs(2) || HasEffect(RPR.Buffs.ArcaneCircle)))))
+                        && (raidBuffs || HasEffect(RPR.Buffs.ArcaneCircle)))))
                 return OriginalHook(RPR.Soulsow);
 
             if (deathsDesign is null || deathsDesign.RemainingTime <= 15)
@@ -308,7 +313,7 @@ internal class ReaperScythe : CustomCombo
 
             if (deathsDesign is null || deathsDesign.RemainingTime <= 15)
             {
-                if (ShouldUseDots())
+                if (ShouldUseDots() && HasTarget() && GetTargetDistance() <= 5)
                     return RPR.WhorlOfDeath;
             }
 

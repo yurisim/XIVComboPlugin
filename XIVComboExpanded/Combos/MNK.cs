@@ -27,6 +27,7 @@ internal static class MNK
         Mantra = 65,
         MasterfulBlitz = 25764,
         RiddleOfWind = 25766,
+        RiddleOfEarth = 7394,
         EarthsReply = 36944,
         FiresReply = 36950,
         SteeledMeditation = 36940,
@@ -95,6 +96,11 @@ internal class MonkBootshine : CustomCombo
                        || level < MNK.Levels.RiddleOfFire;
             }
 
+            var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
+
+            var earthsRumination = FindEffect(MNK.Buffs.EarthsRumination);
+
+
             if (GCDClipCheck(actionID)
                 && InCombat()
                 && InMeleeRange()
@@ -132,13 +138,24 @@ internal class MonkBootshine : CustomCombo
                         && riddleMeDaddy(10):
                         return MNK.RiddleOfWind;
                     case >= MNK.Levels.RiddleOfEarth when
-                        LocalPlayerPercentage() <= 0.98
-                        && HasEffect(MNK.Buffs.EarthsRumination):
-                        return MNK.EarthsReply;
+                        IsOffCooldown(MNK.RiddleOfEarth)
+                        && reprisal is not null
+                        && reprisal.RemainingTime >= 7:
+                        return MNK.RiddleOfEarth;
                     case >= MNK.Levels.Mantra when
                         IsOffCooldown(MNK.Mantra)
                         && LocalPlayerPercentage() <= 0.50:
                         return MNK.Mantra;
+                    case >= MNK.Levels.RiddleOfEarth when
+                        earthsRumination is not null
+                        && (LocalPlayerPercentage() is not 1 || earthsRumination.RemainingTime <= 5):
+                        return MNK.EarthsReply;
+                    case >= ADV.Levels.Feint when
+                        IsOffCooldown(ADV.Feint)
+                        && !TargetHasEffectAny(ADV.Debuffs.Feint)
+                        && reprisal is not null
+                        && reprisal.RemainingTime >= 7:
+                        return ADV.Feint;
                 }
 
             if (GetTargetDistance() >= 4 || !InCombat() || !HasTarget())

@@ -127,6 +127,8 @@ internal class ViperFangs : CustomCombo
             var maxTribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
             var rattleCount = level >= VPR.Levels.EnhancedRattle ? 3 : 2;
 
+            var raidbuffs = HasRaidBuffs(1);
+
             if (GCDClipCheck(actionID))
                 switch (level)
                 {
@@ -142,6 +144,7 @@ internal class ViperFangs : CustomCombo
                         break;
                     case >= VPR.Levels.SerpentsIre when
                         IsOffCooldown(VPR.SerpentsIre)
+                        // && raidbuffs
                         && gauge.RattlingCoilStacks < rattleCount:
                         return VPR.SerpentsIre;
                 }
@@ -187,7 +190,7 @@ internal class ViperFangs : CustomCombo
             {
                 if ((gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (gauge.SerpentOffering >= 90
-                        || HasRaidBuffs(2)
+                        || raidbuffs
                         || readyToReawaken?.RemainingTime <= 10)
                     && gauge.AnguineTribute < 1)
                     return VPR.Reawaken;
@@ -214,7 +217,7 @@ internal class ViperFangs : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
                 && !canUseHunters
-                && (HasRaidBuffs(2) || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 7))
+                && (raidbuffs || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 12))
                 return VPR.Vicewinder;
 
             // Switch case here for optimization, rather than calling OriginalHook in a lot of places.

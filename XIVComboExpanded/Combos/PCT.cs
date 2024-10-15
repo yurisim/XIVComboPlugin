@@ -261,14 +261,14 @@ internal static class PCT
 
                 if (actionID is HolyWhite)
                 {
-                    if (gauge.Paint >= 2)
-                    {
-                        return HolyWhite;
-                    }
-
                     if (IsOffCooldown(ADV.Swiftcast) && quickSkill != default && GCDClipCheck(actionID))
                     {
                         return ADV.Swiftcast;
+                    }
+
+                    if (gauge.Paint >= 2)
+                    {
+                        return HolyWhite;
                     }
                 }
 

@@ -134,8 +134,7 @@ internal class BlackMageFire : CustomCombo
             }
 
             if (gauge.PolyglotStacks >= 1
-                && gauge.EnochianTimer <= 10000
-                && gauge.ElementTimeRemaining >= 8000
+                && ((gauge.EnochianTimer <= 10000 && gauge.ElementTimeRemaining >= 8000) || gauge.InUmbralIce)
                 && level >= BLM.Levels.Foul)
             {
                 return level >= BLM.Levels.Xenoglossy ? BLM.Xenoglossy : BLM.Foul;

@@ -718,7 +718,8 @@ internal abstract partial class CustomCombo
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.8s or not.</returns>
     protected static bool GCDClipCheck(uint actionID)
     {
-        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.18;
+        // proviously 0.18
+        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.2;
     }
 
     /// <summary>
