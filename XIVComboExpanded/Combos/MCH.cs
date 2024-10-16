@@ -171,7 +171,7 @@ internal class MachinistCleanShot : CustomCombo
                         return MCH.Reassemble;
                     case >= MCH.Levels.Tactician when
                         IsOffCooldown(MCH.Tactician)
-                        // && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 15)
+                        && !TargetHasEffect(MCH.Debuffs.Dismantle)
                         && reprisal is not null
                         && reprisal.RemainingTime >= 8:
                         return MCH.Tactician;

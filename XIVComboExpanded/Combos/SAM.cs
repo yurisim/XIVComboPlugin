@@ -119,6 +119,8 @@ internal class SamuraiYukikaze : CustomCombo
             var shifu = FindEffect(SAM.Buffs.Shifu);
             var hasBuffs = jinpu is not null && shifu is not null;
 
+            var ogiNamikiri = FindEffect(SAM.Buffs.OgiNamikiriReady);
+
             if (GCDClipCheck(actionID))
             {
 
@@ -131,6 +133,7 @@ internal class SamuraiYukikaze : CustomCombo
                         && (higanbanaTime
                             || hasRaidBuffs
                             || gaugeSen.Sum() == 3
+                            || ogiNamikiri is not null
                             || actionID is SAM.Fuga
                             ):
                         return SAM.Shoha;
@@ -193,7 +196,7 @@ internal class SamuraiYukikaze : CustomCombo
 
             if (level >= SAM.Levels.OgiNamikiri
                 && gauge.MeditationStacks is not 3
-                && FindEffect(SAM.Buffs.OgiNamikiriReady) is not null)
+                && ogiNamikiri is not null)
                 return SAM.OgiNamikiri;
 
             if (gauge.MeditationStacks != 3)

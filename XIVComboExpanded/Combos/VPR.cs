@@ -126,8 +126,16 @@ internal class ViperFangs : CustomCombo
             var gauge = GetJobGauge<VPRGauge>();
             var maxTribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
             var rattleCount = level >= VPR.Levels.EnhancedRattle ? 3 : 2;
-
             var raidbuffs = HasRaidBuffs(1);
+
+            var flanksbaneVenom = FindEffect(VPR.Buffs.FlanksbaneVenom);
+            var flankstungVenom = FindEffect(VPR.Buffs.FlankstungVenom);
+
+            var hindsbaneVenom = FindEffect(VPR.Buffs.HindsbaneVenom);
+            var hindstungVenom = FindEffect(VPR.Buffs.HindstungVenom);
+
+            var huntersVenom = FindEffect(VPR.Buffs.HuntersVenom);
+            var swiftskinsVenom = FindEffect(VPR.Buffs.SwiftskinsVenom);
 
             if (GCDClipCheck(actionID))
                 switch (level)
@@ -156,14 +164,14 @@ internal class ViperFangs : CustomCombo
             {
                 if ((canUseHunters
                      && (!HasEffect(VPR.Buffs.HuntersInstinct)
-                         || HasEffect(VPR.Buffs.FlanksbaneVenom)
-                         || HasEffect(VPR.Buffs.FlankstungVenom)))
+                         || flanksbaneVenom is not null
+                         || flankstungVenom is not null))
                     || !canUseSSC)
                     return VPR.HuntersCoil;
 
                 if (canUseSSC
-                    && (HasEffect(VPR.Buffs.HindsbaneVenom)
-                        || HasEffect(VPR.Buffs.HindstungVenom)
+                    && (hindsbaneVenom is not null
+                        || hindstungVenom is not null
                         || !canUseHunters))
                     return VPR.SwiftskinsCoil;
 
@@ -188,20 +196,22 @@ internal class ViperFangs : CustomCombo
                 && HasTarget()
                )
             {
+
+                var hasPostionalBuff = new[]
+                {
+                    hindsbaneVenom, hindstungVenom,
+                    flanksbaneVenom, flankstungVenom,
+                    huntersVenom, swiftskinsVenom
+                };
+
+                var noExpiringBuffs = hasPostionalBuff.Any(buff => buff is not null && buff.RemainingTime >= 15);
+
                 if ((gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (gauge.SerpentOffering >= 90
                         || raidbuffs
                         || readyToReawaken?.RemainingTime <= 10)
                     && gauge.AnguineTribute < 1)
                     return VPR.Reawaken;
-
-                var hasPostionalBuff = new[]
-                {
-                    FindEffect(VPR.Buffs.HindsbaneVenom), FindEffect(VPR.Buffs.HindstungVenom),
-                    FindEffect(VPR.Buffs.FlanksbaneVenom), FindEffect(VPR.Buffs.FlankstungVenom)
-                };
-
-                var noExpiringBuffs = hasPostionalBuff.Any(buff => buff is not null && buff.RemainingTime >= 10);
 
                 if (gauge.RattlingCoilStacks >= 1
                     && noExpiringBuffs
@@ -232,24 +242,24 @@ internal class ViperFangs : CustomCombo
                     if (level < VPR.Levels.SwiftskinsSting)
                         return VPR.HuntersSting;
 
-                    return HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom)
+                    return flanksbaneVenom is not null || flankstungVenom is not null
                         ? VPR.HuntersSting
                         : VPR.SwiftskinsSting;
 
                 // Combo step 3, use whichever buff we have, or default to start hindsbane unless otherwise specified
                 case VPR.HindstingStrike:
-                    if (HasEffect(VPR.Buffs.HindsbaneVenom))
+                    if (hindsbaneVenom is not null)
                         return VPR.HindsbaneFang;
-                    if (HasEffect(VPR.Buffs.HindstungVenom))
+                    if (hindstungVenom is not null)
                         return VPR.HindstingStrike;
 
                     return VPR.HindstingStrike;
 
                 // Combo step 3, flank. Use whichever buff we have, or default to Flanksbane if we're here and buff has fallen off.
                 case VPR.FlankstingStrike:
-                    if (HasEffect(VPR.Buffs.FlanksbaneVenom))
+                    if (flanksbaneVenom is not null)
                         return VPR.FlanksbaneFang;
-                    if (HasEffect(VPR.Buffs.FlankstungVenom))
+                    if (flankstungVenom is not null)
                         return VPR.FlankstingStrike;
 
                     return VPR.FlankstingStrike;

@@ -138,6 +138,8 @@ internal class NinjaAeolianEdge : CustomCombo
 
         var tenri = FindEffect(NIN.Buffs.TenriJindoReady);
 
+        var notInMelee = GetTargetDistance() >= 5;
+
         // Only execute this block if GCD is available and NOT if I'm doing a mudra or in TenChiJin
         if (
             GCDClipCheck(actionID)
@@ -147,7 +149,8 @@ internal class NinjaAeolianEdge : CustomCombo
         )
             switch (level)
             {
-                case >= NIN.Levels.TrickAttack when InMeleeRange()
+                case >= NIN.Levels.TrickAttack when
+                    InMeleeRange()
                     && HasEffect(NIN.Buffs.ShadowWalker)
                     && IsOffCooldown(OriginalHook(NIN.TrickAttack))
                     && GetCooldown(OriginalHook(NIN.Mug)).CooldownRemaining >= 10:
@@ -205,25 +208,21 @@ internal class NinjaAeolianEdge : CustomCombo
 
         var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);
 
-        var phantomTime = phantom?.RemainingTime ?? 0;
-
         if (
             level >= NIN.Levels.PhantomKamaitachi
-            && OriginalHook(NIN.Bunshin) != NIN.Bunshin
+            && phantom is not null
             && !HasEffect(NIN.Buffs.Mudra)
             && !HasEffect(NIN.Buffs.TenChiJin)
             && !HasEffect(NIN.Buffs.RaijuReady)
             && (
                 targetHasTrick
-                || phantomTime <= 10
-                || GetTargetDistance() >= 9
-                || trickAttackCD >= phantomTime
+                || phantom.RemainingTime <= 10
                 || raidBuffs
             )
         )
+        {
             return OriginalHook(NIN.Bunshin);
-
-        // Need to put before instant GCDs to not interrupot mudras.
+        }
 
         var startMudra =
             targetHasTrick
@@ -273,23 +272,24 @@ internal class NinjaAeolianEdge : CustomCombo
             return OriginalHook(NIN.Ninjutsu);
         }
 
-        if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
-            return NIN.FleetingRaiju;
-
-        if (GetTargetDistance() >= 9) return NIN.ThrowingDagger;
-
-        if (comboTime > 0)
+        if (InMeleeRange())
         {
-            if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
-                return level >= NIN.Levels.ArmorCrush
-                    && gauge.Kazematoi <= 3
-                    && !(targetHasTrick || raidBuffs) ? NIN.ArmorCrush : actionID;
+            if (level >= NIN.Levels.Raiju && HasEffect(NIN.Buffs.RaijuReady))
+                return NIN.FleetingRaiju;
 
-            if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
-                return NIN.GustSlash;
+            if (comboTime > 0)
+            {
+                if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
+                    return level >= NIN.Levels.ArmorCrush
+                        && gauge.Kazematoi <= 3
+                        && !(targetHasTrick || raidBuffs) ? NIN.ArmorCrush : actionID;
+
+                if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
+                    return NIN.GustSlash;
+            }
         }
 
-        return NIN.SpinningEdge;
+        return notInMelee ? NIN.ThrowingDagger : NIN.SpinningEdge;
     }
 }
 
