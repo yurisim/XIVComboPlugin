@@ -208,11 +208,12 @@ internal static class PCT
 
                 if (HasEffect(Buffs.RainbowReady)) return RainbowDrip;
 
-                if (
-                    HasEffect(Buffs.StarPrismReady)
-                    && (hasRaidBuffs || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15)
-                )
+                if (HasEffect(Buffs.StarPrismReady)
+                    && (hasRaidBuffs 
+                        || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15))
+                {
                     return StarPrism;
+                }
 
                 if (
                     level >= Levels.HammerStamp
@@ -285,7 +286,7 @@ internal static class PCT
                         return OriginalHook(filteredskills);
                 }
 
-                return HasEffect(Buffs.SubtractivePalette) ? OriginalHook(BlizzardCyan): OriginalHook(FireRed);
+                return HasEffect(Buffs.SubtractivePalette) ? OriginalHook(BlizzardCyan) : OriginalHook(FireRed);
 
             }
 
@@ -329,9 +330,7 @@ internal static class PCT
                             return ADV.LucidDreaming;
                     }
 
-                if (
-                    HasEffect(Buffs.StarPrismReady)
-                )
+                if (HasEffect(Buffs.StarPrismReady))
                     return StarPrism;
 
                 if (CanUseAction(OriginalHook(CometBlack))) return OriginalHook(CometBlack);
@@ -360,7 +359,7 @@ internal static class PCT
                     .FirstOrDefault();
 
                 if (HasEffect(Buffs.SubtractivePalette)) return OriginalHook(ExtraBlizzardCyan);
-
+                
                 if (skills != default) return OriginalHook(skills);
 
                 if (gauge.Paint >= 3) return HolyWhite;

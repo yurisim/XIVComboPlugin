@@ -331,7 +331,7 @@ internal class ScholarAdloCrit : CustomCombo
 
             var cd = GetCooldown(SCH.DeploymentTactics);
 
-            if (cd.IsCooldown && cd.CooldownElapsed <= 1) return OriginalHook(SCH.Ruin);
+            if (cd.IsOnCooldown && cd.CooldownElapsed <= 1) return OriginalHook(SCH.Ruin);
         }
 
         return actionID;

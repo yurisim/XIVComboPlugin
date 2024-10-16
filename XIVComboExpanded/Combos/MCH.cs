@@ -23,7 +23,7 @@ internal static class MCH
         Checkmate = 36980,
         // AoE
         SpreadShot = 2870,
-        Dismantle = 40102,
+        Dismantle = 2887,
         AutoCrossbow = 16497,
         Scattergun = 25786,
         // Rook
@@ -138,7 +138,9 @@ internal class MachinistCleanShot : CustomCombo
                 var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
 
                 // this line is causing weird delays to occur with the icon replacer off GCD
-                // var dismantleCD = GetCooldown(MCH.Dismantle);
+                var dismantleCD = GetCooldown(MCH.Dismantle);
+                var tacticianCD = GetCooldown(MCH.Tactician);
+                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 11;
 
                 switch (level)
                 {
@@ -171,10 +173,16 @@ internal class MachinistCleanShot : CustomCombo
                         return MCH.Reassemble;
                     case >= MCH.Levels.Tactician when
                         IsOffCooldown(MCH.Tactician)
-                        && !TargetHasEffect(MCH.Debuffs.Dismantle)
-                        && reprisal is not null
-                        && reprisal.RemainingTime >= 8:
+                        // && !TargetHasEffect(MCH.Debuffs.Dismantle)
+                        && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 10)
+                        && reprisalFound:
                         return MCH.Tactician;
+                    case >= MCH.Levels.Dismantle when
+                        IsOffCooldown(MCH.Dismantle)
+                        // && !HasEffect(MCH.Buffs.Tactician)
+                        && (tacticianCD.IsAvailable || tacticianCD.CooldownElapsed >= 15)
+                        && reprisalFound:
+                        return MCH.Dismantle;
                     case >= MCH.Levels.Hypercharge when
                         IsOffCooldown(MCH.Hypercharge)
                         && canUseHypercharge
@@ -199,7 +207,7 @@ internal class MachinistCleanShot : CustomCombo
                 }
             }
 
-            if (overheated is null || HasEffect(MCH.Buffs.Reassemble))
+            if ((overheated is null || HasEffect(MCH.Buffs.Reassemble)) && comboTime <= 25)
             {
 
                 var shouldUseReassemble =

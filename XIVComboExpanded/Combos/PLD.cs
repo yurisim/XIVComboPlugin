@@ -95,7 +95,7 @@ internal class PaladinST : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == PLD.FastBlade)
+        if (actionID is PLD.FastBlade or PLD.TotalEclipse)
         {
             var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
@@ -104,16 +104,22 @@ internal class PaladinST : CustomCombo
             var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
 
+            var gauge = GetJobGauge<PLDGauge>();
+
             var canUseAtonement = level >= PLD.Levels.Atonement && CanUseAction(OriginalHook(PLD.Atonement));
 
-            if (GCDClipCheck(actionID) && InMeleeRange() && HasTarget())
+            var inMeleeRange = InMeleeRange();
+
+            if (GCDClipCheck(actionID) && HasTarget())
             {
                 switch (level)
                 {
                     case >= PLD.Levels.FightOrFlight when
                         IsOffCooldown(PLD.FightOrFlight)
-                        && ((level < PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
+                        && ((level > PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
                             || (level >= PLD.Levels.RoyalAuthority && lastComboMove == PLD.RoyalAuthority)
+                            || level < PLD.Levels.Prominence && lastComboMove == PLD.TotalEclipse
+                            || level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence
                             || canUseAtonement
                             || hasRaidBuffs):
                         return PLD.FightOrFlight;
@@ -133,164 +139,79 @@ internal class PaladinST : CustomCombo
                         return PLD.CircleOfScorn;
                     case >= PLD.Levels.SpiritsWithin when
                         IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
+                        && inMeleeRange
                         && (flightOrFight is not null
                             || fightOrFlightCD >= 7.5
                             || hasRaidBuffs):
                         return OriginalHook(PLD.SpiritsWithin);
-                    case >= PLD.Levels.Intervene when
-                        HasCharges(PLD.Intervene)
-                        && InMeleeRange()
-                        && IsOnCooldown(PLD.FightOrFlight)
-                        && (GetCooldown(PLD.Intervene).TotalCooldownRemaining <= 3
-                            || flightOrFight is not null
-                            || hasRaidBuffs):
-                        return PLD.Intervene;
-
-                }
-            }
-
-            if (InMeleeRange())
-            {
-                if (level >= PLD.Levels.GoringBlade
-                    && goringBladeReady is not null
-                    && (goringBladeReady.RemainingTime <= 10
-                        || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
-                        || hasRaidBuffs)
-                    )
-                    return PLD.GoringBlade;
-            }
-
-            if (level >= PLD.Levels.HolySpirit
-                && (HasEffect(PLD.Buffs.Requiescat)
-                    || (HasEffect(PLD.Buffs.DivineMight) && (!InMeleeRange() || lastComboMove == PLD.RiotBlade))
-                    )
-                )
-            {
-                return PLD.HolySpirit;
-            }
-
-            if (InMeleeRange())
-            {
-                if (canUseAtonement)
-                {
-                    return OriginalHook(PLD.Atonement);
-                }
-            }
-
-
-            if (comboTime > 0)
-            {
-
-                if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
-                    return OriginalHook(PLD.RageOfHalone);
-
-                if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
-                    return PLD.RiotBlade;
-            }
-
-            return PLD.FastBlade;
-        }
-
-        return actionID;
-    }
-}
-
-internal class PaladinAOE : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PldAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == PLD.TotalEclipse)
-        {
-            var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
-            var hasRaidBuffs = HasRaidBuffs(2);
-
-            var gauge = GetJobGauge<PLDGauge>();
-
-            var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
-
-            if (GCDClipCheck(actionID) && InMeleeRange() && HasTarget())
-            {
-                switch (level)
-                {
-                    case >= PLD.Levels.FightOrFlight when
-                        IsOffCooldown(PLD.FightOrFlight)
-                        && ((level < PLD.Levels.Prominence && lastComboMove == PLD.TotalEclipse)
-                            || (level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence)
-                            || HasRaidBuffs(2)):
-                        return PLD.FightOrFlight;
-                    case >= PLD.Levels.CircleOfScorn when
-                        IsOffCooldown(PLD.CircleOfScorn)
-                        && HasTarget()
-                        && GetTargetDistance() <= 5
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 7.5
-                            || hasRaidBuffs):
-                        return PLD.CircleOfScorn;
-                    case >= PLD.Levels.SpiritsWithin when
-                        IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 7.5
-                            || hasRaidBuffs):
-                        return OriginalHook(PLD.SpiritsWithin);
-                    case >= PLD.Levels.Requiescat when
-                        IsOffCooldown(OriginalHook(PLD.Requiescat))
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 15
-                            || hasRaidBuffs):
-                        return OriginalHook(PLD.Requiescat);
                     case >= PLD.Levels.Sheltron when
                         IsOffCooldown(PLD.Sheltron)
+                        && actionID is PLD.TotalEclipse
                         && gauge.OathGauge == 100:
                         return PLD.Sheltron;
                 }
             }
 
-            // if (level >= PLD.Levels.GoringBlade
-            //     && goringBladeReady is not null
-            //     && (goringBladeReady.RemainingTime <= 10
-            //         || flightOrFight?.RemainingTime <= 10
-            //         || HasRaidBuffs(2))
-            //     )
-            //     return PLD.GoringBlade;
 
-            if (level >= PLD.Levels.HolyCircle
-                && (HasEffect(PLD.Buffs.Requiescat) || HasEffect(PLD.Buffs.DivineMight))
-                && GetTargetDistance() <= 5
+            if (level >= PLD.Levels.GoringBlade
+                && goringBladeReady is not null
+                && inMeleeRange
+                && actionID is PLD.FastBlade
+                && (goringBladeReady.RemainingTime <= 10
+                    || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
+                    || hasRaidBuffs)
+                )
+                return PLD.GoringBlade;
+
+            if (level >= PLD.Levels.HolySpirit
+                && (HasEffect(PLD.Buffs.Requiescat)
+                    || (HasEffect(PLD.Buffs.DivineMight) && (!inMeleeRange || lastComboMove == PLD.RiotBlade || lastComboMove == PLD.Prominence))
+                    )
                 )
             {
-                return PLD.HolyCircle;
+                if (level >= PLD.Levels.Confiteor && HasEffect(PLD.Buffs.ConfiteorReady))
+                {
+                    return OriginalHook(PLD.Confiteor);
+                }
+
+                if (level >= PLD.Levels.HolyCircle && actionID is PLD.TotalEclipse)
+                {
+                    return PLD.HolyCircle;
+                }
+
+                return PLD.HolySpirit;
             }
+
+
+            if (canUseAtonement && inMeleeRange && actionID is PLD.FastBlade)
+            {
+                return OriginalHook(PLD.Atonement);
+            }
+
 
             if (comboTime > 0)
-                if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
-                    return PLD.Prominence;
-
-            return PLD.TotalEclipse;
-        }
-
-        return actionID;
-    }
-}
-
-internal class PaladinHolySpiritHolyCircle : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.PldAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == PLD.HolySpirit || actionID == PLD.HolyCircle)
-            if (level >= PLD.Levels.Confiteor)
             {
-                var original = OriginalHook(PLD.Confiteor);
-                if (original != PLD.Confiteor)
-                    return original;
+                if (actionID is PLD.FastBlade && inMeleeRange)
+                {
+                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
+                        return OriginalHook(PLD.RageOfHalone);
 
-                if (HasEffect(PLD.Buffs.ConfiteorReady))
-                    return PLD.Confiteor;
+                    if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
+                        return PLD.RiotBlade;
+
+                    return PLD.FastBlade;
+                }
+
+                if (actionID is PLD.TotalEclipse)
+                {
+                    if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
+                        return PLD.Prominence;
+
+                    return PLD.TotalEclipse;
+                }
             }
+
+        }
 
         return actionID;
     }

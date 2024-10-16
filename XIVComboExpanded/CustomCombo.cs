@@ -274,16 +274,16 @@ internal abstract partial class CustomCombo
         };
 
         if (TargetIsLow())
-                return true;
+            return true;
 
-        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori};
+        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori };
 
         var raidCDsFound = 0;
 
         foreach (var buff in raidBuffs)
             if (HasEffectAny(buff))
             {
-                if (buff is ADV.Buffs.Medicated) 
+                if (buff is ADV.Buffs.Medicated)
                     raidCDsFound++;
 
                 raidCDsFound++;
@@ -589,7 +589,7 @@ internal abstract partial class CustomCombo
 
     protected static bool IsOnCooldown(uint actionID)
     {
-        return GetCooldown(actionID).IsCooldown;
+        return GetCooldown(actionID).IsOnCooldown;
     }
 
     /// <summary>
@@ -603,7 +603,7 @@ internal abstract partial class CustomCombo
 
     protected static bool IsOffCooldown(uint actionID)
     {
-        return !GetCooldown(actionID).IsCooldown;
+        return !GetCooldown(actionID).IsOnCooldown;
     }
 
     /// <summary>
@@ -632,7 +632,7 @@ internal abstract partial class CustomCombo
     /// <returns>True or false.</returns>
     protected static bool IsRecharging(uint actionID)
     {
-        return GetCooldown(actionID).IsCooldown;
+        return GetCooldown(actionID).IsOnCooldown;
     }
 
     protected static bool HasNoCharges(uint actionID)
@@ -719,7 +719,7 @@ internal abstract partial class CustomCombo
     protected static bool GCDClipCheck(uint actionID)
     {
         // proviously 0.18
-        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.25;
+        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.3;
     }
 
     /// <summary>

@@ -110,8 +110,7 @@ internal class AstrologianMalefic : CustomCombo
                         gauge.DrawnCrownCard == CardType.LADY
                         && (localPlayer <= 0.95
                             || needToUseCards
-                            || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)
-                            ):
+                            || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)):
                         return OriginalHook(AST.MinorArcanaDT);
                     case >= AST.Levels.SunSign when
                         CanUseAction(AST.SunSign):

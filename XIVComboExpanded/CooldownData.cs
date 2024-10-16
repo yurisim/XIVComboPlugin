@@ -42,7 +42,7 @@ internal struct CooldownData
     public float TotalBaseCooldown => this.BaseCooldown * this.MaxCharges;
 
     public float CooldownRemaining =>
-        this.IsCooldown ? this.cooldownTotal - this.CooldownElapsed : 0;
+        this.IsOnCooldown ? this.cooldownTotal - this.CooldownElapsed : 0;
 
     /// <summary>
     ///     Gets the maximum number of charges for an action at the current level.
@@ -59,13 +59,13 @@ internal struct CooldownData
     ///     Gets the currently remaining (ie. usable) number of charges for an action.
     /// </summary>
     public ushort RemainingCharges =>
-        !this.IsCooldown ? this.MaxCharges : (ushort)(this.TotalCooldownElapsed / this.BaseCooldown);
+        !this.IsOnCooldown ? this.MaxCharges : (ushort)(this.TotalCooldownElapsed / this.BaseCooldown);
 
     /// <summary>
     ///     Gets a value indicating whether this action is off cooldown, or for charge-based actions, if the action
     ///     has at least one usable charge available.
     /// </summary>
-    public bool IsAvailable => !this.IsCooldown || this.RemainingCharges > 0;
+    public bool IsAvailable => !this.IsOnCooldown || this.RemainingCharges > 0;
 
     /// <summary>
     ///     Gets a value indicating whether the action is on cooldown, or for charge-based actions, if any charges
@@ -73,12 +73,12 @@ internal struct CooldownData
     ///     charged-based action can be both currently recovering a charge and also available for use.
     /// </summary>
     [field: FieldOffset(0x0)]
-    public bool IsCooldown { get; }
+    public bool IsOnCooldown { get; }
 
     /// <summary>
     ///     Gets the cooldown time remaining until all charges are replenished.
     /// </summary>
-    public float TotalCooldownRemaining => !this.IsCooldown ? 0 : this.TotalBaseCooldown - this.cooldownElapsed;
+    public float TotalCooldownRemaining => !this.IsOnCooldown ? 0 : this.TotalBaseCooldown - this.cooldownElapsed;
 
     /// <summary>
     ///     Gets the overall elapsed cooldown.  The value will range from 0, immediately after all charges are used,
@@ -89,7 +89,7 @@ internal struct CooldownData
     ///     (so it has 1 charge available, and 15s remaining until another charge is available), this field would
     ///     return 25s (20 + 5).  If another charge were used at that exact moment, it would then return 5.
     /// </summary>
-    public float TotalCooldownElapsed => !this.IsCooldown ? this.TotalBaseCooldown : this.cooldownElapsed;
+    public float TotalCooldownElapsed => !this.IsOnCooldown ? this.TotalBaseCooldown : this.cooldownElapsed;
 
     /// <summary>
     ///     Gets the elapsed time on the recharge of only the currently recharging charge.  For actions that are not
@@ -106,7 +106,7 @@ internal struct CooldownData
     {
         get
         {
-            if (!this.IsCooldown)
+            if (!this.IsOnCooldown)
                 return 0;
 
             var (cur, _) = Service.ComboCache.GetMaxCharges(this.ActionID);
