@@ -157,8 +157,7 @@ internal class PaladinST : CustomCombo
                 && goringBladeReady is not null
                 && inMeleeRange
                 && actionID is PLD.FastBlade
-                && (goringBladeReady.RemainingTime <= 10
-                    || GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 10
+                && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5
                     || hasRaidBuffs)
                 )
                 return PLD.GoringBlade;
