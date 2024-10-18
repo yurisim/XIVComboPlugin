@@ -62,8 +62,7 @@ internal static class BLM
 
     public static class Levels
     {
-        public const byte
-            Thunder = 6,
+        public const byte Thunder = 6,
             Blizzard2 = 12,
             Fire2 = 18,
             Thunder2 = 26,
@@ -111,8 +110,7 @@ internal class BlackMageFire : CustomCombo
 
             var playerMP = LocalPlayer?.CurrentMp;
 
-            if (InCombat() && TargetIsEnemy()
-            )
+            if (InCombat() && TargetIsEnemy())
             {
                 var debuffs = new[]
                 {
@@ -121,44 +119,57 @@ internal class BlackMageFire : CustomCombo
                     FindTargetEffect(BLM.Debuffs.HighThunder),
                     FindTargetEffect(BLM.Debuffs.Thunder2),
                     FindTargetEffect(BLM.Debuffs.Thunder4),
-                    FindTargetEffect(BLM.Debuffs.HighThunder2)
+                    FindTargetEffect(BLM.Debuffs.HighThunder2),
                 };
 
-                if (level >= BLM.Levels.Thunder
+                if (
+                    level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && gauge.ElementTimeRemaining >= 6000
-                    && (debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
-                        || debuffs.All(effect => effect is null))
+                    && (
+                        debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
+                        || debuffs.All(effect => effect is null)
+                    )
                 )
                     return OriginalHook(BLM.Thunder);
             }
 
-            if (gauge.PolyglotStacks >= 1
-                && ((gauge.EnochianTimer <= 10000 && gauge.ElementTimeRemaining >= 8000) || gauge.InUmbralIce)
-                && level >= BLM.Levels.Foul)
+            if (
+                gauge.PolyglotStacks >= 1
+                && (
+                    (gauge.EnochianTimer <= 10000 && gauge.ElementTimeRemaining >= 8000)
+                    || gauge.InUmbralIce
+                )
+                && level >= BLM.Levels.Foul
+            )
             {
                 return level >= BLM.Levels.Xenoglossy ? BLM.Xenoglossy : BLM.Foul;
             }
 
             if (gauge.InAstralFire)
             {
-                if (IsOffCooldown(BLM.Manafont) && fireCost > playerMP && level >= BLM.Levels.Manafont)
+                if (
+                    IsOffCooldown(BLM.Manafont)
+                    && fireCost > playerMP
+                    && level >= BLM.Levels.Manafont
+                )
                     return BLM.Manafont;
 
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
 
-                if (level >= BLM.Levels.Fire3 
-                    && firestarter is not null 
-                    && (firestarter.RemainingTime <= 5 || 11 > playerMP))
+                if (
+                    level >= BLM.Levels.Fire3
+                    && firestarter is not null
+                    && (firestarter.RemainingTime <= 5 || 11 > playerMP)
+                )
                     return BLM.Fire3;
 
-                if (fireCost < playerMP 
-                    && gauge.ElementTimeRemaining < 6000)
-                    return level >= BLM.Levels.Fire3 && firestarter is not null ? BLM.Fire3 : BLM.Fire;
+                if (fireCost < playerMP && gauge.ElementTimeRemaining < 6000)
+                    return level >= BLM.Levels.Fire3 && firestarter is not null
+                        ? BLM.Fire3
+                        : BLM.Fire;
 
-                if (level >= BLM.Levels.Despair
-                    && fireCost > playerMP
-                    && playerMP > 0)
+                if (level >= BLM.Levels.Despair && fireCost > playerMP && playerMP > 0)
                     return BLM.Despair;
 
                 if (fireCost < playerMP)
@@ -171,12 +182,13 @@ internal class BlackMageFire : CustomCombo
 
             if (gauge.InUmbralIce)
             {
-                if (level >= BLM.Levels.Fire3
-                    && (gauge.UmbralHearts >= 3 || gauge.ElementTimeRemaining <= 5000))
+                if (
+                    level >= BLM.Levels.Fire3
+                    && (gauge.UmbralHearts >= 3 || gauge.ElementTimeRemaining <= 5000)
+                )
                     return BLM.Fire3;
 
-                if (level < BLM.Levels.Blizzard4
-                    && LocalPlayer?.CurrentMp >= 9500)
+                if (level < BLM.Levels.Blizzard4 && LocalPlayer?.CurrentMp >= 9500)
                     return BLM.Fire3;
 
                 return level >= BLM.Levels.Blizzard4 ? BLM.Blizzard4 : BLM.Blizzard;
@@ -211,14 +223,17 @@ internal class BlackFireBlizzard2 : CustomCombo
                     FindTargetEffect(BLM.Debuffs.HighThunder2),
                     FindTargetEffect(BLM.Debuffs.Thunder),
                     FindTargetEffect(BLM.Debuffs.Thunder3),
-                    FindTargetEffect(BLM.Debuffs.HighThunder)
+                    FindTargetEffect(BLM.Debuffs.HighThunder),
                 };
 
-                if (level >= BLM.Levels.Thunder2
+                if (
+                    level >= BLM.Levels.Thunder2
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && gauge.ElementTimeRemaining >= 5000
-                    && (debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
-                        || debuffs.All(effect => effect is null))
+                    && (
+                        debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
+                        || debuffs.All(effect => effect is null)
+                    )
                 )
                     return OriginalHook(BLM.Thunder2);
             }
@@ -258,7 +273,8 @@ internal class BlackFireBlizzard2 : CustomCombo
                         if (playerMP > 0)
                             return BLM.Flare;
 
-                        if (IsOffCooldown(BLM.Manafont)) return BLM.Manafont;
+                        if (IsOffCooldown(BLM.Manafont))
+                            return BLM.Manafont;
                     }
                 }
 
@@ -272,9 +288,7 @@ internal class BlackFireBlizzard2 : CustomCombo
                 //     return BLM.Fire;
                 // }
 
-                return level > BLM.Levels.Blizzard2
-                        ? BLM.Blizzard2
-                        : BLM.Blizzard;
+                return level > BLM.Levels.Blizzard2 ? BLM.Blizzard2 : BLM.Blizzard;
             }
 
             if (gauge.InUmbralIce)
@@ -289,10 +303,7 @@ internal class BlackFireBlizzard2 : CustomCombo
                 )
                     return BLM.Fire2;
 
-                if (
-                    level >= BLM.Levels.Freeze
-                    && (gauge.UmbralHearts == 0)
-                )
+                if (level >= BLM.Levels.Freeze && (gauge.UmbralHearts == 0))
                     return BLM.Freeze;
 
                 return BLM.Blizzard2;
@@ -300,8 +311,12 @@ internal class BlackFireBlizzard2 : CustomCombo
 
             if (!gauge.InAstralFire && !gauge.InAstralFire)
                 return LocalPlayer?.CurrentMp >= 9000
-                    ? level >= BLM.Levels.Fire2 ? BLM.Fire2 : BLM.Fire
-                    : level >= BLM.Levels.Blizzard2 ? BLM.Blizzard2 : BLM.Blizzard;
+                    ? level >= BLM.Levels.Fire2
+                        ? BLM.Fire2
+                        : BLM.Fire
+                    : level >= BLM.Levels.Blizzard2
+                        ? BLM.Blizzard2
+                        : BLM.Blizzard;
         }
 
         return actionID;
@@ -326,11 +341,9 @@ internal class BlackTranspose : CustomCombo
     }
 }
 
-
 internal class BlackLeyLines : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlmAny;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -486,7 +499,10 @@ internal class BlackFire2 : CustomCombo
                 // At level 50, Fire II is used until under 3800 mana (the combined cost of Fire II and Flare),
                 // and then Flare is cast once.
                 // At level 58, Fire II is used until 1 Umbral Heart is remaining, and then Flare is cast twice.
-                if (LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare || gauge.UmbralHearts == 1)
+                if (
+                    LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare
+                    || gauge.UmbralHearts == 1
+                )
                     return BLM.Flare;
             }
         }

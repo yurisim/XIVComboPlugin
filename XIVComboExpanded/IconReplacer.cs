@@ -33,12 +33,14 @@ internal sealed class IconReplacer : IDisposable
             .Cast<CustomCombo>()
             .ToList();
 
-        this.getIconHook =
-            gameInteropProvider.HookFromAddress<GetIconDelegate>(ActionManager.Addresses.GetAdjustedActionId.Value,
-                this.GetIconDetour);
-        this.isIconReplaceableHook =
-            gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(Service.Address.IsActionIdReplaceable,
-                this.IsIconReplaceableDetour);
+        this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(
+            ActionManager.Addresses.GetAdjustedActionId.Value,
+            this.GetIconDetour
+        );
+        this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(
+            Service.Address.IsActionIdReplaceable,
+            this.IsIconReplaceableDetour
+        );
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
@@ -69,11 +71,11 @@ internal sealed class IconReplacer : IDisposable
     internal unsafe bool CanUseAction(uint actionID, uint targetID = 0xE000_0000)
     {
         return this.clientStructActionManager->GetActionStatus(
-            ActionType.Action,
-            actionID,
-            targetID,
-            false
-        ) == 0;
+                ActionType.Action,
+                actionID,
+                targetID,
+                false
+            ) == 0;
     }
 
     /// <summary>

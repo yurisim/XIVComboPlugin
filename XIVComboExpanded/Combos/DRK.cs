@@ -35,8 +35,7 @@ internal static class DRK
 
     public static class Buffs
     {
-        public const ushort
-            BloodWeapon = 742,
+        public const ushort BloodWeapon = 742,
             Grit = 743,
             Darkside = 751,
             Delirium = 1972,
@@ -51,8 +50,7 @@ internal static class DRK
 
     public static class Levels
     {
-        public const byte
-            SyphonStrike = 2,
+        public const byte SyphonStrike = 2,
             Grit = 10,
             Souleater = 26,
             FloodOfDarkness = 30,
@@ -90,11 +88,11 @@ internal class DarkSouleater : CustomCombo
             {
                 // Do a check for flood of darkness first since it is a lower level
                 if (
-                        (
-                            level >= DRK.Levels.FloodOfDarkness
-                            && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
-                        ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs(2))
-                    )
+                    (
+                        level >= DRK.Levels.FloodOfDarkness
+                        && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                    ) || (LocalPlayer?.CurrentMp >= 6000 && HasRaidBuffs(2))
+                )
                     // If you are high enough level for edge fo darkness then do that instead
                     return level >= DRK.Levels.EdgeOfDarkness
                         ? OriginalHook(DRK.EdgeOfDarkness)
@@ -127,7 +125,8 @@ internal class DarkSouleater : CustomCombo
 
             if (comboTime > 0)
             {
-                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater) return DRK.Souleater;
+                if (lastComboMove == DRK.SyphonStrike && level >= DRK.Levels.Souleater)
+                    return DRK.Souleater;
 
                 if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
                     return DRK.SyphonStrike;
@@ -152,10 +151,10 @@ internal class DarkStalwartSoul : CustomCombo
 
             // Do a check for flood of darkness girst since it is a lower level
             if (
-                    level >= DRK.Levels.FloodOfDarkness
-                    && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
-                    && GCDClipCheck(actionID)
-                )
+                level >= DRK.Levels.FloodOfDarkness
+                && (LocalPlayer?.CurrentMp >= 9000 || gauge.HasDarkArts)
+                && GCDClipCheck(actionID)
+            )
                 // If you are high enough level for edge fo darkness then do that instead
                 return OriginalHook(DRK.FloodOfDarkness);
 
@@ -175,7 +174,8 @@ internal class DarkStalwartSoul : CustomCombo
             )
                 return DRK.Delirium;
 
-            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain)) return DRK.AbyssalDrain;
+            if (level >= DRK.Levels.AbyssalDrain && IsOffCooldown(DRK.AbyssalDrain))
+                return DRK.AbyssalDrain;
 
             if (
                 level >= DRK.Levels.Quietus

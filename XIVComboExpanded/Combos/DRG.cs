@@ -105,8 +105,7 @@ internal static class DRG
             ImprovedLifeSurge = 88,
             WyrmwindThrust = 90,
             RiseOfTheDragon = 92,
-            Starcross = 100
-            ;
+            Starcross = 100;
     }
 }
 
@@ -123,91 +122,107 @@ internal class DragoonSingleTarget : CustomCombo
             var timeOfRotation = 10.0;
             if (level < DRG.Levels.FangAndClaw)
                 timeOfRotation = 10;
-            else if (level < DRG.Levels.LanceMastery) timeOfRotation = 9;
+            else if (level < DRG.Levels.LanceMastery)
+                timeOfRotation = 9;
 
             var disembowelDuration = FindEffect(DRG.Buffs.PowerSurge)?.RemainingTime;
 
-            if (GCDClipCheck(actionID)
-                && InCombat()
-                && HasTarget())
+            if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 static bool doWithLance(int? cooldownAbility)
                 {
-                    return (cooldownAbility is not null &&
-                            GetCooldown(DRG.LanceCharge).CooldownRemaining >= cooldownAbility * 0.1)
-                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs(2);
+                    return (
+                            cooldownAbility is not null
+                            && GetCooldown(DRG.LanceCharge).CooldownRemaining
+                                >= cooldownAbility * 0.1
+                        )
+                        || HasEffect(DRG.Buffs.LanceCharge)
+                        || HasRaidBuffs(2);
                 }
 
                 switch (level)
                 {
-                    case >= DRG.Levels.BattleLitany when
-                        IsOffCooldown(DRG.BattleLitany)
-                        && HasRaidBuffs(2):
+                    case >= DRG.Levels.BattleLitany
+                        when IsOffCooldown(DRG.BattleLitany) && HasRaidBuffs(2):
                         return DRG.BattleLitany;
 
-                    case >= DRG.Levels.LanceCharge when
-                        InMeleeRange()
-                        && IsOffCooldown(DRG.LanceCharge)
-                        && (HasEffect(DRG.Buffs.BattleLitany)
-                            || HasRaidBuffs(2)
-                            || level < DRG.Levels.BattleLitany
-                            || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15):
+                    case >= DRG.Levels.LanceCharge
+                        when InMeleeRange()
+                            && IsOffCooldown(DRG.LanceCharge)
+                            && (
+                                HasEffect(DRG.Buffs.BattleLitany)
+                                || HasRaidBuffs(2)
+                                || level < DRG.Levels.BattleLitany
+                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15
+                            ):
                         return DRG.LanceCharge;
 
-                    case >= DRG.Levels.Geirskogul when
-                        CanUseAction(OriginalHook(DRG.Geirskogul))
-                        && IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                        && doWithLance(60):
+                    case >= DRG.Levels.Geirskogul
+                        when CanUseAction(OriginalHook(DRG.Geirskogul))
+                            && IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                            && doWithLance(60):
                         return OriginalHook(DRG.Geirskogul);
 
-                    case >= DRG.Levels.WyrmwindThrust when
-                        gauge.FirstmindsFocusCount == 2
-                        && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
+                    case >= DRG.Levels.WyrmwindThrust
+                        when gauge.FirstmindsFocusCount == 2
+                            && (
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)
+                            ):
                         return DRG.WyrmwindThrust;
-
                 }
 
                 if (disembowelDuration is not null)
                     switch (level)
                     {
-                        case >= DRG.Levels.LifeSurge when
-                            (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
-                            && (level < DRG.Levels.ImprovedLifeSurge
-                                || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 20
-                                || HasRaidBuffs(2)
-                                || HasEffect(DRG.Buffs.LanceCharge))
-                            && !HasEffect(DRG.Buffs.LifeSurge)
-                            && ((lastComboMove == OriginalHook(DRG.VorpalThrust) &&
-                                 level >= DRG.Levels.FullThrust)
-                                || !(IsOriginal(DRG.WheelingThrust) || IsOriginal(DRG.FangAndClaw))
-                                || (lastComboMove == DRG.TrueThrust && level < DRG.Levels.FullThrust)
-                            ):
+                        case >= DRG.Levels.LifeSurge
+                            when (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
+                                && (
+                                    level < DRG.Levels.ImprovedLifeSurge
+                                    || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 20
+                                    || HasRaidBuffs(2)
+                                    || HasEffect(DRG.Buffs.LanceCharge)
+                                )
+                                && !HasEffect(DRG.Buffs.LifeSurge)
+                                && (
+                                    (
+                                        lastComboMove == OriginalHook(DRG.VorpalThrust)
+                                        && level >= DRG.Levels.FullThrust
+                                    )
+                                    || !(
+                                        IsOriginal(DRG.WheelingThrust)
+                                        || IsOriginal(DRG.FangAndClaw)
+                                    )
+                                    || (
+                                        lastComboMove == DRG.TrueThrust
+                                        && level < DRG.Levels.FullThrust
+                                    )
+                                ):
                             return DRG.LifeSurge;
-                        case >= DRG.Levels.DragonfireDive when
-                            IsOffCooldown(DRG.DragonfireDive)
-                            && doWithLance(120):
+                        case >= DRG.Levels.DragonfireDive
+                            when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
                             return DRG.DragonfireDive;
 
-                        case >= DRG.Levels.Stardiver when gauge.IsLOTDActive
-                                                          && IsOffCooldown(DRG.Stardiver)
-                                                          && doWithLance(gauge.LOTDTimer / 1000 - 5):
+                        case >= DRG.Levels.Stardiver
+                            when gauge.IsLOTDActive
+                                && IsOffCooldown(DRG.Stardiver)
+                                && doWithLance(gauge.LOTDTimer / 1000 - 5):
                             return DRG.Stardiver;
 
                         case >= DRG.Levels.Starcross when CanUseAction(DRG.Starcross):
                             return DRG.Starcross;
 
-                        case >= DRG.Levels.Jump when
-                            IsOffCooldown(OriginalHook(DRG.Jump))
-                            && CanUseAction(OriginalHook(DRG.Jump))
-                            && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
+                        case >= DRG.Levels.Jump
+                            when IsOffCooldown(OriginalHook(DRG.Jump))
+                                && CanUseAction(OriginalHook(DRG.Jump))
+                                && (
+                                    doWithLance(30)
+                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8
+                                ):
                             return OriginalHook(DRG.Jump);
 
-                        case >= DRG.Levels.RiseOfTheDragon when
-                            CanUseAction(DRG.RiseOfTheDragon):
+                        case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
                             return DRG.RiseOfTheDragon;
                     }
-
-
             }
 
             if (comboTime > 0)
@@ -218,18 +233,16 @@ internal class DragoonSingleTarget : CustomCombo
                         disembowelDuration is null || disembowelDuration <= timeOfRotation - 2.5;
 
                     var whichDot =
-                        level >= DRG.Levels.ChaoticSpring
-                            ? DRG.ChaoticSpring
-                            : level >= DRG.Levels.ChaosThrust
-                                ? DRG.ChaosThrust
-                                : 0;
+                        level >= DRG.Levels.ChaoticSpring ? DRG.ChaoticSpring
+                        : level >= DRG.Levels.ChaosThrust ? DRG.ChaosThrust
+                        : 0;
 
                     var whichDotEffect =
                         level >= DRG.Levels.ChaoticSpring
                             ? FindTargetEffect(DRG.Debuffs.ChaoticSpring)
-                            : level >= DRG.Levels.ChaosThrust
-                                ? FindTargetEffect(DRG.Debuffs.ChaosThrust)
-                                : null;
+                        : level >= DRG.Levels.ChaosThrust
+                            ? FindTargetEffect(DRG.Debuffs.ChaosThrust)
+                        : null;
 
                     var refreshDot =
                         whichDot != 0
@@ -251,18 +264,29 @@ internal class DragoonSingleTarget : CustomCombo
                 }
 
                 // AM I doing Disembowel or Vorpal Thrust after True Thrust?
-                if (lastComboMove == OriginalHook(DRG.Disembowel) && level >= DRG.Levels.ChaosThrust)
+                if (
+                    lastComboMove == OriginalHook(DRG.Disembowel)
+                    && level >= DRG.Levels.ChaosThrust
+                )
                     return OriginalHook(DRG.ChaosThrust);
 
-                if (lastComboMove == OriginalHook(DRG.VorpalThrust) && level >= DRG.Levels.FullThrust)
+                if (
+                    lastComboMove == OriginalHook(DRG.VorpalThrust)
+                    && level >= DRG.Levels.FullThrust
+                )
                     return OriginalHook(DRG.FullThrust);
 
-                if (level >= DRG.Levels.WheelingThrust && lastComboMove == OriginalHook(DRG.ChaosThrust))
+                if (
+                    level >= DRG.Levels.WheelingThrust
+                    && lastComboMove == OriginalHook(DRG.ChaosThrust)
+                )
                     return DRG.WheelingThrust;
 
-                if (level >= DRG.Levels.FangAndClaw && lastComboMove == OriginalHook(DRG.FullThrust))
+                if (
+                    level >= DRG.Levels.FangAndClaw
+                    && lastComboMove == OriginalHook(DRG.FullThrust)
+                )
                     return DRG.FangAndClaw;
-
 
                 if (level >= DRG.Levels.Drakesbane)
                 {
@@ -292,82 +316,96 @@ internal class DragoonCoerthanTorment : CustomCombo
 
             var disembowelDuration = FindEffect(DRG.Buffs.PowerSurge)?.RemainingTime;
 
-            if (GCDClipCheck(actionID)
-                && InCombat()
-                && HasTarget())
+            if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 static bool doWithLance(int? cooldownAbility)
                 {
-                    return (cooldownAbility is not null &&
-                            GetCooldown(DRG.LanceCharge).CooldownRemaining >= cooldownAbility * 0.1)
-                           || HasEffect(DRG.Buffs.LanceCharge) || HasRaidBuffs(2);
+                    return (
+                            cooldownAbility is not null
+                            && GetCooldown(DRG.LanceCharge).CooldownRemaining
+                                >= cooldownAbility * 0.1
+                        )
+                        || HasEffect(DRG.Buffs.LanceCharge)
+                        || HasRaidBuffs(2);
                 }
 
                 switch (level)
                 {
-                    case >= DRG.Levels.BattleLitany when
-                        IsOffCooldown(DRG.BattleLitany)
-                        && HasRaidBuffs(2):
+                    case >= DRG.Levels.BattleLitany
+                        when IsOffCooldown(DRG.BattleLitany) && HasRaidBuffs(2):
                         return DRG.BattleLitany;
 
-                    case >= DRG.Levels.LanceCharge when
-                        InMeleeRange()
-                        && IsOffCooldown(DRG.LanceCharge)
-                        && (HasEffect(DRG.Buffs.BattleLitany)
-                            || HasRaidBuffs(2)
-                            || level < DRG.Levels.BattleLitany
-                            || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12):
+                    case >= DRG.Levels.LanceCharge
+                        when InMeleeRange()
+                            && IsOffCooldown(DRG.LanceCharge)
+                            && (
+                                HasEffect(DRG.Buffs.BattleLitany)
+                                || HasRaidBuffs(2)
+                                || level < DRG.Levels.BattleLitany
+                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12
+                            ):
                         return DRG.LanceCharge;
 
-                    case >= DRG.Levels.Geirskogul when
-                        CanUseAction(OriginalHook(DRG.Geirskogul))
-                        && IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                        && doWithLance(60):
+                    case >= DRG.Levels.Geirskogul
+                        when CanUseAction(OriginalHook(DRG.Geirskogul))
+                            && IsOffCooldown(OriginalHook(DRG.Geirskogul))
+                            && doWithLance(60):
                         return OriginalHook(DRG.Geirskogul);
 
-                    case >= DRG.Levels.WyrmwindThrust when
-                        gauge.FirstmindsFocusCount == 2
-                        && (OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
+                    case >= DRG.Levels.WyrmwindThrust
+                        when gauge.FirstmindsFocusCount == 2
+                            && (
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)
+                            ):
                         return DRG.WyrmwindThrust;
-
                 }
 
                 if (disembowelDuration is not null)
                     switch (level)
                     {
-                        case >= DRG.Levels.LifeSurge when
-                            (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
-                            && (level < DRG.Levels.ImprovedLifeSurge
-                                || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
-                                || HasRaidBuffs(2)
-                                || HasEffect(DRG.Buffs.LanceCharge))
-                            && !HasEffect(DRG.Buffs.LifeSurge)
-                            && ((lastComboMove == DRG.SonicThrust && level >= DRG.Levels.CoerthanTorment)
-                                || (lastComboMove == DRG.DoomSpike && level < DRG.Levels.CoerthanTorment)):
+                        case >= DRG.Levels.LifeSurge
+                            when (IsOffCooldown(DRG.LifeSurge) || HasCharges(DRG.LifeSurge))
+                                && (
+                                    level < DRG.Levels.ImprovedLifeSurge
+                                    || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
+                                    || HasRaidBuffs(2)
+                                    || HasEffect(DRG.Buffs.LanceCharge)
+                                )
+                                && !HasEffect(DRG.Buffs.LifeSurge)
+                                && (
+                                    (
+                                        lastComboMove == DRG.SonicThrust
+                                        && level >= DRG.Levels.CoerthanTorment
+                                    )
+                                    || (
+                                        lastComboMove == DRG.DoomSpike
+                                        && level < DRG.Levels.CoerthanTorment
+                                    )
+                                ):
                             return DRG.LifeSurge;
-                        case >= DRG.Levels.DragonfireDive when
-                            IsOffCooldown(DRG.DragonfireDive)
-                            && doWithLance(120):
+                        case >= DRG.Levels.DragonfireDive
+                            when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
                             return DRG.DragonfireDive;
-                        case >= DRG.Levels.Stardiver when gauge.IsLOTDActive
-                                                          && IsOffCooldown(DRG.Stardiver)
-                                                          && doWithLance(gauge.LOTDTimer / 1000 - 5):
+                        case >= DRG.Levels.Stardiver
+                            when gauge.IsLOTDActive
+                                && IsOffCooldown(DRG.Stardiver)
+                                && doWithLance(gauge.LOTDTimer / 1000 - 5):
                             return DRG.Stardiver;
 
                         case >= DRG.Levels.Starcross when CanUseAction(DRG.Starcross):
                             return DRG.Starcross;
 
-
-                        case >= DRG.Levels.Jump when
-                            IsOffCooldown(OriginalHook(DRG.Jump))
-                            && CanUseAction(OriginalHook(DRG.Jump))
-                            && (doWithLance(30) || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
+                        case >= DRG.Levels.Jump
+                            when IsOffCooldown(OriginalHook(DRG.Jump))
+                                && CanUseAction(OriginalHook(DRG.Jump))
+                                && (
+                                    doWithLance(30)
+                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8
+                                ):
                             return OriginalHook(DRG.Jump);
-                        case >= DRG.Levels.RiseOfTheDragon when
-                            CanUseAction(DRG.RiseOfTheDragon):
+                        case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
                             return DRG.RiseOfTheDragon;
                     }
-
             }
 
             if (comboTime > 0)

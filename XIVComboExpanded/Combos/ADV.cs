@@ -5,8 +5,7 @@ internal static class ADV
     public const byte ClassID = 0;
     public const byte JobID = 0;
 
-    public const uint
-        LucidDreaming = 7562,
+    public const uint LucidDreaming = 7562,
         Provoke = 7533,
         Shirk = 7537,
         Peloton = 7557,
@@ -25,14 +24,14 @@ internal static class ADV
     public static class Debuffs
     {
         public const ushort Reprisal = 1193,
-        Feint = 1195,
-        Addle = 1203;
+            Feint = 1195,
+            Addle = 1203;
     }
 
     public static class Levels
     {
         public const byte Swiftcast = 18,
-        Addle = 8,
+            Addle = 8,
             LucidDreaming = 14,
             Feint = 22,
             VariantRaise2 = 90;
@@ -72,17 +71,17 @@ internal class VariantRaiseFeature : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (
-                (actionID == AST.Ascend && level >= AST.Levels.Ascend)
-                || (actionID == SCH.Resurrection && level >= SCH.Levels.Resurrection)
-                || (actionID == SGE.Egeiro && level >= SGE.Levels.Egeiro)
-                || (actionID == WHM.Raise && level >= WHM.Levels.Raise)
-                || (
-                    actionID == RDM.Verraise
-                    && level >= RDM.Levels.Verraise
-                    && !HasEffect(RDM.Buffs.Dualcast)
-                )
-                || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper)
+            (actionID == AST.Ascend && level >= AST.Levels.Ascend)
+            || (actionID == SCH.Resurrection && level >= SCH.Levels.Resurrection)
+            || (actionID == SGE.Egeiro && level >= SGE.Levels.Egeiro)
+            || (actionID == WHM.Raise && level >= WHM.Levels.Raise)
+            || (
+                actionID == RDM.Verraise
+                && level >= RDM.Levels.Verraise
+                && !HasEffect(RDM.Buffs.Dualcast)
             )
+            || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper)
+        )
             // Per Splatoon:
             // 1069: solo
             // 1075: group
@@ -96,7 +95,8 @@ internal class VariantRaiseFeature : CustomCombo
 
 internal class StanceProvokeFeature : CustomCombo
 {
-    protected internal override CustomComboPreset Preset => CustomComboPreset.AdvStanceProvokeFeature;
+    protected internal override CustomComboPreset Preset =>
+        CustomComboPreset.AdvStanceProvokeFeature;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -104,10 +104,12 @@ internal class StanceProvokeFeature : CustomCombo
         {
             var job = LocalPlayer?.ClassJob.Id;
 
-            if (!HasEffect(PLD.Buffs.IronWill)
+            if (
+                !HasEffect(PLD.Buffs.IronWill)
                 && !HasEffect(WAR.Buffs.Defiance)
                 && !HasEffect(DRK.Buffs.Grit)
-                && !HasEffect(GNB.Buffs.RoyalGuard))
+                && !HasEffect(GNB.Buffs.RoyalGuard)
+            )
             {
                 if (job == PLD.JobID && level >= PLD.Levels.IronWill)
                     return PLD.IronWill;
@@ -119,7 +121,10 @@ internal class StanceProvokeFeature : CustomCombo
                     return GNB.RoyalGuard;
             }
 
-            if (IsEnabled(CustomComboPreset.AdvStanceBackProvokeFeature) && !IsAvailable(ADV.Provoke))
+            if (
+                IsEnabled(CustomComboPreset.AdvStanceBackProvokeFeature)
+                && !IsAvailable(ADV.Provoke)
+            )
             {
                 if (job == PLD.JobID && level >= PLD.Levels.IronWill)
                     return PLD.IronWillRemoval;
@@ -146,10 +151,12 @@ internal class ShirkStanceFeature : CustomCombo
         {
             var job = LocalPlayer?.ClassJob.Id;
 
-            if (HasEffect(PLD.Buffs.IronWill)
+            if (
+                HasEffect(PLD.Buffs.IronWill)
                 || HasEffect(WAR.Buffs.Defiance)
                 || HasEffect(DRK.Buffs.Grit)
-                || HasEffect(GNB.Buffs.RoyalGuard))
+                || HasEffect(GNB.Buffs.RoyalGuard)
+            )
             {
                 if (job == PLD.JobID && level >= PLD.Levels.IronWill)
                     return PLD.IronWillRemoval;

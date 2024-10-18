@@ -106,78 +106,109 @@ internal class AstrologianMalefic : CustomCombo
             {
                 switch (level)
                 {
-                    case >= AST.Levels.MinorArcana when
-                        gauge.DrawnCrownCard == CardType.LADY
-                        && (localPlayer <= 0.95
-                            || needToUseCards
-                            || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)):
+                    case >= AST.Levels.MinorArcana
+                        when gauge.DrawnCrownCard == CardType.LADY
+                            && (
+                                localPlayer <= 0.95
+                                || needToUseCards
+                                || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)
+                            ):
                         return OriginalHook(AST.MinorArcanaDT);
-                    case >= AST.Levels.SunSign when
-                        CanUseAction(AST.SunSign):
+                    case >= AST.Levels.SunSign when CanUseAction(AST.SunSign):
                         return AST.SunSign;
 
-                    case >= AST.Levels.Oracle when
-                        divining is not null
-                        && (divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity):
+                    case >= AST.Levels.Oracle
+                        when divining is not null
+                            && (
+                                divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity
+                            ):
                         return AST.Oracle;
 
-                    case >= AST.Levels.CelestialOpposition when
-                        IsOffCooldown(OriginalHook(AST.CelestialOpposition))
-                        && OriginalHook(AST.EarthlyStar) is AST.EarthlyStar
-                        && ((localPlayer <= threshold) || (actionID is AST.Gravity && TargetOfTargetHPercentage() <= threshold)):
+                    case >= AST.Levels.CelestialOpposition
+                        when IsOffCooldown(OriginalHook(AST.CelestialOpposition))
+                            && OriginalHook(AST.EarthlyStar) is AST.EarthlyStar
+                            && (
+                                (localPlayer <= threshold)
+                                || (
+                                    actionID is AST.Gravity
+                                    && TargetOfTargetHPercentage() <= threshold
+                                )
+                            ):
                         return OriginalHook(AST.CelestialOpposition);
 
-                    case >= AST.Levels.EarthlyStar when
-                        OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
-                        && (localPlayer <= 0.85 || (actionID is AST.Gravity && TargetOfTargetHPercentage() <= threshold))
-                        && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50:
+                    case >= AST.Levels.EarthlyStar
+                        when OriginalHook(AST.EarthlyStar) != AST.EarthlyStar
+                            && (
+                                localPlayer <= 0.85
+                                || (
+                                    actionID is AST.Gravity
+                                    && TargetOfTargetHPercentage() <= threshold
+                                )
+                            )
+                            && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50:
                         return OriginalHook(AST.EarthlyStar);
 
-                    case >= AST.Levels.EssentialDignity when
-                        noTankCDs
-                        && (HasCharges(AST.EssentialDignity) || IsOffCooldown(AST.EssentialDignity))
-                        && ((GetCooldown(OriginalHook(AST.EssentialDignity)).TotalCooldownRemaining <= 15
-                                && tankPercentage <= threshold - 0.15)
-                            || tankPercentage <= threshold - 0.2):
+                    case >= AST.Levels.EssentialDignity
+                        when noTankCDs
+                            && (
+                                HasCharges(AST.EssentialDignity)
+                                || IsOffCooldown(AST.EssentialDignity)
+                            )
+                            && (
+                                (
+                                    GetCooldown(
+                                        OriginalHook(AST.EssentialDignity)
+                                    ).TotalCooldownRemaining <= 15
+                                    && tankPercentage <= threshold - 0.15
+                                )
+                                || tankPercentage <= threshold - 0.2
+                            ):
                         return AST.EssentialDignity;
 
-                    case >= AST.Levels.Exaltation when
-                        noTankCDs
-                        && IsOffCooldown(AST.Exaltation)
-                        && tankPercentage <= threshold - 0.1:
+                    case >= AST.Levels.Exaltation
+                        when noTankCDs
+                            && IsOffCooldown(AST.Exaltation)
+                            && tankPercentage <= threshold - 0.1:
                         return AST.Exaltation;
 
-                    case >= AST.Levels.CelestialIntersection when
-                        noTankCDs
-                        && (HasCharges(AST.CelestialIntersection) || IsOffCooldown(AST.CelestialIntersection))
-                        && ((GetCooldown(OriginalHook(AST.CelestialIntersection)).TotalCooldownRemaining <= 10
-                                && tankPercentage <= threshold)
-                            || tankPercentage <= threshold - 0.2):
+                    case >= AST.Levels.CelestialIntersection
+                        when noTankCDs
+                            && (
+                                HasCharges(AST.CelestialIntersection)
+                                || IsOffCooldown(AST.CelestialIntersection)
+                            )
+                            && (
+                                (
+                                    GetCooldown(
+                                        OriginalHook(AST.CelestialIntersection)
+                                    ).TotalCooldownRemaining <= 10
+                                    && tankPercentage <= threshold
+                                )
+                                || tankPercentage <= threshold - 0.2
+                            ):
                         return AST.CelestialIntersection;
 
-                    case >= AST.Levels.Astrodyne when
-                        IsOffCooldown(AST.Divination)
-                        && HasRaidBuffs(2):
+                    case >= AST.Levels.Astrodyne
+                        when IsOffCooldown(AST.Divination) && HasRaidBuffs(2):
                         return AST.Divination;
 
-                    case >= AST.Levels.MinorArcana when
-                        gauge.DrawnCrownCard == CardType.LORD
-                        && (HasRaidBuffs(2) || needToUseCards || actionID is AST.Gravity)
-                        && InCombat():
+                    case >= AST.Levels.MinorArcana
+                        when gauge.DrawnCrownCard == CardType.LORD
+                            && (HasRaidBuffs(2) || needToUseCards || actionID is AST.Gravity)
+                            && InCombat():
                         return OriginalHook(AST.MinorArcanaDT);
 
-                    case >= AST.Levels.AstralDraw when
-                        IsOffCooldown(OriginalHook(AST.AstralDraw))
-                        && IsOriginal(AST.Play1)
-                        && IsOriginal(AST.Play2)
-                        && IsOriginal(AST.Play3):
+                    case >= AST.Levels.AstralDraw
+                        when IsOffCooldown(OriginalHook(AST.AstralDraw))
+                            && IsOriginal(AST.Play1)
+                            && IsOriginal(AST.Play2)
+                            && IsOriginal(AST.Play3):
                         return OriginalHook(AST.AstralDraw);
 
-                    case >= ADV.Levels.LucidDreaming when
-                        IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 7500:
+                    case >= ADV.Levels.LucidDreaming
+                        when IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 7500:
                         return ADV.LucidDreaming;
                 }
-
             }
 
             if (InCombat() && TargetIsEnemy() && ShouldUseDots() && actionID is not AST.Gravity)
@@ -186,10 +217,14 @@ internal class AstrologianMalefic : CustomCombo
                 {
                     FindTargetEffect(AST.Debuffs.Combust),
                     FindTargetEffect(AST.Debuffs.Combust2),
-                    FindTargetEffect(AST.Debuffs.Combust3)
+                    FindTargetEffect(AST.Debuffs.Combust3),
                 };
 
-                if (debuffs.All(x => x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
+                if (
+                    debuffs.All(x =>
+                        x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving
+                    )
+                )
                     return OriginalHook(AST.Combust);
             }
         }
@@ -197,8 +232,6 @@ internal class AstrologianMalefic : CustomCombo
         return actionID;
     }
 }
-
-
 
 internal class AstroCelestial : CustomCombo
 {

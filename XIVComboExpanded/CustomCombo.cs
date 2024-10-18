@@ -38,7 +38,7 @@ internal abstract partial class CustomCombo
             SMN.JobID => SMN.ClassID,
             WAR.JobID => WAR.ClassID,
             WHM.JobID => WHM.ClassID,
-            _ => 0xFF
+            _ => 0xFF,
         };
     }
 
@@ -100,7 +100,8 @@ internal abstract partial class CustomCombo
             this.MovingCounter = 100;
         }
 
-        if (this.MovingCounter > 0) this.MovingCounter--;
+        if (this.MovingCounter > 0)
+            this.MovingCounter--;
 
         if (!IsEnabled(this.Preset))
             return false;
@@ -166,7 +167,9 @@ internal abstract partial class CustomCombo
                 : -a2.Data.CooldownRemaining;
 
             if (a1Priority == a2Priority)
-                return original == a1.ActionID ? a1 : original == a2.ActionID ? a2 : a1;
+                return original == a1.ActionID ? a1
+                    : original == a2.ActionID ? a2
+                    : a1;
 
             return a1Priority > a2Priority ? a1 : a2;
         }
@@ -246,7 +249,6 @@ internal abstract partial class CustomCombo
             && target.CurrentHp <= target.MaxHp * 0.1f;
     }
 
-
     /// <summary>
     ///     Should return whether or not player has raid debuffs.
     ///     Uses forEach loops for faster iterations rather than count for shortcircuiting
@@ -270,13 +272,18 @@ internal abstract partial class CustomCombo
             RDM.Buffs.Embolden,
             RDM.Buffs.EmboldenParty,
             MNK.Buffs.Brotherhood,
-            ADV.Buffs.Medicated
+            ADV.Buffs.Medicated,
         };
 
         if (TargetIsLow())
             return true;
 
-        var raidDebuffs = new[] { SCH.Debuffs.ChainStrategem, NIN.Debuffs.Mug, NIN.Debuffs.Dokumori };
+        var raidDebuffs = new[]
+        {
+            SCH.Debuffs.ChainStrategem,
+            NIN.Debuffs.Mug,
+            NIN.Debuffs.Dokumori,
+        };
 
         var raidCDsFound = 0;
 
@@ -321,7 +328,9 @@ internal abstract partial class CustomCombo
     /// <returns>A number between 0 and 1 that indicates their health percentage. </returns>
     protected static float TargetOfTargetHPercentage()
     {
-        return GetTargetOfTarget is IBattleChara target ? (float)target.CurrentHp / target.MaxHp : 1;
+        return GetTargetOfTarget is IBattleChara target
+            ? (float)target.CurrentHp / target.MaxHp
+            : 1;
     }
 
     /// <summary>
@@ -425,8 +434,8 @@ internal abstract partial class CustomCombo
     protected static bool TargetIsEnemy()
     {
         return HasTarget()
-               && CurrentTarget?.ObjectKind == ObjectKind.BattleNpc
-               && CurrentTarget?.SubKind == 5;
+            && CurrentTarget?.ObjectKind == ObjectKind.BattleNpc
+            && CurrentTarget?.SubKind == 5;
     }
 
     /// <summary>
@@ -498,7 +507,11 @@ internal abstract partial class CustomCombo
 
     protected static Status? FindTargetOfTargetEffect(ushort effectID)
     {
-        return FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, LocalPlayer?.EntityId);
+        return FindEffect(
+            effectID,
+            Service.TargetManager?.Target?.TargetObject,
+            LocalPlayer?.EntityId
+        );
     }
 
     /// <summary>
@@ -682,16 +695,16 @@ internal abstract partial class CustomCombo
 
         if (
             CurrentTarget is not IBattleChara chara
-            || CurrentTarget.ObjectKind
-            != ObjectKind.BattleNpc
+            || CurrentTarget.ObjectKind != ObjectKind.BattleNpc
         )
             return 0;
 
         var position = new Vector2(chara.Position.X, chara.Position.Z);
         var selfPosition = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
-        return Vector2.Distance(position, selfPosition) - chara.HitboxRadius
-                                                        - LocalPlayer.HitboxRadius;
+        return Vector2.Distance(position, selfPosition)
+            - chara.HitboxRadius
+            - LocalPlayer.HitboxRadius;
     }
 
     /// <summary>

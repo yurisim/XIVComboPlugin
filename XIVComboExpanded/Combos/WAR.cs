@@ -36,8 +36,7 @@ internal static class WAR
 
     public static class Buffs
     {
-        public const ushort
-            Berserk = 86,
+        public const ushort Berserk = 86,
             Defiance = 91,
             Holmgang = 409,
             InnerRelease = 1177,
@@ -167,7 +166,8 @@ internal class WarriorStormsPathCombo : CustomCombo
                     return WAR.StormsPath;
                 }
 
-                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim) return WAR.Maim;
+                if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                    return WAR.Maim;
             }
         }
 
@@ -187,12 +187,12 @@ internal class WarriorMythrilTempestCombo : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                var localPlayerPercentage =
-                    LocalPlayer is not null
-                        ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp
-                        : 1;
+                var localPlayerPercentage = LocalPlayer is not null
+                    ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp
+                    : 1;
 
-                if (IsOffCooldown(WAR.Upheaval) && level >= WAR.Levels.Upheaval) return WAR.Upheaval;
+                if (IsOffCooldown(WAR.Upheaval) && level >= WAR.Levels.Upheaval)
+                    return WAR.Upheaval;
 
                 if (
                     level >= WAR.Levels.Infuriate

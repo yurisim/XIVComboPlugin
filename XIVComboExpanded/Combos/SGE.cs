@@ -112,78 +112,93 @@ internal class SageDosis : CustomCombo
 
             var raidbuffs = HasRaidBuffs(2);
 
-            var controlBurst = LocalPlayer?.CurrentMp <= mpThreshold
-                            || IsOnCooldown(ADV.LucidDreaming);
+            var controlBurst =
+                LocalPlayer?.CurrentMp <= mpThreshold || IsOnCooldown(ADV.LucidDreaming);
 
-            var noTankBuffs = FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
-                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null;
+            var noTankBuffs =
+                FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
+                && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null;
 
             if (GCDClipCheck(actionID))
             {
-                var needToUseAddersgall = (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10) || gauge.Addersgall == 3;
+                var needToUseAddersgall =
+                    (gauge.Addersgall == 2 && gauge.AddersgallTimer <= 10) || gauge.Addersgall == 3;
                 var targetHPPercent = TargetOfTargetHPercentage();
 
                 switch (level)
                 {
-                    case >= SGE.Levels.Physis when
-                        (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
-                        && IsOffCooldown(OriginalHook(SGE.Physis))
-                        && myHP <= threshold:
+                    case >= SGE.Levels.Physis
+                        when (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
+                            && IsOffCooldown(OriginalHook(SGE.Physis))
+                            && myHP <= threshold:
                         return OriginalHook(SGE.Physis);
 
-                    case >= SGE.Levels.Ixochole when IsOffCooldown(SGE.Ixochole)
-                                     && gauge.Addersgall >= 2
-                                     && ((!HasEffect(SGE.Buffs.Physis)
-                                          && !HasEffect(SGE.Buffs.Physis2)
-                                          && !HasEffect(SGE.Buffs.Kerakeia))
-                                         || myHP <= threshold - 0.40)
-                                     && myHP <= threshold - 0.10:
+                    case >= SGE.Levels.Ixochole
+                        when IsOffCooldown(SGE.Ixochole)
+                            && gauge.Addersgall >= 2
+                            && (
+                                (
+                                    !HasEffect(SGE.Buffs.Physis)
+                                    && !HasEffect(SGE.Buffs.Physis2)
+                                    && !HasEffect(SGE.Buffs.Kerakeia)
+                                )
+                                || myHP <= threshold - 0.40
+                            )
+                            && myHP <= threshold - 0.10:
                         return SGE.Ixochole;
 
-                    case >= SGE.Levels.Soteria when IsOffCooldown(SGE.Soteria)
-                                    && noTankBuffs
-                                    && ((!HasEffect(SGE.Buffs.Physis)
-                                         && !HasEffect(SGE.Buffs.Physis2)
-                                         && !HasEffect(SGE.Buffs.Kerakeia))
-                                        || myHP <= threshold - 0.25)
-                                    && targetHPPercent <= threshold:
+                    case >= SGE.Levels.Soteria
+                        when IsOffCooldown(SGE.Soteria)
+                            && noTankBuffs
+                            && (
+                                (
+                                    !HasEffect(SGE.Buffs.Physis)
+                                    && !HasEffect(SGE.Buffs.Physis2)
+                                    && !HasEffect(SGE.Buffs.Kerakeia)
+                                )
+                                || myHP <= threshold - 0.25
+                            )
+                            && targetHPPercent <= threshold:
                         return SGE.Soteria;
 
-                    case >= SGE.Levels.Krasis when IsOffCooldown(SGE.Krasis)
-                                    && noTankBuffs
-                                   && ((!HasEffect(SGE.Buffs.Physis)
-                                        && !HasEffect(SGE.Buffs.Physis2)
-                                        && !HasEffect(SGE.Buffs.Kerakeia))
-                                       || myHP <= threshold - 0.15)
-                                   && targetHPPercent <= threshold - 0.1:
+                    case >= SGE.Levels.Krasis
+                        when IsOffCooldown(SGE.Krasis)
+                            && noTankBuffs
+                            && (
+                                (
+                                    !HasEffect(SGE.Buffs.Physis)
+                                    && !HasEffect(SGE.Buffs.Physis2)
+                                    && !HasEffect(SGE.Buffs.Kerakeia)
+                                )
+                                || myHP <= threshold - 0.15
+                            )
+                            && targetHPPercent <= threshold - 0.1:
                         return SGE.Krasis;
 
-                    case >= SGE.Levels.Druochole when
-                        targetHPPercent >= 0.2
-                        && noTankBuffs
-                        && gauge.Addersgall >= 2
-                        && (targetHPPercent <= threshold - 0.25
-                            || (needToUseAddersgall && targetHPPercent <= threshold - 0.15)):
+                    case >= SGE.Levels.Druochole
+                        when targetHPPercent >= 0.2
+                            && noTankBuffs
+                            && gauge.Addersgall >= 2
+                            && (
+                                targetHPPercent <= threshold - 0.25
+                                || (needToUseAddersgall && targetHPPercent <= threshold - 0.15)
+                            ):
                         return level >= SGE.Levels.Taurochole && IsOffCooldown(SGE.Taurochole)
                             ? SGE.Taurochole
                             : SGE.Druochole;
 
-                    case >= SGE.Levels.Rhizomata when
-                        gauge.Addersgall <= 1
-                        && IsOffCooldown(SGE.Rhizomata):
+                    case >= SGE.Levels.Rhizomata
+                        when gauge.Addersgall <= 1 && IsOffCooldown(SGE.Rhizomata):
                         return SGE.Rhizomata;
 
-                    case >= SGE.Levels.Psyche when
-                        (controlBurst || raidbuffs)
-                        && IsOffCooldown(SGE.Psyche):
+                    case >= SGE.Levels.Psyche
+                        when (controlBurst || raidbuffs) && IsOffCooldown(SGE.Psyche):
                         return SGE.Psyche;
 
-                    case >= ADV.Levels.LucidDreaming when
-                        IsOffCooldown(ADV.LucidDreaming)
-                        && LocalPlayer?.CurrentMp <= 9200:
+                    case >= ADV.Levels.LucidDreaming
+                        when IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 9200:
                         return ADV.LucidDreaming;
                 }
-
             }
 
             if (InCombat())
@@ -195,12 +210,17 @@ internal class SageDosis : CustomCombo
                         FindTargetEffect(SGE.Debuffs.EDyskrasia),
                         FindTargetEffect(SGE.Debuffs.EDosis3),
                         FindTargetEffect(SGE.Debuffs.EDosis2),
-                        FindTargetEffect(SGE.Debuffs.EDosis1)
-                        };
+                        FindTargetEffect(SGE.Debuffs.EDosis1),
+                    };
 
-                    if (debuffs.All(x => x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
+                    if (
+                        debuffs.All(x =>
+                            x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving
+                        )
+                    )
                     {
-                        if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
+                        if (!HasEffect(SGE.Buffs.Eukrasia))
+                            return SGE.Eukrasia;
 
                         return OriginalHook(SGE.Dosis);
                     }
@@ -230,9 +250,11 @@ internal class SageDosis : CustomCombo
                     && GetTargetDistance() <= 6
                     && charges >= 1
                     && controlBurst
-                    && (GetCooldown(OriginalHook(SGE.Phlegma)).TotalCooldownRemaining <= 5
+                    && (
+                        GetCooldown(OriginalHook(SGE.Phlegma)).TotalCooldownRemaining <= 5
                         || raidbuffs
-                        || charges >= 2)
+                        || charges >= 2
+                    )
                 )
                     return OriginalHook(SGE.Phlegma);
 
@@ -284,10 +306,7 @@ internal class SageShieldDiagnosis : CustomCombo
         {
             // if (GCDClipCheck(actionID))
             // {
-            if (IsOffCooldown(SGE.Zoe)
-                && level >= SGE.Levels.Zoe
-                && HasEffect(SGE.Buffs.Eukrasia)
-                )
+            if (IsOffCooldown(SGE.Zoe) && level >= SGE.Levels.Zoe && HasEffect(SGE.Buffs.Eukrasia))
             {
                 return SGE.Zoe;
             }
@@ -310,7 +329,12 @@ internal class SageShieldDiagnosis : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SgeAny;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        protected override uint Invoke(
+            uint actionID,
+            uint lastComboMove,
+            float comboTime,
+            byte level
+        )
         {
             if (actionID == SGE.Dyskrasia2 || actionID == SGE.Dyskrasia)
             {
@@ -385,39 +409,51 @@ internal class SageShieldDiagnosis : CustomCombo
                     )
                         return SGE.Rhizomata;
 
-                    if (level >= SGE.Levels.Psyche && IsOffCooldown(SGE.Psyche)) return SGE.Psyche;
+                    if (level >= SGE.Levels.Psyche && IsOffCooldown(SGE.Psyche))
+                        return SGE.Psyche;
 
                     // Use Lucid Dreaming if low enough mana
-                    if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000) return ADV.LucidDreaming;
+                    if (IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000)
+                        return ADV.LucidDreaming;
                 }
 
                 if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6 && TargetIsEnemy())
                 {
-
-                    if (InCombat() && TargetIsEnemy() && ShouldUseDots() && actionID is not AST.Gravity)
+                    if (
+                        InCombat()
+                        && TargetIsEnemy()
+                        && ShouldUseDots()
+                        && actionID is not AST.Gravity
+                    )
                     {
                         var debuffs = new[]
                         {
-                        FindTargetEffect(SGE.Debuffs.EDyskrasia),
-                        FindTargetEffect(SGE.Debuffs.EDosis3),
-                        FindTargetEffect(SGE.Debuffs.EDosis2),
-                        FindTargetEffect(SGE.Debuffs.EDosis1)
+                            FindTargetEffect(SGE.Debuffs.EDyskrasia),
+                            FindTargetEffect(SGE.Debuffs.EDosis3),
+                            FindTargetEffect(SGE.Debuffs.EDosis2),
+                            FindTargetEffect(SGE.Debuffs.EDosis1),
                         };
 
-                        if (debuffs.All(x => x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
+                        if (
+                            debuffs.All(x =>
+                                x is null
+                                || x.RemainingTime <= 3
+                                || x.RemainingTime <= 6 && IsMoving
+                            )
+                        )
                         {
-                            if (!HasEffect(SGE.Buffs.Eukrasia)) return SGE.Eukrasia;
+                            if (!HasEffect(SGE.Buffs.Eukrasia))
+                                return SGE.Eukrasia;
 
                             return OriginalHook(SGE.Dyskrasia);
                         }
                     }
                 }
 
-
-
                 var plegma = OriginalHook(SGE.Phlegma);
 
-                if (GetTargetDistance() <= 6 && HasCharges(plegma) && level >= SGE.Levels.Phlegma) return plegma;
+                if (GetTargetDistance() <= 6 && HasCharges(plegma) && level >= SGE.Levels.Phlegma)
+                    return plegma;
 
                 if (
                     level >= SGE.Levels.Toxikon
@@ -427,7 +463,8 @@ internal class SageShieldDiagnosis : CustomCombo
                 )
                     return OriginalHook(SGE.Toxikon);
 
-                if (gauge.Addersting >= 1 && level >= SGE.Levels.Toxikon) return OriginalHook(SGE.Toxikon);
+                if (gauge.Addersting >= 1 && level >= SGE.Levels.Toxikon)
+                    return OriginalHook(SGE.Toxikon);
 
                 return actionID;
             }
@@ -445,10 +482,13 @@ internal class SagePhlegma : CustomCombo
     {
         if (actionID == SGE.Physis)
         {
-            if (IsOffCooldown(SGE.Philosophia)
-                && level >= SGE.Levels.Philosophia)
+            if (IsOffCooldown(SGE.Philosophia) && level >= SGE.Levels.Philosophia)
             {
-                return CalcBestAction(OriginalHook(SGE.Physis), OriginalHook(SGE.Physis), SGE.Philosophia);
+                return CalcBestAction(
+                    OriginalHook(SGE.Physis),
+                    OriginalHook(SGE.Physis),
+                    SGE.Philosophia
+                );
             }
 
             return actionID;

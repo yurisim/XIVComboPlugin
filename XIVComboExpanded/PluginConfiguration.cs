@@ -92,7 +92,8 @@ public class PluginConfiguration : IPluginConfiguration
     /// <returns>The boolean representation.</returns>
     public bool IsEnabled(CustomComboPreset preset)
     {
-        return this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
+        return this.EnabledActions.Contains(preset)
+            && (this.EnableSecretCombos || !this.IsSecret(preset));
     }
 
     /// <summary>

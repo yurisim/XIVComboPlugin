@@ -89,7 +89,6 @@ internal static class SCH
             Protraction = 86,
             Expedient = 90,
             BanefulImpaction = 92;
-
     }
 }
 
@@ -128,100 +127,128 @@ internal class ScholarEnergyDrain : CustomCombo
             {
                 switch (level)
                 {
-                    case >= SCH.Levels.ChainStratagem when
-                        IsOffCooldown(SCH.ChainStratagem)
-                        && HasRaidBuffs(2):
+                    case >= SCH.Levels.ChainStratagem
+                        when IsOffCooldown(SCH.ChainStratagem) && HasRaidBuffs(2):
                         return SCH.ChainStratagem;
 
-                    case >= SCH.Levels.FeyBlessing when
-                        CanUseAction(SCH.FeyBlessing)
-                        && IsOffCooldown(SCH.FeyBlessing)
-                        && ((localPlayer <= threshold) || (actionID is SCH.ArtOfWar && TargetOfTargetHPercentage() <= threshold))
-                        && !HasEffect(SCH.Buffs.SacredSoil)
-                        && !HasEffect(SCH.Buffs.WhisperingDawn):
+                    case >= SCH.Levels.FeyBlessing
+                        when CanUseAction(SCH.FeyBlessing)
+                            && IsOffCooldown(SCH.FeyBlessing)
+                            && (
+                                (localPlayer <= threshold)
+                                || (
+                                    actionID is SCH.ArtOfWar
+                                    && TargetOfTargetHPercentage() <= threshold
+                                )
+                            )
+                            && !HasEffect(SCH.Buffs.SacredSoil)
+                            && !HasEffect(SCH.Buffs.WhisperingDawn):
                         return SCH.FeyBlessing;
 
-                    case >= SCH.Levels.WhisperingDawn when
-                        CanUseAction(OriginalHook(SCH.WhisperingDawn))
-                        && IsOffCooldown(SCH.WhisperingDawn)
-                        && ((localPlayer <= threshold) || (actionID is SCH.ArtOfWar && TargetOfTargetHPercentage() <= threshold))
-                        && !HasEffect(SCH.Buffs.SacredSoil):
+                    case >= SCH.Levels.WhisperingDawn
+                        when CanUseAction(OriginalHook(SCH.WhisperingDawn))
+                            && IsOffCooldown(SCH.WhisperingDawn)
+                            && (
+                                (localPlayer <= threshold)
+                                || (
+                                    actionID is SCH.ArtOfWar
+                                    && TargetOfTargetHPercentage() <= threshold
+                                )
+                            )
+                            && !HasEffect(SCH.Buffs.SacredSoil):
                         return SCH.WhisperingDawn;
 
-                    case >= SCH.Levels.SummonSeraph when
-                        CanUseAction(SCH.SummonSeraph)
-                        && IsOffCooldown(SCH.SummonSeraph)
-                        && actionID is SCH.ArtOfWar && TargetOfTargetHPercentage() <= threshold
-                        && !HasEffect(SCH.Buffs.SacredSoil)
-                        && !HasEffect(SCH.Buffs.WhisperingDawn):
+                    case >= SCH.Levels.SummonSeraph
+                        when CanUseAction(SCH.SummonSeraph)
+                            && IsOffCooldown(SCH.SummonSeraph)
+                            && actionID is SCH.ArtOfWar
+                            && TargetOfTargetHPercentage() <= threshold
+                            && !HasEffect(SCH.Buffs.SacredSoil)
+                            && !HasEffect(SCH.Buffs.WhisperingDawn):
                         return SCH.SummonSeraph;
 
-                    case >= SCH.Levels.SacredSoil when
-                        CanUseAction(SCH.SacredSoil)
-                        && !IsMoving
-                        && actionID is SCH.ArtOfWar
-                        && TargetOfTargetHPercentage() <= threshold
-                        && !HasEffect(SCH.Buffs.WhisperingDawn):
+                    case >= SCH.Levels.SacredSoil
+                        when CanUseAction(SCH.SacredSoil)
+                            && !IsMoving
+                            && actionID is SCH.ArtOfWar
+                            && TargetOfTargetHPercentage() <= threshold
+                            && !HasEffect(SCH.Buffs.WhisperingDawn):
                         return SCH.SacredSoil;
 
-                    case >= SCH.Levels.Consolation when
-                        gauge.SeraphTimer > 0
-                        && HasCharges(SCH.Consolation)
-                        && CanUseAction(SCH.Consolation)
-                        && (GetRemainingCharges(SCH.Consolation) == 2
-                            || (localPlayer <= threshold + 0.1 && !HasEffect(SCH.Buffs.SeraphicVeil))
-                            || (actionID is SCH.ArtOfWar && TargetOfTargetHPercentage() <= threshold && !TargetHasEffect(SCH.Buffs.SeraphicVeil))
-                            || gauge.SeraphTimer <= 5000):
+                    case >= SCH.Levels.Consolation
+                        when gauge.SeraphTimer > 0
+                            && HasCharges(SCH.Consolation)
+                            && CanUseAction(SCH.Consolation)
+                            && (
+                                GetRemainingCharges(SCH.Consolation) == 2
+                                || (
+                                    localPlayer <= threshold + 0.1
+                                    && !HasEffect(SCH.Buffs.SeraphicVeil)
+                                )
+                                || (
+                                    actionID is SCH.ArtOfWar
+                                    && TargetOfTargetHPercentage() <= threshold
+                                    && !TargetHasEffect(SCH.Buffs.SeraphicVeil)
+                                )
+                                || gauge.SeraphTimer <= 5000
+                            ):
                         return SCH.Consolation;
 
-                    case >= SCH.Levels.Excogitation when
-                        TargetOfTargetHPercentage() <= 0.6
-                        && IsOffCooldown(SCH.Excogitation)
-                        && gauge.Aetherflow >= 2:
+                    case >= SCH.Levels.Excogitation
+                        when TargetOfTargetHPercentage() <= 0.6
+                            && IsOffCooldown(SCH.Excogitation)
+                            && gauge.Aetherflow >= 2:
                         return SCH.Excogitation;
 
-                    case >= SCH.Levels.Aetherflow when
-                        gauge.Aetherflow >= 1
-                        && ((aetherflowCD <= 7.5 && aetherflowCD / gauge.Aetherflow <= 2.5)
-                            || IsOffCooldown(SCH.Aetherflow)
-                            || doDissipation):
+                    case >= SCH.Levels.Aetherflow
+                        when gauge.Aetherflow >= 1
+                            && (
+                                (aetherflowCD <= 7.5 && aetherflowCD / gauge.Aetherflow <= 2.5)
+                                || IsOffCooldown(SCH.Aetherflow)
+                                || doDissipation
+                            ):
                         return SCH.EnergyDrain;
 
-                    case >= SCH.Levels.BanefulImpaction when
-                        impactImminent is not null
-                        && (HasRaidBuffs(2) || impactImminent.RemainingTime <= 20):
+                    case >= SCH.Levels.BanefulImpaction
+                        when impactImminent is not null
+                            && (HasRaidBuffs(2) || impactImminent.RemainingTime <= 20):
                         return SCH.BanefulImpaction;
 
-                    case >= SCH.Levels.Aetherflow when
-                        CanUseAction(SCH.Aetherflow)
-                        && gauge.Aetherflow == 0
-                        && IsOffCooldown(SCH.Aetherflow):
+                    case >= SCH.Levels.Aetherflow
+                        when CanUseAction(SCH.Aetherflow)
+                            && gauge.Aetherflow == 0
+                            && IsOffCooldown(SCH.Aetherflow):
                         return SCH.Aetherflow;
 
-                    case >= SCH.Levels.Dissipation when
-                        doDissipation
-                        && gauge.Aetherflow == 0
-                        && IsOffCooldown(SCH.Dissipation):
+                    case >= SCH.Levels.Dissipation
+                        when doDissipation
+                            && gauge.Aetherflow == 0
+                            && IsOffCooldown(SCH.Dissipation):
                         return SCH.Dissipation;
 
-                    case >= ADV.Levels.LucidDreaming when InCombat() && IsOffCooldown(ADV.LucidDreaming) &&
-                        LocalPlayer?.CurrentMp <= 8000:
+                    case >= ADV.Levels.LucidDreaming
+                        when InCombat()
+                            && IsOffCooldown(ADV.LucidDreaming)
+                            && LocalPlayer?.CurrentMp <= 8000:
                         return ADV.LucidDreaming;
 
                     case >= SCH.Levels.Aetherpact:
-                        if (gauge.FairyGauge >= 30
+                        if (
+                            gauge.FairyGauge >= 30
                             && TargetOfTargetHPercentage() <= 0.80
                             && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
                             && !HasEffect(SCH.Buffs.Dissipation)
-                            && gauge.SeraphTimer == 0)
+                            && gauge.SeraphTimer == 0
+                        )
                             return OriginalHook(SCH.Aetherpact);
 
-                        if (TargetOfTargetHPercentage() >= 0.95
-                            && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
+                        if (
+                            TargetOfTargetHPercentage() >= 0.95
+                            && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact
+                        )
                             return OriginalHook(SCH.Aetherpact);
                         break;
                 }
-
             }
 
             if (InCombat() && actionID != SCH.ArtOfWar && ShouldUseDots())
@@ -230,10 +257,14 @@ internal class ScholarEnergyDrain : CustomCombo
                 {
                     FindTargetEffect(SCH.Debuffs.Bio),
                     FindTargetEffect(SCH.Debuffs.Bio2),
-                    FindTargetEffect(SCH.Debuffs.Biolysis)
+                    FindTargetEffect(SCH.Debuffs.Biolysis),
                 };
 
-                if (dots.All(x => x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
+                if (
+                    dots.All(x =>
+                        x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving
+                    )
+                )
                     return OriginalHook(SCH.Bio);
             }
 
@@ -296,7 +327,8 @@ internal class ScholarExcog : CustomCombo
         {
             var gauge = GetJobGauge<SCHGauge>();
 
-            if (level >= SCH.Levels.Protraction && IsOffCooldown(SCH.Protraction)) return SCH.Protraction;
+            if (level >= SCH.Levels.Protraction && IsOffCooldown(SCH.Protraction))
+                return SCH.Protraction;
 
             if (
                 level >= SCH.Levels.Excogitation
@@ -320,7 +352,8 @@ internal class ScholarAdloCrit : CustomCombo
     {
         if (actionID == SCH.Adloquium)
         {
-            if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation)) return SCH.Recitation;
+            if (level >= SCH.Levels.Recitation && IsOffCooldown(SCH.Recitation))
+                return SCH.Recitation;
 
             if (
                 level >= SCH.Levels.DeploymentTactics
@@ -331,7 +364,8 @@ internal class ScholarAdloCrit : CustomCombo
 
             var cd = GetCooldown(SCH.DeploymentTactics);
 
-            if (cd.IsOnCooldown && cd.CooldownElapsed <= 1) return OriginalHook(SCH.Ruin);
+            if (cd.IsOnCooldown && cd.CooldownElapsed <= 1)
+                return OriginalHook(SCH.Ruin);
         }
 
         return actionID;

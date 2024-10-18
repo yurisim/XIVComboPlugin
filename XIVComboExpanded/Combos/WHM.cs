@@ -105,9 +105,11 @@ internal class WhiteMageHoly : CustomCombo
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3) return WHM.AfflatusMisery;
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+                return WHM.AfflatusMisery;
 
-            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready)) return WHM.Glare4;
+            if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))
+                return WHM.Glare4;
         }
 
         return actionID;
@@ -177,7 +179,8 @@ internal class WhiteMageMedica : CustomCombo
             )
                 return WHM.AfflatusMisery;
 
-            if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0) return WHM.AfflatusRapture;
+            if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
+                return WHM.AfflatusRapture;
         }
 
         return actionID;
@@ -226,43 +229,55 @@ internal class WhiteMageStoneFeature : CustomCombo
             {
                 switch (level)
                 {
-                    case >= WHM.Levels.PresenceOfMind when
-                        IsOffCooldown(WHM.PresenceOfMind)
-                        && HasRaidBuffs(2):
+                    case >= WHM.Levels.PresenceOfMind
+                        when IsOffCooldown(WHM.PresenceOfMind) && HasRaidBuffs(2):
                         return WHM.PresenceOfMind;
-                    case >= WHM.Levels.Assize when
-                        IsOffCooldown(WHM.Assize)
-                        && GetTargetDistance() <= 15
-                        && playerPercentage < 1
-                        && (IsOnCooldown(WHM.PresenceOfMind)
-                            || HasRaidBuffs(2)):
+                    case >= WHM.Levels.Assize
+                        when IsOffCooldown(WHM.Assize)
+                            && GetTargetDistance() <= 15
+                            && playerPercentage < 1
+                            && (IsOnCooldown(WHM.PresenceOfMind) || HasRaidBuffs(2)):
                         return WHM.Assize;
-                    case >= WHM.Levels.DivineCarress when
-                        CanUseAction(WHM.DivCar)
-                        && playerPercentage < 1:
+                    case >= WHM.Levels.DivineCarress
+                        when CanUseAction(WHM.DivCar) && playerPercentage < 1:
                         return WHM.DivCar;
-                    case >= ADV.Levels.LucidDreaming when
-                        IsOffCooldown(ADV.LucidDreaming)
-                        && LocalPlayer?.CurrentMp <= 8000:
+                    case >= ADV.Levels.LucidDreaming
+                        when IsOffCooldown(ADV.LucidDreaming) && LocalPlayer?.CurrentMp <= 8000:
                         return ADV.LucidDreaming;
                 }
 
-                if (FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
-                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null)
+                if (
+                    FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
+                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null
+                )
                 {
                     switch (level)
                     {
-                        case >= WHM.Levels.EnhancedBenison when
-                            (HasCharges(WHM.DivineBenison) || IsOffCooldown(WHM.DivineBenison))
-                            && ((GetCooldown(OriginalHook(WHM.DivineBenison)).TotalCooldownRemaining <= 10
-                                    && tarOfTarPercentage <= threshold)
-                                || tarOfTarPercentage <= threshold - 0.2):
+                        case >= WHM.Levels.EnhancedBenison
+                            when (HasCharges(WHM.DivineBenison) || IsOffCooldown(WHM.DivineBenison))
+                                && (
+                                    (
+                                        GetCooldown(
+                                            OriginalHook(WHM.DivineBenison)
+                                        ).TotalCooldownRemaining <= 10
+                                        && tarOfTarPercentage <= threshold
+                                    )
+                                    || tarOfTarPercentage <= threshold - 0.2
+                                ):
                             return WHM.DivineBenison;
-                        case >= WHM.Levels.Tetragrammaton when
-                            (HasCharges(WHM.Tetragrammaton) || IsOffCooldown(WHM.Tetragrammaton))
-                            && ((GetCooldown(OriginalHook(AST.EssentialDignity)).TotalCooldownRemaining <= 15
-                                    && tarOfTarPercentage <= threshold - 0.15)
-                                || tarOfTarPercentage <= threshold - 0.2):
+                        case >= WHM.Levels.Tetragrammaton
+                            when (
+                                HasCharges(WHM.Tetragrammaton) || IsOffCooldown(WHM.Tetragrammaton)
+                            )
+                                && (
+                                    (
+                                        GetCooldown(
+                                            OriginalHook(AST.EssentialDignity)
+                                        ).TotalCooldownRemaining <= 15
+                                        && tarOfTarPercentage <= threshold - 0.15
+                                    )
+                                    || tarOfTarPercentage <= threshold - 0.2
+                                ):
                             return WHM.Tetragrammaton;
                     }
                 }
@@ -272,7 +287,7 @@ internal class WhiteMageStoneFeature : CustomCombo
             [
                 (WHM.Debuffs.Dia, WHM.Levels.Dia),
                 (WHM.Debuffs.Aero2, WHM.Levels.Aero2),
-                (WHM.Debuffs.Aero, WHM.Levels.Aero)
+                (WHM.Debuffs.Aero, WHM.Levels.Aero),
             ];
 
             var debuff = FindTargetEffect(aeroDOT.FirstOrDefault(x => x.Level <= level).Debuff);
@@ -290,13 +305,16 @@ internal class WhiteMageStoneFeature : CustomCombo
             )
                 return OriginalHook(WHM.Aero);
 
-            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3) return WHM.AfflatusMisery;
+            if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)
+                return WHM.AfflatusMisery;
 
             if (gauge.Lily == 3)
             {
-                if (playerPercentage <= 0.80 && level >= WHM.Levels.AfflatusRapture) return WHM.AfflatusRapture;
+                if (playerPercentage <= 0.80 && level >= WHM.Levels.AfflatusRapture)
+                    return WHM.AfflatusRapture;
 
-                if (tarOfTarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace) return WHM.AfflatusSolace;
+                if (tarOfTarPercentage <= 0.80 && level >= WHM.Levels.AfflatusSolace)
+                    return WHM.AfflatusSolace;
             }
 
             if (level >= WHM.Levels.Glare4 && HasEffect(WHM.Buffs.Glare4Ready))

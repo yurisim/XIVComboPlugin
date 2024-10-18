@@ -9,9 +9,11 @@ namespace XIVComboExpandedPlugin;
 [StructLayout(LayoutKind.Explicit)]
 internal struct CooldownData
 {
-    [FieldOffset(0x8)] private readonly float cooldownElapsed;
+    [FieldOffset(0x8)]
+    private readonly float cooldownElapsed;
 
-    [FieldOffset(0xC)] private readonly float cooldownTotal;
+    [FieldOffset(0xC)]
+    private readonly float cooldownTotal;
 
     /// <summary>
     ///     Gets the action ID on cooldown.
@@ -22,7 +24,8 @@ internal struct CooldownData
     /// <summary>
     ///     Gets the cast time in seconds, adjusted by spell cast time modifiers (ex. spell speed/skill speed).
     /// </summary>
-    public unsafe float CastTime => ActionManager.GetAdjustedCastTime(ActionType.Action, this.ActionID) / 1000f;
+    public unsafe float CastTime =>
+        ActionManager.GetAdjustedCastTime(ActionType.Action, this.ActionID) / 1000f;
 
     /// <summary>
     ///     Gets the resource cost of the action.
@@ -33,7 +36,8 @@ internal struct CooldownData
     ///     Gets the base cooldown time of an action in seconds, adjusted for spell recast modifiers
     ///     (ex. spell speed, if relevant).
     /// </summary>
-    public float BaseCooldown => ActionManager.GetAdjustedRecastTime(ActionType.Action, this.ActionID) / 1000f;
+    public float BaseCooldown =>
+        ActionManager.GetAdjustedRecastTime(ActionType.Action, this.ActionID) / 1000f;
 
     /// <summary>
     ///     Gets the total cooldown of an action across all charges, which is equivalent to the BaseCooldown multiplied
@@ -59,7 +63,9 @@ internal struct CooldownData
     ///     Gets the currently remaining (ie. usable) number of charges for an action.
     /// </summary>
     public ushort RemainingCharges =>
-        !this.IsOnCooldown ? this.MaxCharges : (ushort)(this.TotalCooldownElapsed / this.BaseCooldown);
+        !this.IsOnCooldown
+            ? this.MaxCharges
+            : (ushort)(this.TotalCooldownElapsed / this.BaseCooldown);
 
     /// <summary>
     ///     Gets a value indicating whether this action is off cooldown, or for charge-based actions, if the action
@@ -78,7 +84,8 @@ internal struct CooldownData
     /// <summary>
     ///     Gets the cooldown time remaining until all charges are replenished.
     /// </summary>
-    public float TotalCooldownRemaining => !this.IsOnCooldown ? 0 : this.TotalBaseCooldown - this.cooldownElapsed;
+    public float TotalCooldownRemaining =>
+        !this.IsOnCooldown ? 0 : this.TotalBaseCooldown - this.cooldownElapsed;
 
     /// <summary>
     ///     Gets the overall elapsed cooldown.  The value will range from 0, immediately after all charges are used,
@@ -89,7 +96,8 @@ internal struct CooldownData
     ///     (so it has 1 charge available, and 15s remaining until another charge is available), this field would
     ///     return 25s (20 + 5).  If another charge were used at that exact moment, it would then return 5.
     /// </summary>
-    public float TotalCooldownElapsed => !this.IsOnCooldown ? this.TotalBaseCooldown : this.cooldownElapsed;
+    public float TotalCooldownElapsed =>
+        !this.IsOnCooldown ? this.TotalBaseCooldown : this.cooldownElapsed;
 
     /// <summary>
     ///     Gets the elapsed time on the recharge of only the currently recharging charge.  For actions that are not

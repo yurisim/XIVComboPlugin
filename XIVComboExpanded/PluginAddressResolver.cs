@@ -29,11 +29,14 @@ internal class PluginAddressResolver : BaseAddressResolver
     {
         this.ComboTimer = new IntPtr(&ActionManager.Instance()->Combo.Timer);
 
-        this.IsActionIdReplaceable =
-            scanner.ScanText("E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 5C 24");
+        this.IsActionIdReplaceable = scanner.ScanText(
+            "E8 ?? ?? ?? ?? 84 C0 0F 84 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 5C 24"
+        );
 
         Service.PluginLog.Verbose("===== X I V C O M B O =====");
-        Service.PluginLog.Verbose($"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}");
+        Service.PluginLog.Verbose(
+            $"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}"
+        );
         Service.PluginLog.Verbose($"{nameof(this.ComboTimer)}            0x{this.ComboTimer:X}");
         Service.PluginLog.Verbose($"{nameof(this.LastComboMove)}         0x{this.LastComboMove:X}");
     }

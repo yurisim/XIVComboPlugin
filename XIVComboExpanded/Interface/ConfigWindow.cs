@@ -39,8 +39,8 @@ internal class ConfigWindow : Window
 
         this.groupedPresets = Enum.GetValues<CustomComboPreset>()
             .Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled)
-            .Select(
-                preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
+            .Select(preset =>
+                (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
             )
             .Where(tpl => tpl.Info != null && Service.Configuration.GetParent(tpl.Preset) == null)
             .OrderBy(tpl => tpl.Info.JobName)
@@ -61,9 +61,8 @@ internal class ConfigWindow : Window
         this.presetChildren = childCombos.ToDictionary(
             kvp => kvp.Key,
             kvp =>
-                kvp.Value.Select(
-                        preset =>
-                            (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
+                kvp.Value.Select(preset =>
+                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
                     )
                     .OrderBy(tpl => tpl.Info.Order)
                     .ToArray()
@@ -78,7 +77,9 @@ internal class ConfigWindow : Window
     {
         ImGui.Text("DAWNTRAIL EDITION");
         ImGui.Text("This version of XIVCombo has been updated for Dawntrail (7.0).");
-        ImGui.Text("Because of the massive amount of changes, some combos have been removed, reworked, added.");
+        ImGui.Text(
+            "Because of the massive amount of changes, some combos have been removed, reworked, added."
+        );
         ImGui.Text("New combos will be added at a later date.");
         ImGui.Text("If you encounter any problems, please open an issue on github.");
         ImGui.Separator();
@@ -121,7 +122,13 @@ internal class ConfigWindow : Window
         ImGui.PopStyleVar();
 
         if (ImGui.Button("You can support me on Ko-Fi ♥"))
-            Process.Start(new ProcessStartInfo { FileName = "https://ko-fi.com/khayle", UseShellExecute = true });
+            Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName = "https://ko-fi.com/khayle",
+                    UseShellExecute = true,
+                }
+            );
 
         ImGui.EndChild();
     }
@@ -145,7 +152,8 @@ internal class ConfigWindow : Window
             {
                 this.EnableParentPresets(preset);
                 Service.Configuration.EnabledActions.Add(preset);
-                foreach (var conflict in conflicts) Service.Configuration.EnabledActions.Remove(conflict);
+                foreach (var conflict in conflicts)
+                    Service.Configuration.EnabledActions.Remove(conflict);
             }
             else
             {

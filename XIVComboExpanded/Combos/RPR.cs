@@ -121,7 +121,8 @@ internal class ReaperSlice : CustomCombo
             var needSoulSlice =
                 level >= RPR.Levels.SoulSlice
                 && HasCharges(RPR.SoulSlice)
-                && (GetCooldown(RPR.SoulSlice).TotalCooldownRemaining <= 15
+                && (
+                    GetCooldown(RPR.SoulSlice).TotalCooldownRemaining <= 15
                     || HasEffect(RPR.Buffs.ArcaneCircle)
                     || raidBuffs
                 );
@@ -130,79 +131,95 @@ internal class ReaperSlice : CustomCombo
 
             var arcaneCD = GetCooldown(RPR.ArcaneCircle);
 
-
             if (GCDClipCheck(actionID) && deathsDesign is not null)
             {
-                var normalBloodStalkReady = gauge.Soul >= 50
-                            && (level < RPR.Levels.ArcaneCircle || IsOnCooldown(RPR.ArcaneCircle))
-                            && !HasEffect(RPR.Buffs.SoulReaver)
-                            && !HasEffect(RPR.Buffs.Executioner)
-                            && (gauge.Soul >= 80
-                                || needSoulSlice
-                                || HasEffect(RPR.Buffs.ArcaneCircle)
-                                || raidBuffs);
+                var normalBloodStalkReady =
+                    gauge.Soul >= 50
+                    && (level < RPR.Levels.ArcaneCircle || IsOnCooldown(RPR.ArcaneCircle))
+                    && !HasEffect(RPR.Buffs.SoulReaver)
+                    && !HasEffect(RPR.Buffs.Executioner)
+                    && (
+                        gauge.Soul >= 80
+                        || needSoulSlice
+                        || HasEffect(RPR.Buffs.ArcaneCircle)
+                        || raidBuffs
+                    );
 
                 switch (level)
                 {
-                    case >= RPR.Levels.ArcaneCircle when
-                        IsOffCooldown(RPR.ArcaneCircle)
-                        && raidBuffs:
+                    case >= RPR.Levels.ArcaneCircle
+                        when IsOffCooldown(RPR.ArcaneCircle) && raidBuffs:
                         return RPR.ArcaneCircle;
 
-                    case >= RPR.Levels.Sacrificium when
-                        CanUseAction(RPR.Sacrificium):
+                    case >= RPR.Levels.Sacrificium when CanUseAction(RPR.Sacrificium):
                         return RPR.Sacrificium;
 
-                    case >= RPR.Levels.Gluttony when
-                        IsOffCooldown(RPR.Gluttony)
-                        && !HasEffect(RPR.Buffs.SoulReaver)
-                        && !HasEffect(RPR.Buffs.Executioner)
-                        && gauge.Shroud <= 80
-                        && gauge.EnshroudedTimeRemaining == 0
-                        && (HasEffect(RPR.Buffs.ArcaneCircle)
-                            || raidBuffs
-                            || arcaneCD.TotalCooldownRemaining >= 6)
-                        && gauge.Soul >= 50:
+                    case >= RPR.Levels.Gluttony
+                        when IsOffCooldown(RPR.Gluttony)
+                            && !HasEffect(RPR.Buffs.SoulReaver)
+                            && !HasEffect(RPR.Buffs.Executioner)
+                            && gauge.Shroud <= 80
+                            && gauge.EnshroudedTimeRemaining == 0
+                            && (
+                                HasEffect(RPR.Buffs.ArcaneCircle)
+                                || raidBuffs
+                                || arcaneCD.TotalCooldownRemaining >= 6
+                            )
+                            && gauge.Soul >= 50:
                         return RPR.Gluttony;
 
-                    case >= RPR.Levels.BloodStalk when
-                    CanUseAction(OriginalHook(RPR.BloodStalk))
-                        && (normalBloodStalkReady || gauge.VoidShroud >= 2):
+                    case >= RPR.Levels.BloodStalk
+                        when CanUseAction(OriginalHook(RPR.BloodStalk))
+                            && (normalBloodStalkReady || gauge.VoidShroud >= 2):
                         return OriginalHook(RPR.BloodStalk);
 
-                    case >= RPR.Levels.Enshroud when
-                        (gauge.Shroud >= 50 || idealHost is not null)
-                        && CanUseAction(RPR.Enshroud)
-                        && (gauge.Shroud >= 80
-                            || idealHost is not null
-                            || HasEffect(RPR.Buffs.ArcaneCircle)
-                            || raidBuffs)
-                        && IsOffCooldown(RPR.Enshroud):
+                    case >= RPR.Levels.Enshroud
+                        when (gauge.Shroud >= 50 || idealHost is not null)
+                            && CanUseAction(RPR.Enshroud)
+                            && (
+                                gauge.Shroud >= 80
+                                || idealHost is not null
+                                || HasEffect(RPR.Buffs.ArcaneCircle)
+                                || raidBuffs
+                            )
+                            && IsOffCooldown(RPR.Enshroud):
                         return RPR.Enshroud;
                 }
             }
 
-            if (level >= RPR.Levels.Communio
+            if (
+                level >= RPR.Levels.Communio
                 // && deathsDesign is not null
-                && gauge.LemureShroud == 1)
+                && gauge.LemureShroud == 1
+            )
                 return RPR.Communio;
 
-            if (HasEffect(RPR.Buffs.SoulReaver)
+            if (
+                HasEffect(RPR.Buffs.SoulReaver)
                 || HasEffect(RPR.Buffs.Executioner)
-                || gauge.EnshroudedTimeRemaining > 0)
+                || gauge.EnshroudedTimeRemaining > 0
+            )
             {
-                if ((HasEffect(RPR.Buffs.EnhancedGibbet) && gauge.LemureShroud < 1)
-                    || HasEffect(RPR.Buffs.EnhancedVoidReaping))
+                if (
+                    (HasEffect(RPR.Buffs.EnhancedGibbet) && gauge.LemureShroud < 1)
+                    || HasEffect(RPR.Buffs.EnhancedVoidReaping)
+                )
                     return OriginalHook(RPR.Gibbet);
                 return OriginalHook(RPR.Gallows);
             }
 
-            if (level >= RPR.Levels.Soulsow
-                && ((!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
-                    || (InCombat()
+            if (
+                level >= RPR.Levels.Soulsow
+                && (
+                    (!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
+                    || (
+                        InCombat()
                         && HasEffect(RPR.Buffs.Soulsow)
                         && deathsDesign is not null
-                        && (raidBuffs || HasEffect(RPR.Buffs.ArcaneCircle)))))
+                        && (raidBuffs || HasEffect(RPR.Buffs.ArcaneCircle))
+                    )
+                )
+            )
                 return OriginalHook(RPR.Soulsow);
 
             if (deathsDesign is null || deathsDesign.RemainingTime <= 15)
@@ -213,17 +230,17 @@ internal class ReaperSlice : CustomCombo
 
             if (deathsDesign is not null)
             {
-
                 var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
 
-                if (level >= RPR.Levels.PlentifulHarvest
+                if (
+                    level >= RPR.Levels.PlentifulHarvest
                     && CanUseAction(RPR.PlentifulHarvest)
                     && immortalSacrifice is not null
-                   // && (immortalSacrifice.StackCount == PartyList.Length
-                   //     || immortalSacrifice.StackCount == 8
-                   //     || immortalSacrifice?.RemainingTime <= 25
-                   //     )
-                   )
+                // && (immortalSacrifice.StackCount == PartyList.Length
+                //     || immortalSacrifice.StackCount == 8
+                //     || immortalSacrifice?.RemainingTime <= 25
+                //     )
+                )
                     return RPR.PlentifulHarvest;
 
                 if (needSoulSlice && gauge.Soul <= 50)
@@ -269,37 +286,33 @@ internal class ReaperScythe : CustomCombo
 
                 switch (level)
                 {
-                    case >= RPR.Levels.Sacrificium when
-                        CanUseAction(RPR.Sacrificium):
+                    case >= RPR.Levels.Sacrificium when CanUseAction(RPR.Sacrificium):
                         return RPR.Sacrificium;
 
-                    case >= RPR.Levels.BloodStalk when
-                        !HasEffect(RPR.Buffs.SoulReaver)
-                        && !HasEffect(RPR.Buffs.Executioner)
-                        && (gauge.Soul >= 50
-                            || gauge.VoidShroud >= 2):
+                    case >= RPR.Levels.BloodStalk
+                        when !HasEffect(RPR.Buffs.SoulReaver)
+                            && !HasEffect(RPR.Buffs.Executioner)
+                            && (gauge.Soul >= 50 || gauge.VoidShroud >= 2):
                         return OriginalHook(RPR.BloodStalk);
-                    case >= RPR.Levels.ArcaneCircle when
-                        IsOffCooldown(RPR.ArcaneCircle)
-                        && HasRaidBuffs(2):
+                    case >= RPR.Levels.ArcaneCircle
+                        when IsOffCooldown(RPR.ArcaneCircle) && HasRaidBuffs(2):
                         return RPR.ArcaneCircle;
 
-                    case >= RPR.Levels.Enshroud when
-                        (gauge.Shroud >= 50 || HasEffect(RPR.Buffs.IdealHost))
-                        && gauge.EnshroudedTimeRemaining == 0
-                        && IsOffCooldown(RPR.Enshroud):
+                    case >= RPR.Levels.Enshroud
+                        when (gauge.Shroud >= 50 || HasEffect(RPR.Buffs.IdealHost))
+                            && gauge.EnshroudedTimeRemaining == 0
+                            && IsOffCooldown(RPR.Enshroud):
                         return RPR.Enshroud;
 
-                    case >= RPR.Levels.Gluttony when
-                        IsOffCooldown(RPR.Gluttony)
-                        && !HasEffect(RPR.Buffs.SoulReaver)
-                        && !HasEffect(RPR.Buffs.Executioner)
-                        && gauge.EnshroudedTimeRemaining == 0
-                        && gauge.Soul >= 50:
+                    case >= RPR.Levels.Gluttony
+                        when IsOffCooldown(RPR.Gluttony)
+                            && !HasEffect(RPR.Buffs.SoulReaver)
+                            && !HasEffect(RPR.Buffs.Executioner)
+                            && gauge.EnshroudedTimeRemaining == 0
+                            && gauge.Soul >= 50:
                         return RPR.Gluttony;
                 }
             }
-
 
             if (level >= RPR.Levels.Soulsow)
                 if (
@@ -317,17 +330,24 @@ internal class ReaperScythe : CustomCombo
                     return RPR.WhorlOfDeath;
             }
 
-            if (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Executioner) || gauge.EnshroudedTimeRemaining > 0)
+            if (
+                HasEffect(RPR.Buffs.SoulReaver)
+                || HasEffect(RPR.Buffs.Executioner)
+                || gauge.EnshroudedTimeRemaining > 0
+            )
                 return OriginalHook(RPR.Guillotine);
 
             var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
 
-            if (level >= RPR.Levels.PlentifulHarvest
+            if (
+                level >= RPR.Levels.PlentifulHarvest
                 && CanUseAction(RPR.PlentifulHarvest)
                 && immortalSacrifice is not null
-                && (immortalSacrifice.StackCount == PartyList.Length
-                    || immortalSacrifice?.RemainingTime <= 20)
-               )
+                && (
+                    immortalSacrifice.StackCount == PartyList.Length
+                    || immortalSacrifice?.RemainingTime <= 20
+                )
+            )
                 return RPR.PlentifulHarvest;
 
             if (doSoulScythe && gauge.Soul <= 50)
@@ -360,13 +380,13 @@ internal class ReaperCommunioPositional : CustomCombo
         {
             var gauge = GetJobGauge<RPRGauge>();
 
-            if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1) return RPR.Communio;
+            if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1)
+                return RPR.Communio;
         }
 
         return actionID;
     }
 }
-
 
 internal class ReaperHellsIngressEgress : CustomCombo
 {

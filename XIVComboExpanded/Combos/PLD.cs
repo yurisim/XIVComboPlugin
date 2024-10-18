@@ -8,8 +8,7 @@ internal static class PLD
     public const byte ClassID = 1;
     public const byte JobID = 19;
 
-    public const uint
-    FastBlade = 9,
+    public const uint FastBlade = 9,
         RiotBlade = 15,
         ShieldBash = 16,
         FightOrFlight = 20,
@@ -43,8 +42,7 @@ internal static class PLD
 
     public static class Buffs
     {
-        public const ushort
-            FightOrFlight = 76,
+        public const ushort FightOrFlight = 76,
             IronWill = 79,
             Requiescat = 1368,
             DivineMight = 2673,
@@ -106,7 +104,8 @@ internal class PaladinST : CustomCombo
 
             var gauge = GetJobGauge<PLDGauge>();
 
-            var canUseAtonement = level >= PLD.Levels.Atonement && CanUseAction(OriginalHook(PLD.Atonement));
+            var canUseAtonement =
+                level >= PLD.Levels.Atonement && CanUseAction(OriginalHook(PLD.Atonement));
 
             var inMeleeRange = InMeleeRange();
 
@@ -114,59 +113,74 @@ internal class PaladinST : CustomCombo
             {
                 switch (level)
                 {
-                    case >= PLD.Levels.FightOrFlight when
-                        IsOffCooldown(PLD.FightOrFlight)
-                        && ((level > PLD.Levels.RoyalAuthority && lastComboMove == PLD.RiotBlade)
-                            || (level >= PLD.Levels.RoyalAuthority && lastComboMove == PLD.RoyalAuthority)
-                            || level < PLD.Levels.Prominence && lastComboMove == PLD.TotalEclipse
-                            || level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence
-                            || canUseAtonement
-                            || hasRaidBuffs):
+                    case >= PLD.Levels.FightOrFlight
+                        when IsOffCooldown(PLD.FightOrFlight)
+                            && (
+                                (
+                                    level < PLD.Levels.RoyalAuthority
+                                    && lastComboMove == PLD.RiotBlade
+                                )
+                                || (
+                                    level >= PLD.Levels.RoyalAuthority
+                                    && lastComboMove == PLD.RoyalAuthority
+                                )
+                                || level < PLD.Levels.Prominence
+                                    && lastComboMove == PLD.TotalEclipse
+                                || level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence
+                                || canUseAtonement
+                                || hasRaidBuffs
+                            ):
                         return PLD.FightOrFlight;
-                    case >= PLD.Levels.Requiescat when
-                        IsOffCooldown(OriginalHook(PLD.Requiescat))
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 15
-                            || hasRaidBuffs):
+                    case >= PLD.Levels.Requiescat
+                        when IsOffCooldown(OriginalHook(PLD.Requiescat))
+                            && (flightOrFight is not null || fightOrFlightCD >= 15 || hasRaidBuffs):
                         return OriginalHook(PLD.Requiescat);
-                    case >= PLD.Levels.CircleOfScorn when
-                        IsOffCooldown(PLD.CircleOfScorn)
-                        && HasTarget()
-                        && GetTargetDistance() <= 5
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 7.5
-                            || hasRaidBuffs):
+                    case >= PLD.Levels.CircleOfScorn
+                        when IsOffCooldown(PLD.CircleOfScorn)
+                            && HasTarget()
+                            && GetTargetDistance() <= 5
+                            && (
+                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
+                            ):
                         return PLD.CircleOfScorn;
-                    case >= PLD.Levels.SpiritsWithin when
-                        IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
-                        && inMeleeRange
-                        && (flightOrFight is not null
-                            || fightOrFlightCD >= 7.5
-                            || hasRaidBuffs):
+                    case >= PLD.Levels.SpiritsWithin
+                        when IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
+                            && inMeleeRange
+                            && (
+                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
+                            ):
                         return OriginalHook(PLD.SpiritsWithin);
-                    case >= PLD.Levels.Sheltron when
-                        IsOffCooldown(PLD.Sheltron)
-                        && actionID is PLD.TotalEclipse
-                        && gauge.OathGauge == 100:
-                        return PLD.Sheltron;
+                    case >= PLD.Levels.Sheltron
+                        when IsOffCooldown(PLD.Sheltron)
+                            && actionID is PLD.TotalEclipse
+                            && gauge.OathGauge == 100:
+                        return OriginalHook(PLD.Sheltron);
                 }
             }
 
-
-            if (level >= PLD.Levels.GoringBlade
+            if (
+                level >= PLD.Levels.GoringBlade
                 && goringBladeReady is not null
                 && inMeleeRange
                 && actionID is PLD.FastBlade
-                && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5
-                    || hasRaidBuffs)
-                )
+                && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5 || hasRaidBuffs)
+            )
                 return PLD.GoringBlade;
 
-            if (level >= PLD.Levels.HolySpirit
-                && (HasEffect(PLD.Buffs.Requiescat)
-                    || (HasEffect(PLD.Buffs.DivineMight) && (!inMeleeRange || lastComboMove == PLD.RiotBlade || lastComboMove == PLD.Prominence))
+            if (
+                level >= PLD.Levels.HolySpirit
+                && (
+                    HasEffect(PLD.Buffs.Requiescat)
+                    || (
+                        HasEffect(PLD.Buffs.DivineMight)
+                        && (
+                            !inMeleeRange
+                            || lastComboMove == PLD.RiotBlade
+                            || lastComboMove == PLD.Prominence
+                        )
                     )
                 )
+            )
             {
                 if (level >= PLD.Levels.Confiteor && HasEffect(PLD.Buffs.ConfiteorReady))
                 {
@@ -181,12 +195,10 @@ internal class PaladinST : CustomCombo
                 return PLD.HolySpirit;
             }
 
-
             if (canUseAtonement && inMeleeRange && actionID is PLD.FastBlade)
             {
                 return OriginalHook(PLD.Atonement);
             }
-
 
             if (comboTime > 0)
             {
@@ -209,7 +221,6 @@ internal class PaladinST : CustomCombo
                     return PLD.TotalEclipse;
                 }
             }
-
         }
 
         return actionID;

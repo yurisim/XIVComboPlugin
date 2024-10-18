@@ -104,7 +104,7 @@ internal class CustomComboInfoAttribute : Attribute
             42 => "Pictomancer",
             DOH.JobID => "Disciples of the Hand",
             DOL.JobID => "Disciples of the Land",
-            _ => "Unknown"
+            _ => "Unknown",
         };
     }
 }
