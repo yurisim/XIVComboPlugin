@@ -126,7 +126,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                         when (
                             HasEffect(RDM.Buffs.Embolden)
                             || raidBuffs
-                            || GetCooldown(RDM.Embolden).CooldownRemaining >= 5.5
+                            || GetCooldown(RDM.Embolden).CooldownRemaining >= 15
                         )
                             && gauge.ManaStacks < 1
                             && IsOffCooldown(RDM.Manafication):
@@ -178,7 +178,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 + (level >= RDM.Levels.Zwerchhau ? 15 : 0)
                 + (level >= RDM.Levels.Redoublement ? 15 : 0);
 
-            var needToReprise = gauge.WhiteMana >= 85 && gauge.BlackMana >= 85 && !hasSpeedy;
+            var needToReprise = gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy;
 
             var startMeleeCombo =
                 (
