@@ -184,9 +184,8 @@ internal class DancerCascadeFountain : CustomCombo
     {
         if (actionID == DNC.Cascade || actionID == DNC.Windmill)
         {
-            var hasRaidBuffs = HasRaidBuffs(1);
-            var hasRaidBuffs2 = HasRaidBuffs(2);
-
+            var hasOneRaidBuff = HasRaidBuffs(1);
+            var hasTwoRaidBuffs = HasRaidBuffs(2);
 
             var gauge = GetJobGauge<DNCGauge>();
 
@@ -206,10 +205,22 @@ internal class DancerCascadeFountain : CustomCombo
                 if (gauge.CompletedSteps < stepNumber)
                     return gauge.NextStep;
 
+                if (distance > 15)
+                {
+                    return ADV.Swiftcast;
+                }
+
                 return hasStandardStep
                     ? OriginalHook(DNC.StandardStep)
                     : OriginalHook(DNC.TechnicalStep);
             }
+
+            if (
+                level >= DNC.Levels.Devilment
+                && IsOffCooldown(DNC.Devilment)
+                && IsOnCooldown(DNC.TechnicalStep)
+            )
+                return DNC.Devilment;
 
             if (GCDClipCheck(actionID))
             {
@@ -218,11 +229,6 @@ internal class DancerCascadeFountain : CustomCombo
 
                 switch (level)
                 {
-                    case >= DNC.Levels.Devilment
-                        when IsOffCooldown(DNC.Devilment)
-                            && (IsOnCooldown(DNC.TechnicalStep) || hasRaidBuffs):
-                        return DNC.Devilment;
-
                     case >= DNC.Levels.FanDance4
                         when HasEffect(DNC.Buffs.FourfoldFanDance) && distance <= 15:
                         return DNC.FanDance4;
@@ -234,19 +240,16 @@ internal class DancerCascadeFountain : CustomCombo
                     case >= DNC.Levels.Flourish
                         when gauge.Feathers < 4
                             && IsOffCooldown(DNC.Flourish)
-                            && IsOnCooldown(DNC.TechnicalStep)
-                            && (hasRaidBuffs || GetCooldown(OriginalHook(DNC.StandardStep)).CooldownRemaining <= 10):
+                            && IsOnCooldown(DNC.Devilment):
                         return DNC.Flourish;
 
                     case >= DNC.Levels.FanDance2
-                        when gauge.Feathers >= 1
-                            && distance <= 5
-                            && actionID is DNC.Windmill:
+                        when gauge.Feathers >= 1 && distance <= 5 && actionID is DNC.Windmill:
                         return DNC.FanDance2;
 
                     case >= DNC.Levels.FanDance1
                         when gauge.Feathers >= 1
-                            && (hasRaidBuffs2 || gauge.Feathers == 4)
+                            && (hasTwoRaidBuffs || gauge.Feathers == 4)
                             && distance <= 25:
                         return DNC.FanDance1;
 
@@ -254,27 +257,29 @@ internal class DancerCascadeFountain : CustomCombo
                         when IsOffCooldown(DNC.ShieldSamba) && reprisalFound:
                         return DNC.ShieldSamba;
 
-                    case >= DNC.Levels.CuringWaltz
-                        when IsOffCooldown(DNC.CuringWaltz) && LocalPlayerPercentage() <= 0.50:
-                        return DNC.CuringWaltz;
+                    // case >= DNC.Levels.CuringWaltz
+                    //     when IsOffCooldown(DNC.CuringWaltz) && LocalPlayerPercentage() <= 0.50:
+                    //     return DNC.CuringWaltz;
                 }
             }
 
             if (
                 level >= DNC.Levels.TechnicalStep
                 && IsOffCooldown(DNC.TechnicalStep)
-                && hasRaidBuffs
+                && hasOneRaidBuff
                 && distance <= 15
             )
                 return DNC.TechnicalStep;
 
+            var lastDanceReady = FindEffect(DNC.Buffs.LastDanceReady);
+
             if (
                 level >= DNC.Levels.LastDance
-                && HasEffect(DNC.Buffs.LastDanceReady)
+                && lastDanceReady is not null
                 && (
-                    hasRaidBuffs
-                    || IsOffCooldown(OriginalHook(DNC.StandardStep))
-                    || GetCooldown(OriginalHook(DNC.StandardStep)).CooldownRemaining <= 10
+                    hasTwoRaidBuffs
+                    || lastDanceReady.RemainingTime <= 5
+                    || GetCooldown(OriginalHook(DNC.StandardStep)).CooldownRemaining <= 5
                     || actionID is DNC.Windmill
                 )
             )
@@ -283,15 +288,15 @@ internal class DancerCascadeFountain : CustomCombo
             if (
                 level >= DNC.Levels.StandardStep
                 && IsOffCooldown(OriginalHook(DNC.StandardStep))
-                && !HasEffect(DNC.Buffs.LastDanceReady)
                 && (distance <= 15 || !InCombat())
-                && (level < DNC.Levels.Flourish || IsOnCooldown(DNC.Flourish) || !InCombat() || hasStandardStep)
                 && (
-                    (
-                        GetCooldown(DNC.TechnicalStep).CooldownRemaining >= 11
-                        && GetCooldown(DNC.Flourish).CooldownRemaining >= 11
-                    )
-                    || hasRaidBuffs
+                    level < DNC.Levels.Flourish
+                    || GetCooldown(DNC.Flourish).CooldownRemaining >= 5
+                    || !InCombat()
+                    || hasStandardStep
+                )
+                && (
+                    GetCooldown(DNC.TechnicalStep).CooldownRemaining >= 11
                     || hasStandardStep
                     || !InCombat()
                     || actionID is DNC.Windmill
@@ -304,19 +309,19 @@ internal class DancerCascadeFountain : CustomCombo
                 && (CanUseAction(DNC.DanceOfTheDawn) || gauge.Esprit == 95)
             )
             {
-                return DNC.DanceOfTheDawn;
+                return OriginalHook(DNC.SaberDance);
             }
 
             if (
                 level >= DNC.Levels.StarfallDance
-                && hasRaidBuffs
+                && hasOneRaidBuff
                 && HasEffect(DNC.Buffs.FlourishingStarfall)
             )
                 return DNC.StarfallDance;
 
             if (
                 level >= DNC.Levels.Tillana
-                && (actionID is DNC.Windmill || hasRaidBuffs)
+                && (actionID is DNC.Windmill || hasOneRaidBuff)
                 && gauge.Esprit < 50
                 && CanUseAction(DNC.Tillana)
                 && distance <= 15
@@ -329,7 +334,7 @@ internal class DancerCascadeFountain : CustomCombo
                 && CanUseAction(OriginalHook(DNC.SaberDance))
                 && (
                     gauge.Esprit >= 60
-                    || hasRaidBuffs
+                    || hasOneRaidBuff
                     || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill
                 )

@@ -132,11 +132,16 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                             && IsOffCooldown(RDM.Manafication):
                         return RDM.Manafication;
                     case >= RDM.Levels.Fleche
-                        when IsOffCooldown(RDM.Fleche) && (controlBurst || embolden || raidBuffs):
+                        when IsOffCooldown(RDM.Fleche)
+                            && (
+                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs
+                            ):
                         return RDM.Fleche;
                     case >= RDM.Levels.ContreSixte
                         when IsOffCooldown(RDM.ContreSixte)
-                            && (controlBurst || embolden || raidBuffs):
+                            && (
+                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs
+                            ):
                         return RDM.ContreSixte;
                     case >= RDM.Levels.Engagement
                         when InMeleeRange()
