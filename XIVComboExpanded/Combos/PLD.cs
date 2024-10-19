@@ -79,6 +79,7 @@ internal static class PLD
             Intervene = 74,
             Atonement = 76,
             Supplication = 76,
+            ShieldLob = 15,
             Sepulchre = 76,
             Confiteor = 80,
             Expiacion = 86,
@@ -107,7 +108,7 @@ internal class PaladinST : CustomCombo
             var canUseAtonement =
                 level >= PLD.Levels.Atonement && CanUseAction(OriginalHook(PLD.Atonement));
 
-            var inMeleeRange = InMeleeRange();
+            var distance = GetTargetDistance();
 
             if (GCDClipCheck(actionID) && HasTarget())
             {
@@ -138,14 +139,14 @@ internal class PaladinST : CustomCombo
                     case >= PLD.Levels.CircleOfScorn
                         when IsOffCooldown(PLD.CircleOfScorn)
                             && HasTarget()
-                            && GetTargetDistance() <= 5
+                            && distance <= 5
                             && (
                                 flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
                             ):
                         return PLD.CircleOfScorn;
                     case >= PLD.Levels.SpiritsWithin
                         when IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
-                            && inMeleeRange
+                            && distance <= 5
                             && (
                                 flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
                             ):
@@ -161,7 +162,7 @@ internal class PaladinST : CustomCombo
             if (
                 level >= PLD.Levels.GoringBlade
                 && goringBladeReady is not null
-                && inMeleeRange
+                && distance <= 5
                 && actionID is PLD.FastBlade
                 && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5 || hasRaidBuffs)
             )
@@ -174,7 +175,7 @@ internal class PaladinST : CustomCombo
                     || (
                         HasEffect(PLD.Buffs.DivineMight)
                         && (
-                            !inMeleeRange
+                            distance > 5
                             || lastComboMove == PLD.RiotBlade
                             || lastComboMove == PLD.Prominence
                         )
@@ -195,14 +196,14 @@ internal class PaladinST : CustomCombo
                 return PLD.HolySpirit;
             }
 
-            if (canUseAtonement && inMeleeRange && actionID is PLD.FastBlade)
+            if (canUseAtonement && distance <= 5 && actionID is PLD.FastBlade)
             {
                 return OriginalHook(PLD.Atonement);
             }
 
             if (comboTime > 0)
             {
-                if (actionID is PLD.FastBlade && inMeleeRange)
+                if (actionID is PLD.FastBlade && distance <= 5)
                 {
                     if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.RageOfHalone)
                         return OriginalHook(PLD.RageOfHalone);
@@ -220,6 +221,17 @@ internal class PaladinST : CustomCombo
 
                     return PLD.TotalEclipse;
                 }
+            }
+
+            if (distance > 5)
+            {
+                if (level >= PLD.Levels.HolySpirit && LocalPlayer?.CurrentMp > 5000 && !IsMoving)
+                {
+                    return PLD.HolySpirit;
+                }
+
+                if (level >= PLD.Levels.ShieldLob)
+                    return PLD.ShieldLob;
             }
         }
 

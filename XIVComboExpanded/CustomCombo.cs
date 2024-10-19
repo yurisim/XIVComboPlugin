@@ -732,7 +732,7 @@ internal abstract partial class CustomCombo
     protected static bool GCDClipCheck(uint actionID)
     {
         // proviously 0.18
-        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.3;
+        return GetCooldown(actionID).CooldownRemaining / GetCooldown(actionID).BaseCooldown >= 0.31;
     }
 
     /// <summary>

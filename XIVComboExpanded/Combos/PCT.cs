@@ -223,6 +223,7 @@ internal static class PCT
                         case >= ADV.Levels.Swiftcast
                             when hyperphantasia is null
                                 && !HasEffect(Buffs.HammerTime)
+                                && !HasEffect(Buffs.RainbowReady)
                                 && cooldownBuffs
                                 && HasCharges(OriginalHook(LivingMuse))
                                 && !gauge.CreatureMotifDrawn
@@ -235,14 +236,11 @@ internal static class PCT
                             return ADV.LucidDreaming;
                     }
 
-                if (HasEffect(Buffs.RainbowReady))
-                    return RainbowDrip;
-
                 if (
                     HasEffect(Buffs.StarPrismReady)
                     && (
-                        hasRaidBuffs
-                        || hyperphantasia?.StackCount <= 3
+                        hyperphantasia?.StackCount < 3
+                        || IsMoving
                         || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15
                     )
                 )
@@ -258,6 +256,9 @@ internal static class PCT
                 {
                     return OriginalHook(HammerStamp);
                 }
+
+                if (HasEffect(Buffs.RainbowReady))
+                    return RainbowDrip;
 
                 if (
                     CanUseAction(CometBlack)
@@ -321,7 +322,7 @@ internal static class PCT
                 {
                     if (
                         IsOffCooldown(ADV.Swiftcast)
-                        && quickSkill != default
+                        && quickSkill.Any()
                         && GCDClipCheck(actionID)
                     )
                     {
@@ -334,7 +335,7 @@ internal static class PCT
                     }
                 }
 
-                if (actionID is FireRed && !(HasEffect(Buffs.StarryMuse) || hasRaidBuffs))
+                if (actionID is FireRed && !HasEffect(Buffs.StarryMuse))
                 {
                     var filteredskills = availableSkill
                         .Where(s =>
