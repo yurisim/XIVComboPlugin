@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -39,6 +40,7 @@ internal static class MNK
             RaptorForm = 108,
             CoerlForm = 109,
             PerfectBalance = 110,
+            WindsRumination = 3842,
             EarthsRumination = 3841,
             Brotherhood = 1185,
             RiddleOfFire = 1181,
@@ -101,6 +103,8 @@ internal class MonkBootshine : CustomCombo
                     || level < MNK.Levels.RiddleOfFire;
             }
 
+            var distance = GetTargetDistance();
+
             var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
 
             var earthsRumination = FindEffect(MNK.Buffs.EarthsRumination);
@@ -113,17 +117,22 @@ internal class MonkBootshine : CustomCombo
                             && !HasEffect(MNK.Buffs.FormlessFist)
                             && OriginalHook(MNK.MasterfulBlitz) == MNK.MasterfulBlitz
                             && !HasEffect(MNK.Buffs.PerfectBalance)
+                            && HasEffect(MNK.Buffs.RaptorForm)
                             && (
-                                riddleFireEffect?.RemainingTime
-                                    >= GetCooldown(actionID).BaseCooldown * 4
-                                || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining
-                                    <= GetCooldown(actionID).BaseCooldown * 3
-                                || hasRaidBuffs
+                                riddleFireEffect?.RemainingTime >= GetCooldown(actionID).BaseCooldown * 4 // there are 4 actions
+                                || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining <= GetCooldown(actionID).BaseCooldown * 3 // use 3 actions before the next riddle
+                                || TargetIsLow()
                                 || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4
+                            )
+                            && (
+                                !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR)) // we need to save phantoms for brotherhood, so don't use it if we have both unless...
+                                || HasEffect(MNK.Buffs.Brotherhood) // ...we have brotherhood
+                                || GetCooldown(MNK.Brotherhood).TotalCooldownRemaining
+                                    <= GetCooldown(actionID).BaseCooldown * 3 // ...or we're about to get brotherhood
                             ):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.Brotherhood
-                        when IsOffCooldown(MNK.Brotherhood) && HasRaidBuffs(2):
+                        when IsOffCooldown(MNK.Brotherhood) && hasRaidBuffs:
                         return MNK.Brotherhood;
                     case >= MNK.Levels.RiddleOfFire
                         when IsOffCooldown(MNK.RiddleOfFire)
@@ -181,11 +190,13 @@ internal class MonkBootshine : CustomCombo
                 level >= MNK.Levels.MasterfulBlitz
                 && !HasEffect(MNK.Buffs.PerfectBalance)
                 && OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz
-                // 5000 is in Milliseconds
                 && (
-                    gauge.BlitzTimeRemaining <= 8500
-                    || riddleFireEffect is not null
-                    || hasRaidBuffs
+                    GetCooldown(MNK.Brotherhood).TotalCooldownElapsed >= 1
+                    || level < MNK.Levels.Brotherhood
+                )
+                && (
+                    gauge.BlitzTimeRemaining <= 8500 || riddleFireEffect is not null
+                // || hasRaidBuffs
                 )
             )
                 return OriginalHook(MNK.MasterfulBlitz);
@@ -195,22 +206,45 @@ internal class MonkBootshine : CustomCombo
                 && CanUseAction(MNK.FiresReply)
                 && (
                     HasEffect(MNK.Buffs.RaptorForm)
-                    || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 8
+                    || distance >= 5
+                    || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 6
                 )
                 && !HasEffect(MNK.Buffs.FormlessFist)
             )
                 return MNK.FiresReply;
 
-            if (level >= MNK.Levels.WindsReply && CanUseAction(MNK.WindsReply))
-                return MNK.WindsReply;
+            var windsRumination = FindEffect(MNK.Buffs.WindsRumination);
 
             if (
-                HasEffect(MNK.Buffs.RaptorForm)
-                || (
-                    HasEffect(MNK.Buffs.PerfectBalance)
-                    && level >= MNK.Levels.MasterfulBlitz
-                    && !gauge.Nadi.HasFlag(Nadi.SOLAR)
-                    && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)
+                level >= MNK.Levels.WindsReply
+                && GetCooldown(MNK.WindsReply).TotalCooldownElapsed >= 1
+                && windsRumination is not null
+                && (
+                    (!HasEffect(MNK.Buffs.FormlessFist) && !HasEffect(MNK.Buffs.PerfectBalance))
+                    || windsRumination.RemainingTime <= 6
+                    || distance >= 5
+                )
+            )
+            {
+                return MNK.WindsReply;
+            }
+
+            if (
+                (
+                    HasEffect(MNK.Buffs.RaptorForm)
+                    || (
+                        HasEffect(MNK.Buffs.PerfectBalance)
+                        && level >= MNK.Levels.MasterfulBlitz
+                        && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                        && !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR))
+                        && (
+                            level < MNK.Levels.Brotherhood
+                            // this enables double lunar initially so that we can phantom rush in even windows
+                            || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
+                            || TargetHPercentage() < 85
+                        )
+                        && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)
+                    )
                 )
             )
             {
@@ -221,12 +255,22 @@ internal class MonkBootshine : CustomCombo
             }
 
             if (
-                HasEffect(MNK.Buffs.CoerlForm)
-                || (
-                    HasEffect(MNK.Buffs.PerfectBalance)
-                    && level >= MNK.Levels.MasterfulBlitz
-                    && !gauge.Nadi.HasFlag(Nadi.SOLAR)
-                    && !gauge.BeastChakra.Contains(BeastChakra.COEURL)
+                (
+                    HasEffect(MNK.Buffs.CoerlForm)
+                    || (
+                        HasEffect(MNK.Buffs.PerfectBalance)
+                        && level >= MNK.Levels.MasterfulBlitz
+                        && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                        && !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR))
+                        && (
+                            level < MNK.Levels.Brotherhood
+                            // this enables double lunar initially so that we can phantom rush in even windows
+                            || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
+                            // 
+                            || TargetHPercentage() < 85
+                        )
+                        && !gauge.BeastChakra.Contains(BeastChakra.COEURL)
+                    )
                 )
             )
             {
@@ -334,13 +378,27 @@ internal class MonkAoECombo : CustomCombo
 
             if (
                 HasEffect(MNK.Buffs.RaptorForm)
-                || (perfectBalance?.StackCount >= 3 && !gauge.Nadi.HasFlag(Nadi.SOLAR))
+                || (
+                    perfectBalance?.StackCount >= 3
+                    && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                    && (
+                        level < MNK.Levels.Brotherhood
+                        || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
+                    )
+                )
             )
                 return level >= MNK.Levels.FourPointFury ? MNK.FourPointFury : MNK.TwinSnakes;
 
             if (
                 HasEffect(MNK.Buffs.CoerlForm)
-                || (perfectBalance?.StackCount >= 2 && !gauge.Nadi.HasFlag(Nadi.SOLAR))
+                || (
+                    perfectBalance?.StackCount >= 2
+                    && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                    && (
+                        level < MNK.Levels.Brotherhood
+                        || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
+                    )
+                )
             )
                 return level >= MNK.Levels.Rockbreaker ? MNK.Rockbreaker : MNK.SnapPunch;
 
