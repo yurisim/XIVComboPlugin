@@ -241,7 +241,7 @@ internal class MonkBootshine : CustomCombo
                             level < MNK.Levels.Brotherhood
                             // this enables double lunar initially so that we can phantom rush in even windows
                             || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
-                            || TargetHPercentage() < 85
+                            || TargetHPercentage() < 0.85
                         )
                         && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)
                     )
@@ -267,7 +267,7 @@ internal class MonkBootshine : CustomCombo
                             // this enables double lunar initially so that we can phantom rush in even windows
                             || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
                             // 
-                            || TargetHPercentage() < 85
+                            || TargetHPercentage() < 0.85
                         )
                         && !gauge.BeastChakra.Contains(BeastChakra.COEURL)
                     )
