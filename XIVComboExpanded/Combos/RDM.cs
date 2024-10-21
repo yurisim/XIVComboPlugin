@@ -116,21 +116,21 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var embolden = HasEffect(RDM.Buffs.Embolden);
 
+            // manafication
+            if (
+                level >= RDM.Levels.Manafication
+                && gauge.ManaStacks < 1
+                && IsOnCooldown(RDM.Embolden)
+                && IsOffCooldown(RDM.Manafication)
+            )
+                return RDM.Manafication;
+
             if (GCDClipCheck(actionID))
             {
                 switch (level)
                 {
                     case >= RDM.Levels.Embolden when IsOffCooldown(RDM.Embolden) && raidBuffs:
                         return RDM.Embolden;
-                    case >= RDM.Levels.Manafication
-                        when (
-                            HasEffect(RDM.Buffs.Embolden)
-                            || raidBuffs
-                            || GetCooldown(RDM.Embolden).CooldownRemaining >= 15
-                        )
-                            && gauge.ManaStacks < 1
-                            && IsOffCooldown(RDM.Manafication):
-                        return RDM.Manafication;
                     case >= RDM.Levels.Fleche
                         when IsOffCooldown(RDM.Fleche)
                             && (
@@ -160,6 +160,9 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                         return ADV.LucidDreaming;
                 }
             }
+
+            if (level >= RDM.Levels.Scorch && lastComboMove is RDM.Verflare or RDM.Verholy)
+                return OriginalHook(RDM.Scorch);
 
             if (gauge.ManaStacks == 3)
                 return gauge.BlackMana < gauge.WhiteMana || level < RDM.Levels.Verholy

@@ -88,6 +88,8 @@ internal class MonkBootshine : CustomCombo
             var gauge = GetJobGauge<MNKGauge>();
             var riddleFireEffect = FindEffect(MNK.Buffs.RiddleOfFire);
 
+            var hasRaidBuffs = HasRaidBuffs(2);
+
             bool riddleMeDaddy(int? skillTime)
             {
                 return (
@@ -95,7 +97,7 @@ internal class MonkBootshine : CustomCombo
                         && GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining >= skillTime
                     )
                     || riddleFireEffect is not null
-                    || HasRaidBuffs(2)
+                    || hasRaidBuffs
                     || level < MNK.Levels.RiddleOfFire;
             }
 
@@ -116,7 +118,7 @@ internal class MonkBootshine : CustomCombo
                                     >= GetCooldown(actionID).BaseCooldown * 4
                                 || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining
                                     <= GetCooldown(actionID).BaseCooldown * 3
-                                || HasRaidBuffs(2)
+                                || hasRaidBuffs
                                 || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4
                             ):
                         return MNK.PerfectBalance;
@@ -127,7 +129,7 @@ internal class MonkBootshine : CustomCombo
                         when IsOffCooldown(MNK.RiddleOfFire)
                             && (
                                 HasEffect(MNK.Buffs.Brotherhood)
-                                || HasRaidBuffs(2)
+                                || hasRaidBuffs
                                 || level < MNK.Levels.Brotherhood
                                 || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10
                             ):
@@ -183,7 +185,7 @@ internal class MonkBootshine : CustomCombo
                 && (
                     gauge.BlitzTimeRemaining <= 8500
                     || riddleFireEffect is not null
-                    || HasRaidBuffs(2)
+                    || hasRaidBuffs
                 )
             )
                 return OriginalHook(MNK.MasterfulBlitz);
