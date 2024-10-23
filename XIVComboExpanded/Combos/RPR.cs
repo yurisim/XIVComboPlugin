@@ -324,7 +324,10 @@ internal class ReaperScythe : CustomCombo
             if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1)
                 return RPR.Communio;
 
-            if (deathsDesign is null || deathsDesign.RemainingTime <= 15)
+            if (
+                (deathsDesign is null || deathsDesign.RemainingTime <= 15)
+                && level >= RPR.Levels.WhorlOfDeath
+            )
             {
                 if (ShouldUseDots() && HasTarget() && GetTargetDistance() <= 5)
                     return RPR.WhorlOfDeath;
@@ -352,12 +355,6 @@ internal class ReaperScythe : CustomCombo
 
             if (doSoulScythe && gauge.Soul <= 50)
                 return RPR.SoulScythe;
-
-            if (
-                (deathsDesign is null)
-                || (deathsDesign is not null && deathsDesign.RemainingTime <= 20)
-            )
-                return RPR.WhorlOfDeath;
 
             if (comboTime > 0)
                 if (lastComboMove == RPR.SpinningScythe && level >= RPR.Levels.NightmareScythe)

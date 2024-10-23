@@ -98,7 +98,7 @@ internal class PaladinST : CustomCombo
         {
             var fightOrFlightCD = GetCooldown(PLD.FightOrFlight).CooldownRemaining;
 
-            var hasRaidBuffs = HasRaidBuffs(1);
+            var hasRaidBuffs = HasRaidBuffs(2);
 
             var goringBladeReady = FindEffect(PLD.Buffs.GoringBladeReady);
             var flightOrFight = FindEffect(PLD.Buffs.FightOrFlight);
