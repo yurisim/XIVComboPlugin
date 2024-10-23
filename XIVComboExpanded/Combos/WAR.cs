@@ -109,7 +109,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                             && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
                             && (
                                 needToInfuriate
-                                || (actionID is WAR.Overpower && !IsMoving)
+                                // || (actionID is WAR.Overpower && !IsMoving)
                                 || raidbuffs
                                 || HasEffect(WAR.Buffs.Berserk)
                             )
@@ -123,8 +123,9 @@ internal class WarriorStormsPathCombo : CustomCombo
                     case >= WAR.Levels.Berserk
                         when IsOffCooldown(OriginalHook(WAR.Berserk))
                             && (level < WAR.Levels.StormsEye || surgingTempest is not null)
-                            && (needToInfuriate || level >= WAR.Levels.Infuriate)
-                            && !HasEffect(WAR.Buffs.NascentChaos):
+                            // && (needToInfuriate || level >= WAR.Levels.Infuriate)
+                            // && !HasEffect(WAR.Buffs.NascentChaos)
+                            :
                         return OriginalHook(WAR.Berserk);
 
                     case >= WAR.Levels.Equilibrium
@@ -132,6 +133,13 @@ internal class WarriorStormsPathCombo : CustomCombo
                             && localPlayerPercentage <= 0.70
                             && !HasEffect(WAR.Buffs.Holmgang):
                         return WAR.Equilibrium;
+
+                    case >= WAR.Levels.RawIntuition
+                        when IsOffCooldown(WAR.RawIntuition)
+                            && localPlayerPercentage <= 0.80
+                            && actionID is WAR.Overpower
+                            && !HasEffect(WAR.Buffs.Holmgang):
+                        return OriginalHook(WAR.RawIntuition);
                 }
             }
 
@@ -144,7 +152,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                         gauge.BeastGauge >= 50
                         && (
                             needToInfuriate
-                            || (actionID is WAR.Overpower && !IsMoving)
+                            // || (actionID is WAR.Overpower && !IsMoving)
                             || raidbuffs
                             || HasEffect(WAR.Buffs.Berserk)
                         )

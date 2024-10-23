@@ -116,6 +116,8 @@ internal class BardHeavyShot : CustomCombo
 
             var ragingStrikes = FindEffect(BRD.Buffs.RagingStrikes);
 
+            var ragingStrikesFound = HasEffect(BRD.Buffs.RagingStrikes);
+
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 if (
@@ -134,13 +136,13 @@ internal class BardHeavyShot : CustomCombo
                         when IsOffCooldown(BRD.RagingStrikes) && hasRaidBuffs:
                         return BRD.RagingStrikes;
                     case >= BRD.Levels.BattleVoice
-                        when (ragingStrikes is not null || hasRaidBuffs)
+                        when (ragingStrikesFound || hasRaidBuffs)
                             && IsOffCooldown(BRD.BattleVoice):
                         return BRD.BattleVoice;
                     case >= BRD.Levels.RadiantFinale
                         when IsOffCooldown(BRD.RadiantFinale)
-                            && gauge.Coda.Length >= 1
-                            && (ragingStrikes is not null || hasRaidBuffs):
+                            && gauge.Coda.Length is 1 or 3
+                            && ragingStrikesFound:
                         return BRD.RadiantFinale;
                     case >= BRD.Levels.WanderersMinuet
                         when IsOffCooldown(BRD.WanderersMinuet)
@@ -240,17 +242,6 @@ internal class BardHeavyShot : CustomCombo
             )
                 return BRD.BlastArrow;
 
-            var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
-
-            if (
-                level >= BRD.Levels.RadiantEncore
-                && radiantEncore is not null
-                && (radiantEncore.RemainingTime <= 20 || hasRaidBuffs)
-            )
-            {
-                return BRD.RadiantEncore;
-            }
-
             var resonantArrowReady = FindEffect(BRD.Buffs.ResonantArrowReady);
 
             if (
@@ -280,7 +271,23 @@ internal class BardHeavyShot : CustomCombo
                     )
                 )
             )
+            {
                 return BRD.ApexArrow;
+            }
+
+            var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
+
+            var radiantFinale = GetCooldown(BRD.RadiantFinale);
+
+            if (
+                level >= BRD.Levels.RadiantEncore
+                && radiantEncore is not null
+                && radiantFinale.CooldownElapsed >= 0.5
+                && (radiantEncore.RemainingTime <= 20 || hasRaidBuffs)
+            )
+            {
+                return BRD.RadiantEncore;
+            }
 
             if (level >= BRD.Levels.StraightShot && CanUseAction(OriginalHook(BRD.StraightShot)))
                 // Refulgent Arrow
