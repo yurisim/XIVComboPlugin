@@ -133,11 +133,9 @@ internal class MachinistCleanShot : CustomCombo
                     comboTime > 10 || comboTime == 0,
                 }.All(x => x is true);
 
-                var hyperchargeReady = FindEffect(MCH.Buffs.HyperchargeReady);
-                var hyperchargeElapsed = GetCooldown(MCH.Hypercharge).CooldownElapsed >= 0.5;
+                var hyperchargeReady = HasEffect(MCH.Buffs.HyperchargeReady);
 
-                var canUseHypercharge =
-                    gauge.Heat >= 50 || (hyperchargeReady is not null && hyperchargeElapsed);
+                var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady;
 
                 // this line is causing weird delays to occur with the icon replacer off GCD
                 var dismantleCD = GetCooldown(MCH.Dismantle);
@@ -177,13 +175,14 @@ internal class MachinistCleanShot : CustomCombo
                             && reprisalFound:
                     case >= MCH.Levels.Hypercharge
                         when IsOffCooldown(MCH.Hypercharge)
+                            // && CanUseAction(MCH.Hypercharge)
                             && canUseHypercharge
                             && nothingBlockingHypercharge
                             && (
-                                gauge.Heat >= 95
+                                gauge.Heat >= 85
                                 || raidbuffs
                                 || TargetHasEffect(MCH.Debuffs.Wildfire)
-                                || (hyperchargeReady is not null && hyperchargeElapsed)
+                                || hyperchargeReady
                             ):
                         return MCH.Hypercharge;
                     case >= MCH.Levels.Ricochet
@@ -287,7 +286,7 @@ internal class MachinistCleanShot : CustomCombo
                 }
             }
 
-            return OriginalHook(MCH.SplitShot);
+            return actionID;
         }
 
         return actionID;

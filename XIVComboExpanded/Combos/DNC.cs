@@ -225,7 +225,7 @@ internal class DancerCascadeFountain : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
-                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 12;
+                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 13;
 
                 switch (level)
                 {
@@ -265,7 +265,7 @@ internal class DancerCascadeFountain : CustomCombo
             if (
                 level >= DNC.Levels.TechnicalStep
                 && IsOffCooldown(DNC.TechnicalStep)
-                && hasOneRaidBuff
+                && hasTwoRaidBuffs
                 && distance < 15
             )
                 return DNC.TechnicalStep;
@@ -306,7 +306,7 @@ internal class DancerCascadeFountain : CustomCombo
             if (
                 level >= DNC.Levels.Tillana
                 && (actionID is DNC.Windmill || hasOneRaidBuff)
-                && gauge.Esprit <= 50
+                && gauge.Esprit < 50
                 && CanUseAction(DNC.Tillana)
                 && distance < 15
             )
@@ -336,12 +336,13 @@ internal class DancerCascadeFountain : CustomCombo
                     || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill
                 )
+                && (comboTime >= 5 || comboTime == 0) // ensures we don't break combo
             )
             {
                 return OriginalHook(DNC.SaberDance);
             }
 
-            // Singl11111e Target
+            // Single Target
             if (actionID is DNC.Cascade)
             {
                 if (
