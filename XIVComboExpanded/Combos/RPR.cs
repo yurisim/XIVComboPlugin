@@ -187,6 +187,10 @@ internal class ReaperSlice : CustomCombo
                 }
             }
 
+            // Perfectio
+            if (CanUseAction(RPR.Perfectio))
+                return RPR.Perfectio;
+
             if (
                 level >= RPR.Levels.Communio
                 // && deathsDesign is not null
@@ -209,6 +213,40 @@ internal class ReaperSlice : CustomCombo
             }
 
             if (
+                (
+                    deathsDesign is null
+                    || deathsDesign.RemainingTime <= 15
+                    || (
+                        (
+                            IsOffCooldown(RPR.ArcaneCircle)
+                            || GetCooldown(RPR.ArcaneCircle).TotalCooldownRemaining <= 10
+                        )
+                        && deathsDesign.RemainingTime <= 25
+                    )
+                )
+                && ShouldUseDots()
+                && !HasEffect(RPR.Buffs.ArcaneCircle)
+            )
+            {
+                return RPR.ShadowOfDeath;
+            }
+
+            if (deathsDesign is not null)
+            {
+                var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
+
+                if (
+                    level >= RPR.Levels.PlentifulHarvest
+                    && CanUseAction(RPR.PlentifulHarvest)
+                    && immortalSacrifice is not null
+                )
+                    return RPR.PlentifulHarvest;
+
+                if (needSoulSlice && gauge.Soul <= 50)
+                    return RPR.SoulSlice;
+            }
+
+            if (
                 level >= RPR.Levels.Soulsow
                 && (
                     (!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
@@ -221,31 +259,6 @@ internal class ReaperSlice : CustomCombo
                 )
             )
                 return OriginalHook(RPR.Soulsow);
-
-            if (deathsDesign is null || deathsDesign.RemainingTime <= 15)
-            {
-                if (ShouldUseDots())
-                    return RPR.ShadowOfDeath;
-            }
-
-            if (deathsDesign is not null)
-            {
-                var immortalSacrifice = FindEffect(RPR.Buffs.ImmortalSacrifice);
-
-                if (
-                    level >= RPR.Levels.PlentifulHarvest
-                    && CanUseAction(RPR.PlentifulHarvest)
-                    && immortalSacrifice is not null
-                // && (immortalSacrifice.StackCount == PartyList.Length
-                //     || immortalSacrifice.StackCount == 8
-                //     || immortalSacrifice?.RemainingTime <= 25
-                //     )
-                )
-                    return RPR.PlentifulHarvest;
-
-                if (needSoulSlice && gauge.Soul <= 50)
-                    return RPR.SoulSlice;
-            }
 
             if (comboTime > 0)
             {

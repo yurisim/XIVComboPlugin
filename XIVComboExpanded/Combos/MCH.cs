@@ -179,7 +179,7 @@ internal class MachinistCleanShot : CustomCombo
                             && canUseHypercharge
                             && nothingBlockingHypercharge
                             && (
-                                gauge.Heat >= 85
+                                gauge.Heat >= 90
                                 || raidbuffs
                                 || TargetHasEffect(MCH.Debuffs.Wildfire)
                                 || hyperchargeReady
