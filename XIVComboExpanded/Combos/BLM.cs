@@ -134,11 +134,16 @@ internal class BlackMageFire : CustomCombo
                     return OriginalHook(BLM.Thunder);
             }
 
+            var maxPolyglot = level >= BLM.Levels.Xenoglossy ? 2 : 1;
+
             if (
                 gauge.PolyglotStacks >= 1
                 && (
-                    (gauge.EnochianTimer <= 10000 && gauge.ElementTimeRemaining >= 8000)
-                    || gauge.InUmbralIce
+                    (
+                        gauge.EnochianTimer <= 10000
+                        && gauge.ElementTimeRemaining >= 8000
+                        && gauge.PolyglotStacks == maxPolyglot - 1
+                    ) || gauge.InUmbralIce
                 )
                 && level >= BLM.Levels.Foul
             )
@@ -148,36 +153,37 @@ internal class BlackMageFire : CustomCombo
 
             if (gauge.InAstralFire)
             {
-                if (
-                    IsOffCooldown(BLM.Manafont)
-                    && fireCost > playerMP
-                    && level >= BLM.Levels.Manafont
-                )
-                    return BLM.Manafont;
-
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
-
-                if (
-                    level >= BLM.Levels.Fire3
-                    && firestarter is not null
-                    && (firestarter.RemainingTime <= 5 || 11 > playerMP)
-                )
-                    return BLM.Fire3;
-
-                if (fireCost < playerMP && gauge.ElementTimeRemaining < 6000)
+                
+                // Handle low MP situations first
+                if (fireCost > playerMP)
+                {
+                    if (IsOffCooldown(BLM.Manafont) && level >= BLM.Levels.Manafont)
+                        return BLM.Manafont;
+                        
+                    if (playerMP > 0 && level >= BLM.Levels.Despair)
+                        return BLM.Despair;
+                        
+                    if (firestarter is not null)
+                        return BLM.Fire3;
+                        
+                    return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
+                }
+                
+                // Handle Firestarter procs
+                if (level >= BLM.Levels.Fire3 && firestarter is not null)
+                {
+                    if (firestarter.RemainingTime <= 5 || 11 > playerMP)
+                        return BLM.Fire3;
+                }
+                
+                // Handle normal rotation
+                if (gauge.ElementTimeRemaining < 6000)
                     return level >= BLM.Levels.Fire3 && firestarter is not null
                         ? BLM.Fire3
                         : BLM.Fire;
-
-                if (level >= BLM.Levels.Despair && fireCost > playerMP && playerMP > 0)
-                    return BLM.Despair;
-
-                if (fireCost < playerMP)
-                {
-                    return level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire;
-                }
-
-                return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
+                        
+                return level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire;
             }
 
             if (gauge.InUmbralIce)
