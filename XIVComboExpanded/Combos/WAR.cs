@@ -105,11 +105,9 @@ internal class WarriorStormsPathCombo : CustomCombo
                 {
                     case >= WAR.Levels.Infuriate
                         when gauge.BeastGauge <= 50
-                            && HasCharges(WAR.Infuriate)
-                            && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
+                            && HasCharges(WAR.Infuriate) && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
                             && (
                                 needToInfuriate
-                                // || (actionID is WAR.Overpower && !IsMoving)
                                 || raidbuffs
                                 || HasEffect(WAR.Buffs.Berserk)
                             )
