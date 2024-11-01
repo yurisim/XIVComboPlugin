@@ -134,7 +134,7 @@ internal class PaladinST : CustomCombo
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.Requiescat
                         when IsOffCooldown(OriginalHook(PLD.Requiescat))
-                            && (flightOrFight is not null || fightOrFlightCD >= 15 || hasRaidBuffs):
+                            && (HasEffect(PLD.Buffs.FightOrFlight) || hasRaidBuffs):
                         return OriginalHook(PLD.Requiescat);
                     case >= PLD.Levels.CircleOfScorn
                         when IsOffCooldown(PLD.CircleOfScorn)
