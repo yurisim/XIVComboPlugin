@@ -136,7 +136,15 @@ internal class BlackMageFire : CustomCombo
 
             if (
                 gauge.PolyglotStacks >= 1
-                && (gauge.EnochianTimer <= 10000 || hasRaidBuffs || actionID is BLM.Fire2)
+                && (
+                    gauge.EnochianTimer <= 10000
+                    || hasRaidBuffs
+                    || actionID is BLM.Fire2
+                    || (
+                        level < BLM.Levels.Amplifier
+                        || (IsOffCooldown(BLM.Amplifier) && gauge.PolyglotStacks == maxPolyglot)
+                    )
+                )
                 && gauge.ElementTimeRemaining >= 6000
                 && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs || actionID is BLM.Fire2)
                 && level >= BLM.Levels.Foul
@@ -422,119 +430,6 @@ internal class BlackBlizzard : CustomCombo
     }
 }
 
-internal class BlackFreezeFlare : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Freeze)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
-                if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
-                    return BLM.UmbralSoul;
-        }
-
-        if (actionID == BLM.Freeze || actionID == BLM.Flare)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackFreezeFlareFeature))
-            {
-                if (level >= BLM.Levels.Freeze && gauge.InUmbralIce)
-                    return BLM.Freeze;
-
-                if (level >= BLM.Levels.Flare && gauge.InAstralFire)
-                    return BLM.Flare;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class BlackFire2 : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackFire2Feature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Fire2 || actionID == BLM.HighFire2)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackFireBlizzard2Option))
-                if (gauge.AstralFireStacks < 3)
-                    return actionID;
-
-            if (level >= BLM.Levels.Flare && gauge.InAstralFire)
-            {
-                // Lv 50 rotation without Umbral Hearts
-                if (LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare)
-                    return BLM.Flare;
-
-                // Standard AoE rotation Fire2 until 1 Umbral Heart, followed by 2 Flare
-                if (
-                    gauge.UmbralHearts == 1
-                    || (gauge.UmbralHearts == 0 && HasEffect(BLM.Buffs.EnhancedFlare))
-                )
-                    return BLM.Flare;
-
-                //if (IsEnabled(CustomComboPreset.BlackFire2TriplecastOption))
-                //{
-                //    if (gauge.AstralSoulStacks >= 6)
-                //        return BLM.FlareStar;
-
-                //    return BLM.Flare;
-                //}
-
-                // At level 50, Fire II is used until under 3800 mana (the combined cost of Fire II and Flare),
-                // and then Flare is cast once.
-                // At level 58, Fire II is used until 1 Umbral Heart is remaining, and then Flare is cast twice.
-                if (
-                    LocalPlayer?.CurrentMp < BLM.MpCosts.Fire2 + BLM.MpCosts.Flare
-                    || gauge.UmbralHearts == 1
-                )
-                    return BLM.Flare;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class BlackBlizzard2 : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Blizzard2 || actionID == BLM.HighBlizzard2)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
-                if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
-                    return BLM.UmbralSoul;
-
-            if (IsEnabled(CustomComboPreset.BlackBlizzard2Feature))
-            {
-                if (IsEnabled(CustomComboPreset.BlackFireBlizzard2Option))
-                    if (gauge.UmbralIceStacks < 3)
-                        return actionID;
-
-                if (level >= BLM.Levels.Freeze && gauge.InUmbralIce)
-                    return BLM.Freeze;
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class BlackScathe : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } =
@@ -553,34 +448,3 @@ internal class BlackScathe : CustomCombo
         return actionID;
     }
 }
-
-//internal class BlackThunder : CustomCombo
-//{
-//    protected internal override CustomComboPreset Preset { get; } =
-//        CustomComboPreset.BlackThunderFeature;
-
-//    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//    {
-//        if (actionID == BLM.Thunder3 || actionID == BLM.Thunder4)
-//        {
-//            if (
-//                IsEnabled(CustomComboPreset.BlackThunderDelayOption)
-//                && this.IsThunderCastRecently(lastComboMove)
-//            )
-//                return actionID;
-
-//            if (level >= BLM.Levels.EnhancedSharpcast2)
-//            {
-//                if (HasCharges(BLM.Sharpcast) && !HasEffect(BLM.Buffs.Sharpcast))
-//                    return BLM.Sharpcast;
-//            }
-//            else if (level >= BLM.Levels.Sharpcast)
-//            {
-//                if (IsOffCooldown(BLM.Sharpcast))
-//                    return BLM.Sharpcast;
-//            }
-//        }
-
-//        return actionID;
-//    }
-//}
