@@ -105,11 +105,12 @@ internal class BlackMageFire : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == BLM.Fire)
+        if (actionID is BLM.Fire or BLM.Fire2)
         {
             var gauge = GetJobGauge<BLMGauge>();
 
             var fireCost = GetResourceCost(OriginalHook(BLM.Fire));
+            var fire2Cost = GetResourceCost(OriginalHook(BLM.Fire2));
 
             var playerMP = LocalPlayer?.CurrentMp;
             var hasRaidBuffs = HasRaidBuffs(1);
@@ -135,13 +136,15 @@ internal class BlackMageFire : CustomCombo
 
             if (
                 gauge.PolyglotStacks >= 1
-                && (gauge.EnochianTimer <= 10000 || hasRaidBuffs)
+                && (gauge.EnochianTimer <= 10000 || hasRaidBuffs || actionID is BLM.Fire2)
                 && gauge.ElementTimeRemaining >= 6000
-                && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs)
+                && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs || actionID is BLM.Fire2)
                 && level >= BLM.Levels.Foul
             )
             {
-                return level >= BLM.Levels.Xenoglossy ? BLM.Xenoglossy : BLM.Foul;
+                return level >= BLM.Levels.Xenoglossy && actionID is BLM.Fire
+                    ? BLM.Xenoglossy
+                    : BLM.Foul;
             }
 
             if (InCombat() && TargetIsEnemy())
@@ -159,40 +162,90 @@ internal class BlackMageFire : CustomCombo
                 if (
                     level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
+                    && (actionID is BLM.Fire || level >= BLM.Levels.Thunder2)
                     && gauge.ElementTimeRemaining >= 6000
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
                         || debuffs.All(effect => effect is null)
                     )
                 )
-                    return OriginalHook(BLM.Thunder);
+                    return actionID is BLM.Fire ? OriginalHook(BLM.Thunder) : BLM.Thunder2;
             }
 
             if (gauge.InAstralFire)
             {
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
+                var hasLowMP =
+                    fireCost > playerMP || (actionID is BLM.Fire2 && fire2Cost > playerMP);
 
-                // Handle low MP situations first
-                if (fireCost > playerMP)
+                // Handle low MP situations
+                if (hasLowMP)
                 {
-                    if (firestarter is not null)
+                    // Try to use Firestarter proc if available for Fire
+                    if (firestarter is not null && actionID is BLM.Fire)
                         return BLM.Fire3;
 
+                    // Use Manafont if available
                     if (IsOffCooldown(BLM.Manafont) && level >= BLM.Levels.Manafont)
                         return BLM.Manafont;
 
-                    if (playerMP > 0 && level >= BLM.Levels.Despair && CanUseAction(BLM.Despair))
-                    {
+                    // Handle single-target Despair
+                    if (
+                        actionID is BLM.Fire
+                        && playerMP > 0
+                        && level >= BLM.Levels.Despair
+                        && CanUseAction(BLM.Despair)
+                    )
                         return BLM.Despair;
+
+                    // Handle AoE Flare
+                    if (
+                        level >= BLM.Levels.Flare
+                        && playerMP < fire2Cost
+                        && CanUseAction(BLM.Flare)
+                        && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4)
+                    )
+                    {
+                        var hasInstantCast =
+                            HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast);
+                        var canCastFlare = playerMP > 0 || IsOffCooldown(BLM.Manafont);
+
+                        // Try to get Swiftcast/Triplecast before Flare
+                        if (!hasInstantCast && canCastFlare)
+                        {
+                            if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
+                                return ADV.Swiftcast;
+
+                            if (HasCharges(BLM.Triplecast) && level >= BLM.Levels.Triplecast)
+                                return BLM.Triplecast;
+                        }
+                        // Cast Flare or get MP with Manafont
+                        else if (hasInstantCast)
+                        {
+                            if (playerMP > 0)
+                                return BLM.Flare;
+
+                            if (IsOffCooldown(BLM.Manafont))
+                                return BLM.Manafont;
+                        }
                     }
 
-                    return level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard;
+                    // Transition to ice phase if we can't do anything else
+                    return actionID switch
+                    {
+                        BLM.Fire => level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard,
+                        BLM.Fire2 => level > BLM.Levels.Blizzard2
+                            ? OriginalHook(BLM.Blizzard2)
+                            : BLM.Blizzard,
+                        _ => actionID,
+                    };
                 }
 
-                // Handle Firestarter procs
+                // Handle normal rotation
                 if (
                     level >= BLM.Levels.Fire3
                     && firestarter is not null
+                    && actionID is BLM.Fire
                     && firestarter.RemainingTime <= 5
                     && !HasEffect(BLM.Buffs.Triplecast)
                 )
@@ -200,13 +253,21 @@ internal class BlackMageFire : CustomCombo
                     return BLM.Fire3;
                 }
 
-                // Handle normal rotation
-                if (gauge.ElementTimeRemaining < 6000)
+                // Handle Astral Fire refresh
+                if (gauge.ElementTimeRemaining < 6000 && actionID is BLM.Fire)
+                {
                     return level >= BLM.Levels.Fire3 && firestarter is not null
                         ? BLM.Fire3
                         : BLM.Fire;
+                }
 
-                return level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire;
+                // Normal cast priorities
+                return actionID switch
+                {
+                    BLM.Fire => level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire,
+                    BLM.Fire2 => OriginalHook(BLM.Fire2),
+                    _ => actionID,
+                };
             }
 
             if (gauge.InUmbralIce)
@@ -218,127 +279,31 @@ internal class BlackMageFire : CustomCombo
                         || (level < BLM.Levels.Blizzard4 && LocalPlayer?.CurrentMp >= 9000)
                     )
                 )
-                    return BLM.Fire3;
-
-                return level >= BLM.Levels.Blizzard4 ? BLM.Blizzard4 : BLM.Blizzard;
-            }
-
-            if (!gauge.InAstralFire && level >= BLM.Levels.Fire3)
-            {
-                return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire3 : BLM.Blizzard3;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class BlackFireBlizzard2 : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Blizzard2)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (InCombat() && TargetIsEnemy())
-            {
-                var debuffs = new[]
                 {
-                    FindTargetEffect(BLM.Debuffs.Thunder2),
-                    FindTargetEffect(BLM.Debuffs.Thunder4),
-                    FindTargetEffect(BLM.Debuffs.HighThunder2),
-                    FindTargetEffect(BLM.Debuffs.Thunder),
-                    FindTargetEffect(BLM.Debuffs.Thunder3),
-                    FindTargetEffect(BLM.Debuffs.HighThunder),
-                };
-
-                if (
-                    level >= BLM.Levels.Thunder2
-                    && HasEffect(BLM.Buffs.Thunderhead)
-                    && gauge.ElementTimeRemaining >= 5000
-                    && (
-                        debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
-                        || debuffs.All(effect => effect is null)
-                    )
-                )
-                    return OriginalHook(BLM.Thunder2);
-            }
-
-            var playerMP = LocalPlayer?.CurrentMp;
-
-            var fire2Cost = GetResourceCost(OriginalHook(BLM.Fire2));
-
-            if (gauge.InAstralFire)
-            {
-                if (gauge.PolyglotStacks >= 1 && level >= BLM.Levels.Foul)
-                    return BLM.Foul;
-
-                // Switch out of Fire Phase into Ice phase if less MP than 2500
-
-                if (level >= BLM.Levels.Flare && playerMP < fire2Cost && playerMP > 0)
-                {
-                    // Flare block
-                    if (
-                        !HasEffect(ADV.Buffs.Swiftcast)
-                        && !HasEffect(BLM.Buffs.Triplecast)
-                        && (playerMP > 0 || IsOffCooldown(BLM.Manafont))
-                    )
-                    {
-                        if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
-                            return ADV.Swiftcast;
-
-                        if (
-                            HasCharges(BLM.Triplecast)
-                            && level >= BLM.Levels.Triplecast
-                            && !HasEffect(ADV.Buffs.Swiftcast)
-                        )
-                            return BLM.Triplecast;
-                    }
-                    else if (HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast))
-                    {
-                        if (playerMP > 0)
-                            return BLM.Flare;
-
-                        if (IsOffCooldown(BLM.Manafont))
-                            return BLM.Manafont;
-                    }
+                    return actionID is BLM.Fire ? BLM.Fire3 : OriginalHook(BLM.Fire2);
                 }
 
-                if (level >= BLM.Levels.Fire2 && fire2Cost < playerMP)
+                if (actionID is BLM.Fire)
                 {
-                    return OriginalHook(BLM.Fire2);
+                    return level >= BLM.Levels.Blizzard4 ? BLM.Blizzard4 : BLM.Blizzard;
                 }
 
-                // if (GetResourceCost(OriginalHook(BLM.Fire)) < LocalPlayer?.CurrentMp)
-                // {
-                //     return BLM.Fire;
-                // }
-
-                return level > BLM.Levels.Blizzard2 ? OriginalHook(BLM.Blizzard2) : BLM.Blizzard;
+                if (actionID is BLM.Fire2)
+                {
+                    return level >= BLM.Levels.Freeze ? BLM.Freeze : OriginalHook(BLM.Blizzard2);
+                }
             }
-
-            if (gauge.InUmbralIce)
+            if (actionID is BLM.Fire)
             {
-                if (
-                    level >= BLM.Levels.Fire2
-                    && (
-                        gauge.UmbralHearts >= 3
-                        || gauge.ElementTimeRemaining <= 5000
-                        || (LocalPlayer?.CurrentMp >= 9000 && level < BLM.Levels.Blizzard4)
-                    )
-                )
-                    return OriginalHook(BLM.Fire2);
-
-                if (level >= BLM.Levels.Freeze && (gauge.UmbralHearts == 0))
-                    return BLM.Freeze;
-
-                return OriginalHook(BLM.Blizzard2);
+                // Occurs for single target rotation
+                if (!gauge.InAstralFire && level >= BLM.Levels.Fire3)
+                {
+                    return (LocalPlayer?.CurrentMp >= 9000) ? BLM.Fire3 : BLM.Blizzard3;
+                }
             }
 
-            if (!gauge.InAstralFire && !gauge.InAstralFire)
+            if (actionID is BLM.Fire2 && !gauge.InAstralFire)
+            {
                 return LocalPlayer?.CurrentMp >= 9000
                     ? level >= BLM.Levels.Fire2
                         ? OriginalHook(BLM.Fire2)
@@ -346,6 +311,7 @@ internal class BlackFireBlizzard2 : CustomCombo
                     : level >= BLM.Levels.Blizzard2
                         ? OriginalHook(BLM.Blizzard2)
                         : BLM.Blizzard;
+            }
         }
 
         return actionID;
