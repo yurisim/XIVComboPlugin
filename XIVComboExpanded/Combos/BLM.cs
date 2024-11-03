@@ -243,9 +243,6 @@ internal class BlackMageFire : CustomCombo
                         if (level >= BLM.Levels.Despair && CanUseAction(BLM.Despair)) {
                             return BLM.Despair;
                         }
-
-                        if (CanUseAction(BLM.Fire))
-                            return level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire);
                     }
 
                     // Handle AoE Flare
@@ -279,6 +276,9 @@ internal class BlackMageFire : CustomCombo
                             return OriginalHook(BLM.Fire2);
                     }
 
+                        if (CanUseAction(BLM.Fire))
+                            return level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire);
+
                     // manafont
                     if (level >= BLM.Levels.Manafont && gonnaManafont)
                         return BLM.Manafont;
@@ -301,8 +301,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Fire3
                     && firestarter is not null
                     && actionID is BLM.Fire
-                    && firestarter.RemainingTime <= 5
-                    && !HasEffect(BLM.Buffs.Triplecast)
+                    && (firestarter.RemainingTime <= 5 || level < BLM.Levels.Fire4)
                 )
                 {
                     return BLM.Fire3;
