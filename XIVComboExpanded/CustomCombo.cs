@@ -241,7 +241,7 @@ internal abstract partial class CustomCombo
         return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 5;
     }
 
-    protected static bool TargetIsLow()
+    protected static bool TargetHasLowLife()
     {
         return CurrentTarget is IBattleChara target
             && LocalPlayer is not null
@@ -275,7 +275,7 @@ internal abstract partial class CustomCombo
             ADV.Buffs.Medicated,
         };
 
-        if (TargetIsLow())
+        if (TargetHasLowLife())
             return true;
 
         var raidDebuffs = new[]

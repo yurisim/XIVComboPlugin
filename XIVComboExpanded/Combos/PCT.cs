@@ -320,11 +320,7 @@ internal static class PCT
 
                 if (actionID is HolyWhite)
                 {
-                    if (
-                        IsOffCooldown(ADV.Swiftcast)
-                        && quickSkill.Any()
-                        && GCDClipCheck(actionID)
-                    )
+                    if (IsOffCooldown(ADV.Swiftcast) && quickSkill.Any() && GCDClipCheck(actionID))
                     {
                         return ADV.Swiftcast;
                     }
@@ -345,7 +341,7 @@ internal static class PCT
                                 && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining
                                     <= 30
                             )
-                            || (TargetIsLow() && IsAvailable(OriginalHook(s.skill)))
+                            || (TargetHasLowLife() && IsAvailable(OriginalHook(s.skill)))
                             || !InCombat()
                         )
                         .Select(s => s.motifSkill)

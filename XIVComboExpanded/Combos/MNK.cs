@@ -119,9 +119,11 @@ internal class MonkBootshine : CustomCombo
                             && !HasEffect(MNK.Buffs.PerfectBalance)
                             && HasEffect(MNK.Buffs.RaptorForm)
                             && (
-                                riddleFireEffect?.RemainingTime >= GetCooldown(actionID).BaseCooldown * 4 // there are 4 actions
-                                || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining <= GetCooldown(actionID).BaseCooldown * 3 // use 3 actions before the next riddle
-                                || TargetIsLow()
+                                riddleFireEffect?.RemainingTime
+                                    >= GetCooldown(actionID).BaseCooldown * 4 // there are 4 actions
+                                || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining
+                                    <= GetCooldown(actionID).BaseCooldown * 3 // use 3 actions before the next riddle
+                                || TargetHasLowLife()
                                 || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4
                             )
                             && (
@@ -266,7 +268,7 @@ internal class MonkBootshine : CustomCombo
                             level < MNK.Levels.Brotherhood
                             // this enables double lunar initially so that we can phantom rush in even windows
                             || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 15
-                            // 
+                            //
                             || TargetHPercentage() < 0.85
                         )
                         && !gauge.BeastChakra.Contains(BeastChakra.COEURL)

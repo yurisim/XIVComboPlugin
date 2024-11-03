@@ -138,13 +138,14 @@ internal class BlackMageFire : CustomCombo
                 switch (level)
                 {
                     //  manafont if I'm in astral fire and I have no MP
-                    case >= BLM.Levels.Manafont when gauge.InAstralFire && playerMP <= 0 && IsOffCooldown(BLM.Manafont):
+                    case >= BLM.Levels.Manafont
+                        when gauge.InAstralFire && playerMP <= 0 && IsOffCooldown(BLM.Manafont):
                         return BLM.Manafont;
 
                     case >= BLM.Levels.Triplecast
                         when HasCharges(BLM.Triplecast)
                             && (
-                                GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 12
+                                GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
                                 || hasRaidBuffs
                             )
                             && !HasEffect(BLM.Buffs.Triplecast)
@@ -160,7 +161,8 @@ internal class BlackMageFire : CustomCombo
                 gauge.PolyglotStacks >= 1
                 && (
                     (gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot)
-                    || hasRaidBuffs
+                    // || hasRaidBuffs
+                    || TargetHasLowLife()
                     || actionID is BLM.Fire2
                     || (
                         level < BLM.Levels.Amplifier
@@ -403,13 +405,6 @@ internal class BlackScathe : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
-            // Firestarter
-            if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
-                return BLM.Fire3;
-
-            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
-                return BLM.Paradox;
-
             // Swiftcast
             if (
                 level >= ADV.Levels.Swiftcast
@@ -420,6 +415,13 @@ internal class BlackScathe : CustomCombo
 
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
+
+            // Firestarter
+            if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
+                return BLM.Fire3;
+
+            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                return BLM.Paradox;
 
             // Thunder
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))

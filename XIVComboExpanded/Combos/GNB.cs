@@ -219,7 +219,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                                 < GetCooldown(GNB.GnashingFang).CooldownRemaining
                         )
                 )
-                && (bloodfestOffCD || TargetIsLow())
+                && (bloodfestOffCD || TargetHasLowLife())
             )
             {
                 return GNB.BurstStrike;

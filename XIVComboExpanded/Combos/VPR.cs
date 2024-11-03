@@ -229,7 +229,7 @@ internal class ViperFangs : CustomCombo
                     gauge.RattlingCoilStacks >= 1
                     && noExpiringBuffs
                     && (
-                        TargetIsLow()
+                        TargetHasLowLife()
                         || (
                             gauge.RattlingCoilStacks == rattleCount
                             && (HasCharges(VPR.Vicewinder) || IsOffCooldown(VPR.SerpentsIre))
