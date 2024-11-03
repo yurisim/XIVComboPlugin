@@ -117,14 +117,36 @@ internal class BlackMageFire : CustomCombo
 
             var maxPolyglot = level >= BLM.Levels.Xenoglossy ? 2 : 1;
 
-            if (GCDClipCheck(actionID))
+            // not in combat, has no target, in astral fire
+            if (!InCombat() && !HasTarget())
+            {
+                // tranpose if in astral fire
+                if (gauge.InAstralFire)
+                {
+                    return BLM.Transpose;
+                }
+
+                // umbral soul if in umbral ice and does not have 3 umbnral hearts
+                if (gauge.InUmbralIce && gauge.UmbralHearts < 3)
+                {
+                    return BLM.UmbralSoul;
+                }
+            }
+
+            if (GCDClipCheck(actionID) && InCombat())
             {
                 switch (level)
                 {
+                    //  manafont if I'm in astral fire and I have no MP
+                    case >= BLM.Levels.Manafont when gauge.InAstralFire && playerMP <= 0 && IsOffCooldown(BLM.Manafont):
+                        return BLM.Manafont;
+
                     case >= BLM.Levels.Triplecast
                         when HasCharges(BLM.Triplecast)
-                            && (GetRemainingCharges(BLM.Triplecast) == 2 || hasRaidBuffs)
-                            && gauge.UmbralHearts == 3
+                            && (
+                                GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 12
+                                || hasRaidBuffs
+                            )
                             && !HasEffect(BLM.Buffs.Triplecast)
                             && !HasEffect(ADV.Buffs.Swiftcast):
                         return BLM.Triplecast;
@@ -137,7 +159,7 @@ internal class BlackMageFire : CustomCombo
             if (
                 gauge.PolyglotStacks >= 1
                 && (
-                    gauge.EnochianTimer <= 10000
+                    (gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot)
                     || hasRaidBuffs
                     || actionID is BLM.Fire2
                     || (
@@ -146,7 +168,7 @@ internal class BlackMageFire : CustomCombo
                     )
                 )
                 && gauge.ElementTimeRemaining >= 6000
-                && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs || actionID is BLM.Fire2)
+                // && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs || actionID is BLM.Fire2)
                 && level >= BLM.Levels.Foul
             )
             {
@@ -172,54 +194,52 @@ internal class BlackMageFire : CustomCombo
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && (actionID is BLM.Fire || level >= BLM.Levels.Thunder2)
                     && gauge.ElementTimeRemaining >= 6000
+                    && ShouldUseDots()
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
                         || debuffs.All(effect => effect is null)
                     )
                 )
-                    return actionID is BLM.Fire ? OriginalHook(BLM.Thunder) : BLM.Thunder2;
+                    return actionID is BLM.Fire
+                        ? OriginalHook(BLM.Thunder)
+                        : OriginalHook(BLM.Thunder2);
             }
 
             if (gauge.InAstralFire)
             {
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
                 var hasLowMP =
-                    fireCost > playerMP || (actionID is BLM.Fire2 && fire2Cost > playerMP);
+                    playerMP - fireCost < 800
+                    || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
 
                 // Handle low MP situations
                 if (hasLowMP)
                 {
-                    // Try to use Firestarter proc if available for Fire
-                    if (firestarter is not null && actionID is BLM.Fire)
-                        return BLM.Fire3;
-
-                    // Use Manafont if available
-                    if (IsOffCooldown(BLM.Manafont) && level >= BLM.Levels.Manafont)
-                        return BLM.Manafont;
-
                     // Handle single-target Despair
                     if (
                         actionID is BLM.Fire
-                        && playerMP > 0
                         && level >= BLM.Levels.Despair
                         && CanUseAction(BLM.Despair)
                     )
                         return BLM.Despair;
 
+                    // Try to use Firestarter proc if available for Fire
+                    if (firestarter is not null && actionID is BLM.Fire)
+                        return BLM.Fire3;
+
                     // Handle AoE Flare
                     if (
                         level >= BLM.Levels.Flare
-                        && playerMP < fire2Cost
+                        // && playerMP < fire2Cost
                         && CanUseAction(BLM.Flare)
                         && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4)
                     )
                     {
                         var hasInstantCast =
                             HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast);
-                        var canCastFlare = playerMP > 0 || IsOffCooldown(BLM.Manafont);
 
                         // Try to get Swiftcast/Triplecast before Flare
-                        if (!hasInstantCast && canCastFlare)
+                        if (!hasInstantCast)
                         {
                             if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
                                 return ADV.Swiftcast;
@@ -227,21 +247,27 @@ internal class BlackMageFire : CustomCombo
                             if (HasCharges(BLM.Triplecast) && level >= BLM.Levels.Triplecast)
                                 return BLM.Triplecast;
                         }
-                        // Cast Flare or get MP with Manafont
-                        else if (hasInstantCast)
+
+                        if (hasInstantCast)
                         {
-                            if (playerMP > 0)
+                            if (CanUseAction(BLM.Flare))
                                 return BLM.Flare;
 
-                            if (IsOffCooldown(BLM.Manafont))
-                                return BLM.Manafont;
+                            // if (IsOffCooldown(BLM.Manafont))
+                            //     return BLM.Manafont;
                         }
                     }
+
+                    // manafont
+                    if (IsOffCooldown(BLM.Manafont))
+                        return BLM.Manafont;
 
                     // Transition to ice phase if we can't do anything else
                     return actionID switch
                     {
-                        BLM.Fire => level >= BLM.Levels.Blizzard3 ? BLM.Blizzard3 : BLM.Blizzard,
+                        BLM.Fire => level >= BLM.Levels.Blizzard3 && !gauge.IsParadoxActive
+                            ? BLM.Blizzard3
+                            : OriginalHook(BLM.Blizzard),
                         BLM.Fire2 => level > BLM.Levels.Blizzard2
                             ? OriginalHook(BLM.Blizzard2)
                             : BLM.Blizzard,
@@ -264,15 +290,18 @@ internal class BlackMageFire : CustomCombo
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < 6000 && actionID is BLM.Fire)
                 {
-                    return level >= BLM.Levels.Fire3 && firestarter is not null
+                    return
+                        level >= BLM.Levels.Fire3
+                        && firestarter is not null
+                        && !gauge.IsParadoxActive
                         ? BLM.Fire3
-                        : BLM.Fire;
+                        : OriginalHook(BLM.Fire);
                 }
 
                 // Normal cast priorities
                 return actionID switch
                 {
-                    BLM.Fire => level >= BLM.Levels.Fire4 ? BLM.Fire4 : BLM.Fire,
+                    BLM.Fire => level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire),
                     BLM.Fire2 => OriginalHook(BLM.Fire2),
                     _ => actionID,
                 };
@@ -288,12 +317,18 @@ internal class BlackMageFire : CustomCombo
                     )
                 )
                 {
-                    return actionID is BLM.Fire ? BLM.Fire3 : OriginalHook(BLM.Fire2);
+                    return actionID is BLM.Fire
+                        ? gauge.IsParadoxActive
+                            ? OriginalHook(BLM.Fire)
+                            : BLM.Fire3
+                        : OriginalHook(BLM.Fire2);
                 }
 
                 if (actionID is BLM.Fire)
                 {
-                    return level >= BLM.Levels.Blizzard4 ? BLM.Blizzard4 : BLM.Blizzard;
+                    return level >= BLM.Levels.Blizzard4
+                        ? BLM.Blizzard4
+                        : OriginalHook(BLM.Blizzard);
                 }
 
                 if (actionID is BLM.Fire2)
@@ -328,15 +363,15 @@ internal class BlackMageFire : CustomCombo
 
 internal class BlackTranspose : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackTransposeUmbralSoulFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == BLM.Transpose)
         {
             var gauge = GetJobGauge<BLMGauge>();
-            if (level >= BLM.Levels.UmbralSoul && gauge.IsEnochianActive && gauge.InUmbralIce)
+
+            if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce)
                 return BLM.UmbralSoul;
         }
 
@@ -358,82 +393,9 @@ internal class BlackLeyLines : CustomCombo
     }
 }
 
-internal class BlackFire : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackFireFeature;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Fire)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive && gauge.InUmbralIce)
-                return BLM.Paradox;
-
-            if (level >= BLM.Levels.Fire3)
-            {
-                if (IsEnabled(CustomComboPreset.BlackFireOption))
-                    if (gauge.AstralFireStacks < 3)
-                        return BLM.Fire3;
-
-                if (IsNotEnabled(CustomComboPreset.BlackFireOption2))
-                    if (!gauge.InAstralFire)
-                        return BLM.Fire3;
-
-                if (HasEffect(BLM.Buffs.Firestarter))
-                    return BLM.Fire3;
-            }
-        }
-
-        return actionID;
-    }
-}
-
-internal class BlackBlizzard : CustomCombo
-{
-    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
-
-    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-    {
-        if (actionID == BLM.Blizzard || actionID == BLM.Blizzard3)
-        {
-            var gauge = GetJobGauge<BLMGauge>();
-
-            if (IsEnabled(CustomComboPreset.BlackSpellsUmbralSoulFeature))
-                if (level >= BLM.Levels.UmbralSoul && gauge.InUmbralIce && !HasTarget())
-                    return BLM.UmbralSoul;
-
-            if (IsEnabled(CustomComboPreset.BlackBlizzardFeature))
-            {
-                if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
-                {
-                    //if (
-                    //    gauge.InUmbralIce
-                    //    || (
-                    //        !IsEnabled(CustomComboPreset.BlackBlizzardParadoxOption)
-                    //        && LocalPlayer?.CurrentMp >= 1600
-                    //    )
-                    //)
-                    //    return BLM.Paradox;
-                }
-
-                if (level >= BLM.Levels.Blizzard3)
-                    return BLM.Blizzard3;
-
-                return BLM.Blizzard;
-            }
-        }
-
-        return actionID;
-    }
-}
-
 internal class BlackScathe : CustomCombo
 {
-    protected internal override CustomComboPreset Preset { get; } =
-        CustomComboPreset.BlackScatheFeature;
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BlmAny;
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
@@ -441,8 +403,36 @@ internal class BlackScathe : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
+            // Firestarter
+            if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
+                return BLM.Fire3;
+
+            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                return BLM.Paradox;
+
+            // Swiftcast
+            if (
+                level >= ADV.Levels.Swiftcast
+                && IsOffCooldown(ADV.Swiftcast)
+                && !HasEffect(BLM.Buffs.Triplecast)
+            )
+                return ADV.Swiftcast;
+
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
+
+            // Thunder
+            if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
+                return OriginalHook(BLM.Thunder);
+
+            // Triplecast
+            if (
+                level >= BLM.Levels.Triplecast
+                && HasCharges(BLM.Triplecast)
+                && !HasEffect(BLM.Buffs.Triplecast)
+                && !HasEffect(ADV.Buffs.Swiftcast)
+            )
+                return BLM.Triplecast;
         }
 
         return actionID;
