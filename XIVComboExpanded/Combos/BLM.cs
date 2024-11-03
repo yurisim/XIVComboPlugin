@@ -90,6 +90,7 @@ internal static class BLM
             Amplifier = 86,
             EnhancedSharpcast2 = 88,
             Paradox = 90,
+            EnhancedPolyglot = 96,
             FlareStar = 100;
     }
 
@@ -116,8 +117,10 @@ internal class BlackMageFire : CustomCombo
             var playerMP = LocalPlayer?.CurrentMp;
             var hasRaidBuffs = HasRaidBuffs(1);
 
-            var maxPolyglot = level >= BLM.Levels.Xenoglossy ? 2 : 1;
-
+            var maxPolyglot = 1;
+            if (level >= BLM.Levels.Xenoglossy) maxPolyglot++;
+            if (level >= BLM.Levels.EnhancedPolyglot) maxPolyglot++;
+            
             // not in combat, has no target, in astral fire
             if (!InCombat() && !HasTarget())
             {
