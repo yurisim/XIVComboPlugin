@@ -74,6 +74,7 @@ internal static class BLM
             Freeze = 40,
             Thunder3 = 45,
             Flare = 50,
+            LeyLines = 52,
             Sharpcast = 54,
             Blizzard4 = 58,
             Fire4 = 60,
@@ -132,24 +133,36 @@ internal class BlackMageFire : CustomCombo
                     return BLM.UmbralSoul;
                 }
             }
+            var hasLowMP =
+                playerMP - fireCost < 800 
+                || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
 
-            if (GCDClipCheck(actionID) && InCombat())
+            var needToTriplecast =
+                HasCharges(BLM.Triplecast)
+                && (
+                    GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6 || actionID is BLM.Fire2
+                )
+                && !HasEffect(BLM.Buffs.Triplecast)
+                && !HasEffect(ADV.Buffs.Swiftcast);
+
+            var gonnaManafont = gauge.InAstralFire
+                            && (
+                                (level >= BLM.Levels.Flare && playerMP == 0)
+                                || (level < BLM.Levels.Flare && hasLowMP)
+                            )
+                            && (IsOnCooldown(BLM.LeyLines) || level < BLM.Levels.LeyLines)
+                            && IsOffCooldown(BLM.Manafont);
+
+            if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 switch (level)
                 {
                     //  manafont if I'm in astral fire and I have no MP
                     case >= BLM.Levels.Manafont
-                        when gauge.InAstralFire && playerMP <= 0 && IsOffCooldown(BLM.Manafont):
+                        when gonnaManafont:
                         return BLM.Manafont;
 
-                    case >= BLM.Levels.Triplecast
-                        when HasCharges(BLM.Triplecast)
-                            && (
-                                GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
-                                || hasRaidBuffs
-                            )
-                            && !HasEffect(BLM.Buffs.Triplecast)
-                            && !HasEffect(ADV.Buffs.Swiftcast):
+                    case >= BLM.Levels.Triplecast when needToTriplecast:
                         return BLM.Triplecast;
                     case >= BLM.Levels.Amplifier
                         when IsOffCooldown(BLM.Amplifier) && gauge.PolyglotStacks != maxPolyglot:
@@ -157,20 +170,24 @@ internal class BlackMageFire : CustomCombo
                 }
             }
 
+            var amplifierOffCooldown =
+                IsOffCooldown(BLM.Amplifier)
+                || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 6;
+
             if (
                 gauge.PolyglotStacks >= 1
                 && (
-                    (gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot)
-                    // || hasRaidBuffs
+                    (gauge.EnochianTimer <= 9000 && gauge.PolyglotStacks == maxPolyglot)
+                    || needToTriplecast
                     || TargetHasLowLife()
                     || actionID is BLM.Fire2
                     || (
-                        level < BLM.Levels.Amplifier
-                        || (IsOffCooldown(BLM.Amplifier) && gauge.PolyglotStacks == maxPolyglot)
+                        level >= BLM.Levels.Amplifier
+                        && amplifierOffCooldown
+                        && (gauge.PolyglotStacks == maxPolyglot)
                     )
                 )
                 && gauge.ElementTimeRemaining >= 6000
-                // && (gauge.PolyglotStacks == maxPolyglot || hasRaidBuffs || actionID is BLM.Fire2)
                 && level >= BLM.Levels.Foul
             )
             {
@@ -210,24 +227,26 @@ internal class BlackMageFire : CustomCombo
             if (gauge.InAstralFire)
             {
                 var firestarter = FindEffect(BLM.Buffs.Firestarter);
-                var hasLowMP =
-                    playerMP - fireCost < 800
-                    || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
 
                 // Handle low MP situations
                 if (hasLowMP)
                 {
-                    // Handle single-target Despair
-                    if (
-                        actionID is BLM.Fire
-                        && level >= BLM.Levels.Despair
-                        && CanUseAction(BLM.Despair)
-                    )
-                        return BLM.Despair;
-
                     // Try to use Firestarter proc if available for Fire
                     if (firestarter is not null && actionID is BLM.Fire)
                         return BLM.Fire3;
+
+                    // Handle single-target Despair
+                    if (
+                        actionID is BLM.Fire
+                    )
+                    {
+                        if (level >= BLM.Levels.Despair && CanUseAction(BLM.Despair)) {
+                            return BLM.Despair;
+                        }
+
+                        if (CanUseAction(BLM.Fire))
+                            return level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire);
+                    }
 
                     // Handle AoE Flare
                     if (
@@ -254,14 +273,14 @@ internal class BlackMageFire : CustomCombo
                         {
                             if (CanUseAction(BLM.Flare))
                                 return BLM.Flare;
-
-                            // if (IsOffCooldown(BLM.Manafont))
-                            //     return BLM.Manafont;
                         }
+
+                        if (CanUseAction(BLM.Fire2))
+                            return OriginalHook(BLM.Fire2);
                     }
 
                     // manafont
-                    if (IsOffCooldown(BLM.Manafont))
+                    if (level >= BLM.Levels.Manafont && gonnaManafont)
                         return BLM.Manafont;
 
                     // Transition to ice phase if we can't do anything else
@@ -405,6 +424,9 @@ internal class BlackScathe : CustomCombo
         {
             var gauge = GetJobGauge<BLMGauge>();
 
+            if (HasEffect(BLM.Buffs.Triplecast) || HasEffect(ADV.Buffs.Swiftcast))
+                return ADV.Feint;
+
             // Swiftcast
             if (
                 level >= ADV.Levels.Swiftcast
@@ -413,19 +435,19 @@ internal class BlackScathe : CustomCombo
             )
                 return ADV.Swiftcast;
 
-            if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
-                return BLM.Xenoglossy;
-
             // Firestarter
             if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
                 return BLM.Fire3;
 
-            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
-                return BLM.Paradox;
-
             // Thunder
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
                 return OriginalHook(BLM.Thunder);
+
+            if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
+                return BLM.Xenoglossy;
+
+            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                return BLM.Paradox;
 
             // Triplecast
             if (
