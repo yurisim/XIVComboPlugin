@@ -143,7 +143,10 @@ internal class BlackMageFire : CustomCombo
 
             var needToTriplecast =
                 HasCharges(BLM.Triplecast)
-                && GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
+                && (
+                    GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
+                    || HasEffect(ADV.Buffs.Medicated)
+                )
                 && !HasEffect(BLM.Buffs.Triplecast)
                 && !HasEffect(ADV.Buffs.Swiftcast);
 
@@ -173,7 +176,7 @@ internal class BlackMageFire : CustomCombo
 
             var amplifierOffCooldown =
                 IsOffCooldown(BLM.Amplifier)
-                || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 10;
+                || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 15;
 
             if (
                 gauge.PolyglotStacks >= 1
@@ -187,6 +190,7 @@ internal class BlackMageFire : CustomCombo
                         && amplifierOffCooldown
                         && (gauge.PolyglotStacks == maxPolyglot)
                     )
+                    || HasEffect(ADV.Buffs.Medicated)
                 )
                 && gauge.ElementTimeRemaining >= 6000
                 && level >= BLM.Levels.Foul
@@ -227,23 +231,18 @@ internal class BlackMageFire : CustomCombo
 
             if (gauge.InAstralFire)
             {
-                var firestarter = FindEffect(BLM.Buffs.Firestarter);
+                var hasFirestarter = HasEffect(BLM.Buffs.Firestarter);
 
                 // Handle low MP situations
                 if (hasLowMP)
                 {
-                    // Try to use Firestarter proc if available for Fire
-                    // but only if it will run out befor ethe end of
-                    if (
-                        firestarter is not null
-                        && firestarter.RemainingTime >= 15
-                        && actionID is BLM.Fire
-                    )
-                        return BLM.Fire3;
-
                     // Handle single-target Despair
                     if (actionID is BLM.Fire)
                     {
+                        //  Once we get Fire4, we really only use fire3 for movement and transitions between fire and ice
+                        if (hasFirestarter && level < BLM.Levels.Fire4)
+                            return BLM.Fire3;
+
                         if (level >= BLM.Levels.Despair && CanUseAction(BLM.Despair))
                         {
                             return BLM.Despair;
@@ -302,12 +301,12 @@ internal class BlackMageFire : CustomCombo
                     };
                 }
 
-                // Handle normal rotation
+                // Always use Fire3 if we have Firestarter and are below Fire4
                 if (
                     level >= BLM.Levels.Fire3
-                    && firestarter is not null
+                    && hasFirestarter
                     && actionID is BLM.Fire
-                    && (firestarter.RemainingTime <= 5 || level < BLM.Levels.Fire4)
+                    && level < BLM.Levels.Fire4
                 )
                 {
                     return BLM.Fire3;
@@ -316,10 +315,7 @@ internal class BlackMageFire : CustomCombo
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < 5500 && actionID is BLM.Fire)
                 {
-                    return
-                        level >= BLM.Levels.Fire3
-                        && firestarter is not null
-                        && !gauge.IsParadoxActive
+                    return level >= BLM.Levels.Fire3 && hasFirestarter && !gauge.IsParadoxActive
                         ? BLM.Fire3
                         : OriginalHook(BLM.Fire);
                 }
@@ -362,6 +358,8 @@ internal class BlackMageFire : CustomCombo
                     return level >= BLM.Levels.Freeze ? BLM.Freeze : OriginalHook(BLM.Blizzard2);
                 }
             }
+
+            // Opener Ability with no gauge
             if (actionID is BLM.Fire)
             {
                 // Occurs for single target rotation
@@ -448,11 +446,11 @@ internal class BlackScathe : CustomCombo
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
                 return OriginalHook(BLM.Thunder);
 
-            if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
-                return BLM.Xenoglossy;
-
             if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 return BLM.Paradox;
+
+            if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
+                return BLM.Xenoglossy;
 
             // Triplecast
             if (
