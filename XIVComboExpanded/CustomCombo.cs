@@ -238,7 +238,7 @@ internal abstract partial class CustomCombo
     /// <returns>Whether or not the</returns>
     protected static bool ShouldUseDots()
     {
-        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 5;
+        return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 4;
     }
 
     protected static bool TargetHasLowLife()

@@ -90,7 +90,7 @@ internal static class BLM
             Amplifier = 86,
             EnhancedSharpcast2 = 88,
             Paradox = 90,
-            EnhancedPolyglot = 96,
+            EnhancedPolyglot = 98,
             FlareStar = 100;
     }
 
@@ -118,9 +118,11 @@ internal class BlackMageFire : CustomCombo
             var hasRaidBuffs = HasRaidBuffs(1);
 
             var maxPolyglot = 1;
-            if (level >= BLM.Levels.Xenoglossy) maxPolyglot++;
-            if (level >= BLM.Levels.EnhancedPolyglot) maxPolyglot++;
-            
+            if (level >= BLM.Levels.Xenoglossy)
+                maxPolyglot++;
+            if (level >= BLM.Levels.EnhancedPolyglot)
+                maxPolyglot++;
+
             // not in combat, has no target, in astral fire
             if (!InCombat() && !HasTarget())
             {
@@ -137,34 +139,30 @@ internal class BlackMageFire : CustomCombo
                 }
             }
             var hasLowMP =
-                playerMP - fireCost < 800 
-                || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
+                playerMP - fireCost < 800 || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
 
             var needToTriplecast =
                 HasCharges(BLM.Triplecast)
-                && (
-                    GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6 || actionID is BLM.Fire2
-                )
+                && GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
                 && !HasEffect(BLM.Buffs.Triplecast)
                 && !HasEffect(ADV.Buffs.Swiftcast);
 
-            var gonnaManafont = gauge.InAstralFire
-                            && (
-                                (level >= BLM.Levels.Flare && playerMP == 0)
-                                || (level < BLM.Levels.Flare && hasLowMP)
-                            )
-                            && (IsOnCooldown(BLM.LeyLines) || level < BLM.Levels.LeyLines)
-                            && IsOffCooldown(BLM.Manafont);
+            var gonnaManafont =
+                gauge.InAstralFire
+                && (
+                    (level >= BLM.Levels.Flare && playerMP == 0)
+                    || (level < BLM.Levels.Flare && hasLowMP)
+                )
+                && (IsOnCooldown(BLM.LeyLines) || level < BLM.Levels.LeyLines)
+                && IsOffCooldown(BLM.Manafont);
 
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 switch (level)
                 {
                     //  manafont if I'm in astral fire and I have no MP
-                    case >= BLM.Levels.Manafont
-                        when gonnaManafont:
+                    case >= BLM.Levels.Manafont when gonnaManafont:
                         return BLM.Manafont;
-
                     case >= BLM.Levels.Triplecast when needToTriplecast:
                         return BLM.Triplecast;
                     case >= BLM.Levels.Amplifier
@@ -175,12 +173,12 @@ internal class BlackMageFire : CustomCombo
 
             var amplifierOffCooldown =
                 IsOffCooldown(BLM.Amplifier)
-                || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 6;
+                || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 10;
 
             if (
                 gauge.PolyglotStacks >= 1
                 && (
-                    (gauge.EnochianTimer <= 9000 && gauge.PolyglotStacks == maxPolyglot)
+                    (gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot)
                     || needToTriplecast
                     || TargetHasLowLife()
                     || actionID is BLM.Fire2
@@ -235,15 +233,19 @@ internal class BlackMageFire : CustomCombo
                 if (hasLowMP)
                 {
                     // Try to use Firestarter proc if available for Fire
-                    if (firestarter is not null && actionID is BLM.Fire)
+                    // but only if it will run out befor ethe end of
+                    if (
+                        firestarter is not null
+                        && firestarter.RemainingTime >= 15
+                        && actionID is BLM.Fire
+                    )
                         return BLM.Fire3;
 
                     // Handle single-target Despair
-                    if (
-                        actionID is BLM.Fire
-                    )
+                    if (actionID is BLM.Fire)
                     {
-                        if (level >= BLM.Levels.Despair && CanUseAction(BLM.Despair)) {
+                        if (level >= BLM.Levels.Despair && CanUseAction(BLM.Despair))
+                        {
                             return BLM.Despair;
                         }
                     }
@@ -279,8 +281,8 @@ internal class BlackMageFire : CustomCombo
                             return OriginalHook(BLM.Fire2);
                     }
 
-                        if (CanUseAction(BLM.Fire))
-                            return level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire);
+                    if (CanUseAction(OriginalHook(BLM.Fire)))
+                        return level >= BLM.Levels.Fire4 ? BLM.Fire4 : OriginalHook(BLM.Fire);
 
                     // manafont
                     if (level >= BLM.Levels.Manafont && gonnaManafont)
@@ -289,7 +291,8 @@ internal class BlackMageFire : CustomCombo
                     // Transition to ice phase if we can't do anything else
                     return actionID switch
                     {
-                        BLM.Fire => level >= BLM.Levels.Blizzard3 && !gauge.IsParadoxActive
+                        BLM.Fire => level >= BLM.Levels.Blizzard3
+                            // && (!gauge.IsParadoxActive || !CanUseAction(OriginalHook(BLM.Blizzard)))
                             ? BLM.Blizzard3
                             : OriginalHook(BLM.Blizzard),
                         BLM.Fire2 => level > BLM.Levels.Blizzard2
@@ -311,7 +314,7 @@ internal class BlackMageFire : CustomCombo
                 }
 
                 // Handle Astral Fire refresh
-                if (gauge.ElementTimeRemaining < 6000 && actionID is BLM.Fire)
+                if (gauge.ElementTimeRemaining < 5500 && actionID is BLM.Fire)
                 {
                     return
                         level >= BLM.Levels.Fire3
