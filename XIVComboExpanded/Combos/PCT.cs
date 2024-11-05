@@ -161,6 +161,10 @@ internal static class PCT
                 }
 
                 if (GCDClipCheck(actionID))
+                {
+                    var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
+                    var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 11;
+
                     switch (level)
                     {
                         case >= Levels.SubtractivePalette
@@ -176,7 +180,7 @@ internal static class PCT
                         case >= ADV.Levels.Addle
                             when IsOffCooldown(ADV.Addle)
                                 && !TargetHasEffectAny(ADV.Debuffs.Addle)
-                                && TargetHasEffectAny(ADV.Debuffs.Reprisal):
+                                && reprisalFound:
                             return ADV.Addle;
                         case >= Levels.WeaponMotif
                             when IsAvailable(OriginalHook(SteelMuse))
@@ -235,6 +239,7 @@ internal static class PCT
                                 && LocalPlayer?.CurrentMp <= 7000:
                             return ADV.LucidDreaming;
                     }
+                }
 
                 if (
                     HasEffect(Buffs.StarPrismReady)
