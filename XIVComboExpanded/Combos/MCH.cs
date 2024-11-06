@@ -153,7 +153,11 @@ internal class MachinistCleanShot : CustomCombo
                     case >= MCH.Levels.Wildfire
                         when IsOffCooldown(MCH.Wildfire)
                             && overheated is not null
-                            && (raidbuffs || IsOnCooldown(MCH.BarrelStabilizer)):
+                            && (
+                                raidbuffs
+                                || IsOnCooldown(MCH.BarrelStabilizer)
+                                || level < MCH.Levels.BarrelStabilizer
+                            ):
                         return MCH.Wildfire;
                     case >= MCH.Levels.RookOverdrive
                         when gauge.Battery >= 50
