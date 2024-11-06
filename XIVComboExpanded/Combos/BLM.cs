@@ -446,9 +446,6 @@ internal class BlackScathe : CustomCombo
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
                 return OriginalHook(BLM.Thunder);
 
-            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
-                return BLM.Paradox;
-
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
 
@@ -460,6 +457,9 @@ internal class BlackScathe : CustomCombo
                 && !HasEffect(ADV.Buffs.Swiftcast)
             )
                 return BLM.Triplecast;
+
+            if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
+                return BLM.Paradox;
         }
 
         return actionID;

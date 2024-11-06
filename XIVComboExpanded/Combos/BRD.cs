@@ -116,34 +116,33 @@ internal class BardHeavyShot : CustomCombo
 
             var ragingStrikes = FindEffect(BRD.Buffs.RagingStrikes);
 
-            var ragingStrikesFound = HasEffect(BRD.Buffs.RagingStrikes);
+            var ragingStrikesFound = HasEffect(BRD.Buffs.RagingStrikes) || TargetHasLowLife();
 
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
-                if (
-                    level >= BRD.Levels.PitchPerfect // Be the right level
-                    && gauge.Song == Song.WANDERER // be the right song
-                    && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000))
-                )
-                    return BRD.PitchPerfect;
-
                 var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
                 var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 11;
 
                 switch (level)
                 {
-                    case >= BRD.Levels.RagingStrikes
-                        when IsOffCooldown(BRD.RagingStrikes) && hasRaidBuffs:
-                        return BRD.RagingStrikes;
                     case >= BRD.Levels.BattleVoice
-                        when (ragingStrikesFound || hasRaidBuffs)
-                            && IsOffCooldown(BRD.BattleVoice):
+                        when (ragingStrikesFound || hasRaidBuffs) && IsOffCooldown(BRD.BattleVoice):
                         return BRD.BattleVoice;
                     case >= BRD.Levels.RadiantFinale
                         when IsOffCooldown(BRD.RadiantFinale)
                             && gauge.Coda.Length is 1 or 3
-                            && ragingStrikesFound:
+                            && (ragingStrikesFound || hasRaidBuffs):
                         return BRD.RadiantFinale;
+                    case >= BRD.Levels.RagingStrikes
+                        when IsOffCooldown(BRD.RagingStrikes) && hasRaidBuffs:
+                        return BRD.RagingStrikes;
+                    case >= BRD.Levels.PitchPerfect
+                        when gauge.Song == Song.WANDERER // be the right song
+                            && (
+                                gauge.Repertoire == 3
+                                || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)
+                            ):
+                        return BRD.PitchPerfect;
                     case >= BRD.Levels.WanderersMinuet
                         when IsOffCooldown(BRD.WanderersMinuet)
                             && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
@@ -238,7 +237,7 @@ internal class BardHeavyShot : CustomCombo
             if (
                 level >= BRD.Levels.BlastShot
                 && blastArrow is not null
-                && (blastArrow.RemainingTime <= 6 || hasRaidBuffs)
+                && (blastArrow.RemainingTime <= 5 || ragingStrikesFound)
             )
                 return BRD.BlastArrow;
 
@@ -247,7 +246,7 @@ internal class BardHeavyShot : CustomCombo
             if (
                 level >= BRD.Levels.ResonantArrow
                 && resonantArrowReady is not null
-                && (resonantArrowReady.RemainingTime <= 10 || hasRaidBuffs)
+                && (resonantArrowReady.RemainingTime <= 10 || ragingStrikesFound)
             )
             {
                 return BRD.ResonantArrow;
@@ -256,19 +255,22 @@ internal class BardHeavyShot : CustomCombo
             if (
                 level >= BRD.Levels.ApexArrow
                 && gauge.SoulVoice >= 80
+                && (GetCooldown(BRD.RagingStrikes).CooldownRemaining >= 30 || ragingStrikesFound)
                 && (
-                    (
-                        HasEffect(BRD.Buffs.BattleVoice)
-                        && (level < BRD.Levels.RadiantFinale || HasEffect(BRD.Buffs.RadiantFinale))
-                    )
-                    || (
-                        gauge.Song is Song.WANDERER
-                        && (IsOnCooldown(BRD.RadiantFinale) || level < BRD.Levels.RadiantFinale)
-                    ) // for CDs
-                    || (
-                        gauge.Song is Song.MAGE
-                        && (gauge.SoulVoice == 100 || gauge.SongTimer <= 18000)
-                    )
+                    // (
+                    //     HasEffect(BRD.Buffs.BattleVoice)
+                    //     && (level < BRD.Levels.RadiantFinale || HasEffect(BRD.Buffs.RadiantFinale))
+                    // )
+                    // || (
+                    //     gauge.Song is Song.WANDERER
+                    //     && (IsOnCooldown(BRD.RadiantFinale) || level < BRD.Levels.RadiantFinale)
+                    // ) // for CDs
+                    // || (
+                    //     gauge.Song is Song.MAGE
+                    //     && (gauge.SoulVoice == 100 || gauge.SongTimer <= 18000)
+                    // )
+                    gauge.SoulVoice == 100
+                    || ragingStrikesFound
                 )
             )
             {
@@ -283,7 +285,7 @@ internal class BardHeavyShot : CustomCombo
                 level >= BRD.Levels.RadiantEncore
                 && radiantEncore is not null
                 && radiantFinale.CooldownElapsed >= 0.5
-                && (radiantEncore.RemainingTime <= 20 || hasRaidBuffs)
+                && (radiantEncore.RemainingTime <= 20 || ragingStrikesFound)
             )
             {
                 return BRD.RadiantEncore;
