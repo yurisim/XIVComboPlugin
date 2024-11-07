@@ -48,6 +48,7 @@ internal static class BLM
             Swiftcast = 167,
             LeyLines = 737,
             Sharpcast = 867,
+            CircleOfPower = 738,
             Triplecast = 1211,
             EnhancedFlare = 2960;
     }
@@ -249,6 +250,10 @@ internal class BlackMageFire : CustomCombo
                         }
                     }
 
+                    // flare star
+                    if (level >= BLM.Levels.FlareStar && gauge.AstralSoulStacks == 6)
+                        return BLM.FlareStar;
+
                     // Handle AoE Flare
                     if (
                         level >= BLM.Levels.Flare
@@ -312,13 +317,19 @@ internal class BlackMageFire : CustomCombo
                     return BLM.Fire3;
                 }
 
+                var refreshNumber = HasEffect(BLM.Buffs.CircleOfPower) ? 5000 : 5500;
+
                 // Handle Astral Fire refresh
-                if (gauge.ElementTimeRemaining < 5500 && actionID is BLM.Fire)
+                if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
                 {
                     return level >= BLM.Levels.Fire3 && hasFirestarter && !gauge.IsParadoxActive
                         ? BLM.Fire3
                         : OriginalHook(BLM.Fire);
                 }
+
+                // flare star
+                if (level >= BLM.Levels.FlareStar && gauge.AstralSoulStacks == 6)
+                    return BLM.FlareStar;
 
                 // Normal cast priorities
                 return actionID switch
@@ -442,10 +453,6 @@ internal class BlackScathe : CustomCombo
             if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
                 return BLM.Fire3;
 
-            // Thunder
-            if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
-                return OriginalHook(BLM.Thunder);
-
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
 
@@ -457,6 +464,10 @@ internal class BlackScathe : CustomCombo
                 && !HasEffect(ADV.Buffs.Swiftcast)
             )
                 return BLM.Triplecast;
+
+            // Thunder
+            if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
+                return OriginalHook(BLM.Thunder);
 
             if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 return BLM.Paradox;

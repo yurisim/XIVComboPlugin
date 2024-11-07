@@ -255,7 +255,7 @@ internal class BardHeavyShot : CustomCombo
             if (
                 level >= BRD.Levels.ApexArrow
                 && gauge.SoulVoice >= 80
-                && (GetCooldown(BRD.RagingStrikes).CooldownRemaining >= 30 || ragingStrikesFound)
+                && (GetCooldown(BRD.RagingStrikes).CooldownRemaining >= 28 || ragingStrikesFound)
                 && (
                     // (
                     //     HasEffect(BRD.Buffs.BattleVoice)
@@ -277,15 +277,14 @@ internal class BardHeavyShot : CustomCombo
                 return BRD.ApexArrow;
             }
 
-            var radiantEncore = FindEffect(BRD.Buffs.RadiantEncoreReady);
+            var radiantEncore = HasEffect(BRD.Buffs.RadiantEncoreReady);
 
             var radiantFinale = GetCooldown(BRD.RadiantFinale);
 
             if (
                 level >= BRD.Levels.RadiantEncore
-                && radiantEncore is not null
-                && radiantFinale.CooldownElapsed >= 0.5
-                && (radiantEncore.RemainingTime <= 20 || ragingStrikesFound)
+                && radiantEncore
+                && (radiantFinale.CooldownElapsed >= 10 || ragingStrikesFound)
             )
             {
                 return BRD.RadiantEncore;
