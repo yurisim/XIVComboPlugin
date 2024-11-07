@@ -134,11 +134,15 @@ internal class BlackMageFire : CustomCombo
                 }
 
                 // umbral soul if in umbral ice and does not have 3 umbnral hearts
-                if (gauge.InUmbralIce && gauge.UmbralHearts < 3)
+                if (
+                    gauge.InUmbralIce
+                    && (gauge.UmbralHearts < 3 || gauge.ElementTimeRemaining != 15000)
+                )
                 {
                     return BLM.UmbralSoul;
                 }
             }
+
             var hasLowMP =
                 playerMP - fireCost < 800 || (actionID is BLM.Fire2 && playerMP - fire2Cost < 800);
 
@@ -317,7 +321,7 @@ internal class BlackMageFire : CustomCombo
                     return BLM.Fire3;
                 }
 
-                var refreshNumber = HasEffect(BLM.Buffs.CircleOfPower) ? 5000 : 5500;
+                var refreshNumber = HasEffect(BLM.Buffs.CircleOfPower) ? 5000 : 5600;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
