@@ -255,23 +255,8 @@ internal class BardHeavyShot : CustomCombo
             if (
                 level >= BRD.Levels.ApexArrow
                 && gauge.SoulVoice >= 80
-                && (GetCooldown(BRD.RagingStrikes).CooldownRemaining >= 28 || ragingStrikesFound)
-                && (
-                    // (
-                    //     HasEffect(BRD.Buffs.BattleVoice)
-                    //     && (level < BRD.Levels.RadiantFinale || HasEffect(BRD.Buffs.RadiantFinale))
-                    // )
-                    // || (
-                    //     gauge.Song is Song.WANDERER
-                    //     && (IsOnCooldown(BRD.RadiantFinale) || level < BRD.Levels.RadiantFinale)
-                    // ) // for CDs
-                    // || (
-                    //     gauge.Song is Song.MAGE
-                    //     && (gauge.SoulVoice == 100 || gauge.SongTimer <= 18000)
-                    // )
-                    gauge.SoulVoice == 100
-                    || ragingStrikesFound
-                )
+                && (GetCooldown(BRD.RagingStrikes).CooldownRemaining >= 27 || ragingStrikesFound)
+                && (gauge.SoulVoice == 100 || ragingStrikesFound)
             )
             {
                 return BRD.ApexArrow;
