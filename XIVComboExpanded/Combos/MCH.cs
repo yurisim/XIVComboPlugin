@@ -130,13 +130,12 @@ internal class MachinistCleanShot : CustomCombo
                         || GetCooldown(MCH.Chainsaw).TotalCooldownRemaining >= timeThreshold,
                     fullMetal is null,
                     excavatorReady is null,
-                    comboTime > 10 || comboTime == 0,
+                    comboTime > 11 || comboTime == 0,
                 }.All(x => x is true);
 
                 var hyperchargeReady = HasEffect(MCH.Buffs.HyperchargeReady);
 
-                // var canUseHypercharge = gauge.Heat >= 50 || hyperchargeReady;
-                var canUseHypercharge = CanUseAction(MCH.Hypercharge);
+                var canUseHypercharge = gauge.Heat >= 50 || HasEffect(MCH.Buffs.HyperchargeReady);
 
                 // this line is causing weird delays to occur with the icon replacer off GCD
                 var dismantleCD = GetCooldown(MCH.Dismantle);
@@ -179,7 +178,8 @@ internal class MachinistCleanShot : CustomCombo
                             && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 10)
                             && reprisalFound:
                     case >= MCH.Levels.Hypercharge
-                        when IsOffCooldown(MCH.Hypercharge)
+                        when GetCooldown(MCH.Hypercharge).IsAvailable
+                            && !gauge.IsOverheated
                             && canUseHypercharge
                             && nothingBlockingHypercharge
                             && (

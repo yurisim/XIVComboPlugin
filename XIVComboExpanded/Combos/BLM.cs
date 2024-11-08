@@ -453,10 +453,6 @@ internal class BlackScathe : CustomCombo
             )
                 return ADV.Swiftcast;
 
-            // Firestarter
-            if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
-                return BLM.Fire3;
-
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
                 return BLM.Xenoglossy;
 
@@ -469,9 +465,14 @@ internal class BlackScathe : CustomCombo
             )
                 return BLM.Triplecast;
 
+
             // Thunder
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
                 return OriginalHook(BLM.Thunder);
+
+            // Firestarter
+            if (level >= BLM.Levels.Fire3 && HasEffect(BLM.Buffs.Firestarter))
+                return BLM.Fire3;
 
             if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 return BLM.Paradox;

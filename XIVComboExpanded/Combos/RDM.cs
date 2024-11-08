@@ -206,18 +206,21 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             }
 
             if (
-                (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
-                || (
-                    (lastComboMove is RDM.EnchantedRiposte or RDM.Riposte)
-                    && (level >= RDM.Levels.Zwerchhau)
-                )
-                || (
-                    (lastComboMove is RDM.EnchantedZwerchhau or RDM.Zwerchhau)
-                    && (level >= RDM.Levels.Redoublement)
-                )
-                || (
-                    startMeleeCombo
-                    && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent)
+                InMeleeRange()
+                && (
+                    gauge.ManaStacks >= 1 && gauge.ManaStacks < 3
+                    || (
+                        (lastComboMove is RDM.EnchantedRiposte or RDM.Riposte)
+                        && (level >= RDM.Levels.Zwerchhau)
+                    )
+                    || (
+                        (lastComboMove is RDM.EnchantedZwerchhau or RDM.Zwerchhau)
+                        && (level >= RDM.Levels.Redoublement)
+                    )
+                    || (
+                        startMeleeCombo
+                        && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent)
+                    )
                 )
             )
             {
