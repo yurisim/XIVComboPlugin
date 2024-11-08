@@ -148,6 +148,11 @@ internal class NinjaAeolianEdge : CustomCombo
         )
             switch (level)
             {
+                case >= NIN.Levels.Mug
+                    when IsOffCooldown(OriginalHook(NIN.Mug))
+                        && targetHasTrick:
+                    return OriginalHook(NIN.Mug);
+
                 case >= NIN.Levels.TrickAttack
                     when InMeleeRange()
                         && HasEffect(NIN.Buffs.ShadowWalker)

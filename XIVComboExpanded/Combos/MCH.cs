@@ -105,7 +105,7 @@ internal class MachinistCleanShot : CustomCombo
         {
             var gauge = GetJobGauge<MCHGauge>();
 
-            var overheated = FindEffect(MCH.Buffs.Overheated);
+            var overheated = HasEffect(MCH.Buffs.Overheated);
             var raidbuffs = HasRaidBuffs(1);
 
             var excavatorReady = FindEffect(MCH.Buffs.ExcavatorReady);
@@ -114,12 +114,12 @@ internal class MachinistCleanShot : CustomCombo
             var drillReady =
                 level >= MCH.Levels.Drill
                 && (HasCharges(MCH.Drill) || IsOffCooldown(MCH.Drill))
-                && overheated is null
+                && !overheated
                 && (GetCooldown(MCH.Drill).TotalCooldownRemaining <= 9 || raidbuffs);
 
             if (GCDClipCheck(actionID))
             {
-                var timeThreshold = 9;
+                var timeThreshold = 10;
 
                 var nothingBlockingHypercharge = new[]
                 {
@@ -151,7 +151,7 @@ internal class MachinistCleanShot : CustomCombo
                         return MCH.BarrelStabilizer;
                     case >= MCH.Levels.Wildfire
                         when IsOffCooldown(MCH.Wildfire)
-                            && overheated is not null
+                            && overheated
                             && (
                                 raidbuffs
                                 || IsOnCooldown(MCH.BarrelStabilizer)
@@ -179,7 +179,7 @@ internal class MachinistCleanShot : CustomCombo
                             && reprisalFound:
                     case >= MCH.Levels.Hypercharge
                         when GetCooldown(MCH.Hypercharge).IsAvailable
-                            && !gauge.IsOverheated
+                            && !overheated
                             && canUseHypercharge
                             && nothingBlockingHypercharge
                             && (
@@ -192,7 +192,7 @@ internal class MachinistCleanShot : CustomCombo
                     case >= MCH.Levels.Ricochet
                         when HasCharges(OriginalHook(MCH.Ricochet))
                             && (
-                                overheated is not null
+                                overheated
                                 || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining
                                     <= 40
                                 || raidbuffs
@@ -200,7 +200,7 @@ internal class MachinistCleanShot : CustomCombo
                     case >= MCH.Levels.GaussRound
                         when HasCharges(OriginalHook(MCH.GaussRound))
                             && (
-                                overheated is not null
+                                overheated
                                 || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining
                                     <= 40
                                 || raidbuffs
@@ -214,7 +214,7 @@ internal class MachinistCleanShot : CustomCombo
             }
 
             if (
-                (overheated is null && (comboTime > 4 || comboTime == 0))
+                (!overheated && (comboTime > 4 || comboTime == 0))
                 || HasEffect(MCH.Buffs.Reassemble)
             )
             {
@@ -261,7 +261,7 @@ internal class MachinistCleanShot : CustomCombo
                 }
             }
 
-            if (overheated is not null && level >= MCH.Levels.HeatBlast)
+            if (overheated && level >= MCH.Levels.HeatBlast)
             {
                 return OriginalHook(MCH.HeatBlast);
             }
