@@ -124,7 +124,7 @@ internal class MonkBootshine : CustomCombo
                                 || GetCooldown(MNK.RiddleOfFire).TotalCooldownRemaining
                                     <= GetCooldown(actionID).BaseCooldown * 3 // use 3 actions before the next riddle
                                 || TargetHasLowLife()
-                                || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 4
+                                || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 5
                             )
                             && (
                                 !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR)) // we need to save phantoms for brotherhood, so don't use it if we have both unless...
@@ -175,18 +175,17 @@ internal class MonkBootshine : CustomCombo
                         return ADV.Feint;
                 }
 
-            if (GetTargetDistance() >= 4 || !InCombat() || !HasTarget())
-            {
-                if (gauge.Chakra < 5)
-                    return OriginalHook(MNK.SteeledMeditation);
-
-                if (
-                    level >= MNK.Levels.FormShift
-                    && !HasEffect(MNK.Buffs.FormlessFist)
-                    && !HasEffect(MNK.Buffs.PerfectBalance)
+            if (
+                level >= MNK.Levels.FiresReply
+                && CanUseAction(MNK.FiresReply)
+                && (
+                    HasEffect(MNK.Buffs.RaptorForm)
+                    || distance >= 5
+                    || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 6
                 )
-                    return MNK.FormShift;
-            }
+                && !HasEffect(MNK.Buffs.FormlessFist)
+            )
+                return MNK.FiresReply;
 
             if (
                 level >= MNK.Levels.MasterfulBlitz
@@ -203,18 +202,6 @@ internal class MonkBootshine : CustomCombo
             )
                 return OriginalHook(MNK.MasterfulBlitz);
 
-            if (
-                level >= MNK.Levels.FiresReply
-                && CanUseAction(MNK.FiresReply)
-                && (
-                    HasEffect(MNK.Buffs.RaptorForm)
-                    || distance >= 5
-                    || FindEffect(MNK.Buffs.FiresRumination)?.RemainingTime <= 6
-                )
-                && !HasEffect(MNK.Buffs.FormlessFist)
-            )
-                return MNK.FiresReply;
-
             var windsRumination = FindEffect(MNK.Buffs.WindsRumination);
 
             if (
@@ -230,6 +217,20 @@ internal class MonkBootshine : CustomCombo
             {
                 return MNK.WindsReply;
             }
+
+            if (GetTargetDistance() >= 5 || !InCombat() || !HasTarget())
+            {
+                if (gauge.Chakra < 5)
+                    return OriginalHook(MNK.SteeledMeditation);
+
+                if (
+                    level >= MNK.Levels.FormShift
+                    && !HasEffect(MNK.Buffs.FormlessFist)
+                    && !HasEffect(MNK.Buffs.PerfectBalance)
+                )
+                    return MNK.FormShift;
+            }
+
 
             if (
                 (
