@@ -183,13 +183,16 @@ internal class BlackMageFire : CustomCombo
                 IsOffCooldown(BLM.Amplifier)
                 || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 15;
 
+            var plzUsePolyglotSoon = gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot;
+
             if (
                 gauge.PolyglotStacks >= 1
                 && (
-                    (gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot)
+                    plzUsePolyglotSoon
                     || needToTriplecast
                     || TargetHasLowLife()
                     || actionID is BLM.Fire2
+                    || (gauge.InUmbralIce && gauge.PolyglotStacks == maxPolyglot)
                     || (
                         level >= BLM.Levels.Amplifier
                         && amplifierOffCooldown
@@ -197,6 +200,7 @@ internal class BlackMageFire : CustomCombo
                     )
                     || HasEffect(ADV.Buffs.Medicated)
                 )
+                && (!HasEffect(BLM.Buffs.Triplecast) || plzUsePolyglotSoon)
                 && gauge.ElementTimeRemaining >= 6000
                 && level >= BLM.Levels.Foul
             )
