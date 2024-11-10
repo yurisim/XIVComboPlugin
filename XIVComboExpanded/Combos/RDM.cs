@@ -188,12 +188,10 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var needToReprise = gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy;
 
-            var startMeleeCombo =
-                (
-                    actualWhite >= minimiumGauge
-                    && actualBlack >= minimiumGauge
-                    && (HasEffect(RDM.Buffs.Embolden) || raidBuffs)
-                ) || needToReprise;
+            var startMeleeCombo = (
+                actualWhite >= minimiumGauge && actualBlack >= minimiumGauge
+            // && (HasEffect(RDM.Buffs.Embolden) || raidBuffs)
+            );
 
             if (
                 level >= RDM.Levels.Reprise
@@ -207,6 +205,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             if (
                 InMeleeRange()
+                && !hasSpeedy
                 && (
                     gauge.ManaStacks >= 1 && gauge.ManaStacks < 3
                     || (
@@ -253,18 +252,21 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             }
 
             // Dualcast
-            if (hasSpeedy && actionID == RDM.Jolt)
-                return gauge.WhiteMana + 7 < gauge.BlackMana
-                    ? OriginalHook(RDM.Veraero)
-                    : OriginalHook(RDM.Verthunder);
+            if (hasSpeedy)
+            {
+                if (actionID == RDM.Jolt)
+                    return gauge.WhiteMana < gauge.BlackMana + 7
+                        ? OriginalHook(RDM.Veraero)
+                        : OriginalHook(RDM.Verthunder);
 
-            if (hasSpeedy && actionID == RDM.Scatter)
-                return RDM.Scatter;
+                if (actionID == RDM.Scatter)
+                    return RDM.Scatter;
+            }
 
             if (actionID == RDM.Scatter && level >= RDM.Levels.Verthunder2)
-                return gauge.BlackMana < gauge.WhiteMana + 7 || level < RDM.Levels.Veraero2
-                    ? OriginalHook(RDM.Verthunder2)
-                    : OriginalHook(RDM.Veraero2);
+                return gauge.WhiteMana < gauge.BlackMana + 8 || level < RDM.Levels.Veraero2
+                    ? OriginalHook(RDM.Veraero2)
+                    : OriginalHook(RDM.Verthunder2);
 
             // Procs
             if (HasEffect(RDM.Buffs.VerfireReady) && actionID is RDM.Jolt)

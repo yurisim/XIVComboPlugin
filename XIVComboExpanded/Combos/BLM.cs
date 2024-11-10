@@ -183,7 +183,8 @@ internal class BlackMageFire : CustomCombo
                 IsOffCooldown(BLM.Amplifier)
                 || GetCooldown(BLM.Amplifier).TotalCooldownRemaining <= 15;
 
-            var plzUsePolyglotSoon = gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot;
+            var plzUsePolyglotSoon =
+                gauge.EnochianTimer <= 10000 && gauge.PolyglotStacks == maxPolyglot;
 
             if (
                 gauge.PolyglotStacks >= 1
@@ -265,7 +266,6 @@ internal class BlackMageFire : CustomCombo
                     // Handle AoE Flare
                     if (
                         level >= BLM.Levels.Flare
-                        // && playerMP < fire2Cost
                         && CanUseAction(BLM.Flare)
                         && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4)
                     )
@@ -325,7 +325,15 @@ internal class BlackMageFire : CustomCombo
                     return BLM.Fire3;
                 }
 
-                var refreshNumber = HasEffect(BLM.Buffs.CircleOfPower) ? 5000 : 5600;
+                var findTriplecast = FindEffect(BLM.Buffs.Triplecast);
+
+                var refreshNumber =
+                    (
+                        (findTriplecast is not null && findTriplecast.StackCount >= 2)
+                        || hasFirestarter
+                    )
+                        ? 3700
+                        : 5800;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
@@ -469,7 +477,6 @@ internal class BlackScathe : CustomCombo
             )
                 return BLM.Triplecast;
 
-
             // Thunder
             if (level >= BLM.Levels.Thunder && HasEffect(BLM.Buffs.Thunderhead))
                 return OriginalHook(BLM.Thunder);
@@ -480,6 +487,8 @@ internal class BlackScathe : CustomCombo
 
             if (level >= BLM.Levels.Paradox && gauge.IsParadoxActive)
                 return BLM.Paradox;
+
+            return ADV.Feint;
         }
 
         return actionID;
