@@ -171,8 +171,8 @@ internal class GunbreakerSolidBarrel : CustomCombo
             if (
                 level >= GNB.Levels.DoubleDown
                 && IsOffCooldown(GNB.DoubleDown)
-                && gauge.Ammo >= 2
-                && GetTargetDistance() <= 5
+                && gauge.Ammo >= 1
+                && GetTargetDistance() < 5
                 && (HasEffect(GNB.Buffs.NoMercy) || hasTwoRaidBuffs)
             )
                 return GNB.DoubleDown;
@@ -323,7 +323,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
             if (
                 level >= GNB.Levels.DoubleDown
                 && IsOffCooldown(GNB.DoubleDown)
-                && gauge.Ammo >= 2
+                && gauge.Ammo >= 1
                 && GetTargetDistance() <= 5
                 && (HasEffect(GNB.Buffs.NoMercy) || raidbuffs)
             )

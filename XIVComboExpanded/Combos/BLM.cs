@@ -283,14 +283,7 @@ internal class BlackMageFire : CustomCombo
                                 return BLM.Triplecast;
                         }
 
-                        if (hasInstantCast)
-                        {
-                            if (CanUseAction(BLM.Flare))
-                                return BLM.Flare;
-                        }
-
-                        if (CanUseAction(BLM.Fire2))
-                            return OriginalHook(BLM.Fire2);
+                        return BLM.Flare;
                     }
 
                     if (CanUseAction(OriginalHook(BLM.Fire)))

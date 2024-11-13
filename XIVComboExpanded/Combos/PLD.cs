@@ -76,7 +76,7 @@ internal static class PLD
             DivineMagicMastery = 64,
             Requiescat = 68,
             HolyCircle = 72,
-            Intervene = 74,
+            Intervene = 66,
             Atonement = 76,
             Supplication = 76,
             ShieldLob = 15,
