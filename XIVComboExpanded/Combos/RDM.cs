@@ -116,11 +116,11 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var embolden = HasEffect(RDM.Buffs.Embolden);
 
-            // manafication
+            // // manafication
             if (
                 level >= RDM.Levels.Manafication
                 && gauge.ManaStacks < 1
-                && IsOnCooldown(RDM.Embolden)
+                && HasEffect(RDM.Buffs.Embolden)
                 && IsOffCooldown(RDM.Manafication)
             )
                 return RDM.Manafication;
@@ -146,6 +146,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                     case >= RDM.Levels.Engagement
                         when InMeleeRange()
                             && HasCharges(RDM.Engagement)
+                            && IsOffCooldown(RDM.Embolden)
                             && (
                                 GetCooldown(RDM.Engagement).CooldownRemaining < 6
                                 || HasEffect(RDM.Buffs.Embolden)
