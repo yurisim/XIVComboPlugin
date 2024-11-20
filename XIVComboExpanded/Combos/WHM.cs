@@ -169,6 +169,25 @@ internal class WhiteMageBenison : CustomCombo
     }
 }
 
+internal class WhiteMageThinAirFeature : CustomCombo
+{
+    protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
+
+    protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+    {
+        if (level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && GetRemainingCharges(WHM.ThinAir) >= 1)
+        {
+            if (actionID == WHM.Raise)
+                return WHM.ThinAir;
+
+            if ((actionID == WHM.Medica2 || actionID == WHM.Cure3) && GCDClipCheck(actionID))
+                return WHM.ThinAir;
+        }
+
+        return actionID;
+    }
+}
+
 internal class WhiteMageStoneFeature : CustomCombo
 {
     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WhmAny;
@@ -282,22 +301,6 @@ internal class WhiteMageStoneFeature : CustomCombo
 
             return OriginalHook(actionID);
         }
-
-        if (
-            (actionID == WHM.Medica2 || actionID == WHM.Cure3)
-            && level >= WHM.Levels.ThinAir
-            && !HasEffect(WHM.Buffs.ThinAir)
-            && GetRemainingCharges(WHM.ThinAir) >= 1
-        )
-            return WHM.ThinAir;
-
-        if (
-            actionID == WHM.Raise
-            && level >= WHM.Levels.ThinAir
-            && !HasEffect(WHM.Buffs.ThinAir)
-            && GetRemainingCharges(WHM.ThinAir) >= 1
-        )
-            return WHM.ThinAir;
 
         return actionID;
     }
