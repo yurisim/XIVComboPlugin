@@ -146,11 +146,10 @@ internal class NinjaAeolianEdge : CustomCombo
             && !HasEffect(NIN.Buffs.Kassatsu)
             && !HasEffect(NIN.Buffs.TenChiJin)
         )
+        {
             switch (level)
             {
-                case >= NIN.Levels.Mug
-                    when IsOffCooldown(OriginalHook(NIN.Mug))
-                        && targetHasTrick:
+                case >= NIN.Levels.Mug when IsOffCooldown(OriginalHook(NIN.Mug)) && targetHasTrick:
                     return OriginalHook(NIN.Mug);
 
                 case >= NIN.Levels.TrickAttack
@@ -176,6 +175,12 @@ internal class NinjaAeolianEdge : CustomCombo
                         && (targetHasTrick || raidBuffs || trickAttackCD >= 9)
                         && ninki >= 50:
                     return NIN.Bunshin;
+
+                case >= NIN.Levels.TenChiJin
+                    when IsOffCooldown(NIN.TenChiJin)
+                        && IsOnCooldown(OriginalHook(NIN.TrickAttack))
+                        && (targetHasTrick || raidBuffs || trickAttackCD >= 12):
+                    return NIN.TenChiJin;
 
                 case >= NIN.Levels.Meisui
                     when IsOffCooldown(NIN.Meisui)
@@ -206,6 +211,19 @@ internal class NinjaAeolianEdge : CustomCombo
                         ? OriginalHook(NIN.Bhavacakra)
                         : OriginalHook(NIN.HellfrogMedium);
             }
+        }
+
+        if (HasEffect(NIN.Buffs.TenChiJin))
+        {
+            if (OriginalHook(NIN.TenNormal) != NIN.TenNormal)
+                return OriginalHook(NIN.TenNormal);
+
+            if (OriginalHook(NIN.ChiNormal) != NIN.ChiNormal)
+                return OriginalHook(NIN.ChiNormal);
+
+            if (OriginalHook(NIN.JinNormal) != NIN.JinNormal)
+                return OriginalHook(NIN.JinNormal);
+        }
 
         var phantom = FindEffect(NIN.Buffs.PhantomKamaitachi);
 
