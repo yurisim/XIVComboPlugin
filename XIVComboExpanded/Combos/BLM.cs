@@ -203,6 +203,7 @@ internal class BlackMageFire : CustomCombo
                 )
                 && (!HasEffect(BLM.Buffs.Triplecast) || plzUsePolyglotSoon)
                 && gauge.ElementTimeRemaining >= 6000
+                && gauge.AstralSoulStacks != 6
                 && level >= BLM.Levels.Foul
             )
             {
@@ -259,22 +260,33 @@ internal class BlackMageFire : CustomCombo
                         }
                     }
 
+                    var hasInstantCast =
+                        HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast);
+
                     // flare star
                     if (level >= BLM.Levels.FlareStar && gauge.AstralSoulStacks == 6)
-                        return BLM.FlareStar;
+                    {
+                        // Try to get Swiftcast/Triplecast before Flare
+                        if (!hasInstantCast && GCDClipCheck(actionID))
+                        {
+                            if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
+                                return ADV.Swiftcast;
 
-                    // Handle AoE Flare
+                            if (HasCharges(BLM.Triplecast) && level >= BLM.Levels.Triplecast)
+                                return BLM.Triplecast;
+                        }
+
+                        return BLM.FlareStar;
+                    }
+
                     if (
                         level >= BLM.Levels.Flare
                         && CanUseAction(BLM.Flare)
                         && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4)
                     )
                     {
-                        var hasInstantCast =
-                            HasEffect(ADV.Buffs.Swiftcast) || HasEffect(BLM.Buffs.Triplecast);
-
                         // Try to get Swiftcast/Triplecast before Flare
-                        if (!hasInstantCast)
+                        if (!hasInstantCast && GCDClipCheck(actionID))
                         {
                             if (IsOffCooldown(ADV.Swiftcast) && level >= ADV.Levels.Swiftcast)
                                 return ADV.Swiftcast;
@@ -326,7 +338,7 @@ internal class BlackMageFire : CustomCombo
                         || hasFirestarter
                     )
                         ? 3700
-                        : 5800;
+                        : 4800;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
