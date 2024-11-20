@@ -65,8 +65,8 @@ internal abstract partial class CustomCombo
     /// </summary>
     protected byte JobID { get; }
 
-    /// <summary>
-    ///     Performs various checks then attempts to invoke the combo.
+      /// <summary>
+    /// Performs various checks then attempts to invoke the combo.
     /// </summary>
     /// <param name="actionID">Starting action ID.</param>
     /// <param name="level">Player level.</param>
@@ -74,39 +74,17 @@ internal abstract partial class CustomCombo
     /// <param name="comboTime">Combo timer.</param>
     /// <param name="newActionID">Replacement action ID.</param>
     /// <returns>True if the action has changed, otherwise false.</returns>
-    public bool TryInvoke(
-        uint actionID,
-        byte level,
-        uint lastComboMove,
-        float comboTime,
-        out uint newActionID
-    )
+    public bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID)
     {
         newActionID = 0;
 
-        if (this.MovingCounter == 0)
-        {
-            var newPosition = LocalPlayer is null
-                ? Vector2.Zero
-                : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
-
-            this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
-
-            this.IsMoving = this.PlayerSpeed > 0;
-
-            this.Position = LocalPlayer is null ? Vector2.Zero : newPosition;
-
-            // Ensure this runs only once every 50 Dalamud ticks to make sure we get an actual, accurate representation of speed, rather than just spamming 0.
-            this.MovingCounter = 100;
-        }
-
-        if (this.MovingCounter > 0)
-            this.MovingCounter--;
-
-        if (!IsEnabled(this.Preset))
+        if (!IsEnabled(this.Preset) 
+        // || !Service.Configuration.IsEnabled
+        
+        )
             return false;
 
-        var classJobID = LocalPlayer!.ClassJob.Id;
+        var classJobID = LocalPlayer!.ClassJob.RowId;
 
         if (classJobID >= 8 && classJobID <= 15)
             classJobID = DOH.JobID;
@@ -114,12 +92,8 @@ internal abstract partial class CustomCombo
         if (classJobID >= 16 && classJobID <= 18)
             classJobID = DOL.JobID;
 
-        if (
-            this.JobID != ADV.JobID
-            && this.ClassID != ADV.ClassID
-            && this.JobID != classJobID
-            && this.ClassID != classJobID
-        )
+        if (this.JobID != ADV.JobID && this.ClassID != ADV.ClassID &&
+            this.JobID != classJobID && this.ClassID != classJobID)
             return false;
 
         var resultingActionID = this.Invoke(actionID, lastComboMove, comboTime, level);

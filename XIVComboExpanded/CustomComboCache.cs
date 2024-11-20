@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using Action = Lumina.Excel.GeneratedSheets.Action;
-using Status = Dalamud.Game.ClientState.Statuses.Status;
 
 namespace XIVComboExpandedPlugin;
 
@@ -30,7 +30,7 @@ internal class CustomComboCache : IDisposable
     // Invalidate these
     private readonly Dictionary<
         (uint StatusID, uint? TargetID, uint? SourceID),
-        Status?
+        Dalamud.Game.ClientState.Statuses.Status?
     > statusCache = new();
 
     /// <summary>
@@ -68,7 +68,11 @@ internal class CustomComboCache : IDisposable
     /// <param name="obj">Object to look for effects on.</param>
     /// <param name="sourceID">Source object ID.</param>
     /// <returns>Status object or null.</returns>
-    internal Status? GetStatus(uint statusID, IGameObject? obj, uint? sourceID)
+    internal Dalamud.Game.ClientState.Statuses.Status? GetStatus(
+        uint statusID,
+        IGameObject? obj,
+        uint? sourceID
+    )
     {
         var key = (statusID, obj?.EntityId, sourceID);
         if (this.statusCache.TryGetValue(key, out var found))
@@ -100,7 +104,8 @@ internal class CustomComboCache : IDisposable
     /// <returns> Returns the resource cost of an action. </returns>
     internal static unsafe int GetResourceCost(uint actionID)
     {
-        ActionManager* actionManager = ActionManager.Instance();
+        var actionManager = ActionManager.Instance();
+
         if (actionManager == null)
             return 0;
 
@@ -110,7 +115,7 @@ internal class CustomComboCache : IDisposable
     }
 
     /// <summary>
-    ///     Gets the cooldown data for an action.
+    /// Gets the cooldown data for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Cooldown data.</returns>
@@ -119,7 +124,7 @@ internal class CustomComboCache : IDisposable
         if (this.cooldownCache.TryGetValue(actionID, out var found))
             return found;
 
-        var actionManager = ActionManager.Instance();
+        var actionManager = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.Instance();
         if (actionManager == null)
             return this.cooldownCache[actionID] = default;
 
@@ -132,17 +137,17 @@ internal class CustomComboCache : IDisposable
     }
 
     /// <summary>
-    ///     Get the maximum number of charges for an action.
+    /// Get the maximum number of charges for an action.
     /// </summary>
     /// <param name="actionID">Action ID to check.</param>
     /// <returns>Max number of charges at current and max level.</returns>
-    internal (ushort Current, ushort Max) GetMaxCharges(uint actionID)
+    internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
     {
         var player = Service.ClientState.LocalPlayer;
         if (player == null)
             return (0, 0);
 
-        var job = player.ClassJob.Id;
+        var job = player.ClassJob.RowId;
         var level = player.Level;
         if (job == 0 || level == 0)
             return (0, 0);
@@ -151,8 +156,8 @@ internal class CustomComboCache : IDisposable
         if (this.chargesCache.TryGetValue(key, out var found))
             return found;
 
-        var cur = ActionManager.GetMaxCharges(actionID, 0);
-        var max = ActionManager.GetMaxCharges(actionID, 100);
+        var cur = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 0);
+        var max = FFXIVClientStructs.FFXIV.Client.Game.ActionManager.GetMaxCharges(actionID, 100);
         return this.chargesCache[key] = (cur, max);
     }
 
@@ -161,7 +166,7 @@ internal class CustomComboCache : IDisposable
         if (this.cooldownGroupCache.TryGetValue(actionID, out var cooldownGroup))
             return cooldownGroup;
 
-        var sheet = Service.DataManager.GetExcelSheet<Action>()!;
+        var sheet = Service.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>()!;
         var row = sheet.GetRow(actionID);
 
         return this.cooldownGroupCache[actionID] = row!.CooldownGroup;
