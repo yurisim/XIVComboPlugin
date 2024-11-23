@@ -350,7 +350,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             var ninki = gauge.Ninki;
 
-            // var gauge = GetJobGauge<NINGauge>();
+            var raidBuffs = HasRaidBuffs(2);
 
             if (HasEffect(NIN.Buffs.TenChiJin))
             {
@@ -364,31 +364,21 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                     return OriginalHook(NIN.ChiNormal);
             }
 
-            var trickThreshold = 15;
+            bool canUseTrick =
+                IsOffCooldown(OriginalHook(NIN.TrickAttack))
+                && level >= NIN.Levels.KunaisBane
+                && HasEffect(NIN.Buffs.ShadowWalker);
 
-            var trickAttackCD = GetCooldown(OriginalHook(NIN.TrickAttack)).CooldownRemaining;
-
-            var upcomingTrickAttack =
-                trickAttackCD <= trickThreshold || IsOffCooldown(OriginalHook(NIN.TrickAttack));
+            var targetHasTrick =
+                TargetHasEffect(NIN.Debuffs.TrickAttack) || TargetHasEffect(NIN.Debuffs.KunaisBane);
 
             bool CanUseNinjutsu()
             {
-                // shouldn't use Ninjitsus if I can KunaisBane
-                return (level < NIN.Levels.KunaisBane || !CanUseKunai())
-                    && (
-                        // Otherwise, check that I can use Ninjitsu chain
-                        OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu
-                        || HasEffect(NIN.Buffs.Kassatsu)
-                        || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
-                        || HasEffect(NIN.Buffs.Mudra)
-                    );
-            }
-
-            bool CanUseKunai()
-            {
-                return IsOffCooldown(OriginalHook(NIN.TrickAttack))
-                    && level >= NIN.Levels.KunaisBane
-                    && HasEffect(NIN.Buffs.ShadowWalker);
+                return
+                    OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu // Already in a mudra
+                    || HasEffect(NIN.Buffs.Kassatsu)
+                    || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
+                    || HasEffect(NIN.Buffs.Mudra); // Already in a mudra;
             }
 
             bool ShouldUseChi()
@@ -402,14 +392,11 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool ShouldUseTen()
             {
-                // bool hasKassatsu = HasEffect(NIN.Buffs.Kassatsu);
-                // bool hasKunai = level >= NIN.Levels.KunaisBane && IsOffCooldown(OriginalHook(NIN.TrickAttack));
                 var isNinjutsuFumaOrRaiton =
                     OriginalHook(NIN.Ninjutsu) == NIN.Fuma
                     || OriginalHook(NIN.Ninjutsu) == NIN.Raiton;
 
                 return isNinjutsuFumaOrRaiton;
-                // return (hasKassatsu || hasKunai) && isNinjutsuFumaOrRaiton;
             }
 
             if (level >= NIN.Levels.Ninjitsu && CanUseNinjutsu())
@@ -433,32 +420,37 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 && !HasEffect(NIN.Buffs.Mudra)
             )
             {
-                if (level >= NIN.Levels.KunaisBane)
-                    if (
-                        level >= NIN.Levels.TrickAttack
-                        && HasEffect(NIN.Buffs.ShadowWalker)
-                        && IsOffCooldown(OriginalHook(NIN.TrickAttack))
-                    )
+                switch (level)
+                {
+                    case >= NIN.Levels.TrickAttack when canUseTrick:
                         return OriginalHook(NIN.TrickAttack);
 
-                if (
-                    level >= NIN.Levels.Kassatsu
-                    && IsOffCooldown(NIN.Kassatsu)
-                    && (level < NIN.Levels.KunaisBane || TargetHasEffect(NIN.Debuffs.KunaisBane))
-                )
-                    return NIN.Kassatsu;
+                    case >= NIN.Levels.Kassatsu
+                        when IsOffCooldown(NIN.Kassatsu)
+                            && (
+                                level < NIN.Levels.KunaisBane
+                                || TargetHasEffect(NIN.Debuffs.KunaisBane)
+                            ):
+                        return NIN.Kassatsu;
 
-                if (level >= NIN.Levels.Bunshin && IsOffCooldown(NIN.Bunshin) && ninki >= 50)
-                    return NIN.Bunshin;
+                    case >= NIN.Levels.Bunshin when IsOffCooldown(NIN.Bunshin) && ninki >= 50:
+                        return NIN.Bunshin;
 
-                if (
-                    level >= NIN.Levels.HellfrogMedium
-                    && (ninki >= 95 || (ninki >= 50 && !HasEffect(NIN.Buffs.Higi)))
-                )
-                    return OriginalHook(NIN.HellfrogMedium);
+                    case >= NIN.Levels.TenChiJin
+                        when IsOffCooldown(NIN.TenChiJin)
+                            && IsOnCooldown(OriginalHook(NIN.TrickAttack))
+                            && IsOnCooldown(OriginalHook(NIN.Mug))
+                            && (targetHasTrick || raidBuffs):
+                        return NIN.TenChiJin;
 
-                if (level >= NIN.Levels.Assassinate && IsOffCooldown(OriginalHook(NIN.Assassinate)))
-                    return OriginalHook(NIN.Assassinate);
+                    case >= NIN.Levels.HellfrogMedium
+                        when ninki >= 95 || (ninki >= 50 && !HasEffect(NIN.Buffs.Higi)):
+                        return OriginalHook(NIN.HellfrogMedium);
+
+                    case >= NIN.Levels.Assassinate
+                        when IsOffCooldown(OriginalHook(NIN.Assassinate)):
+                        return OriginalHook(NIN.Assassinate);
+                }
             }
 
             if (level >= NIN.Levels.PhantomKamaitachi && OriginalHook(NIN.Bunshin) != NIN.Bunshin)

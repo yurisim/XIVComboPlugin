@@ -53,6 +53,7 @@ internal static class BRD
             RadiantFinale = 2964,
             ShadowbiteReady = 3002,
             HawksEye = 3861,
+            Troubadour = 1934,
             ResonantArrowReady = 3862,
             RadiantEncoreReady = 3863;
     }
@@ -121,7 +122,7 @@ internal class BardHeavyShot : CustomCombo
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
                 var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
-                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 11;
+                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 12;
 
                 switch (level)
                 {
@@ -183,11 +184,13 @@ internal class BardHeavyShot : CustomCombo
                     case >= BRD.Levels.Sidewinder
                         when IsOffCooldown(BRD.Sidewinder) && ragingStrikesCD >= 9:
                         return BRD.Sidewinder;
-                    case >= BRD.Levels.Troubadour
-                        when IsOffCooldown(BRD.Troubadour) && reprisalFound:
-                        return BRD.Troubadour;
+                    // case >= BRD.Levels.Troubadour
+                    //     when IsOffCooldown(BRD.Troubadour) && reprisalFound:
+                    //     return BRD.Troubadour;
                     case >= BRD.Levels.NaturesMinne
-                        when IsOffCooldown(BRD.NaturesMinne) && LocalPlayerPercentage() <= 0.50:
+                        when IsOffCooldown(BRD.NaturesMinne)
+                            && LocalPlayerPercentage() <= 0.40
+                            && !HasEffect(BRD.Buffs.Troubadour):
                         return BRD.NaturesMinne;
                 }
             }

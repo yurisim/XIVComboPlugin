@@ -119,7 +119,7 @@ internal class MachinistCleanShot : CustomCombo
 
             if (GCDClipCheck(actionID))
             {
-                var timeThreshold = 10;
+                var timeThreshold = 9;
 
                 var nothingBlockingHypercharge = new[]
                 {
@@ -161,7 +161,7 @@ internal class MachinistCleanShot : CustomCombo
                     case >= MCH.Levels.RookOverdrive
                         when gauge.Battery >= 50
                             && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                            && (gauge.Battery >= 90 || raidbuffs):
+                            && (gauge.Battery >= 80 || raidbuffs):
                         return OriginalHook(MCH.RookAutoturret);
                     case >= MCH.Levels.Reassemble
                         when (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
@@ -178,7 +178,7 @@ internal class MachinistCleanShot : CustomCombo
                             && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 10)
                             && reprisalFound:
                     case >= MCH.Levels.Hypercharge
-                        when GetCooldown(MCH.Hypercharge).IsAvailable
+                        when GetCooldown(MCH.Hypercharge).TotalCooldownRemaining <= 1
                             && !overheated
                             && canUseHypercharge
                             && nothingBlockingHypercharge

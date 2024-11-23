@@ -149,7 +149,7 @@ internal class BlackMageFire : CustomCombo
             var needToTriplecast =
                 HasCharges(BLM.Triplecast)
                 && (
-                    GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 6
+                    (GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 8 && gauge.InAstralFire)
                     || HasEffect(ADV.Buffs.Medicated)
                 )
                 && !HasEffect(BLM.Buffs.Triplecast)
