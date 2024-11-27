@@ -134,13 +134,15 @@ internal class MonkBootshine : CustomCombo
                             ):
                         return MNK.PerfectBalance;
                     case >= MNK.Levels.Brotherhood
-                        when IsOffCooldown(MNK.Brotherhood) && hasRaidBuffs:
+                        when IsOffCooldown(MNK.Brotherhood) 
+                        // && hasRaidBuffs
+                        :
                         return MNK.Brotherhood;
                     case >= MNK.Levels.RiddleOfFire
                         when IsOffCooldown(MNK.RiddleOfFire)
                             && (
                                 HasEffect(MNK.Buffs.Brotherhood)
-                                || hasRaidBuffs
+                                // || hasRaidBuffs
                                 || level < MNK.Levels.Brotherhood
                                 || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10
                             ):
@@ -230,7 +232,6 @@ internal class MonkBootshine : CustomCombo
                 )
                     return MNK.FormShift;
             }
-
 
             if (
                 (
