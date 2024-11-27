@@ -112,6 +112,20 @@ internal class MonkBootshine : CustomCombo
             if (GCDClipCheck(actionID) && InCombat() && InMeleeRange() && HasTarget())
                 switch (level)
                 {
+                    case >= MNK.Levels.Brotherhood
+                        when IsOffCooldown(MNK.Brotherhood) 
+                        && hasRaidBuffs
+                        :
+                        return MNK.Brotherhood;
+                    case >= MNK.Levels.RiddleOfFire
+                        when IsOffCooldown(MNK.RiddleOfFire)
+                            && (
+                                HasEffect(MNK.Buffs.Brotherhood)
+                                // || hasRaidBuffs
+                                || level < MNK.Levels.Brotherhood
+                                || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10
+                            ):
+                        return MNK.RiddleOfFire;
                     case >= MNK.Levels.PerfectBalance
                         when GetRemainingCharges(MNK.PerfectBalance) >= 1
                             && !HasEffect(MNK.Buffs.FormlessFist)
@@ -133,20 +147,6 @@ internal class MonkBootshine : CustomCombo
                                     <= GetCooldown(actionID).BaseCooldown * 3 // ...or we're about to get brotherhood
                             ):
                         return MNK.PerfectBalance;
-                    case >= MNK.Levels.Brotherhood
-                        when IsOffCooldown(MNK.Brotherhood) 
-                        // && hasRaidBuffs
-                        :
-                        return MNK.Brotherhood;
-                    case >= MNK.Levels.RiddleOfFire
-                        when IsOffCooldown(MNK.RiddleOfFire)
-                            && (
-                                HasEffect(MNK.Buffs.Brotherhood)
-                                // || hasRaidBuffs
-                                || level < MNK.Levels.Brotherhood
-                                || GetCooldown(MNK.Brotherhood).CooldownRemaining >= 10
-                            ):
-                        return MNK.RiddleOfFire;
                     case >= MNK.Levels.Meditation
                         when gauge.Chakra >= 5
                             && (level < MNK.Levels.RiddleOfFire || IsOnCooldown(MNK.RiddleOfFire)):
