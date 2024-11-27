@@ -219,7 +219,7 @@ internal abstract partial class CustomCombo
     {
         return CurrentTarget is IBattleChara target
             && LocalPlayer is not null
-            && target.MaxHp >= LocalPlayer.MaxHp * 24
+            && target.MaxHp >= LocalPlayer.MaxHp * 30
             && target.CurrentHp <= target.MaxHp * 0.1f;
     }
 

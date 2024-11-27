@@ -338,7 +338,7 @@ internal class BlackMageFire : CustomCombo
                         || hasFirestarter
                     )
                         ? 3700
-                        : 4800;
+                        : 5500;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
