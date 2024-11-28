@@ -372,7 +372,7 @@ internal class BlackMageFire : CustomCombo
                     )
                 )
                 {
-                    if (hasFirestarter && GCDClipCheck(actionID))
+                    if (hasFirestarter && GCDClipCheck(actionID) && !gauge.IsParadoxActive)
                         return BLM.Transpose;
 
                     return actionID is BLM.Fire
