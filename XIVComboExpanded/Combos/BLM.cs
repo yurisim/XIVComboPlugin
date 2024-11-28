@@ -335,11 +335,11 @@ internal class BlackMageFire : CustomCombo
 
                 var instalFireRefreshConditions =
                     (findTriplecast is not null && findTriplecast.StackCount >= 2)
-                    || (playerMP / fireCost < 2 && level >= BLM.Levels.FlareStar)
+                    || (playerMP / fireCost <= 2 && level >= BLM.Levels.FlareStar)
                     || gauge.IsParadoxActive
                     || hasFirestarter;
 
-                var refreshNumber = instalFireRefreshConditions ? 3500 : 5500;
+                var refreshNumber = instalFireRefreshConditions ? 3500 : 6000;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
