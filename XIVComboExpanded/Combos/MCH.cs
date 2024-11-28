@@ -101,7 +101,7 @@ internal class MachinistCleanShot : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID is MCH.SplitShot or MCH.HeatedSplitShot)
+        if (actionID is MCH.SplitShot or MCH.HeatedSplitShot or MCH.SlugShot or MCH.HeatedSlugshot)
         {
             var gauge = GetJobGauge<MCHGauge>();
 
@@ -160,6 +160,7 @@ internal class MachinistCleanShot : CustomCombo
                         return MCH.Wildfire;
                     case >= MCH.Levels.RookOverdrive
                         when gauge.Battery >= 50
+                            && actionID is MCH.SplitShot or MCH.HeatedSplitShot
                             && CanUseAction(OriginalHook(MCH.RookAutoturret))
                             && (gauge.Battery >= 80 || raidbuffs):
                         return OriginalHook(MCH.RookAutoturret);
@@ -181,6 +182,7 @@ internal class MachinistCleanShot : CustomCombo
                         when GetCooldown(MCH.Hypercharge).TotalCooldownRemaining <= 1
                             && !overheated
                             && canUseHypercharge
+                            && actionID is MCH.SplitShot or MCH.HeatedSplitShot
                             && nothingBlockingHypercharge
                             && (
                                 gauge.Heat >= 85
@@ -290,7 +292,7 @@ internal class MachinistCleanShot : CustomCombo
                 }
             }
 
-            return actionID;
+            return OriginalHook(MCH.SplitShot);
         }
 
         return actionID;

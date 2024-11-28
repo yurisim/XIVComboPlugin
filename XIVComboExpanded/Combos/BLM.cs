@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using Lumina.Excel.Sheets;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -240,12 +241,12 @@ internal class BlackMageFire : CustomCombo
                         : OriginalHook(BLM.Thunder2);
             }
 
+            var hasFirestarter = HasEffect(BLM.Buffs.Firestarter);
+
             if (gauge.InAstralFire)
             {
-                var hasFirestarter = HasEffect(BLM.Buffs.Firestarter);
-
                 // Handle low MP situations
-                if (hasLowMP)
+                if (hasLowMP || (actionID is BLM.Fire2 && level >= BLM.Levels.FlareStar))
                 {
                     // Handle single-target Despair
                     if (actionID is BLM.Fire)
@@ -324,7 +325,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Fire3
                     && hasFirestarter
                     && actionID is BLM.Fire
-                    && level < BLM.Levels.Fire4
+                    && (level < BLM.Levels.Fire4 || gauge.AstralFireStacks < 3)
                 )
                 {
                     return BLM.Fire3;
@@ -332,13 +333,13 @@ internal class BlackMageFire : CustomCombo
 
                 var findTriplecast = FindEffect(BLM.Buffs.Triplecast);
 
-                var refreshNumber =
-                    (
-                        (findTriplecast is not null && findTriplecast.StackCount >= 2)
-                        || hasFirestarter
-                    )
-                        ? 3700
-                        : 5500;
+                var instalFireRefreshConditions =
+                    (findTriplecast is not null && findTriplecast.StackCount >= 2)
+                    || (playerMP / fireCost < 2 && level >= BLM.Levels.FlareStar)
+                    || gauge.IsParadoxActive
+                    || hasFirestarter;
+
+                var refreshNumber = instalFireRefreshConditions ? 3500 : 5500;
 
                 // Handle Astral Fire refresh
                 if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
@@ -371,6 +372,9 @@ internal class BlackMageFire : CustomCombo
                     )
                 )
                 {
+                    if (hasFirestarter && GCDClipCheck(actionID))
+                        return BLM.Transpose;
+
                     return actionID is BLM.Fire
                         ? gauge.IsParadoxActive
                             ? OriginalHook(BLM.Fire)
