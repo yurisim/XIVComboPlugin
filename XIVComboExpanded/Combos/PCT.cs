@@ -172,11 +172,11 @@ internal static class PCT
                                 && CanUseAction(SubtractivePalette)
                                 && !CanUseAction(OriginalHook(CometBlack)):
                             return SubtractivePalette;
-                        case >= Levels.StarryMuse
-                            when hasRaidBuffs
-                                && gauge.LandscapeMotifDrawn
-                                && IsOffCooldown(StarryMuse):
-                            return StarryMuse;
+                        // case >= Levels.StarryMuse
+                        //     when hasRaidBuffs
+                        //         && gauge.LandscapeMotifDrawn
+                        //         && IsOffCooldown(StarryMuse):
+                        //     return StarryMuse;
                         case >= ADV.Levels.Addle
                             when IsOffCooldown(ADV.Addle)
                                 && !TargetHasEffectAny(ADV.Debuffs.Addle)

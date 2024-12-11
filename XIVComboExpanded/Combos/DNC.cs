@@ -309,7 +309,10 @@ internal class DancerCascadeFountain : CustomCombo
             )
                 return DNC.Tillana;
 
-            if (level >= DNC.Levels.DanceOfTheDawn && CanUseAction(DNC.DanceOfTheDawn))
+            if (
+                level >= DNC.Levels.DanceOfTheDawn
+                && (CanUseAction(DNC.DanceOfTheDawn) || gauge.Esprit == 100)
+            )
             {
                 return OriginalHook(DNC.SaberDance);
             }
@@ -330,7 +333,7 @@ internal class DancerCascadeFountain : CustomCombo
                     || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill
                 )
-                && (comboTime >= 5 || comboTime == 0) // ensures we don't break combo
+                && (comboTime >= 3 || comboTime == 0) // ensures we don't break combo
             )
             {
                 return OriginalHook(DNC.SaberDance);
