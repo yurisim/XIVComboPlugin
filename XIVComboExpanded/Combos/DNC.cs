@@ -292,7 +292,7 @@ internal class DancerCascadeFountain : CustomCombo
                     || hasStandardStep
                 )
                 && (
-                    GetCooldown(DNC.TechnicalStep).CooldownRemaining >= 11
+                    GetCooldown(DNC.TechnicalStep).CooldownRemaining >= 10
                     || hasStandardStep
                     || !InCombat()
                     || actionID is DNC.Windmill
