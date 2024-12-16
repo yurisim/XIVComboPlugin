@@ -301,15 +301,6 @@ internal class DancerCascadeFountain : CustomCombo
                 return OriginalHook(DNC.StandardStep);
 
             if (
-                level >= DNC.Levels.Tillana
-                && (actionID is DNC.Windmill || hasOneRaidBuff)
-                && gauge.Esprit < 50
-                && CanUseAction(DNC.Tillana)
-                && distance < 15
-            )
-                return DNC.Tillana;
-
-            if (
                 level >= DNC.Levels.DanceOfTheDawn
                 && (CanUseAction(DNC.DanceOfTheDawn) || gauge.Esprit == 100)
             )
@@ -323,6 +314,15 @@ internal class DancerCascadeFountain : CustomCombo
                 && HasEffect(DNC.Buffs.FlourishingStarfall)
             )
                 return DNC.StarfallDance;
+
+            if (
+                level >= DNC.Levels.Tillana
+                && (actionID is DNC.Windmill || hasOneRaidBuff)
+                && gauge.Esprit < 50
+                && CanUseAction(DNC.Tillana)
+                && distance < 15
+            )
+                return DNC.Tillana;
 
             if (
                 level >= DNC.Levels.SaberDance
