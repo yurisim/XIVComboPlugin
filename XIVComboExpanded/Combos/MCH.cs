@@ -147,7 +147,9 @@ internal class MachinistCleanShot : CustomCombo
                 switch (level)
                 {
                     case >= MCH.Levels.BarrelStabilizer
-                        when raidbuffs && IsOffCooldown(MCH.BarrelStabilizer):
+                        when raidbuffs
+                            && actionID is MCH.SplitShot or MCH.HeatedSplitShot
+                            && IsOffCooldown(MCH.BarrelStabilizer):
                         return MCH.BarrelStabilizer;
                     case >= MCH.Levels.Wildfire
                         when IsOffCooldown(MCH.Wildfire)

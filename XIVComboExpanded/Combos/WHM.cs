@@ -140,7 +140,6 @@ internal class WhiteMageMedica : CustomCombo
 
             if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                 return WHM.AfflatusRapture;
-
         }
 
         return actionID;
@@ -175,7 +174,11 @@ internal class WhiteMageThinAirFeature : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (level >= WHM.Levels.ThinAir && !HasEffect(WHM.Buffs.ThinAir) && GetRemainingCharges(WHM.ThinAir) >= 1)
+        if (
+            level >= WHM.Levels.ThinAir
+            && !HasEffect(WHM.Buffs.ThinAir)
+            && GetRemainingCharges(WHM.ThinAir) >= 1
+        )
         {
             if (actionID == WHM.Raise)
                 return WHM.ThinAir;
