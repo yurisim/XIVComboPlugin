@@ -164,7 +164,7 @@ internal class MachinistCleanShot : CustomCombo
                         when gauge.Battery >= 50
                             && actionID is MCH.SplitShot or MCH.HeatedSplitShot
                             && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                            && (gauge.Battery >= 70 || raidbuffs):
+                            && (gauge.Battery >= 80 || raidbuffs):
                         return OriginalHook(MCH.RookAutoturret);
                     case >= MCH.Levels.Reassemble
                         when (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
@@ -187,7 +187,7 @@ internal class MachinistCleanShot : CustomCombo
                             && actionID is MCH.SplitShot or MCH.HeatedSplitShot
                             && nothingBlockingHypercharge
                             && (
-                                gauge.Heat >= 85
+                                gauge.Heat >= 75
                                 || raidbuffs
                                 || TargetHasEffect(MCH.Debuffs.Wildfire)
                                 || hyperchargeReady
@@ -350,16 +350,17 @@ internal class MachinistSpreadShot : CustomCombo
                             when IsOffCooldown(MCH.Hypercharge)
                                 && canUseHypercharge
                                 && (
-                                    gauge.Heat >= 95
+                                    gauge.Heat >= 75
                                     || raidbuffs
                                     || TargetHasEffect(MCH.Debuffs.Wildfire)
                                     || (hyperchargeReady is not null && hyperchargeElapsed)
                                 ):
+                            return MCH.Hypercharge;
 
                         case >= MCH.Levels.RookOverdrive
                             when gauge.Battery >= 50
                                 && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                                && (gauge.Battery >= 70 || raidbuffs):
+                                && (gauge.Battery >= 80 || raidbuffs):
                             return OriginalHook(MCH.RookAutoturret);
 
                         case >= MCH.Levels.Ricochet
