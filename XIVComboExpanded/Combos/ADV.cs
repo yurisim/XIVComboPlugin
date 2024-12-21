@@ -92,4 +92,3 @@ internal class VariantRaiseFeature : CustomCombo
         return actionID;
     }
 }
-

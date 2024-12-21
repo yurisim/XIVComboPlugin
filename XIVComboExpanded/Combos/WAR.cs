@@ -105,12 +105,9 @@ internal class WarriorStormsPathCombo : CustomCombo
                 {
                     case >= WAR.Levels.Infuriate
                         when gauge.BeastGauge <= 50
-                            && HasCharges(WAR.Infuriate) && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
-                            && (
-                                needToInfuriate
-                                || raidbuffs
-                                || HasEffect(WAR.Buffs.Berserk)
-                            )
+                            && HasCharges(WAR.Infuriate)
+                            && (level < WAR.Levels.InnerChaos || !HasEffect(WAR.Buffs.NascentChaos))
+                            && (needToInfuriate || raidbuffs || HasEffect(WAR.Buffs.Berserk))
                             && !HasEffect(WAR.Buffs.InnerRelease):
                         return WAR.Infuriate;
 
@@ -121,9 +118,9 @@ internal class WarriorStormsPathCombo : CustomCombo
                     case >= WAR.Levels.Berserk
                         when IsOffCooldown(OriginalHook(WAR.Berserk))
                             && (level < WAR.Levels.StormsEye || surgingTempest is not null)
-                            // && (needToInfuriate || level >= WAR.Levels.Infuriate)
-                            // && !HasEffect(WAR.Buffs.NascentChaos)
-                            :
+                    // && (needToInfuriate || level >= WAR.Levels.Infuriate)
+                    // && !HasEffect(WAR.Buffs.NascentChaos)
+                    :
                         return OriginalHook(WAR.Berserk);
 
                     case >= WAR.Levels.Equilibrium

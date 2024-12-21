@@ -164,7 +164,7 @@ internal class MachinistCleanShot : CustomCombo
                         when gauge.Battery >= 50
                             && actionID is MCH.SplitShot or MCH.HeatedSplitShot
                             && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                            && (gauge.Battery >= 80 || raidbuffs):
+                            && (gauge.Battery >= 70 || raidbuffs):
                         return OriginalHook(MCH.RookAutoturret);
                     case >= MCH.Levels.Reassemble
                         when (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
@@ -342,9 +342,9 @@ internal class MachinistSpreadShot : CustomCombo
 
                     switch (level)
                     {
-                        case >= MCH.Levels.BarrelStabilizer
-                            when raidbuffs && IsOffCooldown(MCH.BarrelStabilizer):
-                            return MCH.BarrelStabilizer;
+                        // case >= MCH.Levels.BarrelStabilizer
+                        //     when raidbuffs && IsOffCooldown(MCH.BarrelStabilizer):
+                        //     return MCH.BarrelStabilizer;
 
                         case >= MCH.Levels.Hypercharge
                             when IsOffCooldown(MCH.Hypercharge)
@@ -359,7 +359,7 @@ internal class MachinistSpreadShot : CustomCombo
                         case >= MCH.Levels.RookOverdrive
                             when gauge.Battery >= 50
                                 && CanUseAction(OriginalHook(MCH.RookAutoturret))
-                                && (gauge.Battery >= 90 || raidbuffs):
+                                && (gauge.Battery >= 70 || raidbuffs):
                             return OriginalHook(MCH.RookAutoturret);
 
                         case >= MCH.Levels.Ricochet

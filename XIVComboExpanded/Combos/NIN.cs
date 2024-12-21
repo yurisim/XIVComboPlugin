@@ -374,8 +374,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
 
             bool CanUseNinjutsu()
             {
-                return
-                    OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu // Already in a mudra
+                return OriginalHook(NIN.Ninjutsu) != NIN.Ninjutsu // Already in a mudra
                     || HasEffect(NIN.Buffs.Kassatsu)
                     || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 5
                     || HasEffect(NIN.Buffs.Mudra); // Already in a mudra;

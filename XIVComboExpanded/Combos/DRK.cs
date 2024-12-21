@@ -91,11 +91,11 @@ internal class DarkSouleater : CustomCombo
             {
                 switch (level)
                 {
-                    case >= DRK.Levels.TheBlackestNight when 
-                        actionID is DRK.Unleash
-                        && IsOffCooldown(DRK.TheBlackestNight)
-                        && LocalPlayer?.CurrentMp >= 5000
-                        && LocalPlayerPercentage() <= 0.85:
+                    case >= DRK.Levels.TheBlackestNight
+                        when actionID is DRK.Unleash
+                            && IsOffCooldown(DRK.TheBlackestNight)
+                            && LocalPlayer?.CurrentMp >= 5000
+                            && LocalPlayerPercentage() <= 0.85:
                         return DRK.TheBlackestNight;
                     case >= DRK.Levels.FloodOfDarkness
                         when (
@@ -118,7 +118,7 @@ internal class DarkSouleater : CustomCombo
                 level >= DRK.Levels.Bloodspiller
                 && (gauge.Blood >= 50 || HasEffect(DRK.Buffs.Delirium))
                 && (HasEffect(DRK.Buffs.Delirium) || gauge.Blood >= 70 || raidBuffs)
-                // && (lastComboMove is DRK.SyphonStrike or DRK.Unleash || HasEffect(DRK.Buffs.BloodWeapon))
+            // && (lastComboMove is DRK.SyphonStrike or DRK.Unleash || HasEffect(DRK.Buffs.BloodWeapon))
             )
             {
                 return level >= DRK.Levels.Quietus && actionID is DRK.Unleash
