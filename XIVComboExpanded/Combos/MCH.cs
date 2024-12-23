@@ -142,7 +142,7 @@ internal class MachinistCleanShot : CustomCombo
                 var tacticianCD = GetCooldown(MCH.Tactician);
 
                 var reprisal = FindTargetEffectAny(ADV.Debuffs.Reprisal);
-                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 11;
+                var reprisalFound = reprisal is not null && reprisal.RemainingTime >= 12;
 
                 switch (level)
                 {
@@ -180,6 +180,7 @@ internal class MachinistCleanShot : CustomCombo
                             // && !TargetHasEffect(MCH.Debuffs.Dismantle)
                             && (dismantleCD.IsAvailable || dismantleCD.CooldownElapsed >= 10)
                             && reprisalFound:
+                        return MCH.Tactician;
                     case >= MCH.Levels.Hypercharge
                         when GetCooldown(MCH.Hypercharge).TotalCooldownRemaining <= 1
                             && !overheated
