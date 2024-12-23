@@ -193,7 +193,7 @@ internal static class PCT
                                     || hasRaidBuffs
                                     || HasEffect(Buffs.StarryMuse)
                                     || level < Levels.HammerBrush
-                                    || needToUseHammer
+                                // || needToUseHammer
                                 ):
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
@@ -341,11 +341,11 @@ internal static class PCT
                 {
                     var filteredskills = availableSkill
                         .Where(s =>
-                            GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 40
+                            GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 30
                             || (
                                 s.skill is not ScenicMuse
                                 && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining
-                                    <= 30
+                                    <= 20
                             )
                             || (TargetHasLowLife() && IsAvailable(OriginalHook(s.skill)))
                             || !InCombat()
