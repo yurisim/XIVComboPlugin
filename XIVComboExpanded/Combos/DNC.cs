@@ -249,9 +249,9 @@ internal class DancerCascadeFountain : CustomCombo
                         when gauge.Feathers >= 1 && (hasTwoRaidBuffs || gauge.Feathers == 4):
                         return DNC.FanDance1;
 
-                    case >= DNC.Levels.ShieldSamba
-                        when IsOffCooldown(DNC.ShieldSamba) && reprisalFound:
-                        return DNC.ShieldSamba;
+                    // case >= DNC.Levels.ShieldSamba
+                    //     when IsOffCooldown(DNC.ShieldSamba) && reprisalFound:
+                    //     return DNC.ShieldSamba;
 
                     // case >= DNC.Levels.CuringWaltz
                     //     when IsOffCooldown(DNC.CuringWaltz) && LocalPlayerPercentage() <= 0.50:
