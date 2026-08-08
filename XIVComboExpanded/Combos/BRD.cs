@@ -138,7 +138,7 @@ internal class BardHeavyShot : CustomCombo
                         when IsOffCooldown(BRD.RagingStrikes) && hasRaidBuffs:
                         return BRD.RagingStrikes;
                     case >= BRD.Levels.PitchPerfect
-                        when gauge.Song == Song.WANDERER // be the right song
+                        when gauge.Song == Song.WanderersMinuet // be the right song
                             && (
                                 gauge.Repertoire == 3
                                 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)
@@ -146,17 +146,17 @@ internal class BardHeavyShot : CustomCombo
                         return BRD.PitchPerfect;
                     case >= BRD.Levels.WanderersMinuet
                         when IsOffCooldown(BRD.WanderersMinuet)
-                            && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.ArmysPaeon || gauge.Song == Song.None)
                             && gauge.SongTimer <= 3000:
                         return BRD.WanderersMinuet;
                     case >= BRD.Levels.MagesBallad
                         when IsOffCooldown(BRD.MagesBallad)
-                            && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.WanderersMinuet || gauge.Song == Song.None)
                             && gauge.SongTimer <= 3000:
                         return BRD.MagesBallad;
                     case >= BRD.Levels.ArmysPaeon
                         when IsOffCooldown(BRD.ArmysPaeon)
-                            && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.MagesBallad || gauge.Song == Song.None)
                             && (
                                 (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                                 || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
@@ -302,7 +302,7 @@ internal class BardIronJaws : CustomCombo
                 if (
                     level >= BRD.Levels.WanderersMinuet
                     && IsOffCooldown(BRD.WanderersMinuet)
-                    && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                    && (gauge.Song == Song.ArmysPaeon || gauge.Song == Song.None)
                     && gauge.SongTimer <= 3000
                 )
                     return BRD.WanderersMinuet;
@@ -310,7 +310,7 @@ internal class BardIronJaws : CustomCombo
                 if (
                     level >= BRD.Levels.MagesBallad
                     && IsOffCooldown(BRD.MagesBallad)
-                    && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                    && (gauge.Song == Song.WanderersMinuet || gauge.Song == Song.None)
                     && gauge.SongTimer <= 3000
                 )
                     return BRD.MagesBallad;
@@ -318,7 +318,7 @@ internal class BardIronJaws : CustomCombo
                 if (
                     level >= BRD.Levels.ArmysPaeon
                     && IsOffCooldown(BRD.ArmysPaeon)
-                    && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                    && (gauge.Song == Song.MagesBallad || gauge.Song == Song.None)
                     && (
                         (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                         || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)
@@ -392,7 +392,7 @@ internal class BardQuickNock : CustomCombo
             {
                 if (
                     level >= BRD.Levels.PitchPerfect // Be the right level
-                    && gauge.Song == Song.WANDERER // be the right song
+                    && gauge.Song == Song.WanderersMinuet // be the right song
                     && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000))
                 )
                     return BRD.PitchPerfect;
@@ -401,17 +401,17 @@ internal class BardQuickNock : CustomCombo
                 {
                     case >= BRD.Levels.WanderersMinuet
                         when IsOffCooldown(BRD.WanderersMinuet)
-                            && (gauge.Song == Song.ARMY || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.ArmysPaeon || gauge.Song == Song.None)
                             && gauge.SongTimer <= 3000:
                         return BRD.WanderersMinuet;
                     case >= BRD.Levels.MagesBallad
                         when IsOffCooldown(BRD.MagesBallad)
-                            && (gauge.Song == Song.WANDERER || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.WanderersMinuet || gauge.Song == Song.None)
                             && gauge.SongTimer <= 3000:
                         return BRD.MagesBallad;
                     case >= BRD.Levels.ArmysPaeon
                         when IsOffCooldown(BRD.ArmysPaeon)
-                            && (gauge.Song == Song.MAGE || gauge.Song == Song.NONE)
+                            && (gauge.Song == Song.MagesBallad || gauge.Song == Song.None)
                             && (
                                 (gauge.SongTimer <= 12000 && level >= BRD.Levels.WanderersMinuet)
                                 || (gauge.SongTimer <= 3000 && level < BRD.Levels.WanderersMinuet)

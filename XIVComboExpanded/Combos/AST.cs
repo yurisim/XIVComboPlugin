@@ -107,7 +107,7 @@ internal class AstrologianMalefic : CustomCombo
                 switch (level)
                 {
                     case >= AST.Levels.MinorArcana
-                        when gauge.DrawnCrownCard == CardType.LADY
+                        when gauge.DrawnCrownCard == CardType.Lady
                             && (
                                 localPlayer <= 0.95
                                 || needToUseCards
@@ -193,7 +193,7 @@ internal class AstrologianMalefic : CustomCombo
                         return AST.Divination;
 
                     case >= AST.Levels.MinorArcana
-                        when gauge.DrawnCrownCard == CardType.LORD
+                        when gauge.DrawnCrownCard == CardType.Lord
                             && (HasRaidBuffs(2) || needToUseCards || actionID is AST.Gravity)
                             && InCombat():
                         return OriginalHook(AST.MinorArcanaDT);

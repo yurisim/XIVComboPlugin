@@ -141,7 +141,7 @@ internal class MonkBootshine : CustomCombo
                                 || GetCooldown(MNK.PerfectBalance).TotalCooldownRemaining <= 5
                             )
                             && (
-                                !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR)) // we need to save phantoms for brotherhood, so don't use it if we have both unless...
+                                !(gauge.Nadi.HasFlag(Nadi.Lunar) && gauge.Nadi.HasFlag(Nadi.Solar)) // we need to save phantoms for brotherhood, so don't use it if we have both unless...
                                 || HasEffect(MNK.Buffs.Brotherhood) // ...we have brotherhood
                                 || GetCooldown(MNK.Brotherhood).TotalCooldownRemaining
                                     <= GetCooldown(actionID).BaseCooldown * 3 // ...or we're about to get brotherhood
@@ -239,15 +239,15 @@ internal class MonkBootshine : CustomCombo
                     || (
                         HasEffect(MNK.Buffs.PerfectBalance)
                         && level >= MNK.Levels.MasterfulBlitz
-                        && gauge.Nadi.HasFlag(Nadi.LUNAR)
-                        && !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR))
+                        && gauge.Nadi.HasFlag(Nadi.Lunar)
+                        && !(gauge.Nadi.HasFlag(Nadi.Lunar) && gauge.Nadi.HasFlag(Nadi.Solar))
                         && (
                             level < MNK.Levels.Brotherhood
                             // this enables double lunar initially so that we can phantom rush in even windows
                             || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 15
                             || TargetHPercentage() < 0.85
                         )
-                        && !gauge.BeastChakra.Contains(BeastChakra.RAPTOR)
+                        && !gauge.BeastChakra.Contains(BeastChakra.Raptor)
                     )
                 )
             )
@@ -264,8 +264,8 @@ internal class MonkBootshine : CustomCombo
                     || (
                         HasEffect(MNK.Buffs.PerfectBalance)
                         && level >= MNK.Levels.MasterfulBlitz
-                        && gauge.Nadi.HasFlag(Nadi.LUNAR)
-                        && !(gauge.Nadi.HasFlag(Nadi.LUNAR) && gauge.Nadi.HasFlag(Nadi.SOLAR))
+                        && gauge.Nadi.HasFlag(Nadi.Lunar)
+                        && !(gauge.Nadi.HasFlag(Nadi.Lunar) && gauge.Nadi.HasFlag(Nadi.Solar))
                         && (
                             level < MNK.Levels.Brotherhood
                             // this enables double lunar initially so that we can phantom rush in even windows
@@ -273,7 +273,7 @@ internal class MonkBootshine : CustomCombo
                             //
                             || TargetHPercentage() < 0.85
                         )
-                        && !gauge.BeastChakra.Contains(BeastChakra.COEURL)
+                        && !gauge.BeastChakra.Contains(BeastChakra.Coeurl)
                     )
                 )
             )
@@ -383,8 +383,8 @@ internal class MonkAoECombo : CustomCombo
             if (
                 HasEffect(MNK.Buffs.RaptorForm)
                 || (
-                    perfectBalance?.StackCount >= 3
-                    && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                    perfectBalance?.Param >= 3
+                    && gauge.Nadi.HasFlag(Nadi.Lunar)
                     && (
                         level < MNK.Levels.Brotherhood
                         || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
@@ -396,8 +396,8 @@ internal class MonkAoECombo : CustomCombo
             if (
                 HasEffect(MNK.Buffs.CoerlForm)
                 || (
-                    perfectBalance?.StackCount >= 2
-                    && gauge.Nadi.HasFlag(Nadi.LUNAR)
+                    perfectBalance?.Param >= 2
+                    && gauge.Nadi.HasFlag(Nadi.Lunar)
                     && (
                         level < MNK.Levels.Brotherhood
                         || GetCooldown(MNK.Brotherhood).CooldownElapsed >= 20
@@ -406,7 +406,7 @@ internal class MonkAoECombo : CustomCombo
             )
                 return level >= MNK.Levels.Rockbreaker ? MNK.Rockbreaker : MNK.SnapPunch;
 
-            if (HasEffect(MNK.Buffs.OpoOpoForm) || perfectBalance?.StackCount >= 1)
+            if (HasEffect(MNK.Buffs.OpoOpoForm) || perfectBalance?.Param >= 1)
                 return OriginalHook(MNK.ArmOfTheDestroyer);
         }
 

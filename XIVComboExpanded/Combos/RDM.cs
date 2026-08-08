@@ -177,7 +177,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var swordPlay = FindEffect(RDM.Buffs.MagickedSwordPlay);
 
-            var swordPlayStacks = swordPlay is not null ? swordPlay.StackCount : 0;
+            var swordPlayStacks = swordPlay is not null ? swordPlay.Param : 0;
 
             var actualBlack = gauge.BlackMana + swordPlayStacks * 20;
             var actualWhite = gauge.WhiteMana + swordPlayStacks * 20;

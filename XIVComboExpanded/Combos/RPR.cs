@@ -360,7 +360,7 @@ internal class ReaperScythe : CustomCombo
                 && CanUseAction(RPR.PlentifulHarvest)
                 && immortalSacrifice is not null
                 && (
-                    immortalSacrifice.StackCount == PartyList.Length
+                    immortalSacrifice.Param == PartyList.Length
                     || immortalSacrifice?.RemainingTime <= 20
                 )
             )

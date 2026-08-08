@@ -309,7 +309,7 @@ internal class SummonerOutburstTriDisaster : CustomCombo
                 if (
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
-                    && gauge.AttunmentTimerRemaining == 0
+                    && gauge.AttunementTimerRemaining == 0
                     && HasEffect(SMN.Buffs.FurtherRuin)
                 )
                     return SMN.Ruin4;
@@ -354,7 +354,7 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
                 if (
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
-                    && gauge.AttunmentTimerRemaining == 0
+                    && gauge.AttunementTimerRemaining == 0
                     && HasEffect(SMN.Buffs.FurtherRuin)
                 )
                     return SMN.Ruin4;

@@ -30,7 +30,7 @@ internal class CustomComboCache : IDisposable
     // Invalidate these
     private readonly Dictionary<
         (uint StatusID, uint? TargetID, uint? SourceID),
-        Dalamud.Game.ClientState.Statuses.Status?
+        IStatus?
     > statusCache = new();
 
     /// <summary>
@@ -68,7 +68,7 @@ internal class CustomComboCache : IDisposable
     /// <param name="obj">Object to look for effects on.</param>
     /// <param name="sourceID">Source object ID.</param>
     /// <returns>Status object or null.</returns>
-    internal Dalamud.Game.ClientState.Statuses.Status? GetStatus(
+    internal IStatus? GetStatus(
         uint statusID,
         IGameObject? obj,
         uint? sourceID
@@ -143,7 +143,7 @@ internal class CustomComboCache : IDisposable
     /// <returns>Max number of charges at current and max level.</returns>
     internal unsafe (ushort Current, ushort Max) GetMaxCharges(uint actionID)
     {
-        var player = Service.ClientState.LocalPlayer;
+        var player = Service.ObjectTable.LocalPlayer;
         if (player == null)
             return (0, 0);
 

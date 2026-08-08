@@ -137,7 +137,7 @@ internal class BlackMageFire : CustomCombo
                 // umbral soul if in umbral ice and does not have 3 umbnral hearts
                 if (
                     gauge.InUmbralIce
-                    && (gauge.UmbralHearts < 3 || gauge.ElementTimeRemaining != 15000)
+                    && (gauge.UmbralHearts < 3 || gauge.EnochianTimer != 15000)
                 )
                 {
                     return BLM.UmbralSoul;
@@ -203,7 +203,7 @@ internal class BlackMageFire : CustomCombo
                     || HasEffect(ADV.Buffs.Medicated)
                 )
                 && (!HasEffect(BLM.Buffs.Triplecast) || plzUsePolyglotSoon)
-                && gauge.ElementTimeRemaining >= 6000
+                && gauge.EnochianTimer >= 6000
                 && gauge.AstralSoulStacks != 6
                 && level >= BLM.Levels.Foul
             )
@@ -229,7 +229,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && (actionID is BLM.Fire || level >= BLM.Levels.Thunder2)
-                    && gauge.ElementTimeRemaining >= 6000
+                    && gauge.EnochianTimer >= 6000
                     && ShouldUseDots()
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
@@ -334,7 +334,7 @@ internal class BlackMageFire : CustomCombo
                 var findTriplecast = FindEffect(BLM.Buffs.Triplecast);
 
                 var instalFireRefreshConditions =
-                    (findTriplecast is not null && findTriplecast.StackCount >= 2)
+                    (findTriplecast is not null && findTriplecast.Param >= 2)
                     || (playerMP / fireCost <= 2 && level >= BLM.Levels.FlareStar)
                     || gauge.IsParadoxActive
                     || hasFirestarter;
@@ -342,7 +342,7 @@ internal class BlackMageFire : CustomCombo
                 var refreshNumber = instalFireRefreshConditions ? 3500 : 6000;
 
                 // Handle Astral Fire refresh
-                if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
+                if (gauge.EnochianTimer < refreshNumber && actionID is BLM.Fire)
                 {
                     return level >= BLM.Levels.Fire3 && hasFirestarter && !gauge.IsParadoxActive
                         ? BLM.Fire3

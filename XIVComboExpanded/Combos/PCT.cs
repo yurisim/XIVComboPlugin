@@ -245,7 +245,7 @@ internal static class PCT
                     HasEffect(Buffs.StarPrismReady)
                     && (HasEffect(Buffs.Inspiration) || !HasEffect(Buffs.Hyperphantasia))
                     && (
-                        hyperphantasia?.StackCount < 3
+                        hyperphantasia?.Param < 3
                         // || IsMoving
                         || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15
                     )
