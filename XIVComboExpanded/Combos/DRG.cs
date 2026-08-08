@@ -134,8 +134,7 @@ internal class DragoonSingleTarget : CustomCombo
                     return (
                             cooldownAbility is not null
                             && GetCooldown(DRG.LanceCharge).CooldownRemaining
-                                >= cooldownAbility * 0.1
-                        )
+                                >= cooldownAbility * 0.1)
                         || HasEffect(DRG.Buffs.LanceCharge)
                         || HasRaidBuffs(2);
                 }
@@ -153,8 +152,7 @@ internal class DragoonSingleTarget : CustomCombo
                                 HasEffect(DRG.Buffs.BattleLitany)
                                 || HasRaidBuffs(2)
                                 || level < DRG.Levels.BattleLitany
-                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15
-                            ):
+                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 15):
                         return DRG.LanceCharge;
 
                     case >= DRG.Levels.Geirskogul
@@ -166,8 +164,7 @@ internal class DragoonSingleTarget : CustomCombo
                     case >= DRG.Levels.WyrmwindThrust
                         when gauge.FirstmindsFocusCount == 2
                             && (
-                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)
-                            ):
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
                         return DRG.WyrmwindThrust;
                 }
 
@@ -180,23 +177,18 @@ internal class DragoonSingleTarget : CustomCombo
                                     level < DRG.Levels.ImprovedLifeSurge
                                     || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 20
                                     || HasRaidBuffs(2)
-                                    || HasEffect(DRG.Buffs.LanceCharge)
-                                )
+                                    || HasEffect(DRG.Buffs.LanceCharge))
                                 && !HasEffect(DRG.Buffs.LifeSurge)
                                 && (
                                     (
                                         lastComboMove == OriginalHook(DRG.VorpalThrust)
-                                        && level >= DRG.Levels.FullThrust
-                                    )
+                                        && level >= DRG.Levels.FullThrust)
                                     || !(
                                         IsOriginal(DRG.WheelingThrust)
-                                        || IsOriginal(DRG.FangAndClaw)
-                                    )
+                                        || IsOriginal(DRG.FangAndClaw))
                                     || (
                                         lastComboMove == DRG.TrueThrust
-                                        && level < DRG.Levels.FullThrust
-                                    )
-                                ):
+                                        && level < DRG.Levels.FullThrust)):
                             return DRG.LifeSurge;
                         case >= DRG.Levels.DragonfireDive
                             when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
@@ -216,8 +208,7 @@ internal class DragoonSingleTarget : CustomCombo
                                 && CanUseAction(OriginalHook(DRG.Jump))
                                 && (
                                     doWithLance(30)
-                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8
-                                ):
+                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                             return OriginalHook(DRG.Jump);
 
                         case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
@@ -249,14 +240,11 @@ internal class DragoonSingleTarget : CustomCombo
                         && (
                             (
                                 whichDotEffect is not null
-                                && whichDotEffect.RemainingTime <= timeOfRotation
-                            )
+                                && whichDotEffect.RemainingTime <= timeOfRotation)
                             || (
                                 whichDotEffect is null
                                 && ShouldUseDots()
-                                && level >= DRG.Levels.ChaosThrust
-                            )
-                        );
+                                && level >= DRG.Levels.ChaosThrust));
 
                     if (level >= DRG.Levels.Disembowel && (needToRefreshDisembowel || refreshDot))
                         return OriginalHook(DRG.Disembowel);
@@ -266,26 +254,22 @@ internal class DragoonSingleTarget : CustomCombo
                 // AM I doing Disembowel or Vorpal Thrust after True Thrust?
                 if (
                     lastComboMove == OriginalHook(DRG.Disembowel)
-                    && level >= DRG.Levels.ChaosThrust
-                )
+                    && level >= DRG.Levels.ChaosThrust)
                     return OriginalHook(DRG.ChaosThrust);
 
                 if (
                     lastComboMove == OriginalHook(DRG.VorpalThrust)
-                    && level >= DRG.Levels.FullThrust
-                )
+                    && level >= DRG.Levels.FullThrust)
                     return OriginalHook(DRG.FullThrust);
 
                 if (
                     level >= DRG.Levels.WheelingThrust
-                    && lastComboMove == OriginalHook(DRG.ChaosThrust)
-                )
+                    && lastComboMove == OriginalHook(DRG.ChaosThrust))
                     return DRG.WheelingThrust;
 
                 if (
                     level >= DRG.Levels.FangAndClaw
-                    && lastComboMove == OriginalHook(DRG.FullThrust)
-                )
+                    && lastComboMove == OriginalHook(DRG.FullThrust))
                     return DRG.FangAndClaw;
 
                 if (level >= DRG.Levels.Drakesbane)
@@ -323,8 +307,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                     return (
                             cooldownAbility is not null
                             && GetCooldown(DRG.LanceCharge).CooldownRemaining
-                                >= cooldownAbility * 0.1
-                        )
+                                >= cooldownAbility * 0.1)
                         || HasEffect(DRG.Buffs.LanceCharge)
                         || HasRaidBuffs(2);
                 }
@@ -342,8 +325,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                                 HasEffect(DRG.Buffs.BattleLitany)
                                 || HasRaidBuffs(2)
                                 || level < DRG.Levels.BattleLitany
-                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12
-                            ):
+                                || GetCooldown(DRG.BattleLitany).CooldownRemaining >= 12):
                         return DRG.LanceCharge;
 
                     case >= DRG.Levels.Geirskogul
@@ -355,8 +337,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                     case >= DRG.Levels.WyrmwindThrust
                         when gauge.FirstmindsFocusCount == 2
                             && (
-                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)
-                            ):
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
                         return DRG.WyrmwindThrust;
                 }
 
@@ -369,19 +350,15 @@ internal class DragoonCoerthanTorment : CustomCombo
                                     level < DRG.Levels.ImprovedLifeSurge
                                     || GetCooldown(DRG.LifeSurge).TotalCooldownRemaining <= 15
                                     || HasRaidBuffs(2)
-                                    || HasEffect(DRG.Buffs.LanceCharge)
-                                )
+                                    || HasEffect(DRG.Buffs.LanceCharge))
                                 && !HasEffect(DRG.Buffs.LifeSurge)
                                 && (
                                     (
                                         lastComboMove == DRG.SonicThrust
-                                        && level >= DRG.Levels.CoerthanTorment
-                                    )
+                                        && level >= DRG.Levels.CoerthanTorment)
                                     || (
                                         lastComboMove == DRG.DoomSpike
-                                        && level < DRG.Levels.CoerthanTorment
-                                    )
-                                ):
+                                        && level < DRG.Levels.CoerthanTorment)):
                             return DRG.LifeSurge;
                         case >= DRG.Levels.DragonfireDive
                             when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
@@ -400,8 +377,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                                 && CanUseAction(OriginalHook(DRG.Jump))
                                 && (
                                     doWithLance(30)
-                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8
-                                ):
+                                    || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                             return OriginalHook(DRG.Jump);
                         case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
                             return DRG.RiseOfTheDragon;
@@ -415,8 +391,7 @@ internal class DragoonCoerthanTorment : CustomCombo
 
                 if (
                     (lastComboMove == DRG.DoomSpike || lastComboMove == DRG.DraconianFury)
-                    && level >= DRG.Levels.SonicThrust
-                )
+                    && level >= DRG.Levels.SonicThrust)
                     return DRG.SonicThrust;
             }
 

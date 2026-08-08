@@ -71,8 +71,7 @@ internal class CustomComboCache : IDisposable
     internal IStatus? GetStatus(
         uint statusID,
         IGameObject? obj,
-        uint? sourceID
-    )
+        uint? sourceID)
     {
         var key = (statusID, obj?.EntityId, sourceID);
         if (this.statusCache.TryGetValue(key, out var found))
@@ -91,9 +90,7 @@ internal class CustomComboCache : IDisposable
                     !sourceID.HasValue
                     || status.SourceId == 0
                     || status.SourceId == InvalidObjectID
-                    || status.SourceId == sourceID
-                )
-            )
+                    || status.SourceId == sourceID))
                 return this.statusCache[key] = status;
 
         return this.statusCache[key] = null;

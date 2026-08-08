@@ -78,10 +78,9 @@ internal abstract partial class CustomCombo
     {
         newActionID = 0;
 
-        if (!IsEnabled(this.Preset) 
+        if (!IsEnabled(this.Preset)) 
         // || !Service.Configuration.IsEnabled
         
-        )
             return false;
 
         var classJobID = LocalPlayer!.ClassJob.RowId;
@@ -117,8 +116,7 @@ internal abstract partial class CustomCombo
         static (uint ActionID, CooldownData Data) Compare(
             uint original,
             (uint ActionID, CooldownData Data) a1,
-            (uint ActionID, CooldownData Data) a2
-        )
+            (uint ActionID, CooldownData Data) a2)
         {
             // This intent of this priority algorithm is to generate a single unified number that results in the
             // following behaviors:
@@ -168,8 +166,7 @@ internal abstract partial class CustomCombo
         uint actionID,
         uint lastComboActionID,
         float comboTime,
-        byte level
-    );
+        byte level);
 }
 
 /// <summary>
@@ -484,8 +481,7 @@ internal abstract partial class CustomCombo
         return FindEffect(
             effectID,
             Service.TargetManager?.Target?.TargetObject,
-            LocalPlayer?.EntityId
-        );
+            LocalPlayer?.EntityId);
     }
 
     /// <summary>
@@ -669,8 +665,7 @@ internal abstract partial class CustomCombo
 
         if (
             CurrentTarget is not IBattleChara chara
-            || CurrentTarget.ObjectKind != ObjectKind.BattleNpc
-        )
+            || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
             return 0;
 
         var position = new Vector2(chara.Position.X, chara.Position.Z);

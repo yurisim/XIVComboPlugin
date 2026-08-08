@@ -166,16 +166,12 @@ internal class ViperFangs : CustomCombo
                         && (
                             !HasEffect(VPR.Buffs.HuntersInstinct)
                             || flanksbaneVenom is not null
-                            || flankstungVenom is not null
-                        )
-                    ) || !canUseSSC
-                )
+                            || flankstungVenom is not null)) || !canUseSSC)
                     return VPR.HuntersCoil;
 
                 if (
                     canUseSSC
-                    && (hindsbaneVenom is not null || hindstungVenom is not null || !canUseHunters)
-                )
+                    && (hindsbaneVenom is not null || hindstungVenom is not null || !canUseHunters))
                     return VPR.SwiftskinsCoil;
 
                 return canUseSSC ? VPR.SwiftskinsCoil : VPR.HuntersCoil;
@@ -197,8 +193,7 @@ internal class ViperFangs : CustomCombo
             if (
                 HasEffect(VPR.Buffs.Swiftscaled)
                 && HasEffect(VPR.Buffs.HuntersInstinct)
-                && HasTarget()
-            )
+                && HasTarget())
             {
                 var hasPostionalBuff = new[]
                 {
@@ -211,18 +206,15 @@ internal class ViperFangs : CustomCombo
                 };
 
                 var noExpiringBuffs = hasPostionalBuff.Any(buff =>
-                    buff is not null && buff.RemainingTime >= 15
-                );
+                    buff is not null && buff.RemainingTime >= 15);
 
                 if (
                     (gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && (
                         gauge.SerpentOffering >= 90
                         || raidbuffs
-                        || readyToReawaken?.RemainingTime <= 10
-                    )
-                    && gauge.AnguineTribute < 1
-                )
+                        || readyToReawaken?.RemainingTime <= 10)
+                    && gauge.AnguineTribute < 1)
                     return VPR.Reawaken;
 
                 if (
@@ -232,10 +224,7 @@ internal class ViperFangs : CustomCombo
                         TargetHasLowLife()
                         || (
                             gauge.RattlingCoilStacks == rattleCount
-                            && (HasCharges(VPR.Vicewinder) || IsOffCooldown(VPR.SerpentsIre))
-                        )
-                    )
-                )
+                            && (HasCharges(VPR.Vicewinder) || IsOffCooldown(VPR.SerpentsIre)))))
                     return VPR.UncoiledFury;
             }
 
@@ -245,8 +234,7 @@ internal class ViperFangs : CustomCombo
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
                 && !canUseHunters
-                && (raidbuffs || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 12)
-            )
+                && (raidbuffs || GetCooldown(VPR.Vicewinder).TotalCooldownRemaining <= 12))
                 return VPR.Vicewinder;
 
             // Switch case here for optimization, rather than calling OriginalHook in a lot of places.
@@ -316,10 +304,8 @@ internal class ViperPositionals : CustomCombo
                 (
                     hasFlankBuff
                     || canUseHuntersCoil
-                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder)
-                )
-                && actionID is VPR.HuntersCoil
-            )
+                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
+                && actionID is VPR.HuntersCoil)
             {
                 // enable if we can use HunterCoil but not if our current buffs want us in the rear
                 if (
@@ -327,8 +313,7 @@ internal class ViperPositionals : CustomCombo
                     // Enable this position if we need to get the Hunter's Instinct buff
                     || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder)
                     // Enable this position if we have already used the other position
-                    || (canUseHuntersCoil && !canUseSwiftSkinCoil)
-                )
+                    || (canUseHuntersCoil && !canUseSwiftSkinCoil))
                     return VPR.HuntersCoil;
 
                 if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
@@ -348,24 +333,19 @@ internal class ViperPositionals : CustomCombo
                     || canUseSwiftSkinCoil
                     || (
                         HasEffect(VPR.Buffs.HuntersInstinct)
-                        && (level >= VPR.Levels.Vicewinder || (!hasRearBuff && !hasFlankBuff))
-                    )
-                )
-                && actionID is VPR.SwiftskinsCoil
-            )
+                        && (level >= VPR.Levels.Vicewinder || (!hasRearBuff && !hasFlankBuff))))
+                && actionID is VPR.SwiftskinsCoil)
             {
                 // Enable this position if we can use SwiftSkinCoil but not if our current buffs want us in the flank
                 if (
                     (
                         (canUseSwiftSkinCoil && !hasFlankBuff)
                         // Enable this position if we have already used the other position
-                        || (canUseSwiftSkinCoil && !canUseHuntersCoil)
+                        || (canUseSwiftSkinCoil && !canUseHuntersCoil))
                     // Enable this position if we have nothing
                     // || (!hasRearBuff && !hasFlankBuff)
-                    )
                     // Enable this position ONLY if we already have the Hunter's Instinct buff
-                    && (HasEffect(VPR.Buffs.HuntersInstinct) || level < VPR.Levels.Vicewinder)
-                )
+                    && (HasEffect(VPR.Buffs.HuntersInstinct) || level < VPR.Levels.Vicewinder))
                     return VPR.SwiftskinsCoil;
 
                 if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
@@ -427,10 +407,7 @@ internal class ViperAoE : CustomCombo
                         && (
                             !HasEffect(VPR.Buffs.HuntersInstinct)
                             || HasEffect(VPR.Buffs.FlanksbaneVenom)
-                            || HasEffect(VPR.Buffs.FlankstungVenom)
-                        )
-                    ) || !canUseSSC
-                )
+                            || HasEffect(VPR.Buffs.FlankstungVenom))) || !canUseSSC)
                     return VPR.HuntersDen;
 
                 if (
@@ -438,9 +415,7 @@ internal class ViperAoE : CustomCombo
                     && (
                         HasEffect(VPR.Buffs.HindsbaneVenom)
                         || HasEffect(VPR.Buffs.HindstungVenom)
-                        || !canUseHunters
-                    )
-                )
+                        || !canUseHunters))
                     return VPR.SwiftskinsDen;
 
                 return canUseSSC ? VPR.SwiftskinsDen : VPR.HuntersDen;
@@ -465,8 +440,7 @@ internal class ViperAoE : CustomCombo
                     (gauge.SerpentOffering >= 50 || readyToReawaken is not null)
                     && gauge.AnguineTribute < 1
                     && !canUseSSC
-                    && !canUseHunters
-                )
+                    && !canUseHunters)
                     return VPR.Reawaken;
 
                 if (gauge.RattlingCoilStacks >= 1)
@@ -478,8 +452,7 @@ internal class ViperAoE : CustomCombo
                 && HasCharges(VPR.VicePit)
                 && HasEffect(VPR.Buffs.Swiftscaled)
                 && !canUseSSC
-                && !canUseHunters
-            )
+                && !canUseHunters)
                 return VPR.VicePit;
 
             switch (OriginalHook(VPR.SteelMaw))

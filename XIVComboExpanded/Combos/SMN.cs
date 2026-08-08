@@ -148,8 +148,7 @@ internal class SummonerRuin : CustomCombo
             actionID == SMN.Ruin
             || actionID == SMN.Ruin2
             || actionID == SMN.Outburst
-            || actionID == SMN.TriDisaster
-        )
+            || actionID == SMN.TriDisaster)
         {
             var gauge = GetJobGauge<SMNGauge>();
 
@@ -166,10 +165,8 @@ internal class SummonerRuin : CustomCombo
                     && (
                         (hasSearing && searingElapsed > 5)
                         || searingCD >= 10
-                        || level < SMN.Levels.SearingLight
-                    )
-                    && IsOffCooldown(OriginalHook(SMN.EnkindleBahamut))
-                )
+                        || level < SMN.Levels.SearingLight)
+                    && IsOffCooldown(OriginalHook(SMN.EnkindleBahamut)))
                     return OriginalHook(SMN.EnkindleBahamut);
 
                 if (
@@ -177,12 +174,10 @@ internal class SummonerRuin : CustomCombo
                     && (
                         (hasSearing && searingElapsed > 5)
                         || searingCD >= 10
-                        || level < SMN.Levels.SearingLight
-                    )
+                        || level < SMN.Levels.SearingLight)
                     && !gauge.IsGarudaAttuned
                     && !gauge.IsIfritAttuned
-                    && IsOffCooldown(OriginalHook(SMN.AstralFlow))
-                )
+                    && IsOffCooldown(OriginalHook(SMN.AstralFlow)))
                     return OriginalHook(SMN.AstralFlow);
 
                 if (
@@ -190,9 +185,7 @@ internal class SummonerRuin : CustomCombo
                     && (
                         (hasSearing && searingElapsed > 5)
                         || searingCD >= 2
-                        || level < SMN.Levels.SearingLight
-                    )
-                )
+                        || level < SMN.Levels.SearingLight))
                     return
                         level >= SMN.Levels.EnergySyphon
                         && (actionID == SMN.Outburst || actionID == SMN.TriDisaster)
@@ -209,8 +202,7 @@ internal class SummonerRuin : CustomCombo
                 if (
                     HasCondition(ConditionFlag.InCombat)
                     && IsOffCooldown(ADV.LucidDreaming)
-                    && LocalPlayer?.CurrentMp <= 8000
-                )
+                    && LocalPlayer?.CurrentMp <= 8000)
                     return ADV.LucidDreaming;
 
                 // if (HasCharges(SMN.RadiantAegis)
@@ -231,15 +223,12 @@ internal class SummonerRuin : CustomCombo
                     HasEffect(SMN.Buffs.TitansFavor)
                     || (
                         HasEffect(SMN.Buffs.GarudasFavor)
-                        && (!this.IsMoving || HasEffect(ADV.Buffs.Swiftcast))
-                    )
-                )
+                        && (!this.IsMoving || HasEffect(ADV.Buffs.Swiftcast))))
                     return OriginalHook(SMN.AstralFlow);
 
                 if (
                     (HasEffect(SMN.Buffs.IfritsFavor) || lastComboMove == SMN.CrimsonCyclone)
-                    && GetTargetDistance() <= 1
-                )
+                    && GetTargetDistance() <= 1)
                     return OriginalHook(SMN.AstralFlow);
             }
 
@@ -310,8 +299,7 @@ internal class SummonerOutburstTriDisaster : CustomCombo
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
                     && gauge.AttunementTimerRemaining == 0
-                    && HasEffect(SMN.Buffs.FurtherRuin)
-                )
+                    && HasEffect(SMN.Buffs.FurtherRuin))
                     return SMN.Ruin4;
         }
 
@@ -339,15 +327,13 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
                     && !gauge.IsIfritAttuned
                     && !gauge.IsTitanAttuned
                     && !gauge.IsGarudaAttuned
-                    && gauge.SummonTimerRemaining > 0
-                )
+                    && gauge.SummonTimerRemaining > 0)
                     if (
                         level >= SMN.Levels.EnkindleBahamut
                         && !gauge.IsIfritAttuned
                         && !gauge.IsTitanAttuned
                         && !gauge.IsGarudaAttuned
-                        && gauge.SummonTimerRemaining > 0
-                    )
+                        && gauge.SummonTimerRemaining > 0)
                         return OriginalHook(SMN.EnkindleBahamut);
 
             if (IsEnabled(CustomComboPreset.SummonerFurtherShinyFeature))
@@ -355,8 +341,7 @@ internal class SummonerGemshinePreciousBrilliance : CustomCombo
                     level >= SMN.Levels.Ruin4
                     && gauge.SummonTimerRemaining == 0
                     && gauge.AttunementTimerRemaining == 0
-                    && HasEffect(SMN.Buffs.FurtherRuin)
-                )
+                    && HasEffect(SMN.Buffs.FurtherRuin))
                     return SMN.Ruin4;
         }
 

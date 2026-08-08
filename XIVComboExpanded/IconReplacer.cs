@@ -35,12 +35,10 @@ internal sealed class IconReplacer : IDisposable
 
         this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(
             ActionManager.Addresses.GetAdjustedActionId.Value,
-            this.GetIconDetour
-        );
+            this.GetIconDetour);
         this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(
             Service.Address.IsActionIdReplaceable,
-            this.IsIconReplaceableDetour
-        );
+            this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
@@ -74,8 +72,7 @@ internal sealed class IconReplacer : IDisposable
                 ActionType.Action,
                 actionID,
                 targetID,
-                false
-            ) == 0;
+                false) == 0;
     }
 
     /// <summary>

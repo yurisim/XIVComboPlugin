@@ -9,86 +9,30 @@
     <PackageProjectUrl>https://github.com/grammernatzi/XIVComboPluginExpandedest</PackageProjectUrl>
   </PropertyGroup>
 
+  <!-- Everything else (TargetFramework, Platforms, Nullable, AllowUnsafeBlocks,
+       CopyLocalLockFileAssemblies, DalamudLibPath, and the Dalamud/FFXIVClientStructs/Lumina/
+       ImGui/Newtonsoft references) comes from Dalamud.NET.Sdk. Only overrides live here. -->
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <Platforms>x64</Platforms>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>XIVComboExpanded</AssemblyName>
+    <RootNamespace>XIVComboExpandedPlugin</RootNamespace>
+    <!-- CI's RELEASE_DIR expects bin\Release\, not the SDK default bin\x64\Release\. -->
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <LangVersion>latest</LangVersion>
     <NoWarn>CS1591</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Documentation">
-    <DocumentationFile></DocumentationFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="..\res\icon.png" Link="images\icon.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <Content Include="XIVComboExpanded.json" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-    <AssemblyName>XIVComboExpanded</AssemblyName>
-    <RootNamespace>XIVComboExpandedPlugin</RootNamespace>
-  </PropertyGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="ILRepack" Version="2.1.0-beta1" GeneratePathProperty="true" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <!--<ProjectReference Include="..\lib\FFXIVClientStructs\FFXIVClientStructs\FFXIVClientStructs.csproj" />-->
-	  <!--
-	  <Reference Include="FFXIVClientStructs">
-      <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-      <Private>False</Private>
-    </Reference>-->
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Dalamud">
-      <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="FFXIVClientStructs" Private="False" />
-    <Reference Include="Lumina">
-      <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Lumina.Excel">
-      <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-	<Reference Include="InteropGenerator.Runtime">
-		<HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
-		<Private>false</Private>
-	</Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="DalamudPackager" Version="15.0.0" />
     <PackageReference Update="DotNet.ReproducibleBuilds" Version="2.0.2" />
   </ItemGroup>
-
-  <Target Name="CleanOutDir" AfterTargets="ILRepack">
-    <ItemGroup>
-      <DeleteFiles Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(TargetName).dll" />
-      <DeleteFiles Include="$(TargetDir)*.pdb" Exclude="$(TargetDir)$(TargetName).pdb" />
-      <DeleteFiles Include="$(TargetDir)*.xml" />
-    </ItemGroup>
-    <Message Text="Deleting @(DeleteFiles)" Importance="high" />
-    <Delete Files="@(DeleteFiles)" />
-  </Target>
 </Project>

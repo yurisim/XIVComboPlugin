@@ -29,8 +29,7 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
     public XIVComboExpandedPlugin(
         IDalamudPluginInterface pluginInterface,
         ISigScanner sigScanner,
-        IGameInteropProvider gameInteropProvider
-    )
+        IGameInteropProvider gameInteropProvider)
     {
         pluginInterface.Create<Service>();
 
@@ -58,8 +57,7 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
             {
                 HelpMessage = "Open a window to edit custom combo settings.",
                 ShowInHelp = true,
-            }
-        );
+            });
     }
 
     public string Name => "XIV Combo Expanded";
@@ -132,8 +130,7 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
                 Service.ChatGui.Print(
                     Service.Configuration.EnableSecretCombos
                         ? "Secret combos are now shown"
-                        : "Secret combos are now hidden"
-                );
+                        : "Secret combos are now hidden");
 
                 Service.Configuration.Save();
                 break;
@@ -187,14 +184,12 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
                 if (filter == "set")
                     foreach (
                         var preset in Enum.GetValues<CustomComboPreset>()
-                            .Select(preset => Service.Configuration.IsEnabled(preset))
-                    )
+                            .Select(preset => Service.Configuration.IsEnabled(preset)))
                         Service.ChatGui.Print(preset.ToString());
                 else if (filter == "unset")
                     foreach (
                         var preset in Enum.GetValues<CustomComboPreset>()
-                            .Select(preset => !Service.Configuration.IsEnabled(preset))
-                    )
+                            .Select(preset => !Service.Configuration.IsEnabled(preset)))
                         Service.ChatGui.Print(preset.ToString());
                 else if (filter == "all")
                     foreach (var preset in Enum.GetValues<CustomComboPreset>())
@@ -318,8 +313,7 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
                     76 => 2403,
                     77 => 2404,
                     _ => 0,
-                }
-            )
+                })
             .Where(id => id != 0)
             .Select(id => (CustomComboPreset)id)
             .ToHashSet();

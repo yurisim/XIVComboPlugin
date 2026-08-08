@@ -121,8 +121,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 level >= RDM.Levels.Manafication
                 && gauge.ManaStacks < 1
                 && HasEffect(RDM.Buffs.Embolden)
-                && IsOffCooldown(RDM.Manafication)
-            )
+                && IsOffCooldown(RDM.Manafication))
                 return RDM.Manafication;
 
             if (GCDClipCheck(actionID))
@@ -134,14 +133,12 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                     case >= RDM.Levels.Fleche
                         when IsOffCooldown(RDM.Fleche)
                             && (
-                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs
-                            ):
+                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs):
                         return RDM.Fleche;
                     case >= RDM.Levels.ContreSixte
                         when IsOffCooldown(RDM.ContreSixte)
                             && (
-                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs
-                            ):
+                                level < RDM.Levels.Embolden || controlBurst || embolden || raidBuffs):
                         return RDM.ContreSixte;
                     case >= RDM.Levels.Engagement
                         when InMeleeRange()
@@ -149,8 +146,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                             && IsOffCooldown(RDM.Embolden)
                             && (
                                 GetCooldown(RDM.Engagement).CooldownRemaining < 6
-                                || HasEffect(RDM.Buffs.Embolden)
-                            ):
+                                || HasEffect(RDM.Buffs.Embolden)):
                         return RDM.Engagement;
                     case >= RDM.Levels.Acceleration
                         when IsOffCooldown(RDM.Acceleration)
@@ -190,16 +186,14 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             var needToReprise = gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy;
 
             var startMeleeCombo = (
-                actualWhite >= minimiumGauge && actualBlack >= minimiumGauge
+                actualWhite >= minimiumGauge && actualBlack >= minimiumGauge);
             // && (HasEffect(RDM.Buffs.Embolden) || raidBuffs)
-            );
 
             if (
                 level >= RDM.Levels.Reprise
                 && actionID is not RDM.Scatter
                 && needToReprise
-                && !InMeleeRange()
-            )
+                && !InMeleeRange())
             {
                 return OriginalHook(RDM.Reprise);
             }
@@ -211,32 +205,25 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                     gauge.ManaStacks >= 1 && gauge.ManaStacks < 3
                     || (
                         (lastComboMove is RDM.EnchantedRiposte or RDM.Riposte)
-                        && (level >= RDM.Levels.Zwerchhau)
-                    )
+                        && (level >= RDM.Levels.Zwerchhau))
                     || (
                         (lastComboMove is RDM.EnchantedZwerchhau or RDM.Zwerchhau)
-                        && (level >= RDM.Levels.Redoublement)
-                    )
+                        && (level >= RDM.Levels.Redoublement))
                     || (
                         startMeleeCombo
-                        && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent)
-                    )
-                )
-            )
+                        && (actionID is not RDM.Scatter || level >= RDM.Levels.Moulinent))))
             {
                 if (
                     (lastComboMove == RDM.Zwerchhau || lastComboMove == RDM.EnchantedZwerchhau)
                     && OriginalHook(RDM.Redoublement) != RDM.Redoublement
-                    && level >= RDM.Levels.Redoublement
-                )
+                    && level >= RDM.Levels.Redoublement)
                     // Enchanted
                     return OriginalHook(RDM.Redoublement);
 
                 if (
                     (lastComboMove == RDM.Riposte || lastComboMove == RDM.EnchantedRiposte)
                     && level >= RDM.Levels.Zwerchhau
-                    && OriginalHook(RDM.Zwerchhau) != RDM.Zwerchhau
-                )
+                    && OriginalHook(RDM.Zwerchhau) != RDM.Zwerchhau)
                 {
                     return OriginalHook(RDM.Zwerchhau);
                 }

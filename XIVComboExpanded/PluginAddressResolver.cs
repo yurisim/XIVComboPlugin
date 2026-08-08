@@ -34,8 +34,7 @@ internal class PluginAddressResolver : BaseAddressResolver
 
         Service.PluginLog.Verbose("===== X I V C O M B O =====");
         Service.PluginLog.Verbose(
-            $"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}"
-        );
+            $"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}");
         Service.PluginLog.Verbose($"{nameof(this.ComboTimer)}            0x{this.ComboTimer:X}");
         Service.PluginLog.Verbose($"{nameof(this.LastComboMove)}         0x{this.LastComboMove:X}");
     }

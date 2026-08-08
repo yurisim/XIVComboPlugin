@@ -125,8 +125,7 @@ internal static class PCT
             uint actionID,
             uint lastComboMove,
             float comboTime,
-            byte level
-        )
+            byte level)
         {
             var gauge = GetJobGauge<PCTGauge>();
 
@@ -154,8 +153,7 @@ internal static class PCT
                 if (
                     HasEffect(Buffs.SubtractiveSpectrum)
                     && CanUseAction(SubtractivePalette)
-                    && !HasEffect(Buffs.Monochrome)
-                )
+                    && !HasEffect(Buffs.Monochrome))
                 {
                     return SubtractivePalette;
                 }
@@ -192,9 +190,9 @@ internal static class PCT
                                         <= 10
                                     || hasRaidBuffs
                                     || HasEffect(Buffs.StarryMuse)
-                                    || level < Levels.HammerBrush
+                                    || level < Levels.HammerBrush)
                                 // || needToUseHammer
-                                ):
+                                :
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))
@@ -202,11 +200,9 @@ internal static class PCT
                                 && (
                                     (
                                         gauge.CreatureFlags.HasFlag(CreatureFlags.Pom)
-                                        && !gauge.CreatureFlags.HasFlag(CreatureFlags.Wings)
-                                    )
+                                        && !gauge.CreatureFlags.HasFlag(CreatureFlags.Wings))
                                     || gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)
-                                    || cooldownBuffs
-                                ):
+                                    || cooldownBuffs):
                             return OriginalHook(MogOftheAges);
                         case >= Levels.CreatureMotif
                             when IsAvailable(OriginalHook(LivingMuse))
@@ -218,10 +214,7 @@ internal static class PCT
                                     || (
                                         (
                                             !gauge.CreatureFlags.HasFlag(CreatureFlags.Pom)
-                                            || gauge.CreatureFlags.HasFlag(CreatureFlags.Wings)
-                                        ) && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)
-                                    )
-                                )
+                                            || gauge.CreatureFlags.HasFlag(CreatureFlags.Wings)) && !gauge.CreatureFlags.HasFlag(CreatureFlags.Claw)))
                                 && (cooldownBuffs || needToUseLivingMuse):
                             return OriginalHook(LivingMuse);
                         case >= ADV.Levels.Swiftcast
@@ -247,9 +240,7 @@ internal static class PCT
                     && (
                         hyperphantasia?.Param < 3
                         // || IsMoving
-                        || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15
-                    )
-                )
+                        || FindEffect(Buffs.StarPrismReady)?.RemainingTime <= 15))
                 {
                     return StarPrism;
                 }
@@ -257,8 +248,7 @@ internal static class PCT
                 if (
                     level >= Levels.HammerStamp
                     && HasEffect(Buffs.HammerTime)
-                    && !HasEffect(Buffs.Inspiration)
-                )
+                    && !HasEffect(Buffs.Inspiration))
                 {
                     return OriginalHook(HammerStamp);
                 }
@@ -268,8 +258,7 @@ internal static class PCT
 
                 if (
                     CanUseAction(CometBlack)
-                    && (actionID is HolyWhite || canUsePalette || cooldownBuffs)
-                )
+                    && (actionID is HolyWhite || canUsePalette || cooldownBuffs))
                     return CometBlack;
 
                 var availableSkill = new (
@@ -277,30 +266,26 @@ internal static class PCT
                     uint skill,
                     float CD,
                     bool MotifNeeded,
-                    uint motifSkill
-                )[]
+                    uint motifSkill)[]
                 {
                     (
                         Levels.LandscapeMotif,
                         ScenicMuse,
                         GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining,
                         !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)),
-                        LandscapeMotif
-                    ),
+                        LandscapeMotif),
                     (
                         Levels.WeaponMotif,
                         SteelMuse,
                         GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining,
                         !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)),
-                        WeaponMotif
-                    ),
+                        WeaponMotif),
                     (
                         Levels.CreatureMotif,
                         LivingMuse,
                         GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining,
                         !gauge.CreatureMotifDrawn,
-                        CreatureMotif
-                    ),
+                        CreatureMotif),
                 }
                     .Where(s => s.Level <= level && s.MotifNeeded)
                     .OrderBy(s => s.CD);
@@ -314,8 +299,7 @@ internal static class PCT
                     if (
                         quickSkill.Contains(CreatureMotif)
                         && HasCharges(LivingMuse)
-                        && cooldownBuffs
-                    )
+                        && cooldownBuffs)
                         return CreatureMotif;
 
                     if (quickSkill.Contains(WeaponMotif) && HasCharges(SteelMuse))
@@ -345,11 +329,9 @@ internal static class PCT
                             || (
                                 s.skill is not ScenicMuse
                                 && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining
-                                    <= 20
-                            )
+                                    <= 20)
                             || (TargetHasLowLife() && IsAvailable(OriginalHook(s.skill)))
-                            || !InCombat()
-                        )
+                            || !InCombat())
                         .Select(s => s.motifSkill)
                         .FirstOrDefault();
 
@@ -374,8 +356,7 @@ internal static class PCT
             uint actionID,
             uint lastComboMove,
             float comboTime,
-            byte level
-        )
+            byte level)
         {
             var gauge = GetJobGauge<PCTGauge>();
 
@@ -419,8 +400,7 @@ internal static class PCT
                 if (
                     level >= Levels.HammerStamp
                     && !HasEffect(Buffs.Inspiration)
-                    && HasEffect(Buffs.HammerTime)
-                )
+                    && HasEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
                 var skills = new (
@@ -428,30 +408,26 @@ internal static class PCT
                     bool hasCharges,
                     bool MotifNeeded,
                     uint Skill,
-                    float CD
-                )[]
+                    float CD)[]
                 {
                     (
                         Levels.CreatureMotif,
                         HasCharges(OriginalHook(LivingMuse)),
                         !gauge.CreatureMotifDrawn,
                         CreatureMotif,
-                        GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining
-                    ),
+                        GetCooldown(OriginalHook(LivingMuse)).TotalCooldownRemaining),
                     (
                         Levels.WeaponMotif,
                         HasCharges(OriginalHook(SteelMuse)),
                         !(gauge.WeaponMotifDrawn || HasEffect(Buffs.HammerTime)),
                         WeaponMotif,
-                        GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining
-                    ),
+                        GetCooldown(OriginalHook(SteelMuse)).TotalCooldownRemaining),
                     (
                         Levels.LandscapeMotif,
                         HasCharges(OriginalHook(ScenicMuse)),
                         !(gauge.LandscapeMotifDrawn || HasEffect(Buffs.StarryMuse)),
                         LandscapeMotif,
-                        GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining
-                    ),
+                        GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining),
                 }
                     .Where(s => s.Level <= level && s.hasCharges && s.MotifNeeded)
                     .OrderBy(s => s.CD)
@@ -482,8 +458,7 @@ internal static class PCT
             uint actionID,
             uint lastComboMove,
             float comboTime,
-            byte level
-        )
+            byte level)
         {
             return actionID switch
             {
@@ -491,8 +466,7 @@ internal static class PCT
                     OriginalHook(LivingMuse),
                 WeaponMotif when OriginalHook(SteelMuse) != SteelMuse => OriginalHook(SteelMuse),
                 LandscapeMotif when OriginalHook(ScenicMuse) != ScenicMuse => OriginalHook(
-                    ScenicMuse
-                ),
+                    ScenicMuse),
                 _ => actionID,
             };
         }
