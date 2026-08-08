@@ -67,6 +67,12 @@ internal class Service
     internal static ICommandManager CommandManager { get; private set; } = null!;
 
     /// <summary>
+    ///     Gets the Dalamud object table.
+    /// </summary>
+    [PluginService]
+    internal static IObjectTable ObjectTable { get; private set; } = null!;
+
+    /// <summary>
     ///     Gets the Dalamud condition.
     /// </summary>
     [PluginService]

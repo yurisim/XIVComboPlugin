@@ -137,8 +137,7 @@ internal class BlackMageFire : CustomCombo
                 // umbral soul if in umbral ice and does not have 3 umbnral hearts
                 if (
                     gauge.InUmbralIce
-                    && (gauge.UmbralHearts < 3 || gauge.ElementTimeRemaining != 15000)
-                )
+                    && (gauge.UmbralHearts < 3 || gauge.EnochianTimer != 15000))
                 {
                     return BLM.UmbralSoul;
                 }
@@ -151,8 +150,7 @@ internal class BlackMageFire : CustomCombo
                 HasCharges(BLM.Triplecast)
                 && (
                     (GetCooldown(BLM.Triplecast).TotalCooldownRemaining <= 8 && gauge.InAstralFire)
-                    || HasEffect(ADV.Buffs.Medicated)
-                )
+                    || HasEffect(ADV.Buffs.Medicated))
                 && !HasEffect(BLM.Buffs.Triplecast)
                 && !HasEffect(ADV.Buffs.Swiftcast);
 
@@ -160,8 +158,7 @@ internal class BlackMageFire : CustomCombo
                 gauge.InAstralFire
                 && (
                     (level >= BLM.Levels.Flare && playerMP == 0)
-                    || (level < BLM.Levels.Flare && hasLowMP)
-                )
+                    || (level < BLM.Levels.Flare && hasLowMP))
                 && (IsOnCooldown(BLM.LeyLines) || level < BLM.Levels.LeyLines)
                 && IsOffCooldown(BLM.Manafont);
 
@@ -198,15 +195,12 @@ internal class BlackMageFire : CustomCombo
                     || (
                         level >= BLM.Levels.Amplifier
                         && amplifierOffCooldown
-                        && (gauge.PolyglotStacks == maxPolyglot)
-                    )
-                    || HasEffect(ADV.Buffs.Medicated)
-                )
+                        && (gauge.PolyglotStacks == maxPolyglot))
+                    || HasEffect(ADV.Buffs.Medicated))
                 && (!HasEffect(BLM.Buffs.Triplecast) || plzUsePolyglotSoon)
-                && gauge.ElementTimeRemaining >= 6000
+                && gauge.EnochianTimer >= 6000
                 && gauge.AstralSoulStacks != 6
-                && level >= BLM.Levels.Foul
-            )
+                && level >= BLM.Levels.Foul)
             {
                 return level >= BLM.Levels.Xenoglossy && actionID is BLM.Fire
                     ? BLM.Xenoglossy
@@ -229,13 +223,11 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && (actionID is BLM.Fire || level >= BLM.Levels.Thunder2)
-                    && gauge.ElementTimeRemaining >= 6000
+                    && gauge.EnochianTimer >= 6000
                     && ShouldUseDots()
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
-                        || debuffs.All(effect => effect is null)
-                    )
-                )
+                        || debuffs.All(effect => effect is null)))
                     return actionID is BLM.Fire
                         ? OriginalHook(BLM.Thunder)
                         : OriginalHook(BLM.Thunder2);
@@ -283,8 +275,7 @@ internal class BlackMageFire : CustomCombo
                     if (
                         level >= BLM.Levels.Flare
                         && CanUseAction(BLM.Flare)
-                        && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4)
-                    )
+                        && (actionID is BLM.Fire2 || level < BLM.Levels.Fire4))
                     {
                         // Try to get Swiftcast/Triplecast before Flare
                         if (!hasInstantCast && GCDClipCheck(actionID))
@@ -325,8 +316,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Fire3
                     && hasFirestarter
                     && actionID is BLM.Fire
-                    && (level < BLM.Levels.Fire4 || gauge.AstralFireStacks < 3)
-                )
+                    && (level < BLM.Levels.Fire4 || gauge.AstralFireStacks < 3))
                 {
                     return BLM.Fire3;
                 }
@@ -334,7 +324,7 @@ internal class BlackMageFire : CustomCombo
                 var findTriplecast = FindEffect(BLM.Buffs.Triplecast);
 
                 var instalFireRefreshConditions =
-                    (findTriplecast is not null && findTriplecast.StackCount >= 2)
+                    (findTriplecast is not null && findTriplecast.Param >= 2)
                     || (playerMP / fireCost <= 2 && level >= BLM.Levels.FlareStar)
                     || gauge.IsParadoxActive
                     || hasFirestarter;
@@ -342,7 +332,7 @@ internal class BlackMageFire : CustomCombo
                 var refreshNumber = instalFireRefreshConditions ? 3500 : 6000;
 
                 // Handle Astral Fire refresh
-                if (gauge.ElementTimeRemaining < refreshNumber && actionID is BLM.Fire)
+                if (gauge.EnochianTimer < refreshNumber && actionID is BLM.Fire)
                 {
                     return level >= BLM.Levels.Fire3 && hasFirestarter && !gauge.IsParadoxActive
                         ? BLM.Fire3
@@ -368,9 +358,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Fire3
                     && (
                         gauge.UmbralHearts >= 3
-                        || (level < BLM.Levels.Blizzard4 && LocalPlayer?.CurrentMp >= 9000)
-                    )
-                )
+                        || (level < BLM.Levels.Blizzard4 && LocalPlayer?.CurrentMp >= 9000)))
                 {
                     if (hasFirestarter && GCDClipCheck(actionID) && !gauge.IsParadoxActive)
                         return BLM.Transpose;
@@ -470,8 +458,7 @@ internal class BlackScathe : CustomCombo
             if (
                 level >= ADV.Levels.Swiftcast
                 && IsOffCooldown(ADV.Swiftcast)
-                && !HasEffect(BLM.Buffs.Triplecast)
-            )
+                && !HasEffect(BLM.Buffs.Triplecast))
                 return ADV.Swiftcast;
 
             if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
@@ -482,8 +469,7 @@ internal class BlackScathe : CustomCombo
                 level >= BLM.Levels.Triplecast
                 && HasCharges(BLM.Triplecast)
                 && !HasEffect(BLM.Buffs.Triplecast)
-                && !HasEffect(ADV.Buffs.Swiftcast)
-            )
+                && !HasEffect(ADV.Buffs.Swiftcast))
                 return BLM.Triplecast;
 
             // Thunder

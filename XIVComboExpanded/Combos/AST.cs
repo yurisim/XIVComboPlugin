@@ -107,12 +107,11 @@ internal class AstrologianMalefic : CustomCombo
                 switch (level)
                 {
                     case >= AST.Levels.MinorArcana
-                        when gauge.DrawnCrownCard == CardType.LADY
+                        when gauge.DrawnCrownCard == CardType.Lady
                             && (
                                 localPlayer <= 0.95
                                 || needToUseCards
-                                || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)
-                            ):
+                                || (actionID is AST.Gravity && tankPercentage <= 0.75 && noTankCDs)):
                         return OriginalHook(AST.MinorArcanaDT);
                     case >= AST.Levels.SunSign when CanUseAction(AST.SunSign):
                         return AST.SunSign;
@@ -120,8 +119,7 @@ internal class AstrologianMalefic : CustomCombo
                     case >= AST.Levels.Oracle
                         when divining is not null
                             && (
-                                divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity
-                            ):
+                                divining.RemainingTime <= 15 || raidbuffs || actionID is AST.Gravity):
                         return AST.Oracle;
 
                     case >= AST.Levels.CelestialOpposition
@@ -131,9 +129,7 @@ internal class AstrologianMalefic : CustomCombo
                                 (localPlayer <= threshold)
                                 || (
                                     actionID is AST.Gravity
-                                    && TargetOfTargetHPercentage() <= threshold
-                                )
-                            ):
+                                    && TargetOfTargetHPercentage() <= threshold)):
                         return OriginalHook(AST.CelestialOpposition);
 
                     case >= AST.Levels.EarthlyStar
@@ -142,9 +138,7 @@ internal class AstrologianMalefic : CustomCombo
                                 localPlayer <= 0.85
                                 || (
                                     actionID is AST.Gravity
-                                    && TargetOfTargetHPercentage() <= threshold
-                                )
-                            )
+                                    && TargetOfTargetHPercentage() <= threshold))
                             && GetCooldown(AST.EarthlyStar).CooldownRemaining <= 50:
                         return OriginalHook(AST.EarthlyStar);
 
@@ -152,17 +146,14 @@ internal class AstrologianMalefic : CustomCombo
                         when noTankCDs
                             && (
                                 HasCharges(AST.EssentialDignity)
-                                || IsOffCooldown(AST.EssentialDignity)
-                            )
+                                || IsOffCooldown(AST.EssentialDignity))
                             && (
                                 (
                                     GetCooldown(
-                                        OriginalHook(AST.EssentialDignity)
-                                    ).TotalCooldownRemaining <= 15
-                                    && tankPercentage <= threshold - 0.15
-                                )
-                                || tankPercentage <= threshold - 0.2
-                            ):
+                                        OriginalHook(AST.EssentialDignity))
+                                    .TotalCooldownRemaining <= 15
+                                    && tankPercentage <= threshold - 0.15)
+                                || tankPercentage <= threshold - 0.2):
                         return AST.EssentialDignity;
 
                     case >= AST.Levels.Exaltation
@@ -175,17 +166,14 @@ internal class AstrologianMalefic : CustomCombo
                         when noTankCDs
                             && (
                                 HasCharges(AST.CelestialIntersection)
-                                || IsOffCooldown(AST.CelestialIntersection)
-                            )
+                                || IsOffCooldown(AST.CelestialIntersection))
                             && (
                                 (
                                     GetCooldown(
-                                        OriginalHook(AST.CelestialIntersection)
-                                    ).TotalCooldownRemaining <= 10
-                                    && tankPercentage <= threshold
-                                )
-                                || tankPercentage <= threshold - 0.2
-                            ):
+                                        OriginalHook(AST.CelestialIntersection))
+                                    .TotalCooldownRemaining <= 10
+                                    && tankPercentage <= threshold)
+                                || tankPercentage <= threshold - 0.2):
                         return AST.CelestialIntersection;
 
                     case >= AST.Levels.Astrodyne
@@ -193,7 +181,7 @@ internal class AstrologianMalefic : CustomCombo
                         return AST.Divination;
 
                     case >= AST.Levels.MinorArcana
-                        when gauge.DrawnCrownCard == CardType.LORD
+                        when gauge.DrawnCrownCard == CardType.Lord
                             && (HasRaidBuffs(2) || needToUseCards || actionID is AST.Gravity)
                             && InCombat():
                         return OriginalHook(AST.MinorArcanaDT);
@@ -222,9 +210,7 @@ internal class AstrologianMalefic : CustomCombo
 
                 if (
                     debuffs.All(x =>
-                        x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving
-                    )
-                )
+                        x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
                     return OriginalHook(AST.Combust);
             }
         }
@@ -244,8 +230,7 @@ internal class AstroCelestial : CustomCombo
             if (
                 level >= AST.Levels.Exaltation
                 && IsOffCooldown(AST.Exaltation)
-                && GetRemainingCharges(AST.CelestialIntersection) <= 1
-            )
+                && GetRemainingCharges(AST.CelestialIntersection) <= 1)
                 return AST.Exaltation;
 
             if (level >= AST.Levels.Exaltation)

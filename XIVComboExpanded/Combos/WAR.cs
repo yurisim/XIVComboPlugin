@@ -149,12 +149,8 @@ internal class WarriorStormsPathCombo : CustomCombo
                             needToInfuriate
                             // || (actionID is WAR.Overpower && !IsMoving)
                             || raidbuffs
-                            || HasEffect(WAR.Buffs.Berserk)
-                        )
-                    )
-                    || HasEffect(WAR.Buffs.InnerRelease)
-                )
-            )
+                            || HasEffect(WAR.Buffs.Berserk)))
+                    || HasEffect(WAR.Buffs.InnerRelease)))
             {
                 return level >= WAR.Levels.SteelCyclone && actionID is WAR.Overpower
                     ? OriginalHook(WAR.SteelCyclone)
@@ -169,8 +165,7 @@ internal class WarriorStormsPathCombo : CustomCombo
                     {
                         if (
                             level >= WAR.Levels.StormsEye
-                            && (surgingTempest is null || surgingTempest.RemainingTime < 20)
-                        )
+                            && (surgingTempest is null || surgingTempest.RemainingTime < 20))
                         {
                             return WAR.StormsEye;
                         }

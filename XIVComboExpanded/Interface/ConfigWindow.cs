@@ -7,7 +7,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using XIVComboExpandedPlugin.Attributes;
 
 namespace XIVComboExpandedPlugin.Interface;
@@ -40,8 +40,7 @@ internal class ConfigWindow : Window
         this.groupedPresets = Enum.GetValues<CustomComboPreset>()
             .Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled)
             .Select(preset =>
-                (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
-            )
+                (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
             .Where(tpl => tpl.Info != null && Service.Configuration.GetParent(tpl.Preset) == null)
             .OrderBy(tpl => tpl.Info.JobName)
             .ThenBy(tpl => tpl.Info.Order)
@@ -62,11 +61,9 @@ internal class ConfigWindow : Window
             kvp => kvp.Key,
             kvp =>
                 kvp.Value.Select(preset =>
-                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>())
-                    )
+                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
                     .OrderBy(tpl => tpl.Info.Order)
-                    .ToArray()
-        );
+                    .ToArray());
 
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.Size = new Vector2(740, 490);
@@ -78,8 +75,7 @@ internal class ConfigWindow : Window
         ImGui.Text("DAWNTRAIL EDITION");
         ImGui.Text("This version of XIVCombo has been updated for Dawntrail (7.0).");
         ImGui.Text(
-            "Because of the massive amount of changes, some combos have been removed, reworked, added."
-        );
+            "Because of the massive amount of changes, some combos have been removed, reworked, added.");
         ImGui.Text("New combos will be added at a later date.");
         ImGui.Text("If you encounter any problems, please open an issue on github.");
         ImGui.Separator();
@@ -127,8 +123,7 @@ internal class ConfigWindow : Window
                 {
                     FileName = "https://ko-fi.com/khayle",
                     UseShellExecute = true,
-                }
-            );
+                });
 
         ImGui.EndChild();
     }

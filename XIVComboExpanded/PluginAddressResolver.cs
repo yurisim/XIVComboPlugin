@@ -1,5 +1,6 @@
 using System;
 using Dalamud.Game;
+using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace XIVComboExpandedPlugin;
@@ -29,12 +30,11 @@ internal class PluginAddressResolver : BaseAddressResolver
     {
         this.ComboTimer = new IntPtr(&ActionManager.Instance()->Combo.Timer);
 
-        this.IsActionIdReplaceable = scanner.ScanText("40 53 48 83 EC 20 8B D9 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74 1B");
+        this.IsActionIdReplaceable = scanner.ScanText("40 53 48 83 EC 20 8B D9 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74 1F");
 
         Service.PluginLog.Verbose("===== X I V C O M B O =====");
         Service.PluginLog.Verbose(
-            $"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}"
-        );
+            $"{nameof(this.IsActionIdReplaceable)} 0x{this.IsActionIdReplaceable:X}");
         Service.PluginLog.Verbose($"{nameof(this.ComboTimer)}            0x{this.ComboTimer:X}");
         Service.PluginLog.Verbose($"{nameof(this.LastComboMove)}         0x{this.LastComboMove:X}");
     }

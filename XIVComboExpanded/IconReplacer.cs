@@ -35,12 +35,10 @@ internal sealed class IconReplacer : IDisposable
 
         this.getIconHook = gameInteropProvider.HookFromAddress<GetIconDelegate>(
             ActionManager.Addresses.GetAdjustedActionId.Value,
-            this.GetIconDetour
-        );
+            this.GetIconDetour);
         this.isIconReplaceableHook = gameInteropProvider.HookFromAddress<IsIconReplaceableDelegate>(
             Service.Address.IsActionIdReplaceable,
-            this.IsIconReplaceableDetour
-        );
+            this.IsIconReplaceableDetour);
 
         this.getIconHook.Enable();
         this.isIconReplaceableHook.Enable();
@@ -74,8 +72,7 @@ internal sealed class IconReplacer : IDisposable
                 ActionType.Action,
                 actionID,
                 targetID,
-                false
-            ) == 0;
+                false) == 0;
     }
 
     /// <summary>
@@ -94,12 +91,12 @@ internal sealed class IconReplacer : IDisposable
 
         try
         {
-            if (Service.ClientState.LocalPlayer == null)
+            if (Service.ObjectTable.LocalPlayer == null)
                 return this.OriginalHook(actionID);
 
             var lastComboMove = *(uint*)Service.Address.LastComboMove;
             var comboTime = *(float*)Service.Address.ComboTimer;
-            var level = Service.ClientState.LocalPlayer?.Level ?? 0;
+            var level = Service.ObjectTable.LocalPlayer?.Level ?? 0;
 
             foreach (var combo in this.customCombos)
                 if (combo.TryInvoke(actionID, level, lastComboMove, comboTime, out var newActionID))

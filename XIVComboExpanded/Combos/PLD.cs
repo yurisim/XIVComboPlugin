@@ -118,18 +118,15 @@ internal class PaladinST : CustomCombo
                             && (
                                 (
                                     level < PLD.Levels.RoyalAuthority
-                                    && lastComboMove == PLD.RiotBlade
-                                )
+                                    && lastComboMove == PLD.RiotBlade)
                                 || (
                                     level >= PLD.Levels.RoyalAuthority
-                                    && lastComboMove == PLD.RoyalAuthority
-                                )
+                                    && lastComboMove == PLD.RoyalAuthority)
                                 || level < PLD.Levels.Prominence
                                     && lastComboMove == PLD.TotalEclipse
                                 || level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence
                                 || (canUseAtonement && !HasEffect(PLD.Buffs.SepulchreReady))
-                                || hasRaidBuffs
-                            ):
+                                || hasRaidBuffs):
                         return PLD.FightOrFlight;
                     case >= PLD.Levels.Requiescat
                         when IsOffCooldown(OriginalHook(PLD.Requiescat))
@@ -140,15 +137,13 @@ internal class PaladinST : CustomCombo
                             && HasTarget()
                             && distance <= 5
                             && (
-                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
-                            ):
+                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs):
                         return PLD.CircleOfScorn;
                     case >= PLD.Levels.SpiritsWithin
                         when IsOffCooldown(OriginalHook(PLD.SpiritsWithin))
                             && distance <= 5
                             && (
-                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs
-                            ):
+                                flightOrFight is not null || fightOrFlightCD >= 7.5 || hasRaidBuffs):
                         return OriginalHook(PLD.SpiritsWithin);
                     case >= PLD.Levels.Sheltron
                         when IsOffCooldown(PLD.Sheltron)
@@ -163,8 +158,7 @@ internal class PaladinST : CustomCombo
                 && goringBladeReady is not null
                 && distance <= 5
                 && actionID is PLD.FastBlade
-                && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5 || hasRaidBuffs)
-            )
+                && (GetCooldown(PLD.FightOrFlight).CooldownElapsed >= 5 || hasRaidBuffs))
                 return PLD.GoringBlade;
 
             var divineMight = FindEffect(PLD.Buffs.DivineMight);
@@ -180,11 +174,7 @@ internal class PaladinST : CustomCombo
                             divineMight.RemainingTime <= 6
                             || distance > 5
                             || lastComboMove == PLD.RiotBlade
-                            || lastComboMove == PLD.Prominence
-                        )
-                    )
-                )
-            )
+                            || lastComboMove == PLD.Prominence))))
             {
                 if (level >= PLD.Levels.Confiteor && CanUseAction(OriginalHook(PLD.Confiteor)))
                 {

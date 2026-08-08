@@ -144,8 +144,7 @@ internal class NinjaAeolianEdge : CustomCombo
             GCDClipCheck(actionID)
             && OriginalHook(NIN.Ninjutsu) == NIN.Ninjutsu
             && !HasEffect(NIN.Buffs.Kassatsu)
-            && !HasEffect(NIN.Buffs.TenChiJin)
-        )
+            && !HasEffect(NIN.Buffs.TenChiJin))
         {
             switch (level)
             {
@@ -204,9 +203,7 @@ internal class NinjaAeolianEdge : CustomCombo
                             || HasEffect(NIN.Buffs.Meisui)
                             || (
                                 level >= NIN.Levels.EnhancedMug
-                                && GetCooldown(NIN.Mug).CooldownRemaining <= 5
-                            )
-                        ):
+                                && GetCooldown(NIN.Mug).CooldownRemaining <= 5)):
                     return level >= NIN.Levels.Bhavacakra
                         ? OriginalHook(NIN.Bhavacakra)
                         : OriginalHook(NIN.HellfrogMedium);
@@ -233,8 +230,7 @@ internal class NinjaAeolianEdge : CustomCombo
             && !HasEffect(NIN.Buffs.Mudra)
             && !HasEffect(NIN.Buffs.TenChiJin)
             && !HasEffect(NIN.Buffs.RaijuReady)
-            && (targetHasTrick || phantom.RemainingTime <= 10 || raidBuffs)
-        )
+            && (targetHasTrick || phantom.RemainingTime <= 10 || raidBuffs))
         {
             return OriginalHook(NIN.Bunshin);
         }
@@ -243,8 +239,7 @@ internal class NinjaAeolianEdge : CustomCombo
             targetHasTrick
             || (
                 (TargetHasEffect(NIN.Debuffs.Mug) || TargetHasEffect(NIN.Debuffs.Dokumori))
-                && IsOnCooldown(OriginalHook(NIN.TrickAttack))
-            );
+                && IsOnCooldown(OriginalHook(NIN.TrickAttack)));
 
         var continueMudra = HasCharges(NIN.ChiNormal);
 
@@ -256,10 +251,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 || GetCooldown(NIN.ChiNormal).TotalCooldownRemaining <= 3
                 || (
                     continueMudra
-                    && (startMudra || (upcomingTrickAttack && !HasEffect(NIN.Buffs.ShadowWalker)))
-                )
-            )
-        )
+                    && (startMudra || (upcomingTrickAttack && !HasEffect(NIN.Buffs.ShadowWalker))))))
         {
             if (HasEffect(NIN.Buffs.Kassatsu) && level >= NIN.Levels.EnhancedKassatsu)
             {
@@ -280,8 +272,7 @@ internal class NinjaAeolianEdge : CustomCombo
                 upcomingTrickAttack
                 && !HasEffect(NIN.Buffs.ShadowWalker)
                 && level >= NIN.Levels.Suiton
-                && OriginalHook(NIN.Ninjutsu) == NIN.Raiton
-            )
+                && OriginalHook(NIN.Ninjutsu) == NIN.Raiton)
                 return OriginalHook(NIN.JinNormal);
 
             return OriginalHook(NIN.Ninjutsu);
@@ -416,8 +407,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 GCDClipCheck(actionID)
                 && InCombat()
                 && !HasEffect(NIN.Buffs.TenChiJin)
-                && !HasEffect(NIN.Buffs.Mudra)
-            )
+                && !HasEffect(NIN.Buffs.Mudra))
             {
                 switch (level)
                 {
@@ -428,8 +418,7 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                         when IsOffCooldown(NIN.Kassatsu)
                             && (
                                 level < NIN.Levels.KunaisBane
-                                || TargetHasEffect(NIN.Debuffs.KunaisBane)
-                            ):
+                                || TargetHasEffect(NIN.Debuffs.KunaisBane)):
                         return NIN.Kassatsu;
 
                     case >= NIN.Levels.Bunshin when IsOffCooldown(NIN.Bunshin) && ninki >= 50:
@@ -477,8 +466,7 @@ internal class NinjaHide : CustomCombo
 
             if (
                 level >= NIN.Levels.Shukuchi
-                && (IsOffCooldown(NIN.Shukuchi) || HasCharges(NIN.Shukuchi))
-            )
+                && (IsOffCooldown(NIN.Shukuchi) || HasCharges(NIN.Shukuchi)))
                 return NIN.Shukuchi;
         }
 

@@ -21,8 +21,7 @@ internal class CustomComboInfoAttribute : Attribute
         string fancyName,
         string description,
         byte jobID,
-        [CallerLineNumber] int order = 0
-    )
+        [CallerLineNumber] int order = 0)
     {
         this.FancyName = fancyName;
         this.Description = description;

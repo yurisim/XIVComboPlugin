@@ -52,10 +52,8 @@ internal class SwiftRaiseFeature : CustomCombo
             || (
                 actionID == RDM.Verraise
                 && level >= RDM.Levels.Verraise
-                && !HasEffect(RDM.Buffs.Dualcast)
-            )
-            || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper)
-        )
+                && !HasEffect(RDM.Buffs.Dualcast))
+            || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
             if (level >= ADV.Levels.Swiftcast && IsAvailable(ADV.Swiftcast))
                 return ADV.Swiftcast;
 
@@ -78,10 +76,8 @@ internal class VariantRaiseFeature : CustomCombo
             || (
                 actionID == RDM.Verraise
                 && level >= RDM.Levels.Verraise
-                && !HasEffect(RDM.Buffs.Dualcast)
-            )
-            || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper)
-        )
+                && !HasEffect(RDM.Buffs.Dualcast))
+            || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
             // Per Splatoon:
             // 1069: solo
             // 1075: group

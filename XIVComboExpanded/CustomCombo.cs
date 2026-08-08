@@ -78,10 +78,9 @@ internal abstract partial class CustomCombo
     {
         newActionID = 0;
 
-        if (!IsEnabled(this.Preset) 
+        if (!IsEnabled(this.Preset)) 
         // || !Service.Configuration.IsEnabled
         
-        )
             return false;
 
         var classJobID = LocalPlayer!.ClassJob.RowId;
@@ -117,8 +116,7 @@ internal abstract partial class CustomCombo
         static (uint ActionID, CooldownData Data) Compare(
             uint original,
             (uint ActionID, CooldownData Data) a1,
-            (uint ActionID, CooldownData Data) a2
-        )
+            (uint ActionID, CooldownData Data) a2)
         {
             // This intent of this priority algorithm is to generate a single unified number that results in the
             // following behaviors:
@@ -168,8 +166,7 @@ internal abstract partial class CustomCombo
         uint actionID,
         uint lastComboActionID,
         float comboTime,
-        byte level
-    );
+        byte level);
 }
 
 /// <summary>
@@ -180,7 +177,7 @@ internal abstract partial class CustomCombo
     /// <summary>
     ///     Gets the player or null.
     /// </summary>
-    protected static IPlayerCharacter? LocalPlayer => Service.ClientState.LocalPlayer;
+    protected static IPlayerCharacter? LocalPlayer => Service.ObjectTable.LocalPlayer;
 
     /// <summary>
     ///     Gets the current target or null.
@@ -194,7 +191,7 @@ internal abstract partial class CustomCombo
     /// <summary>
     ///     Gets the current territory type.
     /// </summary>
-    protected static ushort CurrentTerritory => Service.ClientState.TerritoryType;
+    protected static uint CurrentTerritory => Service.ClientState.TerritoryType;
 
     /// <summary>
     ///     Calls the original hook.
@@ -447,7 +444,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffect(ushort effectID)
+    protected static IStatus? FindEffect(ushort effectID)
     {
         return FindEffect(effectID, LocalPlayer, LocalPlayer?.EntityId);
     }
@@ -474,18 +471,17 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetEffect(ushort effectID)
+    protected static IStatus? FindTargetEffect(ushort effectID)
     {
         return FindEffect(effectID, CurrentTarget, LocalPlayer?.EntityId);
     }
 
-    protected static Status? FindTargetOfTargetEffect(ushort effectID)
+    protected static IStatus? FindTargetOfTargetEffect(ushort effectID)
     {
         return FindEffect(
             effectID,
             Service.TargetManager?.Target?.TargetObject,
-            LocalPlayer?.EntityId
-        );
+            LocalPlayer?.EntityId);
     }
 
     /// <summary>
@@ -494,7 +490,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetOfTargetEffectAny(ushort effectID)
+    protected static IStatus? FindTargetOfTargetEffectAny(ushort effectID)
     {
         return FindEffect(effectID, Service.TargetManager?.Target?.TargetObject, null);
     }
@@ -516,7 +512,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffectAny(ushort effectID)
+    protected static IStatus? FindEffectAny(ushort effectID)
     {
         return FindEffect(effectID, LocalPlayer, null);
     }
@@ -538,7 +534,7 @@ internal abstract partial class CustomCombo
     /// </summary>
     /// <param name="effectID">Status effect ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindTargetEffectAny(ushort effectID)
+    protected static IStatus? FindTargetEffectAny(ushort effectID)
     {
         return FindEffect(effectID, CurrentTarget, null);
     }
@@ -550,7 +546,7 @@ internal abstract partial class CustomCombo
     /// <param name="obj">Object to look for effects on.</param>
     /// <param name="sourceID">Source object ID.</param>
     /// <returns>Status object or null.</returns>
-    protected static Status? FindEffect(ushort effectID, IGameObject? obj, uint? sourceID)
+    protected static IStatus? FindEffect(ushort effectID, IGameObject? obj, uint? sourceID)
     {
         return Service.ComboCache.GetStatus(effectID, obj, sourceID);
     }
@@ -669,8 +665,7 @@ internal abstract partial class CustomCombo
 
         if (
             CurrentTarget is not IBattleChara chara
-            || CurrentTarget.ObjectKind != ObjectKind.BattleNpc
-        )
+            || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
             return 0;
 
         var position = new Vector2(chara.Position.X, chara.Position.Z);

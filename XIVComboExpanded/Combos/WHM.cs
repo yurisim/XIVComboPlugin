@@ -134,8 +134,7 @@ internal class WhiteMageMedica : CustomCombo
             if (
                 level >= WHM.Levels.AfflatusMisery
                 && gauge.BloodLily == 3
-                && LocalPlayerPercentage() > 0.90
-            )
+                && LocalPlayerPercentage() > 0.90)
                 return WHM.AfflatusMisery;
 
             if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
@@ -157,8 +156,7 @@ internal class WhiteMageBenison : CustomCombo
             if (
                 level >= WHM.Levels.Aquaveil
                 && IsOffCooldown(WHM.Aquaveil)
-                && GetRemainingCharges(WHM.DivineBenison) <= 1
-            )
+                && GetRemainingCharges(WHM.DivineBenison) <= 1)
                 return WHM.Aquaveil;
 
             return CalcBestAction(actionID, WHM.Aquaveil, WHM.DivineBenison);
@@ -177,8 +175,7 @@ internal class WhiteMageThinAirFeature : CustomCombo
         if (
             level >= WHM.Levels.ThinAir
             && !HasEffect(WHM.Buffs.ThinAir)
-            && GetRemainingCharges(WHM.ThinAir) >= 1
-        )
+            && GetRemainingCharges(WHM.ThinAir) >= 1)
         {
             if (actionID == WHM.Raise)
                 return WHM.ThinAir;
@@ -230,8 +227,7 @@ internal class WhiteMageStoneFeature : CustomCombo
 
                 if (
                     FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null
-                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null
-                )
+                    && FindTargetOfTargetEffectAny(DRK.Buffs.WalkingDead) is null)
                 {
                     switch (level)
                     {
@@ -240,26 +236,21 @@ internal class WhiteMageStoneFeature : CustomCombo
                                 && (
                                     (
                                         GetCooldown(
-                                            OriginalHook(WHM.DivineBenison)
-                                        ).TotalCooldownRemaining <= 10
-                                        && tarOfTarPercentage <= threshold
-                                    )
-                                    || tarOfTarPercentage <= threshold - 0.2
-                                ):
+                                            OriginalHook(WHM.DivineBenison))
+                                        .TotalCooldownRemaining <= 10
+                                        && tarOfTarPercentage <= threshold)
+                                    || tarOfTarPercentage <= threshold - 0.2):
                             return WHM.DivineBenison;
                         case >= WHM.Levels.Tetragrammaton
                             when (
-                                HasCharges(WHM.Tetragrammaton) || IsOffCooldown(WHM.Tetragrammaton)
-                            )
+                                HasCharges(WHM.Tetragrammaton) || IsOffCooldown(WHM.Tetragrammaton))
                                 && (
                                     (
                                         GetCooldown(
-                                            OriginalHook(AST.EssentialDignity)
-                                        ).TotalCooldownRemaining <= 15
-                                        && tarOfTarPercentage <= threshold - 0.15
-                                    )
-                                    || tarOfTarPercentage <= threshold - 0.2
-                                ):
+                                            OriginalHook(AST.EssentialDignity))
+                                        .TotalCooldownRemaining <= 15
+                                        && tarOfTarPercentage <= threshold - 0.15)
+                                    || tarOfTarPercentage <= threshold - 0.2):
                             return WHM.Tetragrammaton;
                     }
                 }
@@ -281,10 +272,7 @@ internal class WhiteMageStoneFeature : CustomCombo
                 && (
                     (
                         debuff is not null
-                        && (debuffTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving))
-                    ) || (debuff is null && ShouldUseDots())
-                )
-            )
+                        && (debuffTime <= 3 || (debuff.RemainingTime <= 6 && this.IsMoving))) || (debuff is null && ShouldUseDots())))
                 return OriginalHook(WHM.Aero);
 
             if (level >= WHM.Levels.AfflatusMisery && gauge.BloodLily == 3)

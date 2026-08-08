@@ -138,9 +138,7 @@ internal class ScholarEnergyDrain : CustomCombo
                                 (localPlayer <= threshold)
                                 || (
                                     actionID is SCH.ArtOfWar
-                                    && TargetOfTargetHPercentage() <= threshold
-                                )
-                            )
+                                    && TargetOfTargetHPercentage() <= threshold))
                             && !HasEffect(SCH.Buffs.SacredSoil)
                             && !HasEffect(SCH.Buffs.WhisperingDawn):
                         return SCH.FeyBlessing;
@@ -152,9 +150,7 @@ internal class ScholarEnergyDrain : CustomCombo
                                 (localPlayer <= threshold)
                                 || (
                                     actionID is SCH.ArtOfWar
-                                    && TargetOfTargetHPercentage() <= threshold
-                                )
-                            )
+                                    && TargetOfTargetHPercentage() <= threshold))
                             && !HasEffect(SCH.Buffs.SacredSoil):
                         return SCH.WhisperingDawn;
 
@@ -183,15 +179,12 @@ internal class ScholarEnergyDrain : CustomCombo
                                 GetRemainingCharges(SCH.Consolation) == 2
                                 || (
                                     localPlayer <= threshold + 0.1
-                                    && !HasEffect(SCH.Buffs.SeraphicVeil)
-                                )
+                                    && !HasEffect(SCH.Buffs.SeraphicVeil))
                                 || (
                                     actionID is SCH.ArtOfWar
                                     && TargetOfTargetHPercentage() <= threshold
-                                    && !TargetHasEffect(SCH.Buffs.SeraphicVeil)
-                                )
-                                || gauge.SeraphTimer <= 5000
-                            ):
+                                    && !TargetHasEffect(SCH.Buffs.SeraphicVeil))
+                                || gauge.SeraphTimer <= 5000):
                         return SCH.Consolation;
 
                     case >= SCH.Levels.Excogitation
@@ -205,8 +198,7 @@ internal class ScholarEnergyDrain : CustomCombo
                             && (
                                 (aetherflowCD <= 7.5 && aetherflowCD / gauge.Aetherflow <= 2.5)
                                 || IsOffCooldown(SCH.Aetherflow)
-                                || doDissipation
-                            ):
+                                || doDissipation):
                         return SCH.EnergyDrain;
 
                     case >= SCH.Levels.BanefulImpaction
@@ -238,14 +230,12 @@ internal class ScholarEnergyDrain : CustomCombo
                             && TargetOfTargetHPercentage() <= 0.80
                             && OriginalHook(SCH.Aetherpact) == SCH.Aetherpact
                             && !HasEffect(SCH.Buffs.Dissipation)
-                            && gauge.SeraphTimer == 0
-                        )
+                            && gauge.SeraphTimer == 0)
                             return OriginalHook(SCH.Aetherpact);
 
                         if (
                             TargetOfTargetHPercentage() >= 0.95
-                            && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact
-                        )
+                            && OriginalHook(SCH.Aetherpact) != SCH.Aetherpact)
                             return OriginalHook(SCH.Aetherpact);
                         break;
                 }
@@ -262,9 +252,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 if (
                     dots.All(x =>
-                        x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving
-                    )
-                )
+                        x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
                     return OriginalHook(SCH.Bio);
             }
 
@@ -291,23 +279,20 @@ internal class ScholarIndomitability : CustomCombo
             if (
                 level >= SCH.Levels.Consolation
                 && gauge.SeraphTimer > 0
-                && GetRemainingCharges(SCH.Consolation) > 0
-            )
+                && GetRemainingCharges(SCH.Consolation) > 0)
                 return SCH.Consolation;
 
             if (
                 level >= SCH.Levels.FeyBlessing
                 && !HasEffect(SCH.Buffs.Dissipation)
                 && IsOffCooldown(SCH.FeyBlessing)
-                && gauge.SeraphTimer <= 1
-            )
+                && gauge.SeraphTimer <= 1)
                 return SCH.FeyBlessing;
 
             if (
                 level >= SCH.Levels.Indomitability
                 && IsOffCooldown(SCH.Indomitability)
-                && gauge.Aetherflow >= 1
-            )
+                && gauge.Aetherflow >= 1)
                 return SCH.Indomitability;
 
             return CalcBestAction(actionID, SCH.FeyBlessing);
@@ -333,8 +318,7 @@ internal class ScholarExcog : CustomCombo
             if (
                 level >= SCH.Levels.Excogitation
                 && gauge.Aetherflow >= 1
-                && IsOffCooldown(SCH.Excogitation)
-            )
+                && IsOffCooldown(SCH.Excogitation))
                 return SCH.Excogitation;
 
             return CalcBestAction(actionID, SCH.Protraction);
@@ -358,8 +342,7 @@ internal class ScholarAdloCrit : CustomCombo
             if (
                 level >= SCH.Levels.DeploymentTactics
                 && (TargetHasEffect(SCH.Buffs.Catalyze) || TargetHasEffect(SCH.Buffs.Galvanize2))
-                && IsOffCooldown(SCH.DeploymentTactics)
-            )
+                && IsOffCooldown(SCH.DeploymentTactics))
                 return SCH.DeploymentTactics;
 
             var cd = GetCooldown(SCH.DeploymentTactics);
