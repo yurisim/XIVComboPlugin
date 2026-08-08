@@ -196,14 +196,14 @@ internal class MachinistCleanShot : CustomCombo
                             && (
                                 overheated
                                 || GetCooldown(OriginalHook(MCH.Ricochet)).TotalCooldownRemaining
-                                    <= 40
+                                    <= 44
                                 || raidbuffs):
                     case >= MCH.Levels.GaussRound
                         when HasCharges(OriginalHook(MCH.GaussRound))
                             && (
                                 overheated
                                 || GetCooldown(OriginalHook(MCH.GaussRound)).TotalCooldownRemaining
-                                    <= 40
+                                    <= 44
                                 || raidbuffs):
                         return new[]
                         {
