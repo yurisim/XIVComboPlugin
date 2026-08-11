@@ -109,6 +109,7 @@ internal class MonkBootshine : CustomCombo
             var earthsRumination = FindEffect(MNK.Buffs.EarthsRumination);
 
             if (GCDClipCheck(actionID) && InCombat() && InMeleeRange() && HasTarget())
+            {
                 switch (level)
                 {
                     case >= MNK.Levels.Brotherhood
@@ -172,6 +173,7 @@ internal class MonkBootshine : CustomCombo
                             && reprisal.RemainingTime >= 7:
                         return ADV.Feint;
                 }
+            }
 
             if (
                 level >= MNK.Levels.FiresReply
@@ -293,9 +295,11 @@ internal class MonkAoECombo : CustomCombo
             if (GCDClipCheck(actionID) && InCombat())
             {
                 if (gauge.Chakra >= 5)
+                {
                     return level >= MNK.Levels.HowlingFist
                         ? OriginalHook(MNK.HowlingFist)
                         : OriginalHook(MNK.ForbiddenChakra);
+                }
 
                 switch (level)
                 {

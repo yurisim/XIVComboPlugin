@@ -99,8 +99,10 @@ internal sealed class IconReplacer : IDisposable
             var level = Service.ObjectTable.LocalPlayer?.Level ?? 0;
 
             foreach (var combo in this.customCombos)
+            {
                 if (combo.TryInvoke(actionID, level, lastComboMove, comboTime, out var newActionID))
                     return newActionID;
+            }
 
             return this.OriginalHook(actionID);
         }

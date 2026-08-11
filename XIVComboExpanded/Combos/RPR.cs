@@ -278,9 +278,11 @@ internal class ReaperScythe : CustomCombo
             if (GCDClipCheck(actionID))
             {
                 if (level >= RPR.Levels.BloodStalk && (gauge.Soul >= 50 || gauge.VoidShroud >= 2))
+                {
                     return level >= RPR.Levels.GrimSwathe
                         ? OriginalHook(RPR.GrimSwathe)
                         : OriginalHook(RPR.BloodStalk);
+                }
 
                 switch (level)
                 {
@@ -313,10 +315,12 @@ internal class ReaperScythe : CustomCombo
             }
 
             if (level >= RPR.Levels.Soulsow)
+            {
                 if (
                     (!InCombat() && !HasEffect(RPR.Buffs.Soulsow))
                     || (InCombat() && HasEffect(RPR.Buffs.Soulsow) && deathsDesign is not null))
                     return OriginalHook(RPR.Soulsow);
+            }
 
             if (level >= RPR.Levels.Communio && gauge.LemureShroud == 1)
                 return RPR.Communio;
@@ -350,8 +354,10 @@ internal class ReaperScythe : CustomCombo
                 return RPR.SoulScythe;
 
             if (comboTime > 0)
+            {
                 if (lastComboMove == RPR.SpinningScythe && level >= RPR.Levels.NightmareScythe)
                     return RPR.NightmareScythe;
+            }
 
             return RPR.SpinningScythe;
         }
@@ -385,6 +391,7 @@ internal class ReaperHellsIngressEgress : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == RPR.HellsEgress || actionID == RPR.HellsIngress)
+        {
             if (level >= RPR.Levels.Regress)
             {
                 if (IsEnabled(CustomComboPreset.ReaperRegressOption))
@@ -400,6 +407,7 @@ internal class ReaperHellsIngressEgress : CustomCombo
                         return RPR.Regress;
                 }
             }
+        }
 
         return actionID;
     }

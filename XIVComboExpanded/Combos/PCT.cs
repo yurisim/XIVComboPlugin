@@ -363,6 +363,7 @@ internal static class PCT
             if (actionID == ExtraFireRed)
             {
                 if (GCDClipCheck(actionID))
+                {
                     switch (level)
                     {
                         case >= Levels.MogOftheAges
@@ -387,6 +388,7 @@ internal static class PCT
                                 && LocalPlayer?.CurrentMp <= 8000:
                             return ADV.LucidDreaming;
                     }
+                }
 
                 if (HasEffect(Buffs.StarPrismReady))
                     return StarPrism;

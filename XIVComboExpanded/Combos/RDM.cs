@@ -162,9 +162,11 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 return OriginalHook(RDM.Scorch);
 
             if (gauge.ManaStacks == 3)
+            {
                 return gauge.BlackMana < gauge.WhiteMana || level < RDM.Levels.Verholy
                     ? OriginalHook(RDM.Verflare)
                     : OriginalHook(RDM.Verholy);
+            }
 
             var hasSpeedy =
                 HasEffect(RDM.Buffs.Dualcast)
@@ -243,18 +245,22 @@ internal class RedMageVeraeroVerthunder : CustomCombo
             if (hasSpeedy)
             {
                 if (actionID == RDM.Jolt)
+                {
                     return gauge.WhiteMana < gauge.BlackMana + 7
                         ? OriginalHook(RDM.Veraero)
                         : OriginalHook(RDM.Verthunder);
+                }
 
                 if (actionID == RDM.Scatter)
                     return RDM.Scatter;
             }
 
             if (actionID == RDM.Scatter && level >= RDM.Levels.Verthunder2)
+            {
                 return gauge.WhiteMana < gauge.BlackMana + 8 || level < RDM.Levels.Veraero2
                     ? OriginalHook(RDM.Veraero2)
                     : OriginalHook(RDM.Verthunder2);
+            }
 
             // Procs
             if (HasEffect(RDM.Buffs.VerfireReady) && actionID is RDM.Jolt)

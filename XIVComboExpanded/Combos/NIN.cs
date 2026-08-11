@@ -286,12 +286,14 @@ internal class NinjaAeolianEdge : CustomCombo
             if (comboTime > 0)
             {
                 if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
+                {
                     return
                         level >= NIN.Levels.ArmorCrush
                         && gauge.Kazematoi <= 3
                         && !(targetHasTrick || raidBuffs)
                         ? NIN.ArmorCrush
                         : actionID;
+                }
 
                 if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                     return NIN.GustSlash;
@@ -445,8 +447,10 @@ internal class NinjaHakkeMujinsatsu : CustomCombo
                 return OriginalHook(NIN.Bunshin);
 
             if (comboTime > 0)
+            {
                 if (lastComboMove == NIN.DeathBlossom && level >= NIN.Levels.HakkeMujinsatsu)
                     return NIN.HakkeMujinsatsu;
+            }
         }
 
         return actionID;

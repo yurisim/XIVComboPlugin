@@ -54,8 +54,10 @@ internal class SwiftRaiseFeature : CustomCombo
                 && level >= RDM.Levels.Verraise
                 && !HasEffect(RDM.Buffs.Dualcast))
             || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
+        {
             if (level >= ADV.Levels.Swiftcast && IsAvailable(ADV.Swiftcast))
                 return ADV.Swiftcast;
+        }
 
         return actionID;
     }
@@ -78,12 +80,14 @@ internal class VariantRaiseFeature : CustomCombo
                 && level >= RDM.Levels.Verraise
                 && !HasEffect(RDM.Buffs.Dualcast))
             || (actionID == BLU.AngelWhisper && level >= BLU.Levels.AngelWhisper))
+        {
             // Per Splatoon:
             // 1069: solo
             // 1075: group
             // 1076: savage
             if (level >= ADV.Levels.VariantRaise2 && CurrentTerritory == 1075u)
                 return ADV.VariantRaise2;
+        }
 
         return actionID;
     }

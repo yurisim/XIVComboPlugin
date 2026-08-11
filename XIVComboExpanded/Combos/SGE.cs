@@ -245,8 +245,10 @@ internal class SageDosis : CustomCombo
                     return OriginalHook(SGE.Phlegma);
 
                 if (this.IsMoving)
+                {
                     if (gauge.Addersting >= 1 && level >= SGE.Levels.Toxikon)
                         return OriginalHook(SGE.Toxikon);
+                }
 
                 return actionID;
             }

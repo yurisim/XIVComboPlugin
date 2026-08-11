@@ -169,6 +169,7 @@ internal class DragoonSingleTarget : CustomCombo
                 }
 
                 if (disembowelDuration is not null)
+                {
                     switch (level)
                     {
                         case >= DRG.Levels.LifeSurge
@@ -214,6 +215,7 @@ internal class DragoonSingleTarget : CustomCombo
                         case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
                             return DRG.RiseOfTheDragon;
                     }
+                }
             }
 
             if (comboTime > 0)
@@ -342,6 +344,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                 }
 
                 if (disembowelDuration is not null)
+                {
                     switch (level)
                     {
                         case >= DRG.Levels.LifeSurge
@@ -382,6 +385,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                         case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):
                             return DRG.RiseOfTheDragon;
                     }
+                }
             }
 
             if (comboTime > 0)
@@ -410,8 +414,10 @@ internal class DragoonPositionals : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == DRG.WheelingThrust)
+        {
             if (lastComboMove == DRG.Disembowel && level >= DRG.Levels.ChaosThrust)
                 return OriginalHook(DRG.ChaosThrust);
+        }
 
         return actionID;
     }

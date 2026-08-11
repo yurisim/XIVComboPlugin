@@ -259,9 +259,11 @@ internal class SamuraiYukikaze : CustomCombo
             }
 
             if (!gauge.HasSetsu && level >= SAM.Levels.Higanbana && actionID is SAM.Hakaze)
+            {
                 return lastComboMove == OriginalHook(SAM.Hakaze) && level >= SAM.Levels.Yukikaze
                     ? SAM.Yukikaze
                     : OriginalHook(SAM.Hakaze);
+            }
 
             if (
                 !gauge.HasKa

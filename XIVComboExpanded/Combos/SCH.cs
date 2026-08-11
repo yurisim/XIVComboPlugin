@@ -383,8 +383,10 @@ internal class ScholarSeraphism : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SCH.Seraphism)
+        {
             if (HasEffect(SCH.Buffs.Seraphism))
                 return OriginalHook(SCH.EmergencyTactics);
+        }
 
         return actionID;
     }
@@ -398,8 +400,10 @@ internal class ScholarAdloquium : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == SCH.Adloquium)
+        {
             if (level < SCH.Levels.Adloquium)
                 return SCH.Physick;
+        }
 
         return actionID;
     }

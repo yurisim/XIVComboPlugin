@@ -182,19 +182,25 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
                     argumentsParts.Length > 1 ? argumentsParts[1].ToLowerInvariant() : "all";
 
                 if (filter == "set")
-                    foreach (
+                    {
+                        foreach (
                         var preset in Enum.GetValues<CustomComboPreset>()
                             .Select(preset => Service.Configuration.IsEnabled(preset)))
                         Service.ChatGui.Print(preset.ToString());
-                else if (filter == "unset")
-                    foreach (
+                    }
+                    else if (filter == "unset")
+                    {
+                        foreach (
                         var preset in Enum.GetValues<CustomComboPreset>()
                             .Select(preset => !Service.Configuration.IsEnabled(preset)))
                         Service.ChatGui.Print(preset.ToString());
-                else if (filter == "all")
-                    foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                    }
+                    else if (filter == "all")
+                    {
+                        foreach (var preset in Enum.GetValues<CustomComboPreset>())
                         Service.ChatGui.Print(preset.ToString());
-                else
+                    }
+                    else
                     Service.ChatGui.PrintError("Available list filters: set, unset, all");
 
                 break;

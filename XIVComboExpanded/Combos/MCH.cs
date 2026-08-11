@@ -1,4 +1,5 @@
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -264,17 +265,16 @@ internal class MachinistCleanShot : CustomCombo
 
             if (comboTime > 0)
             {
-                //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+                // DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
                 if (lastComboMove is MCH.SplitShot && level >= MCH.Levels.SlugShot)
                 {
                     return OriginalHook(MCH.SlugShot);
                 }
 
-                //  DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
+                // DO NOT USE ORIGINALHOOKS HERE IN THE LASTCOMBO MOVE
                 if (lastComboMove is MCH.SlugShot && level >= MCH.Levels.CleanShot)
                 {
-                    if (
-                        level < MCH.Levels.Drill
+                    if (level < MCH.Levels.Drill
                         && GCDClipCheck(actionID)
                         && IsOffCooldown(MCH.Reassemble))
                     {
@@ -307,6 +307,7 @@ internal class MachinistSpreadShot : CustomCombo
             var raidbuffs = HasRaidBuffs(2);
 
             if (InCombat() && HasTarget())
+            {
                 if (GCDClipCheck(actionID))
                 {
                     var gaussRoundCharges = GetRemainingCharges(OriginalHook(MCH.GaussRound));
@@ -377,6 +378,7 @@ internal class MachinistSpreadShot : CustomCombo
                             }.MinBy(action => GetCooldown(action).TotalCooldownRemaining);
                     }
                 }
+            }
 
             if (
                 level >= MCH.Levels.Bioblaster

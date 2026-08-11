@@ -109,21 +109,27 @@ internal class ConfigWindow : Window
         var i = 1;
 
         foreach (var jobName in this.groupedPresets.Keys)
+        {
             if (ImGui.CollapsingHeader(jobName))
+            {
                 foreach (var (preset, info) in this.groupedPresets[jobName])
                     this.DrawPreset(preset, info, ref i);
+            }
             else
                 i += this.groupedPresets[jobName].Count;
+        }
 
         ImGui.PopStyleVar();
 
         if (ImGui.Button("You can support me on Ko-Fi ♥"))
+        {
             Process.Start(
                 new ProcessStartInfo
                 {
                     FileName = "https://ko-fi.com/khayle",
                     UseShellExecute = true,
                 });
+        }
 
         ImGui.EndChild();
     }

@@ -251,6 +251,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
             var bloodfestCD = GetCooldown(GNB.Bloodfest);
 
             if (GCDClipCheck(actionID))
+            {
                 switch (level)
                 {
                     case >= GNB.Levels.NoMercy
@@ -302,6 +303,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                                     && FindTargetOfTargetEffectAny(WAR.Buffs.Holmgang) is null)):
                         return GNB.HeartOfCorundum;
                 }
+            }
 
             if (
                 level >= GNB.Levels.DoubleDown

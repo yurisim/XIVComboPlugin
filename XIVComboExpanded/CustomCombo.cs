@@ -139,9 +139,11 @@ internal abstract partial class CustomCombo
                 : -a2.Data.CooldownRemaining;
 
             if (a1Priority == a2Priority)
+            {
                 return original == a1.ActionID ? a1
                     : original == a2.ActionID ? a2
                     : a1;
+            }
 
             return a1Priority > a2Priority ? a1 : a2;
         }
@@ -259,6 +261,7 @@ internal abstract partial class CustomCombo
         var raidCDsFound = 0;
 
         foreach (var buff in raidBuffs)
+        {
             if (HasEffectAny(buff))
             {
                 if (buff is ADV.Buffs.Medicated)
@@ -269,14 +272,17 @@ internal abstract partial class CustomCombo
                 if (raidCDsFound >= buffThreshold)
                     return true;
             }
+        }
 
         foreach (var debuff in raidDebuffs)
+        {
             if (TargetHasEffectAny(debuff))
             {
                 raidCDsFound++;
                 if (raidCDsFound >= buffThreshold)
                     return true;
             }
+        }
 
         return false;
     }

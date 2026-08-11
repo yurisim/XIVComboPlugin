@@ -228,9 +228,11 @@ internal class BlackMageFire : CustomCombo
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
                         || debuffs.All(effect => effect is null)))
+                {
                     return actionID is BLM.Fire
                         ? OriginalHook(BLM.Thunder)
                         : OriginalHook(BLM.Thunder2);
+                }
             }
 
             var hasFirestarter = HasEffect(BLM.Buffs.Firestarter);
@@ -434,8 +436,10 @@ internal class BlackLeyLines : CustomCombo
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
         if (actionID == BLM.LeyLines)
+        {
             if (level >= BLM.Levels.BetweenTheLines && HasEffect(BLM.Buffs.LeyLines))
                 return BLM.BetweenTheLines;
+        }
 
         return actionID;
     }

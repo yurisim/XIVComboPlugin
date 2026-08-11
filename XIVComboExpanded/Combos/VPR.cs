@@ -134,19 +134,26 @@ internal class ViperFangs : CustomCombo
             var swiftskinsVenom = FindEffect(VPR.Buffs.SwiftskinsVenom);
 
             if (GCDClipCheck(actionID))
+            {
                 switch (level)
                 {
                     case >= VPR.Levels.SerpentsTail when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.TwinsSingle when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangBite))
+                        {
                             return HasEffect(VPR.Buffs.SwiftskinsVenom)
                                 ? VPR.TwinbloodBite
                                 : VPR.TwinfangBite;
+                        }
+
                         if (CanUseAction(VPR.UncoiledTwinfang))
+                        {
                             return HasEffect(VPR.Buffs.PoisedForTwinblood)
                                 ? VPR.UncoiledTwinblood
                                 : VPR.UncoiledTwinfang;
+                        }
+
                         break;
                     case >= VPR.Levels.SerpentsIre
                         when IsOffCooldown(VPR.SerpentsIre)
@@ -154,6 +161,7 @@ internal class ViperFangs : CustomCombo
                             && gauge.RattlingCoilStacks < rattleCount:
                         return VPR.SerpentsIre;
                 }
+            }
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
@@ -378,23 +386,31 @@ internal class ViperAoE : CustomCombo
             var maxtribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
 
             if (GCDClipCheck(actionID))
+            {
                 switch (level)
                 {
                     case >= VPR.Levels.TwinsAoE when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangThresh))
+                        {
                             return HasEffect(VPR.Buffs.FellskinsVenom)
                                 ? VPR.TwinbloodThresh
                                 : VPR.TwinfangThresh;
+                        }
+
                         if (CanUseAction(VPR.UncoiledTwinfang))
+                        {
                             return HasEffect(VPR.Buffs.PoisedForTwinblood)
                                 ? VPR.UncoiledTwinblood
                                 : VPR.UncoiledTwinfang;
+                        }
+
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre):
                         return VPR.SerpentsIre;
                 }
+            }
 
             var canUseSSC = CanUseAction(VPR.SwiftskinsDen);
             var canUseHunters = CanUseAction(VPR.HuntersDen);
@@ -501,27 +517,37 @@ internal class ViperRanged : CustomCombo
             var maxtribute = level >= VPR.Levels.Ouroboros ? 5 : 4;
 
             if (GCDClipCheck(actionID))
+            {
                 switch (level)
                 {
                     case >= VPR.Levels.TwinsAoE when !IsOriginal(VPR.Twinfang):
                         if (CanUseAction(VPR.TwinfangThresh))
+                        {
                             return HasEffect(VPR.Buffs.FellskinsVenom)
                                 ? VPR.TwinbloodThresh
                                 : VPR.TwinfangThresh;
+                        }
+
                         if (CanUseAction(VPR.UncoiledTwinfang))
+                        {
                             return HasEffect(VPR.Buffs.PoisedForTwinblood)
                                 ? VPR.UncoiledTwinblood
                                 : VPR.UncoiledTwinfang;
+                        }
+
                         break;
                     case >= VPR.Levels.LastLash when !IsOriginal(VPR.SerpentsTail):
                         return OriginalHook(VPR.SerpentsTail);
                     case >= VPR.Levels.SerpentsIre when IsOffCooldown(VPR.SerpentsIre):
                         return VPR.SerpentsIre;
                 }
+            }
 
             if (HasEffect(VPR.Buffs.Swiftscaled) && HasEffect(VPR.Buffs.HuntersInstinct))
+            {
                 if (gauge.RattlingCoilStacks >= 1)
                     return VPR.UncoiledFury;
+            }
         }
 
         return actionID;

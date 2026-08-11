@@ -84,6 +84,7 @@ internal class CustomComboCache : IDisposable
             return this.statusCache[key] = null;
 
         foreach (var status in chara.StatusList)
+        {
             if (
                 status.StatusId == statusID
                 && (
@@ -92,6 +93,7 @@ internal class CustomComboCache : IDisposable
                     || status.SourceId == InvalidObjectID
                     || status.SourceId == sourceID))
                 return this.statusCache[key] = status;
+        }
 
         return this.statusCache[key] = null;
     }
