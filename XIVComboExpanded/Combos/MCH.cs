@@ -168,7 +168,7 @@ internal class MachinistCleanShot : CustomCombo
                     case >= MCH.Levels.Reassemble
                         when (IsOffCooldown(MCH.Reassemble) || HasCharges(MCH.Reassemble))
                             && (
-                                GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 20
+                                GetCooldown(MCH.Reassemble).TotalCooldownRemaining <= 23
                                 || raidbuffs)
                             && !HasEffect(MCH.Buffs.Reassemble)
                             && drillReady:
