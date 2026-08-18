@@ -292,20 +292,10 @@ internal class SageShieldDiagnosis : CustomCombo
         // If the action is Diagnosis and we have eukrasia buff then do a zoe cast if it's off cooldown
         if (actionID == SGE.Diagnosis || actionID == SGE.Prognosis)
         {
-            // if (GCDClipCheck(actionID))
-            // {
             if (IsOffCooldown(SGE.Zoe) && level >= SGE.Levels.Zoe && HasEffect(SGE.Buffs.Eukrasia))
             {
                 return SGE.Zoe;
             }
-
-            // if (IsOffCooldown(SGE.Philosophia)
-            //     && level >= SGE.Levels.Philosophia
-            //     && HasEffect(SGE.Buffs.Eukrasia)
-            //     && !HasEffect(SGE.Buffs.Zoe))
-            // {
-            //     return SGE.Philosophia;
-            // }
 
             return actionID;
         }
@@ -338,6 +328,7 @@ internal class SageShieldDiagnosis : CustomCombo
                     if (
                         level >= SGE.Levels.Physis
                         && (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.2)
+                        && !HasEffect(SGE.Buffs.Philosophia)
                         && IsOffCooldown(OriginalHook(SGE.Physis))
                         && myHP <= threshold)
                         return OriginalHook(SGE.Physis);
