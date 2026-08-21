@@ -78,6 +78,7 @@ internal static class BLM
             Flare = 50,
             LeyLines = 52,
             Sharpcast = 54,
+            Enochian = 56,
             Blizzard4 = 58,
             Fire4 = 60,
             BetweenTheLines = 62,
@@ -223,7 +224,7 @@ internal class BlackMageFire : CustomCombo
                     level >= BLM.Levels.Thunder
                     && HasEffect(BLM.Buffs.Thunderhead)
                     && (actionID is BLM.Fire || level >= BLM.Levels.Thunder2)
-                    && gauge.EnochianTimer >= 6000
+                    && (gauge.EnochianTimer >= 6000 || level < BLM.Levels.Enochian)
                     && ShouldUseDots()
                     && (
                         debuffs.Any(effect => effect is not null && effect.RemainingTime <= 5)
