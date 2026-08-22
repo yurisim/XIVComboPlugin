@@ -129,12 +129,14 @@ internal class SageDosis : CustomCombo
                 {
                     case >= SGE.Levels.Physis
                         when (!HasEffect(SGE.Buffs.Kerakeia) || myHP <= threshold - 0.25)
+                            && !HasEffect(SGE.Buffs.Philosophia)
                             && IsOffCooldown(OriginalHook(SGE.Physis))
                             && myHP <= threshold:
                         return OriginalHook(SGE.Physis);
 
                     case >= SGE.Levels.Ixochole
                         when IsOffCooldown(SGE.Ixochole)
+                            && !HasEffect(SGE.Buffs.Philosophia)
                             && gauge.Addersgall >= 2
                             && (
                                 (
@@ -336,6 +338,7 @@ internal class SageShieldDiagnosis : CustomCombo
                     if (
                         level >= SGE.Levels.Ixochole
                         && IsOffCooldown(SGE.Ixochole)
+                        && !HasEffect(SGE.Buffs.Philosophia)
                         && gauge.Addersgall >= 2
                         && (
                             (
