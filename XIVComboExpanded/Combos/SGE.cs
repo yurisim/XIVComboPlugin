@@ -387,13 +387,12 @@ internal class SageShieldDiagnosis : CustomCombo
                         return ADV.LucidDreaming;
                 }
 
-                if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 6 && TargetIsEnemy())
+                if (level >= SGE.Levels.EDosis3 && GetTargetDistance() <= 5 && TargetIsEnemy())
                 {
                     if (
                         InCombat()
                         && TargetIsEnemy()
-                        && ShouldUseDots()
-                        && actionID is not AST.Gravity)
+                        && ShouldUseDots())
                     {
                         var debuffs = new[]
                         {
