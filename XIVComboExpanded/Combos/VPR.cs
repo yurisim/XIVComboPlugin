@@ -169,21 +169,44 @@ internal class ViperFangs : CustomCombo
 
             if (canUseSSC || canUseHunters)
             {
-                if (
-                    (
-                        canUseHunters
-                        && (
-                            !HasEffect(VPR.Buffs.HuntersInstinct)
-                            || flanksbaneVenom is not null
-                            || flankstungVenom is not null)) || !canUseSSC)
+                // Forced second coil: only one is executable, so take it regardless of position.
+                if (canUseHunters && !canUseSSC)
                     return VPR.HuntersCoil;
 
-                if (
-                    canUseSSC
-                    && (hindsbaneVenom is not null || hindstungVenom is not null || !canUseHunters))
+                if (canUseSSC && !canUseHunters)
                     return VPR.SwiftskinsCoil;
 
-                return canUseSSC ? VPR.SwiftskinsCoil : VPR.HuntersCoil;
+                // First coil: when either buff is fully missing, follow position entirely;
+                // the forced second coil covers the other buff. Expiring buffs still override below.
+                var swiftscaled = FindEffect(VPR.Buffs.Swiftscaled);
+                var huntersInstinct = FindEffect(VPR.Buffs.HuntersInstinct);
+
+                if (huntersInstinct is null || swiftscaled is null)
+                {
+                    if (!TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth))
+                        return VPR.SwiftskinsCoil;
+
+                    return IsFlankingTarget() ? VPR.HuntersCoil : VPR.SwiftskinsCoil;
+                }
+
+                if (huntersInstinct.RemainingTime <= 15)
+                    return VPR.HuntersCoil;
+
+                if (swiftscaled.RemainingTime <= 15)
+                    return VPR.SwiftskinsCoil;
+
+                // Omnidirectional target or True North: fall back to the venom-driven choice.
+                if (!TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth))
+                {
+                    if (flanksbaneVenom is not null || flankstungVenom is not null)
+                        return VPR.HuntersCoil;
+
+                    return VPR.SwiftskinsCoil;
+                }
+
+                // Coils grant (not consume) venoms, so match the coil to our position.
+                // Front matches neither sector, so default rear with SwiftskinsCoil.
+                return IsFlankingTarget() ? VPR.HuntersCoil : VPR.SwiftskinsCoil;
             }
 
             if (gauge.AnguineTribute == maxTribute)
@@ -253,16 +276,40 @@ internal class ViperFangs : CustomCombo
                 case VPR.SteelFangs:
                     return HasEffect(VPR.Buffs.HonedReavers) ? VPR.ReavingFangs : VPR.SteelFangs;
 
-                // Combo step 2, prioritize whichever buff we don't have. Starts with Swiftscaled since that speeds up the rotation significantly
+                // Combo step 2, prioritize whichever buff we don't have. Starts with Swiftscaled since that speeds up the rotation significantly.
+                // Position only steers this step when buffs are healthy and no venom is held: step 2 fixes the step-3 branch (and hence its positional).
                 case VPR.HuntersSting:
+                {
                     if (level < VPR.Levels.SwiftskinsSting)
                         return VPR.HuntersSting;
 
-                    return flanksbaneVenom is not null || flankstungVenom is not null
-                        ? VPR.HuntersSting
-                        : VPR.SwiftskinsSting;
+                    // A missing or expiring 10%/15% buff dwarfs the 60-potency positional. Swiftscaled first to preserve the opener.
+                    var swiftscaled = FindEffect(VPR.Buffs.Swiftscaled);
+                    var huntersInstinct = FindEffect(VPR.Buffs.HuntersInstinct);
 
-                // Combo step 3, use whichever buff we have, or default to start hindsbane unless otherwise specified
+                    if (swiftscaled is null || swiftscaled.RemainingTime <= 15)
+                        return VPR.SwiftskinsSting;
+
+                    if (huntersInstinct is null || huntersInstinct.RemainingTime <= 15)
+                        return VPR.HuntersSting;
+
+                    // A held venom wins even from the wrong sector (440 > 400), so keep its branch.
+                    if (flanksbaneVenom is not null || flankstungVenom is not null)
+                        return VPR.HuntersSting;
+
+                    if (hindsbaneVenom is not null || hindstungVenom is not null)
+                        return VPR.SwiftskinsSting;
+
+                    // Omnidirectional target or True North: keep the buff-driven default.
+                    if (!TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth))
+                        return VPR.SwiftskinsSting;
+
+                    // Otherwise match the branch to our position. Front matches neither sector, so default rear.
+                    return IsFlankingTarget() ? VPR.HuntersSting : VPR.SwiftskinsSting;
+                }
+
+                // Combo step 3, use whichever buff we have, or default to start hindsbane unless otherwise specified.
+                // The branch (and hence positional) was fixed at step 2, so no position check belongs here.
                 case VPR.HindstingStrike:
                     if (hindsbaneVenom is not null)
                         return VPR.HindsbaneFang;
