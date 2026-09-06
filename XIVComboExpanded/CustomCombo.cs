@@ -55,7 +55,7 @@ internal abstract partial class CustomCombo
     protected CustomCombo()
     {
         var presetInfo = this.Preset.GetAttribute<CustomComboInfoAttribute>();
-        this.JobID = presetInfo.JobID;
+        this.JobID = presetInfo!.JobID;
         this.ClassID = this.JobID switch
         {
             ADV.JobID => ADV.ClassID,
@@ -732,24 +732,6 @@ internal abstract partial class CustomCombo
         return Vector2.Distance(position, selfPosition)
             - chara.HitboxRadius
             - LocalPlayer.HitboxRadius;
-    }
-
-    /// <summary>
-    ///     Gets the distance from the target.
-    /// </summary>
-    /// <returns>Double representing the distance from the target.</returns>
-    protected static double GetTargetofTargetDistance()
-    {
-        if (GetTargetOfTarget is null)
-            return 0;
-
-        if (GetTargetOfTarget is not IBattleChara chara)
-            return 0;
-
-        double distanceX = chara.YalmDistanceX;
-        double distanceY = chara.YalmDistanceZ;
-
-        return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
     }
 
     /// <summary>

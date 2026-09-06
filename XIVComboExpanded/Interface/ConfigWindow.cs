@@ -41,7 +41,7 @@ internal class ConfigWindow : Window
         this.groupedPresets = Enum.GetValues<CustomComboPreset>()
             .Where(preset => (int)preset > 100 && preset != CustomComboPreset.Disabled)
             .Select(preset =>
-                (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
+                (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()!))
             .Where(tpl => tpl.Info != null && Service.Configuration.GetParent(tpl.Preset) == null)
             .OrderBy(tpl => tpl.Info.JobName)
             .ThenBy(tpl => tpl.Info.Order)
@@ -62,7 +62,7 @@ internal class ConfigWindow : Window
             kvp => kvp.Key,
             kvp =>
                 kvp.Value.Select(preset =>
-                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
+                        (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()!))
                     .OrderBy(tpl => tpl.Info.Order)
                     .ToArray());
 
@@ -202,7 +202,7 @@ internal class ConfigWindow : Window
                         return string.Empty;
 
                     var conflictInfo = conflict.GetAttribute<CustomComboInfoAttribute>();
-                    return $"\n - {conflictInfo.FancyName}";
+                    return $"\n - {conflictInfo!.FancyName}";
                 })
                 .Aggregate((t1, t2) => $"{t1}{t2}");
 
