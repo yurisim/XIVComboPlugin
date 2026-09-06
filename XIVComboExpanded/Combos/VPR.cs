@@ -54,6 +54,88 @@ internal static class VPR
         WrithingSnap = 34632,
         Slither = 34646;
 
+    /// <summary>
+    ///     Selects the coil for the current Vicewinder window. Pure decision shared by the main combo and the HUD.
+    /// </summary>
+    /// <param name="canUseHunters">Whether Hunters Coil is currently executable.</param>
+    /// <param name="canUseSwiftskins">Whether Swiftskins Coil is currently executable.</param>
+    /// <param name="huntersMissing">Whether Hunters Instinct is fully missing.</param>
+    /// <param name="swiftscaledMissing">Whether Swiftscaled is fully missing.</param>
+    /// <param name="huntersExpiring">Whether Hunters Instinct is expiring.</param>
+    /// <param name="swiftscaledExpiring">Whether Swiftscaled is expiring.</param>
+    /// <param name="hasFlankVenom">Whether a flank venom is held.</param>
+    /// <param name="hasHindVenom">Whether a hind venom is held. Hind and empty both default to Swiftskins Coil.</param>
+    /// <param name="positionIndependent">Whether positionals are disregarded (omnidirectional target or True North).</param>
+    /// <param name="isFlanking">Whether the player is in a flank sector. Front defaults to rear.</param>
+    /// <returns>Hunters Coil, Swiftskins Coil, or 0 when neither coil is usable.</returns>
+    internal static uint SelectCoil(bool canUseHunters, bool canUseSwiftskins, bool huntersMissing, bool swiftscaledMissing, bool huntersExpiring, bool swiftscaledExpiring, bool hasFlankVenom, bool hasHindVenom, bool positionIndependent, bool isFlanking)
+    {
+        if (!canUseHunters && !canUseSwiftskins)
+            return 0;
+
+        // Forced second coil: only one is executable, so take it regardless of position.
+        if (canUseHunters && !canUseSwiftskins)
+            return HuntersCoil;
+
+        if (canUseSwiftskins && !canUseHunters)
+            return SwiftskinsCoil;
+
+        // First coil: when either buff is fully missing, follow position entirely;
+        // the forced second coil covers the other buff. Expiring buffs still override below.
+        if (huntersMissing || swiftscaledMissing)
+        {
+            if (positionIndependent)
+                return SwiftskinsCoil;
+
+            return isFlanking ? HuntersCoil : SwiftskinsCoil;
+        }
+
+        if (huntersExpiring)
+            return HuntersCoil;
+
+        if (swiftscaledExpiring)
+            return SwiftskinsCoil;
+
+        // Omnidirectional target or True North: fall back to the venom-driven choice.
+        if (positionIndependent)
+            return hasFlankVenom ? HuntersCoil : SwiftskinsCoil;
+
+        // Coils grant (not consume) venoms, so match the coil to our position.
+        // Front matches neither sector, so default rear with Swiftskins Coil.
+        _ = hasHindVenom;
+
+        return isFlanking ? HuntersCoil : SwiftskinsCoil;
+    }
+
+    /// <summary>
+    ///     Selects the step-3 finisher for the current Reaving combo branch. Pure decision shared by the main combo and the HUD.
+    /// </summary>
+    /// <param name="rearBranch">Whether the combo is on the rear branch (Hindsting Strike). Flank branch selects the Strike pair otherwise.</param>
+    /// <param name="hasFlanksbaneVenom">Whether Flanksbane Venom is held.</param>
+    /// <param name="hasFlankstungVenom">Whether Flankstung Venom is held.</param>
+    /// <param name="hasHindsbaneVenom">Whether Hindsbane Venom is held.</param>
+    /// <param name="hasHindstungVenom">Whether Hindstung Venom is held.</param>
+    /// <returns>Flanksbane Fang, Flanksting Strike, Hindsbane Fang, or Hindsting Strike.</returns>
+    internal static uint SelectFinisher(bool rearBranch, bool hasFlanksbaneVenom, bool hasFlankstungVenom, bool hasHindsbaneVenom, bool hasHindstungVenom)
+    {
+        if (rearBranch)
+        {
+            if (hasHindsbaneVenom)
+                return HindsbaneFang;
+            if (hasHindstungVenom)
+                return HindstingStrike;
+
+            return HindstingStrike;
+        }
+
+        if (hasFlanksbaneVenom)
+            return FlanksbaneFang;
+        if (hasFlankstungVenom)
+            return FlankstingStrike;
+
+        return FlankstingStrike;
+    }
+
     public static class Buffs
     {
         public const ushort FlankstungVenom = 3645,
@@ -167,47 +249,23 @@ internal class ViperFangs : CustomCombo
             var canUseSSC = CanUseAction(VPR.SwiftskinsCoil);
             var canUseHunters = CanUseAction(VPR.HuntersCoil);
 
-            if (canUseSSC || canUseHunters)
-            {
-                // Forced second coil: only one is executable, so take it regardless of position.
-                if (canUseHunters && !canUseSSC)
-                    return VPR.HuntersCoil;
+            var swiftscaledBuff = FindEffect(VPR.Buffs.Swiftscaled);
+            var huntersInstinctBuff = FindEffect(VPR.Buffs.HuntersInstinct);
 
-                if (canUseSSC && !canUseHunters)
-                    return VPR.SwiftskinsCoil;
+            var coil = VPR.SelectCoil(
+                canUseHunters,
+                canUseSSC,
+                huntersInstinctBuff is null,
+                swiftscaledBuff is null,
+                huntersInstinctBuff is not null && huntersInstinctBuff.RemainingTime <= 15,
+                swiftscaledBuff is not null && swiftscaledBuff.RemainingTime <= 15,
+                flanksbaneVenom is not null || flankstungVenom is not null,
+                hindsbaneVenom is not null || hindstungVenom is not null,
+                !TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth),
+                IsFlankingTarget());
 
-                // First coil: when either buff is fully missing, follow position entirely;
-                // the forced second coil covers the other buff. Expiring buffs still override below.
-                var swiftscaled = FindEffect(VPR.Buffs.Swiftscaled);
-                var huntersInstinct = FindEffect(VPR.Buffs.HuntersInstinct);
-
-                if (huntersInstinct is null || swiftscaled is null)
-                {
-                    if (!TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth))
-                        return VPR.SwiftskinsCoil;
-
-                    return IsFlankingTarget() ? VPR.HuntersCoil : VPR.SwiftskinsCoil;
-                }
-
-                if (huntersInstinct.RemainingTime <= 15)
-                    return VPR.HuntersCoil;
-
-                if (swiftscaled.RemainingTime <= 15)
-                    return VPR.SwiftskinsCoil;
-
-                // Omnidirectional target or True North: fall back to the venom-driven choice.
-                if (!TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth))
-                {
-                    if (flanksbaneVenom is not null || flankstungVenom is not null)
-                        return VPR.HuntersCoil;
-
-                    return VPR.SwiftskinsCoil;
-                }
-
-                // Coils grant (not consume) venoms, so match the coil to our position.
-                // Front matches neither sector, so default rear with SwiftskinsCoil.
-                return IsFlankingTarget() ? VPR.HuntersCoil : VPR.SwiftskinsCoil;
-            }
+            if (coil != 0)
+                return coil;
 
             if (gauge.AnguineTribute == maxTribute)
                 return VPR.FirstGeneration;
@@ -311,21 +369,11 @@ internal class ViperFangs : CustomCombo
                 // Combo step 3, use whichever buff we have, or default to start hindsbane unless otherwise specified.
                 // The branch (and hence positional) was fixed at step 2, so no position check belongs here.
                 case VPR.HindstingStrike:
-                    if (hindsbaneVenom is not null)
-                        return VPR.HindsbaneFang;
-                    if (hindstungVenom is not null)
-                        return VPR.HindstingStrike;
-
-                    return VPR.HindstingStrike;
+                    return VPR.SelectFinisher(true, flanksbaneVenom is not null, flankstungVenom is not null, hindsbaneVenom is not null, hindstungVenom is not null);
 
                 // Combo step 3, flank. Use whichever buff we have, or default to Flanksbane if we're here and buff has fallen off.
                 case VPR.FlankstingStrike:
-                    if (flanksbaneVenom is not null)
-                        return VPR.FlanksbaneFang;
-                    if (flankstungVenom is not null)
-                        return VPR.FlankstingStrike;
-
-                    return VPR.FlankstingStrike;
+                    return VPR.SelectFinisher(false, flanksbaneVenom is not null, flankstungVenom is not null, hindsbaneVenom is not null, hindstungVenom is not null);
 
                 // Default return of actionID
                 default:
@@ -338,7 +386,7 @@ internal class ViperFangs : CustomCombo
 }
 
 /// <summary>
-///     This method helps determine the relative positional.
+///     Projects the next positional onto HUD slots: each flank/rear slot morphs into its side's upcoming coil or finisher, dims while the other side is next.
 /// </summary>
 internal class ViperPositionals : CustomCombo
 {
@@ -346,79 +394,69 @@ internal class ViperPositionals : CustomCombo
 
     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
     {
-        if (actionID == VPR.HuntersCoil || actionID == VPR.SwiftskinsCoil)
+        bool isFlankSlot = actionID == VPR.HuntersCoil || actionID == VPR.FlankstingStrike || actionID == VPR.FlanksbaneFang;
+        bool isRearSlot = actionID == VPR.SwiftskinsCoil || actionID == VPR.HindstingStrike || actionID == VPR.HindsbaneFang;
+
+        if (!isFlankSlot && !isRearSlot)
+            return actionID;
+
+        var canUseSwiftskins = CanUseAction(VPR.SwiftskinsCoil);
+        var canUseHunters = CanUseAction(VPR.HuntersCoil);
+
+        var swiftscaled = FindEffect(VPR.Buffs.Swiftscaled);
+        var huntersInstinct = FindEffect(VPR.Buffs.HuntersInstinct);
+
+        bool hasFlanksbaneVenom = FindEffect(VPR.Buffs.FlanksbaneVenom) is not null;
+        bool hasFlankstungVenom = FindEffect(VPR.Buffs.FlankstungVenom) is not null;
+        bool hasHindsbaneVenom = FindEffect(VPR.Buffs.HindsbaneVenom) is not null;
+        bool hasHindstungVenom = FindEffect(VPR.Buffs.HindstungVenom) is not null;
+
+        uint upcoming = VPR.SelectCoil(
+            canUseHunters,
+            canUseSwiftskins,
+            huntersInstinct is null,
+            swiftscaled is null,
+            huntersInstinct is not null && huntersInstinct.RemainingTime <= 15,
+            swiftscaled is not null && swiftscaled.RemainingTime <= 15,
+            hasFlanksbaneVenom || hasFlankstungVenom,
+            hasHindsbaneVenom || hasHindstungVenom,
+            !TargetHasPositionals() || HasEffect(ADV.Buffs.TrueNorth),
+            IsFlankingTarget());
+
+        if (upcoming == 0)
         {
-            var canUseSwiftSkinCoil = CanUseAction(VPR.SwiftskinsCoil);
-            var canUseHuntersCoil = CanUseAction(VPR.HuntersCoil);
+            if (level < VPR.Levels.Single3rdCombo)
+                return ADV.Swiftcast;
 
-            var hasRearBuff =
-                HasEffect(VPR.Buffs.HindsbaneVenom) || HasEffect(VPR.Buffs.HindstungVenom);
-            var hasFlankBuff =
-                HasEffect(VPR.Buffs.FlanksbaneVenom) || HasEffect(VPR.Buffs.FlankstungVenom);
-
-            if (
-                (
-                    hasFlankBuff
-                    || canUseHuntersCoil
-                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder))
-                && actionID is VPR.HuntersCoil)
+            switch (OriginalHook(VPR.SteelFangs))
             {
-                // enable if we can use HunterCoil but not if our current buffs want us in the rear
-                if (
-                    (canUseHuntersCoil && !hasRearBuff)
-                    // Enable this position if we need to get the Hunter's Instinct buff
-                    || (!HasEffect(VPR.Buffs.HuntersInstinct) && level >= VPR.Levels.Vicewinder)
-                    // Enable this position if we have already used the other position
-                    || (canUseHuntersCoil && !canUseSwiftSkinCoil))
-                    return VPR.HuntersCoil;
-
-                if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
+                case VPR.HindstingStrike:
+                case VPR.HindsbaneFang:
+                    upcoming = VPR.SelectFinisher(true, hasFlanksbaneVenom, hasFlankstungVenom, hasHindsbaneVenom, hasHindstungVenom);
+                    break;
+                case VPR.FlankstingStrike:
+                case VPR.FlanksbaneFang:
+                    upcoming = VPR.SelectFinisher(false, hasFlanksbaneVenom, hasFlankstungVenom, hasHindsbaneVenom, hasHindstungVenom);
+                    break;
+                default:
                 {
-                    if (HasEffect(VPR.Buffs.FlanksbaneVenom))
-                        return VPR.FlanksbaneFang;
-                    if (HasEffect(VPR.Buffs.FlankstungVenom))
-                        return VPR.FlankstingStrike;
+                    bool flank;
+                    if (hasFlanksbaneVenom || hasFlankstungVenom)
+                        flank = true;
+                    else if (hasHindsbaneVenom || hasHindstungVenom)
+                        flank = false;
+                    else
+                        flank = IsFlankingTarget();
+
+                    upcoming = VPR.SelectFinisher(!flank, hasFlanksbaneVenom, hasFlankstungVenom, hasHindsbaneVenom, hasHindstungVenom);
+                    break;
                 }
             }
-
-            // TODO: Vicewinder is now behaving correctly
-
-            if (
-                (
-                    hasRearBuff
-                    || canUseSwiftSkinCoil
-                    || (
-                        HasEffect(VPR.Buffs.HuntersInstinct)
-                        && (level >= VPR.Levels.Vicewinder || (!hasRearBuff && !hasFlankBuff))))
-                && actionID is VPR.SwiftskinsCoil)
-            {
-                // Enable this position if we can use SwiftSkinCoil but not if our current buffs want us in the flank
-                if (
-                    (
-                        (canUseSwiftSkinCoil && !hasFlankBuff)
-                        // Enable this position if we have already used the other position
-                        || (canUseSwiftSkinCoil && !canUseHuntersCoil))
-                    // Enable this position if we have nothing
-                    // || (!hasRearBuff && !hasFlankBuff)
-                    // Enable this position ONLY if we already have the Hunter's Instinct buff
-                    && (HasEffect(VPR.Buffs.HuntersInstinct) || level < VPR.Levels.Vicewinder))
-                    return VPR.SwiftskinsCoil;
-
-                if (!canUseSwiftSkinCoil && !canUseHuntersCoil)
-                {
-                    if (HasEffect(VPR.Buffs.HindsbaneVenom))
-                        return VPR.HindsbaneFang;
-                    if (HasEffect(VPR.Buffs.HindstungVenom))
-                        return VPR.HindstingStrike;
-                    if (!hasRearBuff && !hasFlankBuff)
-                        return VPR.HindstingStrike;
-                }
-            }
-
-            return ADV.Swiftcast;
         }
 
-        return actionID;
+        bool upcomingFlank = upcoming == VPR.HuntersCoil || upcoming == VPR.FlankstingStrike || upcoming == VPR.FlanksbaneFang;
+
+        return isFlankSlot == upcomingFlank ? upcoming : ADV.Swiftcast;
     }
 }
 
