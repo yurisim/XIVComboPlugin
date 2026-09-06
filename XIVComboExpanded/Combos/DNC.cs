@@ -1,4 +1,5 @@
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -313,6 +314,7 @@ internal class DancerCascadeFountain : CustomCombo
                 && distance < 15)
                 return DNC.Tillana;
 
+            // ensures we don't break combo
             if (
                 level >= DNC.Levels.SaberDance
                 && CanUseAction(OriginalHook(DNC.SaberDance))
@@ -321,7 +323,7 @@ internal class DancerCascadeFountain : CustomCombo
                     || hasOneRaidBuff
                     || HasEffect(DNC.Buffs.FlourishingFinish)
                     || actionID is DNC.Windmill)
-                && (comboTime >= 3 || comboTime == 0)) // ensures we don't break combo
+                && (comboTime >= 3 || comboTime == 0))
             {
                 return OriginalHook(DNC.SaberDance);
             }
@@ -343,6 +345,7 @@ internal class DancerCascadeFountain : CustomCombo
                             || HasEffect(DNC.Buffs.SilkenSymmetry)))
                         return DNC.ReverseCascade;
                 }
+
                 if (lastComboMove == DNC.Cascade && level >= DNC.Levels.Fountain)
                     return DNC.Fountain;
             }

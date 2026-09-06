@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -210,7 +210,7 @@ internal class SageDosis : CustomCombo
 
                     if (
                         debuffs.All(x =>
-                            x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
+                            x is null || x.RemainingTime <= 4 || (x.RemainingTime <= 8 && this.IsMoving)))
                     {
                         if (!HasEffect(SGE.Buffs.Eukrasia))
                             return SGE.Eukrasia;
@@ -406,7 +406,7 @@ internal class SageShieldDiagnosis : CustomCombo
                             debuffs.All(x =>
                                 x is null
                                 || x.RemainingTime <= 3
-                                || x.RemainingTime <= 6 && IsMoving))
+                                || (x.RemainingTime <= 6 && this.IsMoving)))
                         {
                             if (!HasEffect(SGE.Buffs.Eukrasia))
                                 return SGE.Eukrasia;

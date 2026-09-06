@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Dalamud.Configuration;
 using Dalamud.Utility;
 using Newtonsoft.Json;
@@ -68,7 +69,9 @@ public class PluginConfiguration : IPluginConfiguration
     ///     <see cref="CustomComboPreset.DancerDanceComboCompatibility" /> combo.
     /// </summary>
     public uint[] DancerDanceCompatActionIDs { get; set; } =
-        { DNC.Cascade, DNC.Flourish, DNC.FanDance1, DNC.FanDance2 };
+    {
+        DNC.Cascade, DNC.Flourish, DNC.FanDance1, DNC.FanDance2,
+    };
 
     /// <summary>
     ///     Gets or sets the configuration version.

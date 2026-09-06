@@ -91,7 +91,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
 
             if (
                 level >= GNB.Levels.Continuation
-                && GNB.Continuation != OriginalHook(GNB.Continuation))
+                && !IsOriginal(GNB.Continuation))
                 return OriginalHook(GNB.Continuation);
 
             var maxAmmo = level >= GNB.Levels.CartridgeCharge2 ? 3 : 2;
@@ -117,7 +117,7 @@ internal class GunbreakerSolidBarrel : CustomCombo
                         return GNB.NoMercy;
 
                     case >= GNB.Levels.Continuation
-                        when GNB.Continuation != OriginalHook(GNB.Continuation)
+                        when !IsOriginal(GNB.Continuation)
                             && CanUseAction(OriginalHook(GNB.Continuation)):
                         return OriginalHook(GNB.Continuation);
 
@@ -200,13 +200,13 @@ internal class GunbreakerSolidBarrel : CustomCombo
                 && noMercy is not null
                 && (
                     bloodfestOffCD
-                    || (
+                    || ((
                         level < GNB.Levels.DoubleDown
                         || noMercy.RemainingTime < GetCooldown(GNB.DoubleDown).CooldownRemaining)
                         && (
                             level < GNB.Levels.GnashingFang
                             || noMercy.RemainingTime
-                                < GetCooldown(GNB.GnashingFang).CooldownRemaining))
+                                < GetCooldown(GNB.GnashingFang).CooldownRemaining)))
                 && (bloodfestOffCD || TargetHasLowLife()))
             {
                 return GNB.BurstStrike;
@@ -267,7 +267,7 @@ internal class GunbreakerDemonSlaughter : CustomCombo
                         return GNB.NoMercy;
 
                     case >= GNB.Levels.Continuation
-                        when GNB.Continuation != OriginalHook(GNB.Continuation)
+                        when !IsOriginal(GNB.Continuation)
                             && CanUseAction(OriginalHook(GNB.Continuation)):
                         return OriginalHook(GNB.Continuation);
 

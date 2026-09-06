@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
-using Dalamud.Bindings.ImGui;
 using XIVComboExpandedPlugin.Attributes;
 
 namespace XIVComboExpandedPlugin.Interface;
@@ -116,7 +117,9 @@ internal class ConfigWindow : Window
                     this.DrawPreset(preset, info, ref i);
             }
             else
+            {
                 i += this.groupedPresets[jobName].Count;
+            }
         }
 
         ImGui.PopStyleVar();

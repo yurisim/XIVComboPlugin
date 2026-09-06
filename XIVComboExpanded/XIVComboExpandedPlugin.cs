@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
@@ -60,6 +61,9 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
             });
     }
 
+    /// <summary>
+    ///     Gets the name of the plugin.
+    /// </summary>
     public string Name => "XIV Combo Expanded";
 
     /// <inheritdoc />
@@ -201,7 +205,9 @@ public sealed class XIVComboExpandedPlugin : IDalamudPlugin
                         Service.ChatGui.Print(preset.ToString());
                     }
                     else
-                    Service.ChatGui.PrintError("Available list filters: set, unset, all");
+                    {
+                        Service.ChatGui.PrintError("Available list filters: set, unset, all");
+                    }
 
                 break;
             }

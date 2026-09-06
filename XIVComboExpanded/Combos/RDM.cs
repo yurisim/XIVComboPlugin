@@ -177,8 +177,8 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var swordPlayStacks = swordPlay is not null ? swordPlay.Param : 0;
 
-            var actualBlack = gauge.BlackMana + swordPlayStacks * 20;
-            var actualWhite = gauge.WhiteMana + swordPlayStacks * 20;
+            var actualBlack = gauge.BlackMana + (swordPlayStacks * 20);
+            var actualWhite = gauge.WhiteMana + (swordPlayStacks * 20);
 
             var minimiumGauge =
                 20
@@ -187,8 +187,8 @@ internal class RedMageVeraeroVerthunder : CustomCombo
 
             var needToReprise = gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy;
 
-            var startMeleeCombo = (
-                actualWhite >= minimiumGauge && actualBlack >= minimiumGauge);
+            var startMeleeCombo =
+                actualWhite >= minimiumGauge && actualBlack >= minimiumGauge;
             // && (HasEffect(RDM.Buffs.Embolden) || raidBuffs)
 
             if (
@@ -204,7 +204,7 @@ internal class RedMageVeraeroVerthunder : CustomCombo
                 InMeleeRange()
                 && !hasSpeedy
                 && (
-                    gauge.ManaStacks >= 1 && gauge.ManaStacks < 3
+                    (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
                     || (
                         (lastComboMove is RDM.EnchantedRiposte or RDM.Riposte)
                         && (level >= RDM.Levels.Zwerchhau))
@@ -275,46 +275,3 @@ internal class RedMageVeraeroVerthunder : CustomCombo
         return actionID;
     }
 }
-
-// internal class RedMageVeraeroVerthunder2 : CustomCombo
-// {
-//     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RdmAny;
-
-//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//     {
-//         if (actionID == RDM.Scatter)
-//         {
-//             var gauge = GetJobGauge<RDMGauge>();
-
-
-//             var hasSpeedy =
-//                 HasEffect(RDM.Buffs.Dualcast)
-//                 || HasEffect(RDM.Buffs.Acceleration)
-//                 || HasEffect(ADV.Buffs.Swiftcast);
-
-//             if (
-//                     level >= RDM.Levels.Moulinent
-//                     && (
-//                         (gauge.ManaStacks >= 1 && gauge.ManaStacks < 3)
-//                         || (
-//                             gauge.WhiteMana >= 60
-//                             && gauge.BlackMana >= 60
-//                             && HasEffect(RDM.Buffs.Embolden)
-//                         )
-//                         || (gauge.WhiteMana >= 80 && gauge.BlackMana >= 80 && !hasSpeedy)
-//                     )
-//                 )
-//                 // Enchanted
-//                 return OriginalHook(RDM.Moulinet);
-
-//             // Dualcast
-//             if (hasSpeedy) return RDM.Scatter;
-
-//             if (level >= RDM.Levels.Verthunder2)
-//                 return gauge.BlackMana <= gauge.WhiteMana || level < RDM.Levels.Veraero2
-//                     ? OriginalHook(RDM.Verthunder2)
-//                     : OriginalHook(RDM.Veraero2);
-//         }
-
-//         return actionID;
-//     }

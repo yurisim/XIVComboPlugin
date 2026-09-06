@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using Dalamud.Hooking;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -21,6 +22,10 @@ internal sealed class IconReplacer : IDisposable
 
     private IntPtr actionManager = IntPtr.Zero;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="IconReplacer" /> class.
+    /// </summary>
+    /// <param name="gameInteropProvider">Dalamud game interop provider.</param>
     public unsafe IconReplacer(IGameInteropProvider gameInteropProvider)
     {
         this.clientStructActionManager = ActionManager.Instance();
@@ -44,20 +49,15 @@ internal sealed class IconReplacer : IDisposable
         this.isIconReplaceableHook.Enable();
     }
 
+    private delegate ulong IsIconReplaceableDelegate(uint actionID);
+
+    private delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
+
     /// <inheritdoc />
     public void Dispose()
     {
         this.getIconHook?.Dispose();
         this.isIconReplaceableHook?.Dispose();
-    }
-
-    private static bool IsDescendant(Type clazz, Type ancestor)
-    {
-        if (clazz.BaseType == null)
-            return false;
-        if (clazz.BaseType == ancestor)
-            return true;
-        return IsDescendant(clazz.BaseType, ancestor);
     }
 
     /// <summary>
@@ -83,6 +83,15 @@ internal sealed class IconReplacer : IDisposable
     internal uint OriginalHook(uint actionID)
     {
         return this.getIconHook.Original(this.actionManager, actionID);
+    }
+
+    private static bool IsDescendant(Type clazz, Type ancestor)
+    {
+        if (clazz.BaseType == null)
+            return false;
+        if (clazz.BaseType == ancestor)
+            return true;
+        return IsDescendant(clazz.BaseType, ancestor);
     }
 
     private unsafe uint GetIconDetour(IntPtr actionManager, uint actionID)
@@ -117,8 +126,4 @@ internal sealed class IconReplacer : IDisposable
     {
         return 1;
     }
-
-    private delegate ulong IsIconReplaceableDelegate(uint actionID);
-
-    private delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
 }

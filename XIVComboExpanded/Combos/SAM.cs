@@ -1,4 +1,5 @@
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -193,6 +194,7 @@ internal class SamuraiYukikaze : CustomCombo
                         {
                             return skill;
                         }
+
                         break;
                 }
             }
@@ -233,7 +235,7 @@ internal class SamuraiYukikaze : CustomCombo
                             || (higanabana is not null && higanabana.RemainingTime <= 10)))
                         return OriginalHook(SAM.Iaijutsu);
 
-                    if (level >= SAM.Levels.MidareSetsugekka && !IsMoving && gaugeSen.Sum() == 3)
+                    if (level >= SAM.Levels.MidareSetsugekka && !this.IsMoving && gaugeSen.Sum() == 3)
                         return OriginalHook(SAM.Iaijutsu);
                 }
             }
@@ -305,28 +307,3 @@ internal class SamuraiYukikaze : CustomCombo
         return actionID;
     }
 }
-
-// internal class SamuraiMangetsu : CustomCombo
-// {
-//     protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SamAny;
-
-//     protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-//     {
-//         if (actionID == SAM.Fuga || actionID == SAM.Fuko)
-//         {
-
-
-//             // Rear
-//             if ((!gauge.HasGetsu || !HasEffect(SAM.Buffs.Jinpu)) && level >= SAM.Levels.Mangetsu)
-//                 if (lastComboMove == OriginalHook(SAM.Fuga) || lastComboMove == OriginalHook(SAM.Fuko))
-//                     return OriginalHook(SAM.Mangetsu);
-
-//             // Flank
-//             if ((!gauge.HasKa || !HasEffect(SAM.Buffs.Shifu)) && level >= SAM.Levels.Oka)
-//                 if (lastComboMove == OriginalHook(SAM.Fuga) || lastComboMove == OriginalHook(SAM.Fuko))
-//                     return OriginalHook(SAM.Oka);
-//         }
-
-//         return actionID;
-//     }
-// }

@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using Lumina.Excel.Sheets;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -167,7 +165,7 @@ internal class BlackMageFire : CustomCombo
             {
                 switch (level)
                 {
-                    //  manafont if I'm in astral fire and I have no MP
+                    // manafont if I'm in astral fire and I have no MP
                     case >= BLM.Levels.Manafont when gonnaManafont:
                         return BLM.Manafont;
                     case >= BLM.Levels.Triplecast when needToTriplecast:
@@ -246,7 +244,7 @@ internal class BlackMageFire : CustomCombo
                     // Handle single-target Despair
                     if (actionID is BLM.Fire)
                     {
-                        //  Once we get Fire4, we really only use fire3 for movement and transitions between fire and ice
+                        // Once we get Fire4, we really only use fire3 for movement and transitions between fire and ice
                         if (hasFirestarter && level < BLM.Levels.Fire4)
                             return BLM.Fire3;
 

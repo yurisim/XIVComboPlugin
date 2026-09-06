@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace XIVComboExpandedPlugin;
@@ -45,6 +46,9 @@ internal struct CooldownData
     /// </summary>
     public float TotalBaseCooldown => this.BaseCooldown * this.MaxCharges;
 
+    /// <summary>
+    ///     Gets the cooldown time remaining on the currently recharging charge.
+    /// </summary>
     public float CooldownRemaining =>
         this.IsOnCooldown ? this.cooldownTotal - this.CooldownElapsed : 0;
 
@@ -108,7 +112,7 @@ internal struct CooldownData
     /// <summary>
     ///     Gets the elapsed time on the recharge of only the currently recharging charge.  For actions that are not
     ///     charge-based, this is mechanically equivalent to TotalCooldownElapsed. THIS DOES NOT SEEM TO WORK PROPERLY. REMOVE
-    ///     SOON
+    ///     SOON.
     /// </summary>
     public float ChargeCooldownRemaining
     {

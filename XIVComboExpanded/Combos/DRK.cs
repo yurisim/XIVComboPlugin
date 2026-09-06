@@ -98,10 +98,9 @@ internal class DarkSouleater : CustomCombo
                             && LocalPlayerPercentage() <= 0.85:
                         return DRK.TheBlackestNight;
                     case >= DRK.Levels.FloodOfDarkness
-                        when (
-                            LocalPlayer?.CurrentMp >= 9000
+                        when LocalPlayer?.CurrentMp >= 9000
                             || gauge.HasDarkArts
-                            || (LocalPlayer?.CurrentMp >= 6000 && raidBuffs)):
+                            || (LocalPlayer?.CurrentMp >= 6000 && raidBuffs):
                         return level >= DRK.Levels.EdgeOfDarkness && actionID is not DRK.Unleash
                             ? OriginalHook(DRK.EdgeOfDarkness)
                             : OriginalHook(DRK.FloodOfDarkness);
@@ -113,11 +112,12 @@ internal class DarkSouleater : CustomCombo
                             : DRK.AbyssalDrain;
                 }
             }
+
+            // && (lastComboMove is DRK.SyphonStrike or DRK.Unleash || HasEffect(DRK.Buffs.BloodWeapon))
             if (
                 level >= DRK.Levels.Bloodspiller
                 && (gauge.Blood >= 50 || HasEffect(DRK.Buffs.Delirium))
                 && (HasEffect(DRK.Buffs.Delirium) || gauge.Blood >= 70 || raidBuffs))
-            // && (lastComboMove is DRK.SyphonStrike or DRK.Unleash || HasEffect(DRK.Buffs.BloodWeapon))
             {
                 return level >= DRK.Levels.Quietus && actionID is DRK.Unleash
                     ? DRK.Quietus

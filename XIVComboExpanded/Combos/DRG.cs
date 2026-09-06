@@ -62,8 +62,8 @@ internal static class DRG
             FangAndClawBared = 802,
             WheelInMotion = 803,
             LanceCharge = 1864,
-            //public const ushort
-            //SharperFangAndClaw = 802,
+            // public const ushort
+            // SharperFangAndClaw = 802,
             EnhancedWheelingThrust = 803,
             DiveReady = 1243,
             DraconianFire = 1863;
@@ -129,7 +129,7 @@ internal class DragoonSingleTarget : CustomCombo
 
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
-                static bool doWithLance(int? cooldownAbility)
+                static bool DoWithLance(int? cooldownAbility)
                 {
                     return (
                             cooldownAbility is not null
@@ -158,13 +158,13 @@ internal class DragoonSingleTarget : CustomCombo
                     case >= DRG.Levels.Geirskogul
                         when CanUseAction(OriginalHook(DRG.Geirskogul))
                             && IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                            && doWithLance(60):
+                            && DoWithLance(60):
                         return OriginalHook(DRG.Geirskogul);
 
                     case >= DRG.Levels.WyrmwindThrust
                         when gauge.FirstmindsFocusCount == 2
                             && (
-                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || DoWithLance(null)):
                         return DRG.WyrmwindThrust;
                 }
 
@@ -192,13 +192,13 @@ internal class DragoonSingleTarget : CustomCombo
                                         && level < DRG.Levels.FullThrust)):
                             return DRG.LifeSurge;
                         case >= DRG.Levels.DragonfireDive
-                            when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
+                            when IsOffCooldown(DRG.DragonfireDive) && DoWithLance(120):
                             return DRG.DragonfireDive;
 
                         case >= DRG.Levels.Stardiver
                             when gauge.IsLOTDActive
                                 && IsOffCooldown(DRG.Stardiver)
-                                && doWithLance(gauge.LOTDTimer / 1000 - 5):
+                                && DoWithLance((gauge.LOTDTimer / 1000) - 5):
                             return DRG.Stardiver;
 
                         case >= DRG.Levels.Starcross when CanUseAction(DRG.Starcross):
@@ -208,7 +208,7 @@ internal class DragoonSingleTarget : CustomCombo
                             when IsOffCooldown(OriginalHook(DRG.Jump))
                                 && CanUseAction(OriginalHook(DRG.Jump))
                                 && (
-                                    doWithLance(30)
+                                    DoWithLance(30)
                                     || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                             return OriginalHook(DRG.Jump);
 
@@ -304,7 +304,7 @@ internal class DragoonCoerthanTorment : CustomCombo
 
             if (GCDClipCheck(actionID) && InCombat() && HasTarget())
             {
-                static bool doWithLance(int? cooldownAbility)
+                static bool DoWithLance(int? cooldownAbility)
                 {
                     return (
                             cooldownAbility is not null
@@ -333,13 +333,13 @@ internal class DragoonCoerthanTorment : CustomCombo
                     case >= DRG.Levels.Geirskogul
                         when CanUseAction(OriginalHook(DRG.Geirskogul))
                             && IsOffCooldown(OriginalHook(DRG.Geirskogul))
-                            && doWithLance(60):
+                            && DoWithLance(60):
                         return OriginalHook(DRG.Geirskogul);
 
                     case >= DRG.Levels.WyrmwindThrust
                         when gauge.FirstmindsFocusCount == 2
                             && (
-                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || doWithLance(null)):
+                                OriginalHook(DRG.TrueThrust) != DRG.TrueThrust || DoWithLance(null)):
                         return DRG.WyrmwindThrust;
                 }
 
@@ -364,12 +364,12 @@ internal class DragoonCoerthanTorment : CustomCombo
                                         && level < DRG.Levels.CoerthanTorment)):
                             return DRG.LifeSurge;
                         case >= DRG.Levels.DragonfireDive
-                            when IsOffCooldown(DRG.DragonfireDive) && doWithLance(120):
+                            when IsOffCooldown(DRG.DragonfireDive) && DoWithLance(120):
                             return DRG.DragonfireDive;
                         case >= DRG.Levels.Stardiver
                             when gauge.IsLOTDActive
                                 && IsOffCooldown(DRG.Stardiver)
-                                && doWithLance(gauge.LOTDTimer / 1000 - 5):
+                                && DoWithLance((gauge.LOTDTimer / 1000) - 5):
                             return DRG.Stardiver;
 
                         case >= DRG.Levels.Starcross when CanUseAction(DRG.Starcross):
@@ -379,7 +379,7 @@ internal class DragoonCoerthanTorment : CustomCombo
                             when IsOffCooldown(OriginalHook(DRG.Jump))
                                 && CanUseAction(OriginalHook(DRG.Jump))
                                 && (
-                                    doWithLance(30)
+                                    DoWithLance(30)
                                     || FindEffect(DRG.Buffs.DiveReady)?.RemainingTime <= 8):
                             return OriginalHook(DRG.Jump);
                         case >= DRG.Levels.RiseOfTheDragon when CanUseAction(DRG.RiseOfTheDragon):

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Enums;
@@ -96,27 +97,7 @@ internal abstract partial class CustomCombo
     protected byte JobID { get; }
 
     /// <summary>
-    ///     Gets a value indicating whether the current target has directional
-    ///     positionals. False for omnidirectional enemies and targets under
-    ///     Directional Disregard. Mirrors Avarice's LuminaSheets.HasPositional.
-    /// </summary>
-    /// <returns>True when rear/flank positioning matters for the current target.</returns>
-    protected static bool TargetHasPositionals()
-    {
-        if (CurrentTarget is not IBattleNpc npc)
-            return false;
-
-        if (npc.BattleNpcKind != BattleNpcSubKind.Combatant)
-            return false;
-
-        if (TargetHasEffectAny(ADV.Buffs.DirectionalDisregard))
-            return false;
-
-        return !NonPositionalUnits.Value.Contains(npc.BaseId);
-    }
-
-      /// <summary>
-    /// Performs various checks then attempts to invoke the combo.
+    ///     Performs various checks then attempts to invoke the combo.
     /// </summary>
     /// <param name="actionID">Starting action ID.</param>
     /// <param name="level">Player level.</param>
@@ -128,9 +109,9 @@ internal abstract partial class CustomCombo
     {
         newActionID = 0;
 
-        if (!IsEnabled(this.Preset)) 
+        if (!IsEnabled(this.Preset))
         // || !Service.Configuration.IsEnabled
-        
+
             return false;
 
         var classJobID = LocalPlayer!.ClassJob.RowId;
@@ -152,6 +133,26 @@ internal abstract partial class CustomCombo
 
         newActionID = resultingActionID;
         return true;
+    }
+
+    /// <summary>
+    ///     Gets a value indicating whether the current target has directional
+    ///     positionals. False for omnidirectional enemies and targets under
+    ///     Directional Disregard. Mirrors Avarice's LuminaSheets.HasPositional.
+    /// </summary>
+    /// <returns>True when rear/flank positioning matters for the current target.</returns>
+    protected static bool TargetHasPositionals()
+    {
+        if (CurrentTarget is not IBattleNpc npc)
+            return false;
+
+        if (npc.BattleNpcKind != BattleNpcSubKind.Combatant)
+            return false;
+
+        if (TargetHasEffectAny(ADV.Buffs.DirectionalDisregard))
+            return false;
+
+        return !NonPositionalUnits.Value.Contains(npc.BaseId);
     }
 
     /// <summary>
@@ -245,6 +246,11 @@ internal abstract partial class CustomCombo
     /// </summary>
     protected static uint CurrentTerritory => Service.ClientState.TerritoryType;
 
+    /// <summary> Gets the Resource Cost of the action. </summary>
+    /// <param name="actionID"> Action ID to check. </param>
+    /// <returns>The resource cost of the action.</returns>
+    public static int GetResourceCost(uint actionID) => CustomComboCache.GetResourceCost(actionID);
+
     /// <summary>
     ///     Calls the original hook.
     /// </summary>
@@ -256,9 +262,9 @@ internal abstract partial class CustomCombo
     }
 
     /// <summary>
-    ///     Should refresh DoTs
+    ///     Should refresh DoTs.
     /// </summary>
-    /// <returns>Whether or not the</returns>
+    /// <returns>Whether or not the DoTs should be refreshed.</returns>
     protected static bool ShouldUseDots()
     {
         return (CurrentTarget as IBattleChara)?.CurrentHp > LocalPlayer?.MaxHp * 3;
@@ -274,9 +280,10 @@ internal abstract partial class CustomCombo
 
     /// <summary>
     ///     Should return whether or not player has raid debuffs.
-    ///     Uses forEach loops for faster iterations rather than count for shortcircuiting
+    ///     Uses forEach loops for faster iterations rather than count for shortcircuiting.
     /// </summary>
-    /// <returns>Whether or not the</returns>
+    /// <param name="buffThreshold">Number of raid buffs required to return true.</param>
+    /// <returns>Whether or not the player has raid buffs.</returns>
     protected static bool HasRaidBuffs(int buffThreshold)
     {
         var raidBuffs = new[]
@@ -516,11 +523,6 @@ internal abstract partial class CustomCombo
         return FindTargetEffect(effectID) is not null;
     }
 
-    /// <summary> Gets the Resource Cost of the action. </summary>
-    /// <param name="actionID"> Action ID to check. </param>
-    /// <returns></returns>
-    public static int GetResourceCost(uint actionID) => CustomComboCache.GetResourceCost(actionID);
-
     /// <summary>
     ///     Finds an effect on the current target of target.
     ///     The effect must be owned by the player or unowned.
@@ -753,6 +755,7 @@ internal abstract partial class CustomCombo
     /// <summary>
     ///     Checks to see if the GCD would not currently clip if you used a cooldown.
     /// </summary>
+    /// <param name="actionID">Action ID to check.</param>
     /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.8s or not.</returns>
     protected static bool GCDClipCheck(uint actionID)
     {

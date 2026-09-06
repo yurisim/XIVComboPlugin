@@ -1,4 +1,5 @@
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -210,7 +211,7 @@ internal class AstrologianMalefic : CustomCombo
 
                 if (
                     debuffs.All(x =>
-                        x is null || x.RemainingTime <= 3 || x.RemainingTime <= 6 && IsMoving))
+                        x is null || x.RemainingTime <= 3 || (x.RemainingTime <= 6 && this.IsMoving)))
                     return OriginalHook(AST.Combust);
             }
         }

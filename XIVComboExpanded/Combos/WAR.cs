@@ -117,10 +117,9 @@ internal class WarriorStormsPathCombo : CustomCombo
 
                     case >= WAR.Levels.Berserk
                         when IsOffCooldown(OriginalHook(WAR.Berserk))
-                            && (level < WAR.Levels.StormsEye || surgingTempest is not null)
+                            && (level < WAR.Levels.StormsEye || surgingTempest is not null):
                     // && (needToInfuriate || level >= WAR.Levels.Infuriate)
                     // && !HasEffect(WAR.Buffs.NascentChaos)
-                    :
                         return OriginalHook(WAR.Berserk);
 
                     case >= WAR.Levels.Equilibrium

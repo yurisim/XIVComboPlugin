@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -290,7 +291,7 @@ internal class ViperFangs : CustomCombo
 }
 
 /// <summary>
-///     This method helps determine the relative positional
+///     This method helps determine the relative positional.
 /// </summary>
 internal class ViperPositionals : CustomCombo
 {

@@ -122,9 +122,9 @@ internal class PaladinST : CustomCombo
                                 || (
                                     level >= PLD.Levels.RoyalAuthority
                                     && lastComboMove == PLD.RoyalAuthority)
-                                || level < PLD.Levels.Prominence
-                                    && lastComboMove == PLD.TotalEclipse
-                                || level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence
+                                || (level < PLD.Levels.Prominence
+                                    && lastComboMove == PLD.TotalEclipse)
+                                || (level >= PLD.Levels.Prominence && lastComboMove == PLD.Prominence)
                                 || (canUseAtonement && !HasEffect(PLD.Buffs.SepulchreReady))
                                 || hasRaidBuffs):
                         return PLD.FightOrFlight;
@@ -218,7 +218,7 @@ internal class PaladinST : CustomCombo
 
             if (distance > 5)
             {
-                if (level >= PLD.Levels.HolySpirit && LocalPlayer?.CurrentMp > 5000 && !IsMoving)
+                if (level >= PLD.Levels.HolySpirit && LocalPlayer?.CurrentMp > 5000 && !this.IsMoving)
                 {
                     return PLD.HolySpirit;
                 }

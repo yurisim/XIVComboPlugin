@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dalamud.Game;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -41,10 +41,27 @@ internal class CustomComboCache : IDisposable
         Service.Framework.Update += this.Framework_Update;
     }
 
+    private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
+
     /// <inheritdoc />
     public void Dispose()
     {
         Service.Framework.Update -= this.Framework_Update;
+    }
+
+    /// <summary> Get the resource cost of an action. </summary>
+    /// <param name="actionID"> Action ID to check. </param>
+    /// <returns> Returns the resource cost of an action. </returns>
+    internal static unsafe int GetResourceCost(uint actionID)
+    {
+        var actionManager = ActionManager.Instance();
+
+        if (actionManager == null)
+            return 0;
+
+        int cost = ActionManager.GetActionCost(ActionType.Action, actionID, 0, 0, 0, 0);
+
+        return cost;
     }
 
     /// <summary>
@@ -96,21 +113,6 @@ internal class CustomComboCache : IDisposable
         }
 
         return this.statusCache[key] = null;
-    }
-
-    /// <summary> Get the resource cost of an action. </summary>
-    /// <param name="actionID"> Action ID to check. </param>
-    /// <returns> Returns the resource cost of an action. </returns>
-    internal static unsafe int GetResourceCost(uint actionID)
-    {
-        var actionManager = ActionManager.Instance();
-
-        if (actionManager == null)
-            return 0;
-
-        int cost = ActionManager.GetActionCost(ActionType.Action, actionID, 0, 0, 0, 0);
-
-        return cost;
     }
 
     /// <summary>
@@ -176,6 +178,4 @@ internal class CustomComboCache : IDisposable
         this.statusCache.Clear();
         this.cooldownCache.Clear();
     }
-
-    private delegate IntPtr GetActionCooldownSlotDelegate(IntPtr actionManager, int cooldownGroup);
 }

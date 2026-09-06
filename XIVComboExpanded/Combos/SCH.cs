@@ -1,6 +1,6 @@
 using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Newtonsoft.Json.Converters;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -165,7 +165,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
                     case >= SCH.Levels.SacredSoil
                         when CanUseAction(SCH.SacredSoil)
-                            && !IsMoving
+                            && !this.IsMoving
                             && actionID is SCH.ArtOfWar
                             && TargetOfTargetHPercentage() <= threshold
                             && !HasEffect(SCH.Buffs.WhisperingDawn):
@@ -252,7 +252,7 @@ internal class ScholarEnergyDrain : CustomCombo
 
                 if (
                     dots.All(x =>
-                        x is null || x.RemainingTime <= 4 || x.RemainingTime <= 8 && IsMoving))
+                        x is null || x.RemainingTime <= 4 || (x.RemainingTime <= 8 && this.IsMoving)))
                     return OriginalHook(SCH.Bio);
             }
 

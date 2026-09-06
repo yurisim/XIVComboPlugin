@@ -1,5 +1,5 @@
 using System.Linq;
-using System.Net.NetworkInformation;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 

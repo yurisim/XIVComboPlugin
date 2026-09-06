@@ -1,7 +1,7 @@
-﻿using System.Linq;
+using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace XIVComboExpandedPlugin.Combos;
 
@@ -77,46 +77,6 @@ internal static class PCT
         public const ushort Placeholder = 0;
     }
 
-    private static class Levels
-    {
-        public const byte Smudge = 20,
-            ExtraFireRed = 25,
-            CreatureMotif = 30,
-            PomMotif = 30,
-            WingMotif = 30,
-            PomMuse = 30,
-            WingedMuse = 30,
-            MogOftheAges = 30,
-            ExtraAeroGreen = 35,
-            ExtraWaterBlue = 45,
-            HammerMotif = 50,
-            HammerStamp = 50,
-            WeaponMotif = 50,
-            StrikingMuse = 50,
-            SubtractivePalette = 60,
-            BlizzardCyan = 60,
-            EarthYellow = 60,
-            ThunderMagenta = 60,
-            ExtraBlizzardCyan = 60,
-            ExtraEarthYellow = 60,
-            ExtraThunderMagenta = 60,
-            StarrySkyMotif = 70,
-            LandscapeMotif = 70,
-            MiracleWhite = 80,
-            HammerBrush = 86,
-            PolishingHammer = 86,
-            TemperaGrassa = 88,
-            CometBlack = 90,
-            RainbowDrip = 92,
-            ClawMotif = 96,
-            MawMotif = 96,
-            ClawedMuse = 96,
-            FangedMuse = 96,
-            StarryMuse = 70,
-            Retribution = 96,
-            StarPrism = 100;
-    }
-
     internal class PictomancerSTCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PctAny;
@@ -190,9 +150,8 @@ internal static class PCT
                                         <= 10
                                     || hasRaidBuffs
                                     || HasEffect(Buffs.StarryMuse)
-                                    || level < Levels.HammerBrush)
+                                    || level < Levels.HammerBrush):
                                 // || needToUseHammer
-                                :
                             return OriginalHook(SteelMuse);
                         case >= Levels.MogOftheAges
                             when CanUseAction(OriginalHook(MogOftheAges))
@@ -263,10 +222,10 @@ internal static class PCT
 
                 var availableSkill = new (
                     uint Level,
-                    uint skill,
-                    float CD,
+                    uint Skill,
+                    float Cd,
                     bool MotifNeeded,
-                    uint motifSkill)[]
+                    uint MotifSkill)[]
                 {
                     (
                         Levels.LandscapeMotif,
@@ -288,11 +247,11 @@ internal static class PCT
                         CreatureMotif),
                 }
                     .Where(s => s.Level <= level && s.MotifNeeded)
-                    .OrderBy(s => s.CD);
+                    .OrderBy(s => s.Cd);
 
                 var swiftCast = HasEffect(ADV.Buffs.Swiftcast);
 
-                var quickSkill = availableSkill.Select(s => s.motifSkill);
+                var quickSkill = availableSkill.Select(s => s.MotifSkill);
 
                 if (swiftCast)
                 {
@@ -325,14 +284,14 @@ internal static class PCT
                 {
                     var filteredskills = availableSkill
                         .Where(s =>
-                            GetCooldown(OriginalHook(s.skill)).TotalCooldownRemaining <= 30
+                            GetCooldown(OriginalHook(s.Skill)).TotalCooldownRemaining <= 30
                             || (
-                                s.skill is not ScenicMuse
+                                s.Skill is not ScenicMuse
                                 && GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining
                                     <= 20)
-                            || (TargetHasLowLife() && IsAvailable(OriginalHook(s.skill)))
+                            || (TargetHasLowLife() && IsAvailable(OriginalHook(s.Skill)))
                             || !InCombat())
-                        .Select(s => s.motifSkill)
+                        .Select(s => s.MotifSkill)
                         .FirstOrDefault();
 
                     if (filteredskills != default)
@@ -407,10 +366,10 @@ internal static class PCT
 
                 var skills = new (
                     uint Level,
-                    bool hasCharges,
+                    bool HasCharges,
                     bool MotifNeeded,
                     uint Skill,
-                    float CD)[]
+                    float Cd)[]
                 {
                     (
                         Levels.CreatureMotif,
@@ -431,8 +390,8 @@ internal static class PCT
                         LandscapeMotif,
                         GetCooldown(OriginalHook(ScenicMuse)).TotalCooldownRemaining),
                 }
-                    .Where(s => s.Level <= level && s.hasCharges && s.MotifNeeded)
-                    .OrderBy(s => s.CD)
+                    .Where(s => s.Level <= level && s.HasCharges && s.MotifNeeded)
+                    .OrderBy(s => s.Cd)
                     .Select(s => s.Skill)
                     .FirstOrDefault();
 
@@ -472,5 +431,45 @@ internal static class PCT
                 _ => actionID,
             };
         }
+    }
+
+    private static class Levels
+    {
+        public const byte Smudge = 20,
+            ExtraFireRed = 25,
+            CreatureMotif = 30,
+            PomMotif = 30,
+            WingMotif = 30,
+            PomMuse = 30,
+            WingedMuse = 30,
+            MogOftheAges = 30,
+            ExtraAeroGreen = 35,
+            ExtraWaterBlue = 45,
+            HammerMotif = 50,
+            HammerStamp = 50,
+            WeaponMotif = 50,
+            StrikingMuse = 50,
+            SubtractivePalette = 60,
+            BlizzardCyan = 60,
+            EarthYellow = 60,
+            ThunderMagenta = 60,
+            ExtraBlizzardCyan = 60,
+            ExtraEarthYellow = 60,
+            ExtraThunderMagenta = 60,
+            StarrySkyMotif = 70,
+            LandscapeMotif = 70,
+            MiracleWhite = 80,
+            HammerBrush = 86,
+            PolishingHammer = 86,
+            TemperaGrassa = 88,
+            CometBlack = 90,
+            RainbowDrip = 92,
+            ClawMotif = 96,
+            MawMotif = 96,
+            ClawedMuse = 96,
+            FangedMuse = 96,
+            StarryMuse = 70,
+            Retribution = 96,
+            StarPrism = 100;
     }
 }

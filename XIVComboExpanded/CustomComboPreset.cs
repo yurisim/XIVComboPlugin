@@ -1115,18 +1115,13 @@ public enum CustomComboPreset
 
     #region NINJA
 
-    //[ConflictingCombos(NinjaKazematoiFeature)]
+    // [ConflictingCombos(NinjaKazematoiFeature)]
     [CustomComboInfo("Aeolian Edge Combo", "Replace Aeolian Edge with its combo chain.", NIN.JobID)]
     NinjaAeolianEdgeCombo = 3002,
 
-    //[ConflictingCombos(NinjaKazematoiFeature)]
+    // [ConflictingCombos(NinjaKazematoiFeature)]
     [CustomComboInfo("Armor Crush Combo", "Replace Armor Crush with its combo chain.", NIN.JobID)]
     NinjaArmorCrushCombo = 3001,
-
-    //[SecretCustomCombo]
-    //[ConflictingCombos([NinjaAeolianEdgeCombo, NinjaArmorCrushCombo])]
-    //[CustomComboInfo("Auto-Refill Kazematoi / Huton Feature", "Replaces Aeolian Edge with Armor Crush when you don't have any Kazematoi left or with its combo chain else.", NIN.JobID)]
-    //NinjaKazematoiFeature = 3019,
 
     [CustomComboInfo(
         "Aeolian Edge / Ninjutsu Feature",
