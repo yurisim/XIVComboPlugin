@@ -287,12 +287,38 @@ internal class NinjaAeolianEdge : CustomCombo
             {
                 if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.AeolianEdge)
                 {
-                    return
-                        level >= NIN.Levels.ArmorCrush
-                        && gauge.Kazematoi <= 3
-                        && !(targetHasTrick || raidBuffs)
-                        ? NIN.ArmorCrush
-                        : actionID;
+                    if (level < NIN.Levels.ArmorCrush)
+                        return NIN.AeolianEdge;
+
+                    // Empty: generate even inside burst windows (per Avarice IsNINAnticipatedFlank).
+                    if (gauge.Kazematoi <= 1)
+                        return NIN.ArmorCrush;
+
+                    // Burst windows: spend for max damage.
+                    if (targetHasTrick || raidBuffs)
+                        return NIN.AeolianEdge;
+
+                    // Low gauge: generate regardless of position.
+                    if (gauge.Kazematoi <= 1)
+                        return NIN.ArmorCrush;
+
+                    // Omnidirectional target (or Directional Disregard): both
+                    // finishers land from anywhere, so spend to avoid overcap.
+                    if (!TargetHasPositionals())
+                        return NIN.AeolianEdge;
+
+                    // Capped: spend regardless of position to avoid overcap waste.
+                    if (gauge.Kazematoi >= 5)
+                        return NIN.AeolianEdge;
+
+                    // True North guarantees the rear positional, so spend it.
+                    if (HasEffect(ADV.Buffs.TrueNorth))
+                        return NIN.AeolianEdge;
+
+                    // Otherwise match the finisher to our position (per Avarice Data.cs:
+                    // Aeolian Edge is rear, Armor Crush is flank). Front matches
+                    // neither, so spend with the harder-hitting Aeolian Edge.
+                    return IsFlankingTarget() ? NIN.ArmorCrush : NIN.AeolianEdge;
                 }
 
                 if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)

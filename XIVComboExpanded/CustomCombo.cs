@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Game.ClientState.Conditions;
@@ -9,6 +10,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
+using Lumina.Excel.Sheets;
 using XIVComboExpandedPlugin.Attributes;
 
 namespace XIVComboExpandedPlugin.Combos;
@@ -18,6 +20,34 @@ namespace XIVComboExpandedPlugin.Combos;
 /// </summary>
 internal abstract partial class CustomCombo
 {
+    /// <summary>
+    ///     Omnidirectional enemy types, by BNpcBase row ID. Mirrors Avarice's
+    ///     LuminaSheets.NonPositionalUnits. Built once, lazily, since sheet data is static.
+    /// </summary>
+    private static readonly Lazy<HashSet<uint>> NonPositionalUnits = new(() =>
+    {
+        var set = new HashSet<uint>();
+
+        try
+        {
+            var sheet = Service.DataManager.GetExcelSheet<BNpcBase>();
+            if (sheet is null)
+                return set;
+
+            foreach (var row in sheet)
+            {
+                if (row.IsOmnidirectional)
+                    set.Add(row.RowId);
+            }
+        }
+        catch (Exception ex)
+        {
+            Service.PluginLog.Warning(ex, "Failed to load omnidirectional enemy set; treating all targets as positional.");
+        }
+
+        return set;
+    });
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="CustomCombo" /> class.
     /// </summary>
@@ -64,6 +94,26 @@ internal abstract partial class CustomCombo
     ///     Gets the job ID associated with this combo.
     /// </summary>
     protected byte JobID { get; }
+
+    /// <summary>
+    ///     Gets a value indicating whether the current target has directional
+    ///     positionals. False for omnidirectional enemies and targets under
+    ///     Directional Disregard. Mirrors Avarice's LuminaSheets.HasPositional.
+    /// </summary>
+    /// <returns>True when rear/flank positioning matters for the current target.</returns>
+    protected static bool TargetHasPositionals()
+    {
+        if (CurrentTarget is not IBattleNpc npc)
+            return false;
+
+        if (npc.BattleNpcKind != BattleNpcSubKind.Combatant)
+            return false;
+
+        if (TargetHasEffectAny(ADV.Buffs.DirectionalDisregard))
+            return false;
+
+        return !NonPositionalUnits.Value.Contains(npc.BaseId);
+    }
 
       /// <summary>
     /// Performs various checks then attempts to invoke the combo.
@@ -723,5 +773,43 @@ internal abstract partial class CustomCombo
             return distance == 0;
 
         return true;
+    }
+
+    /// <summary>
+    ///     Gets the player's angle relative to the target's facing, in radians.
+    ///     0 is directly in front of the target, <see cref="MathF.PI"/> (or -PI) directly behind it.
+    ///     Modeled on Avarice's Util.GetAngle (relative angle plus target rotation).
+    /// </summary>
+    /// <returns>Normalized angle in the range [-PI, PI]. Returns 0 when there is no target.</returns>
+    protected static float GetTargetRelativeAngle()
+    {
+        if (CurrentTarget is null || LocalPlayer is null)
+            return 0;
+
+        var dx = LocalPlayer.Position.X - CurrentTarget.Position.X;
+        var dz = LocalPlayer.Position.Z - CurrentTarget.Position.Z;
+        var relative = MathF.Atan2(dx, dz) - CurrentTarget.Rotation;
+
+        return MathF.Atan2(MathF.Sin(relative), MathF.Cos(relative));
+    }
+
+    /// <summary>
+    ///     Gets a value indicating whether the player is in the target's rear 90-degree sector.
+    /// </summary>
+    /// <returns>True when within 45 degrees of directly behind the target.</returns>
+    protected static bool IsBehindTarget()
+    {
+        return MathF.Abs(GetTargetRelativeAngle()) >= MathF.PI * 0.75f;
+    }
+
+    /// <summary>
+    ///     Gets a value indicating whether the player is in either of the target's flank 90-degree sectors.
+    /// </summary>
+    /// <returns>True when on either side of the target, but not front or rear.</returns>
+    protected static bool IsFlankingTarget()
+    {
+        var abs = MathF.Abs(GetTargetRelativeAngle());
+
+        return abs >= MathF.PI * 0.25f && abs < MathF.PI * 0.75f;
     }
 }
